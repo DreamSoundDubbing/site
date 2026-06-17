@@ -5,12 +5,146 @@
     box-sizing: border-box;
 }
 
+/* ========== ПЕРЕМЕННЫЕ ТЕМ ========== */
+:root {
+    /* Светлая тема (по умолчанию) */
+    --bg-body: linear-gradient(135deg, #f0f8ff 0%, #ffe4f0 100%);
+    --bg-container: rgba(255, 255, 255, 0.92);
+    --bg-content: #ffffff;
+    --bg-content2: linear-gradient(135deg, #d4e8ff, #ffe0f0);
+    --bg-card: #ffffff;
+    --bg-stat: #f0f8ff;
+    --bg-voice-profile: linear-gradient(135deg, #e8f0ff, #ffe8f0);
+    --bg-comment: #f0f8ff;
+    --bg-character: #f8f8f8;
+    --bg-episode: rgba(74, 144, 217, 0.06);
+    --bg-episode-hover: rgba(74, 144, 217, 0.15);
+    --bg-player: #f0f4f8;
+    --bg-admin-panel: rgba(74, 144, 217, 0.08);
+    --bg-input: #f8faff;
+    --bg-modal: #ffffff;
+    --bg-filter: rgba(74, 144, 217, 0.08);
+    --bg-welcome: rgba(74, 144, 217, 0.15);
+    --bg-news1: #f0f8ff;
+    --bg-news2: #fff0f5;
+    --bg-auth: #f8faff;
+    --bg-auth-error: #fff0f0;
+    --bg-auth-success: #e8f5e9;
+    --bg-order-summary: #f8faff;
+    --bg-dub-card: #ffffff;
+    --bg-material: #f8faff;
+    --bg-material-hover: #e8f0ff;
+    --bg-stat-card: #f8faff;
+    --bg-stat-card-hover: #e8f0ff;
+    --bg-admin-panel-dark: #f8faff;
+    --bg-profile-header: linear-gradient(135deg, #e8f0ff, #ffe8f0);
+    --bg-achievement: #f8faff;
+    --bg-user-search: #f8faff;
+    --bg-order-item: #f8faff;
+    --bg-filter-search: #f8faff;
+    --bg-telegram-btn: linear-gradient(135deg, #0088cc, #005f8a);
+    --bg-header: linear-gradient(135deg, #4a90d9 0%, #e8a0bf 100%);
+    
+    --text-primary: #2c3e50;
+    --text-secondary: #444;
+    --text-muted: #888;
+    --text-light: #666;
+    --text-white: #fff;
+    
+    --border-primary: #d4e8ff;
+    --border-secondary: #e8e8e8;
+    
+    --shadow-card: 0 8px 20px rgba(0,0,0,0.08);
+    --shadow-hover: 0 15px 35px rgba(74, 144, 217, 0.2);
+    --shadow-container: 0 10px 40px rgba(74, 144, 217, 0.15);
+    --shadow-header: 0 4px 20px rgba(74, 144, 217, 0.3);
+    
+    --gradient-primary: linear-gradient(135deg, #4a90d9, #d472a0);
+    --gradient-title: linear-gradient(135deg, #4a90d9, #e8a0bf);
+    --gradient-tag: linear-gradient(135deg, #4a90d9, #d472a0);
+    --gradient-button: linear-gradient(135deg, #4a90d9 0%, #d472a0 100%);
+    --gradient-header: linear-gradient(135deg, #4a90d9 0%, #e8a0bf 100%);
+    
+    --color-accent: #4a90d9;
+    --color-accent2: #d472a0;
+    --color-accent-light: #e8a0bf;
+    --color-success: #4CAF50;
+    --color-danger: #ff6b6b;
+    --color-warning: #ffaa00;
+}
+
+/* ========== ТЁМНАЯ ТЕМА ========== */
+[data-theme="dark"] {
+    --bg-body: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 100%);
+    --bg-container: rgba(18, 10, 30, 0.95);
+    --bg-content: #1a1030;
+    --bg-content2: linear-gradient(135deg, #1a1040, #2a1040);
+    --bg-card: #1a1030;
+    --bg-stat: #1a1040;
+    --bg-voice-profile: linear-gradient(135deg, #1a1040, #2a1040);
+    --bg-comment: #1a1040;
+    --bg-character: #1a1030;
+    --bg-episode: rgba(74, 100, 200, 0.12);
+    --bg-episode-hover: rgba(74, 100, 200, 0.25);
+    --bg-player: #0a0820;
+    --bg-admin-panel: rgba(74, 100, 200, 0.12);
+    --bg-input: #1a1030;
+    --bg-modal: #1a1030;
+    --bg-filter: rgba(74, 100, 200, 0.1);
+    --bg-welcome: rgba(74, 100, 200, 0.15);
+    --bg-news1: #1a1040;
+    --bg-news2: #2a1040;
+    --bg-auth: #1a1030;
+    --bg-auth-error: #2a1030;
+    --bg-auth-success: #103020;
+    --bg-order-summary: #1a1040;
+    --bg-dub-card: #1a1030;
+    --bg-material: #1a1040;
+    --bg-material-hover: #2a1050;
+    --bg-stat-card: #1a1040;
+    --bg-stat-card-hover: #2a1050;
+    --bg-admin-panel-dark: #1a1040;
+    --bg-profile-header: linear-gradient(135deg, #1a1040, #2a1040);
+    --bg-achievement: #1a1040;
+    --bg-user-search: #1a1040;
+    --bg-order-item: #1a1040;
+    --bg-filter-search: #1a1040;
+    --bg-telegram-btn: linear-gradient(135deg, #0066aa, #003366);
+    --bg-header: linear-gradient(135deg, #2a1a4a 0%, #4a1a6a 100%);
+    
+    --text-primary: #d0c8e8;
+    --text-secondary: #b0a8c8;
+    --text-muted: #8878a8;
+    --text-light: #a090b0;
+    --text-white: #e8e0f0;
+    
+    --border-primary: #3a2a5a;
+    --border-secondary: #2a1a4a;
+    
+    --shadow-card: 0 8px 20px rgba(0,0,0,0.4);
+    --shadow-hover: 0 15px 35px rgba(74, 100, 200, 0.3);
+    --shadow-container: 0 10px 40px rgba(74, 100, 200, 0.2);
+    --shadow-header: 0 4px 20px rgba(74, 100, 200, 0.3);
+    
+    --gradient-primary: linear-gradient(135deg, #5a4a9a, #8a4a7a);
+    --gradient-title: linear-gradient(135deg, #6a5aaa, #aa5a8a);
+    --gradient-tag: linear-gradient(135deg, #5a4a9a, #8a4a7a);
+    --gradient-button: linear-gradient(135deg, #5a4a9a 0%, #8a4a7a 100%);
+    --gradient-header: linear-gradient(135deg, #2a1a4a 0%, #4a1a6a 100%);
+    
+    --color-accent: #7a6aba;
+    --color-accent2: #aa6a8a;
+    --color-accent-light: #8a5a7a;
+}
+
+/* ========== БАЗОВЫЕ СТИЛИ ========== */
 body { 
-    background: linear-gradient(135deg, #f0f8ff 0%, #ffe4f0 100%);
+    background: var(--bg-body);
     background-attachment: fixed;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     min-height: 100vh;
-    padding-top: 200px; /* Отступ для фиксированного хедера */
+    padding-top: 200px;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* ========== ФИКСИРОВАННАЯ ВЕРХНЯЯ ПАНЕЛЬ ========== */
@@ -19,16 +153,17 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    background: linear-gradient(135deg, #4a90d9 0%, #e8a0bf 100%);
+    background: var(--bg-header);
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 20px rgba(74, 144, 217, 0.3);
+    box-shadow: var(--shadow-header);
     z-index: 1000;
     box-sizing: border-box;
     flex-wrap: wrap;
     gap: 15px;
+    transition: background 0.3s ease;
 }
 
 .header-logo {
@@ -53,7 +188,7 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.2);
     padding: 12px 24px;
     border-radius: 40px;
     text-decoration: none;
@@ -66,9 +201,9 @@ body {
 }
 
 .nav-icon-btn:hover {
-    background: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.35);
     transform: translateY(-2px);
-    color: #2c3e50;
+    color: #fff;
 }
 
 .nav-icon {
@@ -77,15 +212,39 @@ body {
     filter: brightness(0) invert(1);
 }
 
+/* ========== КНОПКА ПЕРЕКЛЮЧЕНИЯ ТЕМЫ ========== */
+.theme-toggle {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+    background: rgba(255,255,255,0.35);
+    transform: rotate(20deg) scale(1.05);
+}
+
 /* ========== ОСНОВНОЙ КОНТЕЙНЕР ========== */
 .container {
     max-width: 1200px;
     margin: 30px auto;
     padding: 25px;
-    background-color: rgba(255, 255, 255, 0.92);
+    background: var(--bg-container);
     border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(74, 144, 217, 0.15);
+    box-shadow: var(--shadow-container);
     backdrop-filter: blur(2px);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* ========== ОСТАЛЬНЫЕ СТИЛИ ========== */
@@ -106,7 +265,7 @@ body {
 
 .title {
     font-size: 32px;
-    background: linear-gradient(135deg, #4a90d9, #e8a0bf);
+    background: var(--gradient-title);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -115,7 +274,7 @@ body {
 
 .bold-comment {
     font-size: 35px;
-    background: linear-gradient(135deg, #4a90d9, #e8a0bf);
+    background: var(--gradient-title);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -124,37 +283,40 @@ body {
 
 .text, p {
     font-size: 18px;
-    color: #2c3e50;
+    color: var(--text-primary);
     line-height: 1.5;
+    transition: color 0.3s ease;
 }
 
 .h2 {
     font-size: 24px;
-    color: #2c3e50;
+    color: var(--text-primary);
     line-height: 1.5;
 }
 
 hr {
     border: none;
     height: 2px;
-    background: linear-gradient(90deg, transparent, #4a90d9, #e8a0bf, transparent);
+    background: linear-gradient(90deg, transparent, var(--color-accent), var(--color-accent2), transparent);
     margin: 0px 0;
 }
 
 .content-box {
-    background: #ffffff;
+    background: var(--bg-content);
     padding: 25px;
     border-radius: 15px;
     margin-top: 20px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: background 0.3s ease;
 }
 
 .content-box2 {
-    background: linear-gradient(135deg, #d4e8ff, #ffe0f0);
+    background: var(--bg-content2);
     padding: 25px;
     border-radius: 15px;
     margin-top: 20px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: background 0.3s ease;
 }
 
 /* Кнопки внутри контента */
@@ -163,7 +325,7 @@ hr {
     align-items: center;
     justify-content: center;
     padding: 12px 28px;
-    background: linear-gradient(135deg, #4a90d9 0%, #d472a0 100%);
+    background: var(--gradient-button);
     color: white;
     text-decoration: none;
     border-radius: 50px;
@@ -190,20 +352,20 @@ hr {
 
 .title-card {
     width: 210px;
-    background: #fff;
+    background: var(--bg-card);
     border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    box-shadow: var(--shadow-card);
     transition: all 0.3s ease;
     text-decoration: none;
     color: inherit;
-    border: 2px solid #e8e8e8;
+    border: 2px solid var(--border-secondary);
 }
 
 .title-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 35px rgba(74, 144, 217, 0.2);
-    border-color: #4a90d9;
+    box-shadow: var(--shadow-hover);
+    border-color: var(--color-accent);
 }
 
 .title-card-image, .featured-image {
@@ -220,22 +382,23 @@ hr {
 .title-card-name {
     font-size: 18px;
     font-weight: bold;
-    color: #4a90d9;
+    color: var(--color-accent);
     margin-bottom: 5px;
 }
 
 .loading {
     text-align: center;
     padding: 40px;
-    color: #666;
+    color: var(--text-muted);
 }
 
 .welcome-banner {
-    background: linear-gradient(135deg, rgba(74, 144, 217, 0.15), rgba(232, 160, 191, 0.15));
+    background: var(--bg-welcome);
     padding: 25px;
     border-radius: 20px;
     text-align: center;
     margin-bottom: 25px;
+    transition: background 0.3s ease;
 }
 
 /* Стили для страницы даббера и тайтла */
@@ -245,8 +408,9 @@ hr {
     flex-wrap: wrap;
     margin-bottom: 30px;
     padding: 25px;
-    background: linear-gradient(135deg, #e8f0ff, #ffe8f0);
+    background: var(--bg-voice-profile);
     border-radius: 20px;
+    transition: background 0.3s ease;
 }
 
 .voice-avatar-large {
@@ -254,11 +418,11 @@ hr {
     height: 200px;
     border-radius: 50%;
     object-fit: cover;
-    border: 5px solid #4a90d9;
+    border: 5px solid var(--color-accent);
 }
 
 .team-card {
-    background: #ffffff;
+    background: var(--bg-card);
     border-radius: 20px;
     padding: 20px 15px;
     width: 210px;
@@ -267,7 +431,7 @@ hr {
     box-shadow: 0 5px 15px rgba(74, 144, 217, 0.15);
     text-decoration: none;
     color: inherit;
-    border: 2px solid #e8e8e8;
+    border: 2px solid var(--border-secondary);
 }
 
 .team-card-avatar {
@@ -275,7 +439,7 @@ hr {
     height: 100px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #4a90d9;
+    border: 3px solid var(--color-accent);
     margin-bottom: 15px;
 }
 
@@ -290,35 +454,36 @@ hr {
 .stat-box {
     flex: 1;
     min-width: 120px;
-    background: #f0f8ff;
+    background: var(--bg-stat);
     padding: 18px;
     border-radius: 15px;
     text-align: center;
     box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    transition: background 0.3s ease;
 }
 
 .stat-number {
     font-size: 32px;
     font-weight: bold;
-    color: #4a90d9;
+    color: var(--color-accent);
 }
 
 .stat-label {
     font-size: 19px;
-    color: #666;
+    color: var(--text-muted);
     margin-top: 5px;
 }
 
 .team-card-name {
     font-size: 20px;
     font-weight: bold;
-    color: #4a90d9;
+    color: var(--color-accent);
     margin-bottom: 8px;
 }
 
 .title-card-meta {
     font-size: 17px;
-    color: #555;
+    color: var(--text-secondary);
     display: flex;
     justify-content: space-between;
 }
@@ -363,7 +528,7 @@ hr {
 
 .anime-title {
     font-size: 32px;
-    color: #4a90d9;
+    color: var(--color-accent);
     margin: 0 0 10px 0;
 }
 
@@ -375,7 +540,7 @@ hr {
 }
 
 .anime-tag {
-    background: linear-gradient(135deg, #4a90d9, #d472a0);
+    background: var(--gradient-tag);
     color: #fff;
     padding: 5px 15px;
     border-radius: 25px;
@@ -383,23 +548,23 @@ hr {
 }
 
 .anime-description {
-    color: #444;
+    color: var(--text-secondary);
     line-height: 1.6;
     margin-top: 15px;
     padding: 15px;
-    background: rgba(74, 144, 217, 0.08);
+    background: var(--bg-welcome);
     border-radius: 10px;
-    border-left: 4px solid #4a90d9;
+    border-left: 4px solid var(--color-accent);
 }
 
 .player-container {
-    background: #f0f4f8;
+    background: var(--bg-player);
     border-radius: 15px;
     overflow: hidden;
     margin: 20px 0;
     aspect-ratio: 16/9;
     width: 100%;
-    border: 2px solid #d4e8ff;
+    border: 2px solid var(--border-primary);
 }
 
 .episodes-list {
@@ -410,7 +575,7 @@ hr {
     display: flex;
     align-items: center;
     padding: 12px 18px;
-    background: rgba(74, 144, 217, 0.06);
+    background: var(--bg-episode);
     border-radius: 12px;
     margin-bottom: 8px;
     transition: background 0.3s;
@@ -418,18 +583,18 @@ hr {
 }
 
 .episode-item:hover {
-    background: rgba(74, 144, 217, 0.15);
+    background: var(--bg-episode-hover);
 }
 
 .episode-number {
     font-weight: bold;
-    color: #4a90d9;
+    color: var(--color-accent);
     min-width: 70px;
 }
 
 .episode-title {
     flex: 1;
-    color: #2c3e50;
+    color: var(--text-primary);
     font-size: 16px;
 }
 
@@ -441,13 +606,13 @@ hr {
 }
 
 .status-ready {
-    background: #4CAF50;
+    background: var(--color-success);
     color: #fff;
 }
 
 .status-soon {
-    background: #ddd;
-    color: #888;
+    background: var(--text-muted);
+    color: #fff;
 }
 
 /* ========== ПЕРСОНАЖИ ========== */
@@ -461,13 +626,13 @@ hr {
 
 .character-card {
     width: 170px;
-    background: #f8f8f8;
+    background: var(--bg-character);
     border-radius: 15px;
     overflow: hidden;
     text-align: center;
     padding-bottom: 12px;
     box-shadow: 0 3px 12px rgba(74, 144, 217, 0.1);
-    border: 1px solid #d4e8ff;
+    border: 1px solid var(--border-primary);
 }
 
 .character-image {
@@ -480,15 +645,15 @@ hr {
     font-size: 16px;
     font-weight: bold;
     margin: 10px 0 5px 0;
-    color: #4a90d9;
+    color: var(--color-accent);
 }
 
 .comment-card {
-    background: #f8f8f8;
+    background: var(--bg-comment);
     padding: 15px;
     border-radius: 12px;
     margin-bottom: 12px;
-    border-left: 4px solid #4a90d9;
+    border-left: 4px solid var(--color-accent);
 }
 
 /* ============================================================
@@ -509,13 +674,18 @@ hr {
         padding: 10px 20px;
         font-size: 16px;
     }
+    
+    .theme-toggle {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
 }
 
 /* Телефоны */
 @media (max-width: 768px) {
     body {
         padding-top: 190px;
-        background: #f5faff;
     }
     
     .fixed-header {
@@ -549,10 +719,15 @@ hr {
         height: 20px;
     }
     
+    .theme-toggle {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+    
     .container {
         margin: 15px 10px;
         padding: 18px;
-        background-color: rgba(255, 255, 255, 0.95);
     }
     
     .title {
@@ -652,6 +827,12 @@ hr {
         height: 18px;
     }
     
+    .theme-toggle {
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+    }
+    
     .container {
         margin: 10px 8px;
         padding: 14px;
@@ -742,5 +923,11 @@ hr {
     .nav-icon {
         width: 16px;
         height: 16px;
+    }
+    
+    .theme-toggle {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
     }
 }

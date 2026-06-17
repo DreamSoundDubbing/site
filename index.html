@@ -32,12 +32,12 @@
             transform: scale(1.05);
         }
         .footer-links a {
-            color: #4a90d9;
+            color: var(--color-accent);
             text-decoration: none;
             transition: color 0.3s;
         }
         .footer-links a:hover {
-            color: #d472a0;
+            color: var(--color-accent2);
             text-decoration: underline;
         }
     </style>
@@ -56,6 +56,8 @@
         <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
         <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
         <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+        <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
     </div>
 </header>
 
@@ -63,7 +65,7 @@
     <div class="header">
         <hr>
         <h1 class="title" style="font-size:42px; margin:20px 0 10px 0;">🎧 Dream Sound Dubbing</h1>
-        <p style="color:#4a90d9; font-size:18px;">Студия озвучки аниме и не только</p>
+        <p style="color:var(--color-accent); font-size:18px;">Студия озвучки аниме и не только</p>
         <hr>
     </div>
     
@@ -81,8 +83,11 @@
         <hr>
         
         <h2 class="title">Новости проекта</h2>
-        <div class="news-item" style="background:#f0f8ff; padding:10px; border-radius:8px; margin-bottom:10px; border-left:4px solid #4a90d9;">
+        <div class="news-item" style="background:var(--bg-news1); padding:10px; border-radius:8px; margin-bottom:10px; border-left:4px solid var(--color-accent);">
             <p><strong>15.06.2026</strong> - Запущен новый сайт Dream Sound Dubbing!</p>
+        </div>
+        <div class="news-item" style="background:var(--bg-news2); padding:10px; border-radius:8px; border-left:4px solid var(--color-accent2);">
+            <p><strong>10.06.2026</strong> - Вышла 7 серия "Молчаливой ведьмы"</p>
         </div>
     </div>
 </div>
@@ -96,8 +101,33 @@
         <a href="dub-in.html" style="display:none;" id="dubInFooter">DUB-in</a>
         <a href="privacy.html">Политика</a>
     </div>
-    <p style="color:#888;">© 2026 Dream Sound Dubbing. Все права защищены.</p>
+    <p style="color:var(--text-muted);">© 2026 Dream Sound Dubbing. Все права защищены.</p>
 </div>
+
+<script>
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) {
+            btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
+        }
+    }
+
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) {
+            btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadTheme);
+</script>
 
 <script type="module">
     import { 
@@ -108,7 +138,6 @@
         initializeData
     } from './firebase-config.js';
 
-    // Инициализируем данные при первом запуске
     setTimeout(async () => {
         await initializeData();
     }, 1000);
@@ -139,6 +168,17 @@
         }
     }
 
+    async function updateAdminLink(user) {
+        const link = document.getElementById('adminLink');
+        if (!link) return;
+        if (user) {
+            const role = await getUserRole(user.uid);
+            link.style.display = role === 'admin' ? 'inline-flex' : 'none';
+        } else {
+            link.style.display = 'none';
+        }
+    }
+
     async function loadFeaturedTitles() {
         const container = document.getElementById('featured-titles');
         const result = await getTitles();
@@ -153,26 +193,28 @@
                             <a href="title.html?id=${title.id}">
                                 <img src="${image}" alt="${title.name}" class="featured-image" onerror="this.src='https://via.placeholder.com/280x160/4a90d9/fff?text=${encodeURIComponent(title.name)}'">
                             </a>
-                            <p style="color:#2c3e50;"><strong>${title.name}</strong></p>
-                            <p style="color:#888;">${title.episodes} серий</p>
+                            <p style="color:var(--text-primary);"><strong>${title.name}</strong></p>
+                            <p style="color:var(--text-muted);">${title.episodes} серий</p>
                         </div>
                     </div>
                 `;
             }).join('');
         } else {
-            container.innerHTML = '<p style="color:#888;">Загрузка данных...</p>';
+            container.innerHTML = '<p style="color:var(--text-muted);">Загрузка данных...</p>';
         }
     }
 
     onAuthStateChangedListener(async (user) => {
         updateAuthButton(user);
         await updateDubInLink(user);
+        await updateAdminLink(user);
     });
 
     document.addEventListener('DOMContentLoaded', async () => {
         const user = getCurrentUser();
         updateAuthButton(user);
         await updateDubInLink(user);
+        await updateAdminLink(user);
         await loadFeaturedTitles();
     });
 </script>

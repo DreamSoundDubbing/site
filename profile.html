@@ -17,16 +17,17 @@
             flex-wrap: wrap;
             align-items: center;
             padding: 20px;
-            background: linear-gradient(135deg, #e8f0ff, #ffe8f0);
+            background: var(--bg-profile-header);
             border-radius: 20px;
-            border: 1px solid #d4e8ff;
+            border: 1px solid var(--border-primary);
+            transition: background 0.3s ease;
         }
         .profile-avatar-large {
             width: 120px;
             height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid #4a90d9;
+            border: 4px solid var(--color-accent);
             cursor: pointer;
             transition: all 0.3s;
         }
@@ -38,11 +39,11 @@
         }
         .profile-name {
             font-size: 28px;
-            color: #4a90d9;
+            color: var(--color-accent);
             margin: 0;
         }
         .profile-email {
-            color: #888;
+            color: var(--text-muted);
             font-size: 14px;
         }
         .profile-role {
@@ -53,9 +54,9 @@
             font-weight: bold;
             margin-top: 5px;
         }
-        .role-admin { background: #4a90d9; color: #fff; }
-        .role-dubber { background: #d472a0; color: #fff; }
-        .role-user { background: #d4e8ff; color: #4a90d9; }
+        .role-admin { background: var(--color-accent); color: #fff; }
+        .role-dubber { background: var(--color-accent2); color: #fff; }
+        .role-user { background: var(--border-primary); color: var(--color-accent); }
 
         .profile-stats {
             display: flex;
@@ -67,26 +68,27 @@
         .stat-item {
             text-align: center;
             padding: 10px 20px;
-            background: #f8faff;
+            background: var(--bg-stat-card);
             border-radius: 12px;
-            border: 1px solid #d4e8ff;
+            border: 1px solid var(--border-primary);
             min-width: 80px;
+            transition: background 0.3s ease;
         }
         .stat-number {
             font-size: 24px;
             font-weight: bold;
-            color: #4a90d9;
+            color: var(--color-accent);
         }
         .stat-label {
             font-size: 12px;
-            color: #888;
+            color: var(--text-muted);
         }
         .stat-clickable {
             cursor: pointer;
             transition: all 0.3s;
         }
         .stat-clickable:hover {
-            background: #e8f0ff;
+            background: var(--bg-stat-card-hover);
         }
 
         .profile-actions {
@@ -105,7 +107,7 @@
             font-size: 14px;
         }
         .action-btn.primary {
-            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            background: var(--gradient-primary);
             color: #fff;
         }
         .action-btn.primary:hover {
@@ -113,7 +115,7 @@
             box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
         }
         .action-btn.danger {
-            background: #ff6b6b;
+            background: var(--color-danger);
             color: #fff;
         }
         .action-btn.danger:hover {
@@ -121,20 +123,20 @@
         }
         .action-btn.outline {
             background: transparent;
-            border: 2px solid #4a90d9;
-            color: #4a90d9;
+            border: 2px solid var(--color-accent);
+            color: var(--color-accent);
         }
         .action-btn.outline:hover {
-            background: #4a90d9;
+            background: var(--color-accent);
             color: #fff;
         }
         .action-btn.subscribed {
-            background: #e8f5e9;
-            color: #4CAF50;
-            border: 2px solid #4CAF50;
+            background: var(--bg-auth-success);
+            color: var(--color-success);
+            border: 2px solid var(--color-success);
         }
         .action-btn.success {
-            background: #4CAF50;
+            background: var(--color-success);
             color: #fff;
         }
         .action-btn.success:hover {
@@ -152,8 +154,8 @@
         }
         .achievement-card {
             padding: 10px 16px;
-            background: #f8faff;
-            border: 1px solid #4a90d9;
+            background: var(--bg-achievement);
+            border: 1px solid var(--color-accent);
             border-radius: 12px;
             text-align: center;
             min-width: 100px;
@@ -163,30 +165,30 @@
         }
         .achievement-name {
             font-size: 12px;
-            color: #4a90d9;
+            color: var(--color-accent);
             margin-top: 4px;
         }
         .achievement-desc {
             font-size: 10px;
-            color: #888;
+            color: var(--text-muted);
         }
 
         .admin-panel {
             margin-top: 30px;
             padding: 20px;
-            background: #f8faff;
-            border: 1px solid #4a90d9;
+            background: var(--bg-admin-panel-dark);
+            border: 1px solid var(--color-accent);
             border-radius: 15px;
         }
         .admin-panel h3 {
-            color: #4a90d9;
+            color: var(--color-accent);
             margin-bottom: 15px;
         }
         .admin-panel .form-group {
             margin-bottom: 12px;
         }
         .admin-panel .form-group label {
-            color: #666;
+            color: var(--text-muted);
             font-size: 13px;
             display: block;
             margin-bottom: 4px;
@@ -196,15 +198,15 @@
             width: 100%;
             padding: 8px 12px;
             border-radius: 8px;
-            border: 2px solid #d4e8ff;
-            background: #fff;
-            color: #2c3e50;
+            border: 2px solid var(--border-primary);
+            background: var(--bg-input);
+            color: var(--text-primary);
             font-size: 14px;
             box-sizing: border-box;
         }
         .admin-panel .form-group input:focus,
         .admin-panel .form-group select:focus {
-            border-color: #4a90d9;
+            border-color: var(--color-accent);
             outline: none;
         }
         .admin-panel .form-row {
@@ -218,7 +220,7 @@
         }
         .admin-panel .search-btn {
             padding: 8px 20px;
-            background: #4a90d9;
+            background: var(--color-accent);
             color: #fff;
             border: none;
             border-radius: 20px;
@@ -227,14 +229,14 @@
             transition: all 0.3s;
         }
         .admin-panel .search-btn:hover {
-            background: #d472a0;
+            background: var(--color-accent2);
         }
         .admin-panel .role-select {
             padding: 6px 12px;
             border-radius: 15px;
-            border: 1px solid #d4e8ff;
-            background: #fff;
-            color: #2c3e50;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-primary);
         }
 
         .user-search-result {
@@ -242,7 +244,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 15px;
-            background: #f8faff;
+            background: var(--bg-user-search);
             border-radius: 8px;
             margin-bottom: 8px;
         }
@@ -258,15 +260,15 @@
             object-fit: cover;
         }
         .user-search-result .user-name {
-            color: #4a90d9;
+            color: var(--color-accent);
         }
         .user-search-result .user-email {
-            color: #888;
+            color: var(--text-muted);
             font-size: 12px;
         }
         .user-search-result .user-current-role {
             font-size: 12px;
-            color: #888;
+            color: var(--text-muted);
             margin: 0 10px;
         }
 
@@ -287,18 +289,18 @@
             display: flex;
         }
         .modal-content {
-            background: #ffffff;
+            background: var(--bg-modal);
             border-radius: 20px;
             padding: 30px;
             max-width: 500px;
             width: 95%;
             max-height: 80vh;
             overflow-y: auto;
-            border: 2px solid #4a90d9;
+            border: 2px solid var(--color-accent);
             position: relative;
         }
         .modal-content h2 {
-            color: #4a90d9;
+            color: var(--color-accent);
             text-align: center;
             margin-bottom: 20px;
         }
@@ -307,19 +309,19 @@
             top: 15px;
             right: 20px;
             font-size: 28px;
-            color: #888;
+            color: var(--text-muted);
             cursor: pointer;
             background: none;
             border: none;
         }
         .modal-close:hover {
-            color: #2c3e50;
+            color: var(--text-primary);
         }
         .modal-content .form-group {
             margin-bottom: 12px;
         }
         .modal-content .form-group label {
-            color: #666;
+            color: var(--text-muted);
             font-size: 13px;
             display: block;
             margin-bottom: 4px;
@@ -329,9 +331,9 @@
             width: 100%;
             padding: 8px 12px;
             border-radius: 8px;
-            border: 2px solid #d4e8ff;
-            background: #f8faff;
-            color: #2c3e50;
+            border: 2px solid var(--border-primary);
+            background: var(--bg-input);
+            color: var(--text-primary);
             font-size: 14px;
             box-sizing: border-box;
         }
@@ -342,7 +344,7 @@
         .modal-content .submit-btn {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            background: var(--gradient-primary);
             color: #fff;
             border: none;
             border-radius: 25px;
@@ -361,15 +363,15 @@
             padding: 40px 20px;
         }
         .auth-message h2 {
-            color: #4a90d9;
+            color: var(--color-accent);
         }
         .auth-message p {
-            color: #888;
+            color: var(--text-muted);
         }
         .auth-btn {
             display: inline-block;
             padding: 14px 40px;
-            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            background: var(--gradient-primary);
             color: white;
             text-decoration: none;
             border-radius: 50px;
@@ -410,8 +412,35 @@
         <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
         <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
         <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+        <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
     </div>
 </header>
+
+<script>
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) {
+            btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
+        }
+    }
+
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) {
+            btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadTheme);
+</script>
 
 <div class="container">
     <div class="header">
@@ -421,17 +450,17 @@
     
     <div class="content-box">
         <div id="profileContent">
-            <div class="loading" style="text-align:center; padding:40px; color:#888;">⏳ Загрузка...</div>
+            <div class="loading" style="text-align:center; padding:40px; color:var(--text-muted);">⏳ Загрузка...</div>
         </div>
     </div>
     
     <div id="ordersSection" style="margin-top:30px;">
-        <h3 style="color:#4a90d9;">📋 Мои заявки на озвучку</h3>
+        <h3 style="color:var(--color-accent);">📋 Мои заявки на озвучку</h3>
         <div id="ordersList" style="margin-top:10px;">
-            <p style="color:#888;">Загрузка...</p>
+            <p style="color:var(--text-muted);">Загрузка...</p>
         </div>
         <br>
-        <a href="voice-order.html" class="action-btn primary" style="display:inline-block; padding:10px 25px; background:linear-gradient(135deg,#4a90d9,#d472a0); color:#fff; border:none; border-radius:25px; text-decoration:none; font-weight:bold; transition:all 0.3s;">
+        <a href="voice-order.html" class="action-btn primary" style="display:inline-block; padding:10px 25px; background:var(--gradient-primary); color:#fff; border:none; border-radius:25px; text-decoration:none; font-weight:bold; transition:all 0.3s;">
             ➕ Создать заявку
         </a>
     </div>
@@ -480,12 +509,12 @@
         if (!container) return;
         const user = getCurrentUser();
         if (!user) {
-            container.innerHTML = '<p style="color:#888;">Войдите, чтобы увидеть заявки</p>';
+            container.innerHTML = '<p style="color:var(--text-muted);">Войдите, чтобы увидеть заявки</p>';
             return;
         }
         const result = await getVoiceOrders(user.uid);
         if (!result.success || result.orders.length === 0) {
-            container.innerHTML = '<p style="color:#888;">У вас пока нет заявок</p>';
+            container.innerHTML = '<p style="color:var(--text-muted);">У вас пока нет заявок</p>';
             return;
         }
         const statusMap = {
@@ -495,18 +524,18 @@
             'cancelled': '❌ Отменено'
         };
         container.innerHTML = result.orders.map(order => `
-            <div style="background:#f8faff; border-radius:10px; padding:15px; margin-bottom:10px; border-left:4px solid ${order.status === 'paid' ? '#4CAF50' : order.status === 'completed' ? '#4a90d9' : '#ffaa00'};">
+            <div style="background:var(--bg-order-item); border-radius:10px; padding:15px; margin-bottom:10px; border-left:4px solid ${order.status === 'paid' ? 'var(--color-success)' : order.status === 'completed' ? 'var(--color-accent)' : 'var(--color-warning)'};">
                 <div style="display:flex; justify-content:space-between; flex-wrap:wrap;">
-                    <strong style="color:#4a90d9;">${order.title}</strong>
-                    <span style="color:#888;">${order.type} • ${order.episodes} серий</span>
+                    <strong style="color:var(--color-accent);">${order.title}</strong>
+                    <span style="color:var(--text-muted);">${order.type} • ${order.episodes} серий</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; flex-wrap:wrap; margin-top:5px;">
-                    <span style="color:#888; font-size:13px;">${order.description || 'Без описания'}</span>
-                    <span style="color:#ffaa00; font-weight:bold;">${order.price} ₽</span>
+                    <span style="color:var(--text-muted); font-size:13px;">${order.description || 'Без описания'}</span>
+                    <span style="color:var(--color-warning); font-weight:bold;">${order.price} ₽</span>
                 </div>
                 <div style="margin-top:5px;">
-                    <span style="color:#888; font-size:12px;">${statusMap[order.status] || order.status}</span>
-                    ${order.status === 'paid' ? '<span style="color:#4CAF50; font-size:12px; margin-left:10px;">🎙️ Ждите связи</span>' : ''}
+                    <span style="color:var(--text-muted); font-size:12px;">${statusMap[order.status] || order.status}</span>
+                    ${order.status === 'paid' ? '<span style="color:var(--color-success); font-size:12px; margin-left:10px;">🎙️ Ждите связи</span>' : ''}
                 </div>
             </div>
         `).join('');
@@ -535,11 +564,22 @@
         }
     }
 
+    async function updateAdminLink(user) {
+        const link = document.getElementById('adminLink');
+        if (!link) return;
+        if (user) {
+            const role = await getUserRole(user.uid);
+            link.style.display = role === 'admin' ? 'inline-flex' : 'none';
+        } else {
+            link.style.display = 'none';
+        }
+    }
+
     window.openUsersModal = function(title, users) {
         document.getElementById('usersModalTitle').textContent = title;
         const body = document.getElementById('usersModalBody');
         if (!users || users.length === 0) {
-            body.innerHTML = '<p style="color:#888; text-align:center;">Нет пользователей</p>';
+            body.innerHTML = '<p style="color:var(--text-muted); text-align:center;">Нет пользователей</p>';
         } else {
             body.innerHTML = users.map(uid => `
                 <a href="profile.html?uid=${uid}" class="user-search-result" style="text-decoration:none;">
@@ -547,7 +587,7 @@
                         <img src="https://via.placeholder.com/32/d4e8ff/4a90d9?text=?" class="user-avatar-small">
                         <span class="user-name">${uid}</span>
                     </div>
-                    <span style="color:#888;">→</span>
+                    <span style="color:var(--text-muted);">→</span>
                 </a>
             `).join('');
         }
@@ -569,10 +609,10 @@
         const email = input.value.trim();
         const resultsContainer = document.getElementById('adminSearchResults');
         if (!email) {
-            resultsContainer.innerHTML = '<p style="color:#888;">Введите email для поиска</p>';
+            resultsContainer.innerHTML = '<p style="color:var(--text-muted);">Введите email для поиска</p>';
             return;
         }
-        resultsContainer.innerHTML = '<p style="color:#888;">⏳ Поиск...</p>';
+        resultsContainer.innerHTML = '<p style="color:var(--text-muted);">⏳ Поиск...</p>';
         const result = await getUserByEmail(email);
         if (result.success) {
             const user = result.data;
@@ -598,16 +638,16 @@
                     </div>
                 </div>
                 <div style="margin-top:10px;">
-                    <h4 style="color:#888; font-size:14px;">🎯 Выдать достижение</h4>
+                    <h4 style="color:var(--text-muted); font-size:14px;">🎯 Выдать достижение</h4>
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                        <input type="text" id="customAchName_${user.id}" placeholder="Название" style="flex:1; padding:6px 12px; border-radius:8px; border:2px solid #d4e8ff; background:#f8faff; color:#2c3e50;">
-                        <input type="text" id="customAchIcon_${user.id}" placeholder="Иконка" style="width:60px; padding:6px 12px; border-radius:8px; border:2px solid #d4e8ff; background:#f8faff; color:#2c3e50;">
+                        <input type="text" id="customAchName_${user.id}" placeholder="Название" style="flex:1; padding:6px 12px; border-radius:8px; border:2px solid var(--border-primary); background:var(--bg-input); color:var(--text-primary);">
+                        <input type="text" id="customAchIcon_${user.id}" placeholder="Иконка" style="width:60px; padding:6px 12px; border-radius:8px; border:2px solid var(--border-primary); background:var(--bg-input); color:var(--text-primary);">
                         <button class="action-btn success" style="padding:4px 16px; font-size:12px;" onclick="giveCustomAchievement('${user.id}')">🏅 Выдать</button>
                     </div>
                 </div>
             `;
         } else {
-            resultsContainer.innerHTML = `<p style="color:#ff6b6b;">❌ ${result.error}</p>`;
+            resultsContainer.innerHTML = `<p style="color:var(--color-danger);">❌ ${result.error}</p>`;
         }
     };
 
@@ -722,9 +762,9 @@
                 <div class="admin-panel">
                     <h3>👑 Управление пользователем</h3>
                     <div style="margin-bottom:15px;">
-                        <p style="color:#888; font-size:14px;">Текущая роль: <strong style="color:#4a90d9;">${roleNames[role] || role}</strong></p>
+                        <p style="color:var(--text-muted); font-size:14px;">Текущая роль: <strong style="color:var(--color-accent);">${roleNames[role] || role}</strong></p>
                         <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                            <select id="adminRoleSelect" style="padding:8px 16px; border-radius:15px; border:2px solid #d4e8ff; background:#fff; color:#2c3e50; font-size:14px;">
+                            <select id="adminRoleSelect" style="padding:8px 16px; border-radius:15px; border:2px solid var(--border-primary); background:var(--bg-card); color:var(--text-primary); font-size:14px;">
                                 <option value="user" ${role === 'user' ? 'selected' : ''}>👤 Пользователь</option>
                                 <option value="dubber" ${role === 'dubber' ? 'selected' : ''}>🎙️ Даббер</option>
                                 <option value="admin" ${role === 'admin' ? 'selected' : ''}>👑 Администратор</option>
@@ -732,12 +772,12 @@
                             <button class="action-btn primary" onclick="handleRoleChange()">💾 Применить роль</button>
                         </div>
                     </div>
-                    <hr style="border-color:#d4e8ff; margin:15px 0;">
+                    <hr style="border-color:var(--border-primary); margin:15px 0;">
                     <div>
-                        <p style="color:#888; font-size:14px;">🏅 Выдать кастомное достижение</p>
+                        <p style="color:var(--text-muted); font-size:14px;">🏅 Выдать кастомное достижение</p>
                         <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                            <input type="text" id="customAchievementName" placeholder="Название" style="flex:1; padding:8px 14px; border-radius:8px; border:2px solid #d4e8ff; background:#f8faff; color:#2c3e50; min-width:150px;">
-                            <input type="text" id="customAchievementIcon" placeholder="Иконка" style="width:60px; padding:8px 14px; border-radius:8px; border:2px solid #d4e8ff; background:#f8faff; color:#2c3e50;">
+                            <input type="text" id="customAchievementName" placeholder="Название" style="flex:1; padding:8px 14px; border-radius:8px; border:2px solid var(--border-primary); background:var(--bg-input); color:var(--text-primary); min-width:150px;">
+                            <input type="text" id="customAchievementIcon" placeholder="Иконка" style="width:60px; padding:8px 14px; border-radius:8px; border:2px solid var(--border-primary); background:var(--bg-input); color:var(--text-primary);">
                             <button class="action-btn success" onclick="handleCustomAchievement()">🏅 Выдать</button>
                         </div>
                     </div>
@@ -750,13 +790,13 @@
             adminOwnPanel = `
                 <div class="admin-panel">
                     <h3>👑 Админ-панель</h3>
-                    <p style="color:#888; font-size:14px; margin-bottom:15px;">Управление пользователями по email</p>
+                    <p style="color:var(--text-muted); font-size:14px; margin-bottom:15px;">Управление пользователями по email</p>
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                        <input type="email" id="adminSearchEmail" placeholder="Введите email пользователя" style="flex:1; padding:10px 16px; border-radius:10px; border:2px solid #d4e8ff; background:#f8faff; color:#2c3e50; font-size:14px; min-width:200px;">
+                        <input type="email" id="adminSearchEmail" placeholder="Введите email пользователя" style="flex:1; padding:10px 16px; border-radius:10px; border:2px solid var(--border-primary); background:var(--bg-input); color:var(--text-primary); font-size:14px; min-width:200px;">
                         <button class="search-btn" onclick="searchUserByEmail()">🔍 Найти</button>
                     </div>
                     <div id="adminSearchResults" style="margin-top:15px;">
-                        <p style="color:#888;">Введите email для поиска пользователя</p>
+                        <p style="color:var(--text-muted);">Введите email для поиска пользователя</p>
                     </div>
                 </div>
             `;
@@ -766,7 +806,7 @@
         if (achievements.length > 0) {
             achievementsHtml = `
                 <div class="achievements-section">
-                    <h3 style="color:#4a90d9;">🏆 Достижения</h3>
+                    <h3 style="color:var(--color-accent);">🏆 Достижения</h3>
                     <div class="achievements-grid">
                         ${achievements.map(a => `
                             <div class="achievement-card">
@@ -865,7 +905,7 @@
 
     async function loadProfile() {
         const container = document.getElementById('profileContent');
-        container.innerHTML = '<div class="loading" style="text-align:center; padding:40px; color:#888;">⏳ Загрузка...</div>';
+        container.innerHTML = '<div class="loading" style="text-align:center; padding:40px; color:var(--text-muted);">⏳ Загрузка...</div>';
         const user = getCurrentUser();
         currentUser = user;
         let targetUid = null;
@@ -878,7 +918,7 @@
                 targetUid = result.data.id;
                 viewedUserData = result.data;
             } else {
-                container.innerHTML = `<p style="color:#ff6b6b; text-align:center;">❌ Пользователь с email "${viewedEmail}" не найден</p>`;
+                container.innerHTML = `<p style="color:var(--color-danger); text-align:center;">❌ Пользователь с email "${viewedEmail}" не найден</p>`;
                 return;
             }
         } else if (user) {
@@ -899,7 +939,7 @@
         isOwnProfile = user && user.uid === targetUid;
         const result = await getUserData(targetUid);
         if (!result.success) {
-            container.innerHTML = `<p style="color:#ff6b6b; text-align:center;">❌ ${result.error}</p>`;
+            container.innerHTML = `<p style="color:var(--color-danger); text-align:center;">❌ ${result.error}</p>`;
             return;
         }
         viewedUserData = result.data;
@@ -919,6 +959,7 @@
         currentUser = user;
         updateAuthButton(user);
         await updateDubInLink(user);
+        await updateAdminLink(user);
         await loadProfile();
     });
 
@@ -927,6 +968,7 @@
         currentUser = user;
         updateAuthButton(user);
         await updateDubInLink(user);
+        await updateAdminLink(user);
         await loadProfile();
     });
 </script>

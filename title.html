@@ -9,8 +9,8 @@
     <script type="module" src="firebase-config.js"></script>
     <style>
         .comment-item {
-            background: #f0f8ff;
-            border-left: 4px solid #4a90d9;
+            background: var(--bg-comment);
+            border-left: 4px solid var(--color-accent);
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 10px;
@@ -38,43 +38,43 @@
         }
         .comment-avatar:hover {
             transform: scale(1.1);
-            border-color: #4a90d9;
+            border-color: var(--color-accent);
         }
         .comment-name {
-            color: #4a90d9;
+            color: var(--color-accent);
             font-weight: bold;
             text-decoration: none;
             transition: color 0.3s;
         }
         .comment-name:hover {
-            color: #d472a0;
+            color: var(--color-accent2);
             text-decoration: underline;
         }
         .comment-rating {
-            color: #ffaa00;
+            color: var(--color-warning);
         }
         .comment-text {
-            color: #2c3e50;
+            color: var(--text-primary);
             margin-top: 8px;
             word-wrap: break-word;
             line-height: 1.5;
         }
         .comment-text .mention {
-            color: #4a90d9;
+            color: var(--color-accent);
             font-weight: bold;
             text-decoration: none;
             cursor: pointer;
         }
         .comment-text .mention:hover {
-            color: #d472a0;
+            color: var(--color-accent2);
             text-decoration: underline;
         }
         .comment-time {
-            color: #999;
+            color: var(--text-muted);
             font-size: 12px;
         }
         .comment-delete {
-            background: #4a90d9;
+            background: var(--color-accent);
             color: #fff;
             border: none;
             padding: 4px 12px;
@@ -84,7 +84,7 @@
             transition: background 0.3s;
         }
         .comment-delete:hover {
-            background: #d472a0;
+            background: var(--color-accent2);
         }
 
         .comment-form {
@@ -98,16 +98,16 @@
             min-width: 200px;
             padding: 12px;
             border-radius: 10px;
-            border: 2px solid #4a90d9;
-            background: #f8faff;
-            color: #2c3e50;
+            border: 2px solid var(--color-accent);
+            background: var(--bg-input);
+            color: var(--text-primary);
             min-height: 80px;
             font-size: 16px;
             font-family: inherit;
             resize: vertical;
         }
         .comment-form textarea:focus {
-            border-color: #d472a0;
+            border-color: var(--color-accent2);
             outline: none;
             box-shadow: 0 0 20px rgba(74, 144, 217, 0.2);
         }
@@ -120,14 +120,14 @@
         .comment-form select {
             padding: 12px;
             border-radius: 10px;
-            border: 2px solid #4a90d9;
-            background: #fff;
-            color: #2c3e50;
+            border: 2px solid var(--color-accent);
+            background: var(--bg-card);
+            color: var(--text-primary);
             font-size: 16px;
         }
         .comment-form button {
             padding: 12px 25px;
-            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            background: var(--gradient-primary);
             color: white;
             border: none;
             border-radius: 50px;
@@ -146,38 +146,38 @@
             transform: none;
         }
         .comment-form .hint {
-            color: #999;
+            color: var(--text-muted);
             font-size: 12px;
             width: 100%;
             margin-top: 5px;
         }
 
         .no-comments {
-            color: #888;
+            color: var(--text-muted);
             text-align: center;
             padding: 20px;
         }
         .auth-prompt {
-            background: #f0f8ff;
+            background: var(--bg-welcome);
             padding: 20px;
             border-radius: 10px;
             text-align: center;
-            color: #888;
+            color: var(--text-muted);
         }
         .auth-prompt a {
-            color: #4a90d9;
+            color: var(--color-accent);
             text-decoration: none;
             font-weight: bold;
         }
         .auth-prompt a:hover {
-            color: #d472a0;
+            color: var(--color-accent2);
             text-decoration: underline;
         }
 
         .admin-edit-btn {
             display: inline-block;
             padding: 8px 20px;
-            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            background: var(--gradient-primary);
             color: #fff;
             border: none;
             border-radius: 25px;
@@ -195,9 +195,9 @@
         .admin-panel {
             display: none;
             padding: 20px;
-            background: rgba(74, 144, 217, 0.08);
+            background: var(--bg-admin-panel);
             border-radius: 15px;
-            border: 1px solid #4a90d9;
+            border: 1px solid var(--color-accent);
             margin-top: 15px;
         }
         .admin-panel.active {
@@ -207,7 +207,7 @@
             margin-bottom: 12px;
         }
         .admin-panel .form-group label {
-            color: #666;
+            color: var(--text-muted);
             font-size: 13px;
             display: block;
             margin-bottom: 4px;
@@ -218,9 +218,9 @@
             width: 100%;
             padding: 8px 12px;
             border-radius: 8px;
-            border: 2px solid #d4e8ff;
-            background: #f8faff;
-            color: #2c3e50;
+            border: 2px solid var(--border-primary);
+            background: var(--bg-input);
+            color: var(--text-primary);
             font-size: 14px;
             box-sizing: border-box;
             font-family: inherit;
@@ -240,7 +240,7 @@
         }
         .admin-panel .save-btn {
             padding: 10px 30px;
-            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            background: var(--gradient-primary);
             color: #fff;
             border: none;
             border-radius: 25px;
@@ -255,9 +255,9 @@
         }
         .admin-panel .cancel-btn {
             padding: 10px 30px;
-            background: #f0f4f8;
-            color: #666;
-            border: 2px solid #d4e8ff;
+            background: var(--bg-input);
+            color: var(--text-muted);
+            border: 2px solid var(--border-primary);
             border-radius: 25px;
             cursor: pointer;
             font-weight: bold;
@@ -265,8 +265,8 @@
             transition: all 0.3s ease;
         }
         .admin-panel .cancel-btn:hover {
-            border-color: #4a90d9;
-            color: #2c3e50;
+            border-color: var(--color-accent);
+            color: var(--text-primary);
         }
 
         .episodes-editor {
@@ -278,21 +278,21 @@
             gap: 8px;
             align-items: center;
             padding: 8px 12px;
-            background: #f8faff;
+            background: var(--bg-input);
             border-radius: 8px;
             margin-bottom: 6px;
-            border: 1px solid #d4e8ff;
+            border: 1px solid var(--border-primary);
         }
         .episode-edit-item:hover {
-            border-color: #4a90d9;
+            border-color: var(--color-accent);
         }
         .episode-edit-item .ep-number {
             width: 50px;
             padding: 6px 8px;
             border-radius: 6px;
-            border: 1px solid #d4e8ff;
-            background: #fff;
-            color: #2c3e50;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-primary);
             font-size: 13px;
             text-align: center;
         }
@@ -301,9 +301,9 @@
             min-width: 120px;
             padding: 6px 10px;
             border-radius: 6px;
-            border: 1px solid #d4e8ff;
-            background: #fff;
-            color: #2c3e50;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-primary);
             font-size: 13px;
         }
         .episode-edit-item .ep-url {
@@ -311,25 +311,25 @@
             min-width: 150px;
             padding: 6px 10px;
             border-radius: 6px;
-            border: 1px solid #d4e8ff;
-            background: #fff;
-            color: #2c3e50;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-primary);
             font-size: 13px;
         }
         .episode-edit-item .ep-status {
             padding: 6px 10px;
             border-radius: 6px;
-            border: 1px solid #d4e8ff;
-            background: #fff;
-            color: #2c3e50;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-primary);
             font-size: 13px;
             min-width: 80px;
         }
         .episode-edit-item .ep-status option {
-            background: #fff;
+            background: var(--bg-card);
         }
         .episode-edit-item .remove-ep-btn {
-            background: #ff6b6b;
+            background: var(--color-danger);
             color: #fff;
             border: none;
             border-radius: 15px;
@@ -345,7 +345,7 @@
 
         .add-episode-btn {
             padding: 8px 20px;
-            background: #4a90d9;
+            background: var(--color-accent);
             color: #fff;
             border: none;
             border-radius: 20px;
@@ -356,12 +356,12 @@
             margin-top: 8px;
         }
         .add-episode-btn:hover {
-            background: #d472a0;
+            background: var(--color-accent2);
             transform: translateY(-2px);
         }
 
         .episodes-empty {
-            color: #999;
+            color: var(--text-muted);
             text-align: center;
             padding: 15px;
             font-style: italic;
@@ -369,13 +369,13 @@
 
         .avg-rating {
             display: inline-block;
-            background: rgba(74, 144, 217, 0.12);
+            background: var(--bg-welcome);
             padding: 4px 16px;
             border-radius: 25px;
-            border: 1px solid #4a90d9;
+            border: 1px solid var(--color-accent);
             margin-left: 10px;
             font-size: 14px;
-            color: #ffaa00;
+            color: var(--color-warning);
         }
 
         @media (max-width: 768px) {
@@ -415,8 +415,35 @@
         <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
         <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
         <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+        <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
     </div>
 </header>
+
+<script>
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) {
+            btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
+        }
+    }
+
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) {
+            btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadTheme);
+</script>
 
 <div class="container">
     <div class="header">
@@ -432,7 +459,7 @@
 
 <div class="container" style="text-align: center;">
     <hr>
-    <p style="color:#888;">© 2026 Dream Sound Dubbing</p>
+    <p style="color:var(--text-muted);">© 2026 Dream Sound Dubbing</p>
 </div>
 
 <script type="module">
@@ -479,6 +506,17 @@
         }
     }
 
+    async function updateAdminLink(user) {
+        const link = document.getElementById('adminLink');
+        if (!link) return;
+        if (user) {
+            const role = await getUserRole(user.uid);
+            link.style.display = role === 'admin' ? 'inline-flex' : 'none';
+        } else {
+            link.style.display = 'none';
+        }
+    }
+
     function renderComments(comments) {
         const container = document.getElementById('comments-list');
         if (!container) return;
@@ -510,7 +548,7 @@
             
             const avatarHtml = c.photoURL ? 
                 `<a href="profile.html?uid=${c.uid}"><img src="${c.photoURL}" class="comment-avatar" onerror="this.style.display='none'"></a>` : 
-                `<a href="profile.html?uid=${c.uid}"><div style="width:36px;height:36px;border-radius:50%;background:#d4e8ff;display:flex;align-items:center;justify-content:center;color:#4a90d9;font-size:16px;cursor:pointer;">👤</div></a>`;
+                `<a href="profile.html?uid=${c.uid}"><div style="width:36px;height:36px;border-radius:50%;background:var(--border-primary);display:flex;align-items:center;justify-content:center;color:var(--color-accent);font-size:16px;cursor:pointer;">👤</div></a>`;
             
             return `
                 <div class="comment-item">
@@ -533,7 +571,7 @@
         const container = document.getElementById('comments-list');
         if (!container) return;
         
-        container.innerHTML = '<div style="color:#888; text-align:center; padding:10px;">⏳ Загрузка комментариев...</div>';
+        container.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding:10px;">⏳ Загрузка комментариев...</div>';
         
         try {
             const comments = await getComments(titleId);
@@ -541,7 +579,7 @@
             renderComments(comments);
         } catch (error) {
             console.error('Ошибка загрузки комментариев:', error);
-            container.innerHTML = `<div class="no-comments" style="color:#ff6b6b;">❌ Ошибка загрузки комментариев</div>`;
+            container.innerHTML = `<div class="no-comments" style="color:var(--color-danger);">❌ Ошибка загрузки комментариев</div>`;
         }
     }
 
@@ -591,7 +629,7 @@
         
         if (user) {
             container.innerHTML = `
-                <h2 style="color:#4a90d9; margin-top:30px;">💬 Комментарии</h2>
+                <h2 style="color:var(--color-accent); margin-top:30px;">💬 Комментарии</h2>
                 <div class="comment-form">
                     <textarea id="commentText" placeholder="Напишите ваш комментарий... (используйте @email для отметки)"></textarea>
                     <div class="form-actions">
@@ -604,13 +642,13 @@
                         </select>
                         <button onclick="handleAddComment()">📤 Отправить</button>
                     </div>
-                    <div class="hint">💡 Используйте <strong style="color:#4a90d9;">@email</strong> чтобы отметить пользователя</div>
+                    <div class="hint">💡 Используйте <strong style="color:var(--color-accent);">@email</strong> чтобы отметить пользователя</div>
                 </div>
                 <div id="comments-list"></div>
             `;
         } else {
             container.innerHTML = `
-                <h2 style="color:#4a90d9; margin-top:30px;">💬 Комментарии</h2>
+                <h2 style="color:var(--color-accent); margin-top:30px;">💬 Комментарии</h2>
                 <div class="auth-prompt">
                     <a href="login.html">Войдите</a>, чтобы оставить комментарий
                 </div>
@@ -792,7 +830,7 @@
         const container = document.getElementById('playerContainer');
         if (!url) {
             container.innerHTML = `
-                <div style="display:flex; align-items:center; justify-content:center; height:100%; color:#888; background:#f5faff;">
+                <div style="display:flex; align-items:center; justify-content:center; height:100%; color:var(--text-muted); background:var(--bg-player);">
                     <p>Серия ещё не доступна</p>
                 </div>
             `;
@@ -817,7 +855,7 @@
             if (localTitle) {
                 currentTitle = localTitle;
             } else {
-                content.innerHTML = '<div style="text-align:center; padding:50px; color:#888;">❌ Тайтл не найден</div>';
+                content.innerHTML = '<div style="text-align:center; padding:50px; color:var(--text-muted);">❌ Тайтл не найден</div>';
                 return;
             }
         } else {
@@ -829,14 +867,14 @@
         
         let charactersHtml = '';
         if (roles.length > 0) {
-            charactersHtml = '<h2 style="color:#4a90d9; margin-top:30px;">🎭 Персонажи и озвучка</h2><div class="characters-grid">';
+            charactersHtml = '<h2 style="color:var(--color-accent); margin-top:30px;">🎭 Персонажи и озвучка</h2><div class="characters-grid">';
             roles.forEach(role => {
                 const voice = window.voicesDatabase?.find(v => v.id === role.voiceId);
                 charactersHtml += `
                     <div class="character-card">
                         <img src="${role.characterImage || 'https://via.placeholder.com/180x150/d4e8ff/4a90d9?text=Персонаж'}" class="character-image" onerror="this.src='https://via.placeholder.com/180x150/d4e8ff/4a90d9?text=?'">
                         <div class="character-name">${role.character}</div>
-                        <p style="color:#888;">Озвучивает: <a href="voice.html?id=${role.voiceId}" style="color:#4a90d9;">${voice?.name || role.voiceId}</a></p>
+                        <p style="color:var(--text-muted);">Озвучивает: <a href="voice.html?id=${role.voiceId}" style="color:var(--color-accent);">${voice?.name || role.voiceId}</a></p>
                     </div>
                 `;
             });
@@ -847,12 +885,12 @@
         let episodesHtml = '';
         if (episodes.length > 0) {
             episodesHtml = `
-                <h2 style="color:#4a90d9; margin-top:30px;">📺 Список серий</h2>
+                <h2 style="color:var(--color-accent); margin-top:30px;">📺 Список серий</h2>
                 <div class="episodes-list">
                     ${episodes.map(ep => `
                         <div class="episode-item" onclick="playEpisode('${ep.url}', ${ep.number})" style="cursor:pointer;">
                             <span class="episode-number">Серия ${ep.number}</span>
-                            <span class="episode-title" style="color:#2c3e50;">${ep.title}</span>
+                            <span class="episode-title" style="color:var(--text-primary);">${ep.title}</span>
                             <span class="episode-status ${ep.status === 'Озвучено' ? 'status-ready' : 'status-soon'}">${ep.status}</span>
                         </div>
                     `).join('')}
@@ -873,7 +911,7 @@
             adminHtml = `
                 <button class="admin-edit-btn" onclick="toggleAdminEdit()">✏️ Редактировать тайтл</button>
                 <div id="adminEditPanel" class="admin-panel">
-                    <h3 style="color:#4a90d9;">✏️ Редактирование тайтла</h3>
+                    <h3 style="color:var(--color-accent);">✏️ Редактирование тайтла</h3>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Название (рус.)</label>
@@ -953,18 +991,18 @@
                         <span class="anime-tag">${title.episodes || '?'} серий</span>
                         <span class="anime-tag">⭐ ${title.rating || '4.5'}</span>
                     </div>
-                    <p style="color:#2c3e50;"><strong style="color:#4a90d9;">Жанры:</strong> ${title.genres?.join(', ') || 'Не указаны'}</p>
+                    <p style="color:var(--text-primary);"><strong style="color:var(--color-accent);">Жанры:</strong> ${title.genres?.join(', ') || 'Не указаны'}</p>
                     <div class="anime-description">${title.description || 'Описание отсутствует'}</div>
                     ${adminHtml}
                 </div>
             </div>
             
-            <h2 style="color:#4a90d9;">▶ Смотреть онлайн</h2>
+            <h2 style="color:var(--color-accent);">▶ Смотреть онлайн</h2>
             <div class="player-container" id="playerContainer">
                 ${firstEpisode.url ? `
                     <iframe id="playerFrame" width="100%" height="100%" src="${firstEpisode.url}" frameborder="0" allowfullscreen></iframe>
                 ` : `
-                    <div style="display:flex; align-items:center; justify-content:center; height:100%; color:#888; background:#f5faff;">
+                    <div style="display:flex; align-items:center; justify-content:center; height:100%; color:var(--text-muted); background:var(--bg-player);">
                         <p>Скоро появится</p>
                     </div>
                 `}
@@ -984,6 +1022,7 @@
         currentUser = user;
         updateAuthButton(user);
         await updateDubInLink(user);
+        await updateAdminLink(user);
         if (user) {
             const role = await getUserRole(user.uid);
             isAdmin = role === 'admin';
@@ -998,6 +1037,7 @@
         currentUser = user;
         updateAuthButton(user);
         await updateDubInLink(user);
+        await updateAdminLink(user);
         if (user) {
             const role = await getUserRole(user.uid);
             isAdmin = role === 'admin';

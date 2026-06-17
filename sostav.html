@@ -14,13 +14,13 @@
             margin-bottom: 20px;
             flex-wrap: wrap;
             padding: 15px;
-            background: rgba(74, 144, 217, 0.08);
+            background: var(--bg-admin-panel);
             border-radius: 15px;
-            border: 1px solid #4a90d9;
+            border: 1px solid var(--color-accent);
         }
         .admin-toolbar .admin-btn {
             padding: 8px 20px;
-            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            background: var(--gradient-primary);
             color: #fff;
             border: none;
             border-radius: 25px;
@@ -61,14 +61,14 @@
             transition: all 0.3s;
         }
         .team-card-wrapper .admin-actions .edit-btn {
-            background: #4a90d9;
+            background: var(--color-accent);
             color: #fff;
         }
         .team-card-wrapper .admin-actions .edit-btn:hover {
-            background: #3a7bc8;
+            background: var(--color-accent2);
         }
         .team-card-wrapper .admin-actions .delete-btn {
-            background: #ff6b6b;
+            background: var(--color-danger);
             color: #fff;
         }
         .team-card-wrapper .admin-actions .delete-btn:hover {
@@ -84,7 +84,7 @@
         }
 
         .team-card {
-            background: #ffffff;
+            background: var(--bg-card);
             border-radius: 20px;
             padding: 20px 15px;
             width: 210px;
@@ -93,14 +93,14 @@
             box-shadow: 0 5px 15px rgba(74, 144, 217, 0.12);
             text-decoration: none;
             color: inherit;
-            border: 2px solid #e8e8e8;
+            border: 2px solid var(--border-secondary);
             display: flex;
             flex-direction: column;
             align-items: center;
         }
         .team-card:hover {
             transform: translateY(-5px);
-            border-color: #4a90d9;
+            border-color: var(--color-accent);
             box-shadow: 0 10px 30px rgba(74, 144, 217, 0.2);
         }
 
@@ -109,21 +109,21 @@
             height: 100px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid #4a90d9;
+            border: 3px solid var(--color-accent);
             margin-bottom: 15px;
         }
 
         .team-card-name {
             font-size: 20px;
             font-weight: bold;
-            color: #4a90d9;
+            color: var(--color-accent);
             margin-bottom: 5px;
             word-wrap: break-word;
         }
 
         .team-card-status {
             font-size: 13px;
-            color: #888;
+            color: var(--text-muted);
             margin-top: 2px;
         }
 
@@ -144,18 +144,18 @@
             display: flex;
         }
         .modal-content {
-            background: #ffffff;
+            background: var(--bg-modal);
             border-radius: 20px;
             padding: 30px;
             max-width: 600px;
             width: 95%;
             max-height: 90vh;
             overflow-y: auto;
-            border: 2px solid #4a90d9;
+            border: 2px solid var(--color-accent);
             position: relative;
         }
         .modal-content h2 {
-            color: #4a90d9;
+            color: var(--color-accent);
             text-align: center;
             margin-bottom: 20px;
         }
@@ -164,20 +164,20 @@
             top: 15px;
             right: 20px;
             font-size: 28px;
-            color: #888;
+            color: var(--text-muted);
             cursor: pointer;
             background: none;
             border: none;
             transition: color 0.3s;
         }
         .modal-close:hover {
-            color: #2c3e50;
+            color: var(--text-primary);
         }
         .modal-content .form-group {
             margin-bottom: 15px;
         }
         .modal-content .form-group label {
-            color: #666;
+            color: var(--text-muted);
             font-size: 14px;
             display: block;
             margin-bottom: 5px;
@@ -188,9 +188,9 @@
             width: 100%;
             padding: 10px 14px;
             border-radius: 10px;
-            border: 2px solid #d4e8ff;
-            background: #f8faff;
-            color: #2c3e50;
+            border: 2px solid var(--border-primary);
+            background: var(--bg-input);
+            color: var(--text-primary);
             font-size: 14px;
             box-sizing: border-box;
             font-family: inherit;
@@ -201,7 +201,7 @@
         }
         .modal-content .form-group input:focus,
         .modal-content .form-group textarea:focus {
-            border-color: #4a90d9;
+            border-color: var(--color-accent);
             outline: none;
         }
         .modal-content .form-row {
@@ -216,7 +216,7 @@
         .modal-content .submit-btn {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            background: var(--gradient-primary);
             color: #fff;
             border: none;
             border-radius: 50px;
@@ -239,7 +239,7 @@
         .stat-box {
             flex: 1;
             min-width: 120px;
-            background: #f0f8ff;
+            background: var(--bg-stat);
             padding: 18px;
             border-radius: 15px;
             text-align: center;
@@ -248,11 +248,11 @@
         .stat-number {
             font-size: 32px;
             font-weight: bold;
-            color: #4a90d9;
+            color: var(--color-accent);
         }
         .stat-label {
             font-size: 16px;
-            color: #888;
+            color: var(--text-muted);
             margin-top: 5px;
         }
 
@@ -265,38 +265,38 @@
             gap: 8px;
             align-items: center;
             padding: 8px 12px;
-            background: #f8faff;
+            background: var(--bg-input);
             border-radius: 8px;
             margin-bottom: 6px;
-            border: 1px solid #d4e8ff;
+            border: 1px solid var(--border-primary);
         }
         .social-edit-item:hover {
-            border-color: #4a90d9;
+            border-color: var(--color-accent);
         }
         .social-edit-item .social-type {
             padding: 6px 10px;
             border-radius: 6px;
-            border: 1px solid #d4e8ff;
-            background: #fff;
-            color: #2c3e50;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-primary);
             font-size: 13px;
             min-width: 100px;
         }
         .social-edit-item .social-type option {
-            background: #fff;
+            background: var(--bg-card);
         }
         .social-edit-item .social-value {
             flex: 2;
             min-width: 150px;
             padding: 6px 10px;
             border-radius: 6px;
-            border: 1px solid #d4e8ff;
-            background: #fff;
-            color: #2c3e50;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-primary);
             font-size: 13px;
         }
         .social-edit-item .remove-social-btn {
-            background: #ff6b6b;
+            background: var(--color-danger);
             color: #fff;
             border: none;
             border-radius: 15px;
@@ -312,7 +312,7 @@
 
         .add-social-btn {
             padding: 8px 20px;
-            background: #4a90d9;
+            background: var(--color-accent);
             color: #fff;
             border: none;
             border-radius: 20px;
@@ -323,12 +323,12 @@
             margin-top: 8px;
         }
         .add-social-btn:hover {
-            background: #d472a0;
+            background: var(--color-accent2);
             transform: translateY(-2px);
         }
 
         .socials-empty {
-            color: #999;
+            color: var(--text-muted);
             text-align: center;
             padding: 15px;
             font-style: italic;
@@ -377,8 +377,35 @@
         <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
         <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
         <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+        <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
     </div>
 </header>
+
+<script>
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) {
+            btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
+        }
+    }
+
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) {
+            btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadTheme);
+</script>
 
 <div class="container">
     <div class="header">
@@ -395,7 +422,7 @@
         <div id="adminPanel" style="display:none;" class="admin-toolbar">
             <button class="admin-btn" onclick="openAddVoiceModal()">➕ Добавить даббера</button>
             <button class="admin-btn" onclick="refreshVoices()">🔄 Обновить</button>
-            <span style="color:#888; font-size:14px; margin-left:auto;">👑 Режим администратора</span>
+            <span style="color:var(--text-muted); font-size:14px; margin-left:auto;">👑 Режим администратора</span>
         </div>
 
         <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap;">
@@ -409,14 +436,14 @@
             </div>
         </div>
 
-        <h2 style="color: #4a90d9; border-left: 5px solid #4a90d9; padding-left: 15px; margin-top: 30px;">
+        <h2 style="color: var(--color-accent); border-left: 5px solid var(--color-accent); padding-left: 15px; margin-top: 30px;">
             🎙️ Дабберы
         </h2>
         <div id="dubberList" class="team-list"></div>
 
         <hr>
 
-        <h2 style="color: #4a90d9; border-left: 5px solid #4a90d9; padding-left: 15px; margin-top: 30px;">
+        <h2 style="color: var(--color-accent); border-left: 5px solid var(--color-accent); padding-left: 15px; margin-top: 30px;">
             🔧 Технический персонал
         </h2>
         <div id="techList" class="team-list"></div>
@@ -492,7 +519,7 @@
                 <div id="socialsEditor" class="socials-editor">
                     <div class="socials-empty">Нет добавленных соцсетей</div>
                 </div>
-                <small style="color:#999; display:block; margin-top:5px;">Выберите тип соцсети и введите имя пользователя или ссылку</small>
+                <small style="color:var(--text-muted); display:block; margin-top:5px;">Выберите тип соцсети и введите имя пользователя или ссылку</small>
             </div>
             
             <button type="submit" class="submit-btn" id="voiceSubmitBtn">💾 Сохранить</button>
@@ -502,7 +529,7 @@
 
 <div class="container" style="text-align: center;">
     <hr>
-    <p style="color:#888;">© 2026 Dream Sound Dubbing</p>
+    <p style="color:var(--text-muted);">© 2026 Dream Sound Dubbing</p>
 </div>
 
 <script type="module">
@@ -536,6 +563,17 @@
         if (user) {
             const role = await getUserRole(user.uid);
             link.style.display = (role === 'dubber' || role === 'admin') ? 'inline-flex' : 'none';
+        } else {
+            link.style.display = 'none';
+        }
+    }
+
+    async function updateAdminLink(user) {
+        const link = document.getElementById('adminLink');
+        if (!link) return;
+        if (user) {
+            const role = await getUserRole(user.uid);
+            link.style.display = role === 'admin' ? 'inline-flex' : 'none';
         } else {
             link.style.display = 'none';
         }
@@ -632,7 +670,7 @@
         const renderList = (voices, containerId) => {
             const container = document.getElementById(containerId);
             if (voices.length === 0) {
-                container.innerHTML = `<div style="color:#888; text-align:center; padding:20px; width:100%;">Нет участников</div>`;
+                container.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:20px; width:100%;">Нет участников</div>`;
                 return;
             }
             container.innerHTML = voices.map(voice => {
@@ -766,6 +804,7 @@
     onAuthStateChangedListener(async (user) => {
         updateAuthButton(user);
         await updateDubInLink(user);
+        await updateAdminLink(user);
         await checkAdmin(user);
         if (user) {
             await loadVoicesFromFirestore();
@@ -781,6 +820,7 @@
         const user = getCurrentUser();
         updateAuthButton(user);
         await updateDubInLink(user);
+        await updateAdminLink(user);
         await checkAdmin(user);
         if (user) {
             await loadVoicesFromFirestore();

@@ -19,8 +19,35 @@
         <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
         <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
         <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+        <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
     </div>
 </header>
+
+<script>
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) {
+            btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
+        }
+    }
+
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) {
+            btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadTheme);
+</script>
 
 <script type="module">
     import { getCurrentUser, onAuthStateChangedListener, getUserRole } from './firebase-config.js';
@@ -47,15 +74,28 @@
         }
     }
 
+    async function updateAdminLink(user) {
+        const link = document.getElementById('adminLink');
+        if (!link) return;
+        if (user) {
+            const role = await getUserRole(user.uid);
+            link.style.display = role === 'admin' ? 'inline-flex' : 'none';
+        } else {
+            link.style.display = 'none';
+        }
+    }
+
     onAuthStateChangedListener(async (user) => {
         updateAuthButton(user);
         await updateDubInLink(user);
+        await updateAdminLink(user);
     });
 
     document.addEventListener('DOMContentLoaded', async () => {
         const user = getCurrentUser();
         updateAuthButton(user);
         await updateDubInLink(user);
+        await updateAdminLink(user);
     });
 </script>
     
@@ -66,9 +106,9 @@
         </div>
         
         <div class="content-box">
-            <p style="color:#2c3e50;">Сайт Dream Sound Dubbing не собирает и не хранит персональные данные пользователей.</p>
-            <p style="color:#2c3e50;">Все данные о дабберах и тайтлах являются публичной информацией.</p>
-            <p style="color:#2c3e50;">По вопросам: <a href="mailto:dreamsound@example.com" style="color:#4a90d9;">dreamsound@example.com</a></p>
+            <p style="color:var(--text-primary);">Сайт Dream Sound Dubbing не собирает и не хранит персональные данные пользователей.</p>
+            <p style="color:var(--text-primary);">Все данные о дабберах и тайтлах являются публичной информацией.</p>
+            <p style="color:var(--text-primary);">По вопросам: <a href="mailto:dreamsound@example.com" style="color:var(--color-accent);">dreamsound@example.com</a></p>
         </div>
     </div>
 </body>

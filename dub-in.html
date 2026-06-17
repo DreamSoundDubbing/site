@@ -16,20 +16,20 @@
         }
         .dub-card {
             width: 210px;
-            background: #ffffff;
+            background: var(--bg-dub-card);
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            box-shadow: var(--shadow-card);
             transition: all 0.3s ease;
             cursor: pointer;
-            border: 2px solid #e8e8e8;
+            border: 2px solid var(--border-secondary);
             text-decoration: none;
             color: inherit;
         }
         .dub-card:hover {
             transform: translateY(-8px);
-            border-color: #4a90d9;
-            box-shadow: 0 15px 35px rgba(74, 144, 217, 0.2);
+            border-color: var(--color-accent);
+            box-shadow: var(--shadow-hover);
         }
         .dub-card-image {
             width: 100%;
@@ -44,12 +44,12 @@
         .dub-card-name {
             font-size: 18px;
             font-weight: bold;
-            color: #4a90d9;
+            color: var(--color-accent);
             margin-bottom: 5px;
         }
         .dub-card-meta {
             font-size: 14px;
-            color: #888;
+            color: var(--text-muted);
         }
 
         .modal-overlay {
@@ -69,18 +69,18 @@
             display: flex;
         }
         .modal-content {
-            background: #ffffff;
+            background: var(--bg-modal);
             border-radius: 20px;
             padding: 30px;
             max-width: 600px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            border: 2px solid #4a90d9;
+            border: 2px solid var(--color-accent);
             position: relative;
         }
         .modal-content h2 {
-            color: #4a90d9;
+            color: var(--color-accent);
             margin-bottom: 20px;
             text-align: center;
         }
@@ -89,23 +89,23 @@
             top: 15px;
             right: 20px;
             font-size: 28px;
-            color: #888;
+            color: var(--text-muted);
             cursor: pointer;
             background: none;
             border: none;
             transition: color 0.3s;
         }
         .modal-close:hover {
-            color: #2c3e50;
+            color: var(--text-primary);
         }
         .material-section {
             margin: 20px 0;
         }
         .material-section h3 {
-            color: #4a90d9;
+            color: var(--color-accent);
             font-size: 18px;
             margin-bottom: 10px;
-            border-bottom: 1px solid #d4e8ff;
+            border-bottom: 1px solid var(--border-primary);
             padding-bottom: 8px;
         }
         .material-item {
@@ -113,16 +113,16 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 15px;
-            background: #f8faff;
+            background: var(--bg-material);
             border-radius: 8px;
             margin-bottom: 8px;
             transition: background 0.3s;
         }
         .material-item:hover {
-            background: #e8f0ff;
+            background: var(--bg-material-hover);
         }
         .material-item a {
-            color: #4a90d9;
+            color: var(--color-accent);
             text-decoration: none;
             word-break: break-all;
         }
@@ -130,7 +130,7 @@
             text-decoration: underline;
         }
         .material-item .delete-btn {
-            background: #ff6b6b;
+            background: var(--color-danger);
             color: #fff;
             border: none;
             padding: 4px 12px;
@@ -151,27 +151,27 @@
             flex: 1;
             padding: 8px 14px;
             border-radius: 8px;
-            border: 1px solid #d4e8ff;
-            background: #f8faff;
-            color: #2c3e50;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-input);
+            color: var(--text-primary);
             font-size: 14px;
             min-width: 150px;
         }
         .add-material-form input:focus {
-            border-color: #4a90d9;
+            border-color: var(--color-accent);
             outline: none;
         }
         .add-material-form select {
             padding: 8px 14px;
             border-radius: 8px;
-            border: 1px solid #d4e8ff;
-            background: #fff;
-            color: #2c3e50;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-primary);
             font-size: 14px;
         }
         .add-material-form button {
             padding: 8px 20px;
-            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            background: var(--gradient-primary);
             color: white;
             border: none;
             border-radius: 8px;
@@ -184,29 +184,29 @@
             box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
         }
         .no-materials {
-            color: #888;
+            color: var(--text-muted);
             text-align: center;
             padding: 10px;
         }
         .loading-spinner {
             text-align: center;
             padding: 40px;
-            color: #888;
+            color: var(--text-muted);
         }
         .access-denied {
             text-align: center;
             padding: 60px 20px;
         }
         .access-denied h2 {
-            color: #ff6b6b;
+            color: var(--color-danger);
             font-size: 28px;
         }
         .access-denied p {
-            color: #888;
+            color: var(--text-muted);
             margin: 20px 0;
         }
         .access-denied a {
-            color: #4a90d9;
+            color: var(--color-accent);
             text-decoration: none;
             font-weight: bold;
         }
@@ -229,13 +229,40 @@
         <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
         <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
         <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+        <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
     </div>
 </header>
+
+<script>
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) {
+            btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
+        }
+    }
+
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) {
+            btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadTheme);
+</script>
 
 <div class="container">
     <div class="header">
         <h1 class="title">🎙️ DUB-in</h1>
-        <p style="color:#888; text-align:center;">Материалы для озвучки</p>
+        <p style="color:var(--text-muted); text-align:center;">Материалы для озвучки</p>
         <hr>
     </div>
     
@@ -292,6 +319,17 @@
         }
     }
 
+    async function updateAdminLink(user) {
+        const link = document.getElementById('adminLink');
+        if (!link) return;
+        if (user) {
+            const role = await getUserRole(user.uid);
+            link.style.display = role === 'admin' ? 'inline-flex' : 'none';
+        } else {
+            link.style.display = 'none';
+        }
+    }
+
     window.openModal = function(titleId, titleName) {
         currentTitleId = titleId;
         const overlay = document.getElementById('modalOverlay');
@@ -321,7 +359,7 @@
         
         const result = await getDubMaterials(titleId);
         if (!result.success) {
-            body.innerHTML = `<p style="color:#ff6b6b;">❌ Ошибка загрузки: ${result.error}</p>`;
+            body.innerHTML = `<p style="color:var(--color-danger);">❌ Ошибка загрузки: ${result.error}</p>`;
             return;
         }
         
@@ -332,10 +370,10 @@
 
         let html = `
             <h2>${titleName}</h2>
-            <p style="color:#888; margin-bottom:20px;">Материалы для озвучки</p>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Материалы для озвучки</p>
             ${!isDubberUser ? `
-                <div style="background:#f0f8ff; padding:15px; border-radius:10px; text-align:center; color:#888; margin-bottom:20px;">
-                    🔒 Для доступа к материалам нужна роль <strong style="color:#4a90d9;">Даббер</strong> или <strong style="color:#4a90d9;">Админ</strong>
+                <div style="background:var(--bg-welcome); padding:15px; border-radius:10px; text-align:center; color:var(--text-muted); margin-bottom:20px;">
+                    🔒 Для доступа к материалам нужна роль <strong style="color:var(--color-accent);">Даббер</strong> или <strong style="color:var(--color-accent);">Админ</strong>
                 </div>
             ` : ''}
         `;
@@ -414,8 +452,8 @@
 
         if (!isDubberUser) {
             html += `
-                <div style="text-align:center; margin-top:20px; padding:15px; background:#f0f8ff; border-radius:10px;">
-                    <a href="login.html" style="color:#4a90d9;">Войдите</a> или запросите роль у администратора
+                <div style="text-align:center; margin-top:20px; padding:15px; background:var(--bg-welcome); border-radius:10px;">
+                    <a href="login.html" style="color:var(--color-accent);">Войдите</a> или запросите роль у администратора
                 </div>
             `;
         }
@@ -457,11 +495,11 @@
         const container = document.getElementById('dubContent');
         const titlesResult = await getTitles();
         if (!titlesResult.success) {
-            container.innerHTML = `<p style="color:#ff6b6b;">❌ Ошибка загрузки: ${titlesResult.error}</p>`;
+            container.innerHTML = `<p style="color:var(--color-danger);">❌ Ошибка загрузки: ${titlesResult.error}</p>`;
             return;
         }
         if (titlesResult.titles.length === 0) {
-            container.innerHTML = '<p style="color:#888; text-align:center; padding:40px;">Пока нет тайтлов</p>';
+            container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:40px;">Пока нет тайтлов</p>';
             return;
         }
         container.innerHTML = `
@@ -489,10 +527,10 @@
             container.innerHTML = `
                 <div class="access-denied">
                     <h2>🔒 Доступ запрещён</h2>
-                    <p>Только <strong style="color:#4a90d9;">дабберы</strong> и <strong style="color:#4a90d9;">администраторы</strong> имеют доступ к этой странице.</p>
+                    <p>Только <strong style="color:var(--color-accent);">дабберы</strong> и <strong style="color:var(--color-accent);">администраторы</strong> имеют доступ к этой странице.</p>
                     <p><a href="login.html">Войдите</a> в аккаунт или обратитесь к администратору.</p>
                     <br>
-                    <a href="index.html" style="color:#4a90d9; text-decoration:none;">🏠 На главную</a>
+                    <a href="index.html" style="color:var(--color-accent); text-decoration:none;">🏠 На главную</a>
                 </div>
             `;
             return false;
@@ -503,11 +541,11 @@
             container.innerHTML = `
                 <div class="access-denied">
                     <h2>🚫 Недостаточно прав</h2>
-                    <p>Ваша роль: <strong style="color:#ffaa00;">${role}</strong></p>
-                    <p>Для доступа к этой странице нужна роль <strong style="color:#4a90d9;">Даббер</strong> или <strong style="color:#4a90d9;">Администратор</strong>.</p>
+                    <p>Ваша роль: <strong style="color:var(--color-warning);">${role}</strong></p>
+                    <p>Для доступа к этой странице нужна роль <strong style="color:var(--color-accent);">Даббер</strong> или <strong style="color:var(--color-accent);">Администратор</strong>.</p>
                     <p>Обратитесь к администратору для изменения роли.</p>
                     <br>
-                    <a href="index.html" style="color:#4a90d9; text-decoration:none;">🏠 На главную</a>
+                    <a href="index.html" style="color:var(--color-accent); text-decoration:none;">🏠 На главную</a>
                 </div>
             `;
             return false;
@@ -519,6 +557,7 @@
         const user = getCurrentUser();
         updateAuthButton(user);
         await updateDubInLink(user);
+        await updateAdminLink(user);
         const hasAccess = await checkAccess();
         if (hasAccess) {
             await loadTitles();
@@ -529,6 +568,7 @@
         currentUser = user;
         updateAuthButton(user);
         await updateDubInLink(user);
+        await updateAdminLink(user);
         await initPage();
     });
 
