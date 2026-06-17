@@ -65,7 +65,6 @@ async function registerUser(email, password, displayName) {
             photoURL: '',
             role: 'user',
             createdAt: serverTimestamp(),
-            // Статистика
             viewsCount: 0,
             commentsCount: 0,
             subscribers: [],
@@ -245,7 +244,6 @@ async function toggleSubscribe(currentUserId, targetUserId) {
         const isSubscribed = subscribers.includes(currentUserId);
         
         await runTransaction(db, async (transaction) => {
-            // Обновляем подписчиков у целевого пользователя
             if (isSubscribed) {
                 transaction.update(targetRef, {
                     subscribers: arrayRemove(currentUserId)
@@ -376,7 +374,6 @@ async function addComment(titleId, text, rating) {
         return { success: false, error: "Необходимо авторизоваться" };
     }
     try {
-        // Поиск упоминаний @email
         const mentions = text.match(/@([^\s]+)/g) || [];
         const mentionedEmails = mentions.map(m => m.substring(1));
         
@@ -395,13 +392,11 @@ async function addComment(titleId, text, rating) {
             time: serverTimestamp()
         });
         
-        // Увеличиваем счётчик комментариев
         const userRef = doc(db, "users", user.uid);
         await updateDoc(userRef, {
             commentsCount: increment(1)
         });
         
-        // Проверяем достижения
         const newCommentsCount = (userData.success ? userData.data.commentsCount || 0 : 0) + 1;
         await checkAndAddAchievement(user.uid, 'comments', newCommentsCount);
         
@@ -746,58 +741,6 @@ async function removeDubMaterial(titleId, materialType, index) {
 }
 
 // ============================================================
-// ========== ИНИЦИАЛИЗАЦИЯ ==========
-// ============================================================
-
-async function initializeData() {
-    try {
-        const titlesResult = await getTitles();
-        if (titlesResult.success && titlesResult.titles.length > 0) {
-            return;
-        }
-
-        console.log('📝 Загрузка начальных данных...');
-        const batch = writeBatch(db);
-
-        if (window.titlesDatabase && window.titlesDatabase.length > 0) {
-            for (const title of window.titlesDatabase) {
-                const docRef = doc(db, "titles", title.id || title.name);
-                batch.set(docRef, {
-                    ...title,
-                    createdAt: serverTimestamp()
-                });
-            }
-        }
-
-        if (window.voicesDatabase && window.voicesDatabase.length > 0) {
-            for (const voice of window.voicesDatabase) {
-                const docRef = doc(db, "voices", voice.id || voice.name);
-                batch.set(docRef, {
-                    ...voice,
-                    createdAt: serverTimestamp()
-                });
-            }
-        }
-
-        if (window.rolesDatabase && window.rolesDatabase.length > 0) {
-            for (const role of window.rolesDatabase) {
-                const docRef = doc(db, "roles", role.id || `${role.titleId}_${role.voiceId}`);
-                batch.set(docRef, {
-                    ...role,
-                    createdAt: serverTimestamp()
-                });
-            }
-        }
-
-        await batch.commit();
-        console.log('✅ Начальные данные загружены');
-    } catch (error) {
-        console.error('❌ Ошибка:', error);
-    }
-}
-// Добавьте эти функции в конец файла firebase-config.js
-
-// ============================================================
 // ========== ЗАЯВКИ НА ОЗВУЧКУ ==========
 // ============================================================
 
@@ -808,7 +751,6 @@ async function createVoiceOrder(orderData) {
     }
     
     try {
-        // Проверяем роль — только админы или дабберы могут создавать заявки
         const userRole = await getUserRole(user.uid);
         if (userRole !== 'admin' && userRole !== 'dubber') {
             return { success: false, error: "Недостаточно прав" };
@@ -819,7 +761,7 @@ async function createVoiceOrder(orderData) {
             userId: user.uid,
             userEmail: user.email,
             userName: user.displayName || 'Пользователь',
-            status: 'pending', // pending, paid, completed, cancelled
+            status: 'pending',
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
         });
@@ -870,89 +812,53 @@ async function updateVoiceOrder(orderId, data) {
 }
 
 // ============================================================
-// ========== ОПЛАТА ЧЕРЕЗ ЮMONEY ==========
+// ========== ИНИЦИАЛИЗАЦИЯ ==========
 // ============================================================
 
-async function createPayment(orderId, amount, description) {
+async function initializeData() {
     try {
-        // Создаём платёж в ЮMoney
-        const response = await fetch('https://api.yoomoney.ru/v2/payments', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Bearer ' + YOOMONEY_ACCESS_TOKEN
-            },
-            body: new URLSearchParams({
-                'amount': amount.toString(),
-                'currency': 'RUB',
-                'payment_method_data[type]': 'bank_card',
-                'confirmation[type]': 'redirect',
-                'confirmation[return_url]': window.location.origin + '/profile.html?payment=success',
-                'description': description,
-                'metadata[order_id]': orderId
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (data.status === 'pending' || data.status === 'waiting_for_capture') {
-            // Сохраняем ID платежа в заявке
-            await updateVoiceOrder(orderId, {
-                paymentId: data.id,
-                paymentStatus: data.status,
-                paymentAmount: amount
-            });
-            
-            return { 
-                success: true, 
-                paymentId: data.id,
-                confirmationUrl: data.confirmation?.confirmation_url || null,
-                status: data.status
-            };
-        } else {
-            return { success: false, error: 'Ошибка создания платежа: ' + JSON.stringify(data) };
+        const titlesResult = await getTitles();
+        if (titlesResult.success && titlesResult.titles.length > 0) {
+            return;
         }
-    } catch (error) {
-        console.error('Ошибка создания платежа:', error);
-        return { success: false, error: error.message };
-    }
-}
 
-async function checkPaymentStatus(paymentId) {
-    try {
-        const response = await fetch('https://api.yoomoney.ru/v2/payments/' + paymentId, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + YOOMONEY_ACCESS_TOKEN
+        console.log('📝 Загрузка начальных данных...');
+        const batch = writeBatch(db);
+
+        if (window.titlesDatabase && window.titlesDatabase.length > 0) {
+            for (const title of window.titlesDatabase) {
+                const docRef = doc(db, "titles", title.id || title.name);
+                batch.set(docRef, {
+                    ...title,
+                    createdAt: serverTimestamp()
+                });
             }
-        });
-        
-        const data = await response.json();
-        
-        return { success: true, status: data.status, data: data };
-    } catch (error) {
-        return { success: false, error: error.message };
-    }
-}
+        }
 
-// ============================================================
-// ========== АЧИВКИ ЗА ОПЛАТУ ==========
-// ============================================================
+        if (window.voicesDatabase && window.voicesDatabase.length > 0) {
+            for (const voice of window.voicesDatabase) {
+                const docRef = doc(db, "voices", voice.id || voice.name);
+                batch.set(docRef, {
+                    ...voice,
+                    createdAt: serverTimestamp()
+                });
+            }
+        }
 
-async function grantPaymentAchievement(userId, orderId, achievementName, achievementIcon = '💎') {
-    try {
-        const achievement = {
-            id: 'payment_' + Date.now(),
-            name: achievementName || '💎 Платный заказ',
-            icon: achievementIcon,
-            description: 'Оплаченная заявка на озвучку #' + orderId,
-            type: 'payment'
-        };
-        
-        const result = await addCustomAchievement(userId, achievement);
-        return result;
+        if (window.rolesDatabase && window.rolesDatabase.length > 0) {
+            for (const role of window.rolesDatabase) {
+                const docRef = doc(db, "roles", role.id || `${role.titleId}_${role.voiceId}`);
+                batch.set(docRef, {
+                    ...role,
+                    createdAt: serverTimestamp()
+                });
+            }
+        }
+
+        await batch.commit();
+        console.log('✅ Начальные данные загружены');
     } catch (error) {
-        return { success: false, error: error.message };
+        console.error('❌ Ошибка:', error);
     }
 }
 
@@ -1007,7 +913,11 @@ export {
     getDubMaterials,
     addDubMaterial,
     removeDubMaterial,
-    initializeData
+    initializeData,
+    // ДОБАВЛЕНЫ ЭКСПОРТЫ ДЛЯ ЗАЯВОК
+    createVoiceOrder,
+    getVoiceOrders,
+    updateVoiceOrder
 };
 
 console.log('🔥 Модуль firebase-config.js загружен');
