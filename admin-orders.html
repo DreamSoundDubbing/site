@@ -319,7 +319,7 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', loadTheme);
+    loadTheme();
 </script>
 
 <div class="container">
@@ -339,11 +339,12 @@
         onAuthStateChangedListener,
         getUserRole,
         getVoiceOrders,
-        updateVoiceOrder,
-        deleteDoc,
-        doc,
-        db
+        updateVoiceOrder
     } from './firebase-config.js';
+    
+    // Импортируем Firebase напрямую
+    import { deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { db } from './firebase-config.js';
 
     let allOrders = [];
     let filteredOrders = [];
