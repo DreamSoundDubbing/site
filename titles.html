@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тайтлы - Dream Sound Dubbing</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="data.js"></script>
+    <script type="module" src="firebase-config.js"></script>
+    <style>
+        .filters-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px 20px;
+            background: rgba(74, 144, 217, 0.08);
+            border-radius: 15px;
+            border: 1px solid #d4e8ff;
+            align-items: center;
+        }
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .filter-btn {
+            padding: 6px 16px;
+            border-radius: 25px;
+            border: 2px solid #d4e8ff;
+            background: transparent;
+            color: #888;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .filter-btn:hover {
+            border-color: #4a90d9;
+            color: #2c3e50;
+        }
+        .filter-btn.active {
+            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            border-color: #4a90d9;
+            color: #fff;
+        }
+        .filter-label {
+            color: #888;
+            font-size: 13px;
+            margin-right: 5px;
+        }
+        .filter-divider {
+            color: #d4e8ff;
+            font-size: 20px;
+            margin: 0 5px;
+        }
+        .titles-count {
+            color: #888;
+            font-size: 14px;
+            margin-left: auto;
+        }
+        .titles-count span {
+            color: #4a90d9;
+            font-weight: bold;
+        }
+        .episode-input {
+            width: 60px;
+            padding: 6px 10px;
+            border-radius: 25px;
+            border: 2px solid #d4e8ff;
+            background: #fff;
+            color: #2c3e50;
+            font-size: 14px;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            appearance: textfield;
+            -webkit-appearance: textfield;
+            -moz-appearance: textfield;
+        }
+        .episode-input:focus {
+            border-color: #4a90d9;
+            box-shadow: 0 0 15px rgba(74, 144, 217, 0.2);
+        }
+        .episode-input::-webkit-outer-spin-button,
+        .episode-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .episode-input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+        .episode-range-label {
+            color: #888;
+            font-size: 13px;
+        }
+        .reset-episodes-btn {
+            padding: 6px 14px;
+            border-radius: 25px;
+            border: 2px solid #d4e8ff;
+            background: transparent;
+            color: #888;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .reset-episodes-btn:hover {
+            border-color: #4a90d9;
+            color: #2c3e50;
+        }
+
+        .admin-toolbar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            padding: 15px;
+            background: rgba(74, 144, 217, 0.08);
+            border-radius: 15px;
+            border: 1px solid #4a90d9;
+        }
+        .admin-toolbar .admin-btn {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        .admin-toolbar .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+
+        .title-card-wrapper {
+            position: relative;
+        }
+        .title-card-wrapper .admin-actions {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .title-card-wrapper:hover .admin-actions {
+            opacity: 1;
+        }
+        .title-card-wrapper .admin-actions button {
+            padding: 4px 10px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .title-card-wrapper .admin-actions .edit-btn {
+            background: #4a90d9;
+            color: #fff;
+        }
+        .title-card-wrapper .admin-actions .edit-btn:hover {
+            background: #3a7bc8;
+        }
+        .title-card-wrapper .admin-actions .delete-btn {
+            background: #ff6b6b;
+            color: #fff;
+        }
+        .title-card-wrapper .admin-actions .delete-btn:hover {
+            background: #e05555;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 700px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid #4a90d9;
+            position: relative;
+        }
+        .modal-content h2 {
+            color: #4a90d9;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            color: #888;
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: color 0.3s;
+        }
+        .modal-close:hover {
+            color: #2c3e50;
+        }
+        .modal-content .form-group {
+            margin-bottom: 15px;
+        }
+        .modal-content .form-group label {
+            color: #666;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .modal-content .form-group input,
+        .modal-content .form-group textarea,
+        .modal-content .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 2px solid #d4e8ff;
+            background: #f8faff;
+            color: #2c3e50;
+            font-size: 14px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .modal-content .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .modal-content .form-group input:focus,
+        .modal-content .form-group textarea:focus {
+            border-color: #4a90d9;
+            outline: none;
+        }
+        .modal-content .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .modal-content .form-row .form-group {
+            flex: 1;
+            min-width: 150px;
+        }
+        .modal-content .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        .modal-content .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+        .modal-content .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .episodes-editor {
+            margin-top: 10px;
+        }
+        .episode-edit-item {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f8faff;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            border: 1px solid #d4e8ff;
+        }
+        .episode-edit-item:hover {
+            border-color: #4a90d9;
+        }
+        .episode-edit-item .ep-number {
+            width: 50px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid #d4e8ff;
+            background: #fff;
+            color: #2c3e50;
+            font-size: 13px;
+            text-align: center;
+        }
+        .episode-edit-item .ep-title {
+            flex: 2;
+            min-width: 120px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #d4e8ff;
+            background: #fff;
+            color: #2c3e50;
+            font-size: 13px;
+        }
+        .episode-edit-item .ep-url {
+            flex: 3;
+            min-width: 150px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #d4e8ff;
+            background: #fff;
+            color: #2c3e50;
+            font-size: 13px;
+        }
+        .episode-edit-item .ep-status {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #d4e8ff;
+            background: #fff;
+            color: #2c3e50;
+            font-size: 13px;
+            min-width: 80px;
+        }
+        .episode-edit-item .ep-status option {
+            background: #fff;
+        }
+        .episode-edit-item .remove-ep-btn {
+            background: #ff6b6b;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+        .episode-edit-item .remove-ep-btn:hover {
+            background: #e05555;
+        }
+
+        .add-episode-btn {
+            padding: 8px 20px;
+            background: #4a90d9;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+        .add-episode-btn:hover {
+            background: #d472a0;
+            transform: translateY(-2px);
+        }
+
+        .episodes-empty {
+            color: #999;
+            text-align: center;
+            padding: 15px;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .filters-container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .filter-group {
+                justify-content: center;
+            }
+            .titles-count {
+                margin-left: 0;
+                text-align: center;
+            }
+            .filter-divider {
+                display: none;
+            }
+            .episode-input {
+                width: 50px;
+            }
+            .admin-toolbar {
+                justify-content: center;
+            }
+            .title-card-wrapper .admin-actions {
+                opacity: 1;
+            }
+            .episode-edit-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .episode-edit-item .ep-number {
+                width: 100%;
+            }
+            .episode-edit-item .ep-title,
+            .episode-edit-item .ep-url,
+            .episode-edit-item .ep-status {
+                width: 100%;
+            }
+        }
+        @media (max-width: 480px) {
+            .filters-container {
+                padding: 12px;
+            }
+            .filter-btn {
+                padding: 5px 12px;
+                font-size: 12px;
+            }
+            .episode-input {
+                width: 45px;
+                padding: 5px 8px;
+                font-size: 12px;
+            }
+            .modal-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="fixed-header">
+    <div class="nav-buttons">
+        <a href="index.html">
+            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo">
+        </a>
+        <a href="index.html" class="nav-icon-btn">🏠Главная</a>
+        <a href="titles.html" class="nav-icon-btn">🎦Тайтлы</a>
+        <a href="sostav.html" class="nav-icon-btn">🎭Состав</a>
+        <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
+        <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
+        <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
+        <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="header">
+        <h1 class="title">Наши тайтлы</h1>
+        <hr>
+    </div>
+    
+    <div class="content-box">
+        <div id="adminPanel" style="display:none;" class="admin-toolbar">
+            <button class="admin-btn" onclick="openAddModal()">➕ Добавить тайтл</button>
+            <button class="admin-btn" onclick="refreshTitles()">🔄 Обновить</button>
+            <span style="color:#888; font-size:14px; margin-left:auto;">👑 Режим администратора</span>
+        </div>
+
+        <div class="filters-container">
+            <div class="filter-group">
+                <span class="filter-label">📂 Тип:</span>
+                <button class="filter-btn active" data-filter="type" data-value="all">Все</button>
+                <button class="filter-btn" data-filter="type" data-value="Сериал">Сериалы</button>
+                <button class="filter-btn" data-filter="type" data-value="Фильм">Фильмы</button>
+                <button class="filter-btn" data-filter="type" data-value="Короткометражка">Короткометражки</button>
+            </div>
+            <span class="filter-divider">|</span>
+            <div class="filter-group">
+                <span class="filter-label">📊 Серий:</span>
+                <span class="episode-range-label">от</span>
+                <input type="number" class="episode-input" id="episodeFrom" placeholder="0" min="0">
+                <span class="episode-range-label">до</span>
+                <input type="number" class="episode-input" id="episodeTo" placeholder="∞" min="0">
+                <button class="reset-episodes-btn" id="resetEpisodes">✕ Сбросить</button>
+            </div>
+            <div class="titles-count">
+                Найдено: <span id="titlesCount">0</span>
+            </div>
+        </div>
+        
+        <div class="titles-grid" id="titles-container">
+            <div class="loading">Загрузка...</div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <h2 id="modalTitle">Добавить тайтл</h2>
+        <form id="titleForm" onsubmit="saveTitle(event)">
+            <input type="hidden" id="editId" value="">
+            
+            <div class="form-group">
+                <label>ID тайтла (уникальный, латиница)</label>
+                <input type="text" id="titleId" placeholder="например: dandadan" required>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Название (рус.)</label>
+                    <input type="text" id="titleName" placeholder="Название" required>
+                </div>
+                <div class="form-group">
+                    <label>Название (англ.)</label>
+                    <input type="text" id="titleNameEn" placeholder="English name">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Тип</label>
+                    <select id="titleType">
+                        <option value="Сериал">Сериал</option>
+                        <option value="Фильм">Фильм</option>
+                        <option value="Короткометражка">Короткометражка</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Год</label>
+                    <input type="number" id="titleYear" placeholder="2024">
+                </div>
+                <div class="form-group">
+                    <label>Кол-во серий</label>
+                    <input type="number" id="titleEpisodes" placeholder="12" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Рейтинг</label>
+                    <input type="number" id="titleRating" placeholder="5" min="0" max="5" step="0.1">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Жанры (через запятую)</label>
+                <input type="text" id="titleGenres" placeholder="Комедия, Экшен, Романтика">
+            </div>
+            
+            <div class="form-group">
+                <label>Ссылка на вертикальную обложку</label>
+                <input type="text" id="titleImageVert" placeholder="images/title_vert.jpg">
+            </div>
+            
+            <div class="form-group">
+                <label>Ссылка на горизонтальную обложку</label>
+                <input type="text" id="titleImageHoriz" placeholder="images/title_horiz.jpg">
+            </div>
+            
+            <div class="form-group">
+                <label>Описание</label>
+                <textarea id="titleDescription" placeholder="Описание тайтла..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>📺 Список серий</span>
+                    <button type="button" class="add-episode-btn" onclick="addEpisode()">➕ Добавить серию</button>
+                </label>
+                <div id="episodesEditor" class="episodes-editor">
+                    <div class="episodes-empty">Загрузка...</div>
+                </div>
+                <small style="color:#999; display:block; margin-top:5px;">Номер, название, ссылка на Google Drive и статус серии</small>
+            </div>
+            
+            <button type="submit" class="submit-btn" id="submitBtn">💾 Сохранить</button>
+        </form>
+    </div>
+</div>
+
+<div class="container" style="text-align: center;">
+    <hr>
+    <p style="color:#888;">© 2026 Dream Sound Dubbing</p>
+</div>
+
+<script type="module">
+    import { 
+        getCurrentUser, 
+        onAuthStateChangedListener, 
+        getUserRole,
+        getTitles,
+        addTitle,
+        updateTitle,
+        deleteTitle
+    } from './firebase-config.js';
+
+    let allTitles = [];
+    let currentFilterType = 'all';
+    let currentEpisodeFrom = 0;
+    let currentEpisodeTo = Infinity;
+    let isAdmin = false;
+
+    function updateAuthButton(user) {
+        const btn = document.getElementById('authBtn');
+        if (user) {
+            btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
+            btn.href = 'profile.html';
+        } else {
+            btn.textContent = '🔑 Вход';
+            btn.href = 'login.html';
+        }
+    }
+
+    async function updateDubInLink(user) {
+        const link = document.getElementById('dubInLink');
+        if (!link) return;
+        if (user) {
+            const role = await getUserRole(user.uid);
+            link.style.display = (role === 'dubber' || role === 'admin') ? 'inline-flex' : 'none';
+        } else {
+            link.style.display = 'none';
+        }
+    }
+
+    async function checkAdmin(user) {
+        if (user) {
+            const role = await getUserRole(user.uid);
+            isAdmin = role === 'admin';
+            const panel = document.getElementById('adminPanel');
+            panel.style.display = isAdmin ? 'flex' : 'none';
+        } else {
+            isAdmin = false;
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+    }
+
+    function renderEpisodesEditor(episodes) {
+        const container = document.getElementById('episodesEditor');
+        if (!episodes || episodes.length === 0) {
+            container.innerHTML = `<div class="episodes-empty">📭 Список серий пуст. Нажмите "➕ Добавить серию"</div>`;
+            return;
+        }
+        container.innerHTML = episodes.map((ep, index) => `
+            <div class="episode-edit-item">
+                <input type="number" class="ep-number" value="${ep.number}" placeholder="№" data-index="${index}" data-field="number" min="1">
+                <input type="text" class="ep-title" value="${ep.title || ''}" placeholder="Название серии" data-index="${index}" data-field="title">
+                <input type="text" class="ep-url" value="${ep.url || ''}" placeholder="Ссылка на Google Drive" data-index="${index}" data-field="url">
+                <select class="ep-status" data-index="${index}" data-field="status">
+                    <option value="Озвучено" ${ep.status === 'Озвучено' ? 'selected' : ''}>✅ Озвучено</option>
+                    <option value="Скоро" ${ep.status === 'Скоро' ? 'selected' : ''}>⏳ Скоро</option>
+                    <option value="В работе" ${ep.status === 'В работе' ? 'selected' : ''}>🔧 В работе</option>
+                </select>
+                <button class="remove-ep-btn" onclick="removeEpisode(${index})" title="Удалить серию">✕</button>
+            </div>
+        `).join('');
+    }
+
+    window.removeEpisode = function(index) {
+        const episodes = getEpisodesFromEditor();
+        if (episodes.length <= 1) {
+            if (!confirm('Удалить последнюю серию?')) return;
+        }
+        episodes.splice(index, 1);
+        episodes.forEach((ep, i) => ep.number = i + 1);
+        renderEpisodesEditor(episodes);
+    };
+
+    window.addEpisode = function() {
+        const episodes = getEpisodesFromEditor();
+        episodes.push({ number: episodes.length + 1, title: '', url: '', status: 'Скоро' });
+        renderEpisodesEditor(episodes);
+        const container = document.getElementById('episodesEditor');
+        const lastItem = container.lastElementChild;
+        if (lastItem) {
+            lastItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const firstInput = lastItem.querySelector('input');
+            if (firstInput) firstInput.focus();
+        }
+    };
+
+    function getEpisodesFromEditor() {
+        const container = document.getElementById('episodesEditor');
+        const items = container.querySelectorAll('.episode-edit-item');
+        const episodes = [];
+        items.forEach(el => {
+            const number = parseInt(el.querySelector('[data-field="number"]').value) || 0;
+            const title = el.querySelector('[data-field="title"]').value || '';
+            const url = el.querySelector('[data-field="url"]').value || '';
+            const status = el.querySelector('[data-field="status"]').value || 'Скоро';
+            episodes.push({ number, title, url, status });
+        });
+        return episodes;
+    }
+
+    function getFilteredTitles() {
+        let titles = allTitles;
+        if (currentFilterType !== 'all') {
+            titles = titles.filter(t => t.type === currentFilterType);
+        }
+        titles = titles.filter(t => {
+            const eps = t.episodes || 0;
+            return eps >= currentEpisodeFrom && eps <= currentEpisodeTo;
+        });
+        return titles;
+    }
+
+    function renderTitles() {
+        const container = document.getElementById('titles-container');
+        const countEl = document.getElementById('titlesCount');
+        const filtered = getFilteredTitles();
+        
+        if (filtered.length === 0) {
+            container.innerHTML = `
+                <div style="text-align:center; padding:40px; color:#888; width:100%;">
+                    <p style="font-size:24px;">😕</p>
+                    <p>По выбранным фильтрам ничего не найдено</p>
+                    <button onclick="resetAllFilters()" style="margin-top:15px; padding:10px 25px; background:linear-gradient(135deg,#4a90d9,#d472a0); color:#fff; border:none; border-radius:25px; cursor:pointer;">Сбросить фильтры</button>
+                </div>
+            `;
+            countEl.textContent = '0';
+            return;
+        }
+        
+        countEl.textContent = filtered.length;
+        
+        container.innerHTML = filtered.map(title => {
+            const image = title.imageVertical || title.imageHorizontal || title.image || 'https://via.placeholder.com/200x280/d4e8ff/4a90d9?text=No+Image';
+            let adminButtons = '';
+            if (isAdmin) {
+                adminButtons = `
+                    <div class="admin-actions">
+                        <button class="edit-btn" onclick="event.preventDefault(); openEditModal('${title.id}')">✏️</button>
+                        <button class="delete-btn" onclick="event.preventDefault(); handleDelete('${title.id}')">🗑️</button>
+                    </div>
+                `;
+            }
+            return `
+                <div class="title-card-wrapper">
+                    <a href="title.html?id=${title.id}" class="title-card">
+                        <img src="${image}" alt="${title.name}" class="title-card-image" onerror="this.src='https://via.placeholder.com/200x280/d4e8ff/4a90d9?text=${encodeURIComponent(title.name)}'">
+                        <div class="title-card-info">
+                            <div class="title-card-name">${title.name}</div>
+                            <div class="title-card-meta">
+                                <span>${title.type}</span>
+                                <span>${title.episodes} серий</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-top:5px;">
+                                <span style="color:#888; font-size:13px;">${title.year || ''}</span>
+                                <span style="color:#ffaa00;">⭐ ${title.rating}</span>
+                            </div>
+                        </div>
+                    </a>
+                    ${adminButtons}
+                </div>
+            `;
+        }).join('');
+    }
+
+    window.resetAllFilters = function() {
+        currentFilterType = 'all';
+        currentEpisodeFrom = 0;
+        currentEpisodeTo = Infinity;
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.filter-btn[data-filter="type"][data-value="all"]').forEach(btn => btn.classList.add('active'));
+        document.getElementById('episodeFrom').value = '';
+        document.getElementById('episodeTo').value = '';
+        renderTitles();
+    };
+
+    function setupFilters() {
+        document.querySelectorAll('.filter-btn[data-filter="type"]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn[data-filter="type"]').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilterType = this.dataset.value;
+                renderTitles();
+            });
+        });
+
+        const episodeFrom = document.getElementById('episodeFrom');
+        const episodeTo = document.getElementById('episodeTo');
+        const updateEpisodeFilter = function() {
+            const from = parseInt(episodeFrom.value);
+            const to = parseInt(episodeTo.value);
+            currentEpisodeFrom = isNaN(from) ? 0 : from;
+            currentEpisodeTo = isNaN(to) ? Infinity : to;
+            renderTitles();
+        };
+        episodeFrom.addEventListener('input', updateEpisodeFilter);
+        episodeTo.addEventListener('input', updateEpisodeFilter);
+        document.getElementById('resetEpisodes').addEventListener('click', function() {
+            episodeFrom.value = '';
+            episodeTo.value = '';
+            currentEpisodeFrom = 0;
+            currentEpisodeTo = Infinity;
+            renderTitles();
+        });
+    }
+
+    window.openAddModal = function() {
+        document.getElementById('modalTitle').textContent = '➕ Добавить тайтл';
+        document.getElementById('submitBtn').textContent = '💾 Создать';
+        document.getElementById('editId').value = '';
+        document.getElementById('titleForm').reset();
+        document.getElementById('titleId').disabled = false;
+        renderEpisodesEditor([]);
+        document.getElementById('modalOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.openEditModal = function(titleId) {
+        const title = allTitles.find(t => t.id === titleId);
+        if (!title) return;
+        document.getElementById('modalTitle').textContent = '✏️ Редактировать: ' + title.name;
+        document.getElementById('submitBtn').textContent = '💾 Обновить';
+        document.getElementById('editId').value = title.id;
+        document.getElementById('titleId').value = title.id;
+        document.getElementById('titleId').disabled = true;
+        document.getElementById('titleName').value = title.name || '';
+        document.getElementById('titleNameEn').value = title.nameEn || '';
+        document.getElementById('titleType').value = title.type || 'Сериал';
+        document.getElementById('titleYear').value = title.year || '';
+        document.getElementById('titleEpisodes').value = title.episodes || '';
+        document.getElementById('titleRating').value = title.rating || '';
+        document.getElementById('titleGenres').value = (title.genres || []).join(', ');
+        document.getElementById('titleImageVert').value = title.imageVertical || '';
+        document.getElementById('titleImageHoriz').value = title.imageHorizontal || '';
+        document.getElementById('titleDescription').value = title.description || '';
+        renderEpisodesEditor(title.episodesList || []);
+        document.getElementById('modalOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.closeModal = function() {
+        document.getElementById('modalOverlay').classList.remove('active');
+        document.body.style.overflow = '';
+        document.getElementById('titleId').disabled = false;
+    };
+
+    window.saveTitle = async function(event) {
+        event.preventDefault();
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Сохранение...';
+        
+        const editId = document.getElementById('editId').value;
+        const id = document.getElementById('titleId').value.trim();
+        const name = document.getElementById('titleName').value.trim();
+        const nameEn = document.getElementById('titleNameEn').value.trim();
+        const type = document.getElementById('titleType').value;
+        const year = parseInt(document.getElementById('titleYear').value);
+        const episodes = parseInt(document.getElementById('titleEpisodes').value);
+        const rating = parseFloat(document.getElementById('titleRating').value);
+        const genres = document.getElementById('titleGenres').value.split(',').map(s => s.trim()).filter(Boolean);
+        const imageVertical = document.getElementById('titleImageVert').value.trim();
+        const imageHorizontal = document.getElementById('titleImageHoriz').value.trim();
+        const description = document.getElementById('titleDescription').value.trim();
+        const episodesList = getEpisodesFromEditor();
+        const finalEpisodes = episodes > 0 ? episodes : episodesList.length;
+        
+        const data = { id, name, nameEn, type, year, episodes: finalEpisodes, rating, genres, imageVertical, imageHorizontal, description, episodesList };
+        
+        let result;
+        if (editId) {
+            result = await updateTitle(editId, data);
+        } else {
+            result = await addTitle(data);
+        }
+        
+        if (result.success) {
+            alert('✅ Тайтл сохранён!');
+            closeModal();
+            await loadTitlesFromFirestore();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+        
+        submitBtn.disabled = false;
+        submitBtn.textContent = '💾 Сохранить';
+    };
+
+    window.handleDelete = async function(titleId) {
+        if (!confirm(`Удалить тайтл "${allTitles.find(t => t.id === titleId)?.name || titleId}"?`)) return;
+        const result = await deleteTitle(titleId);
+        if (result.success) {
+            alert('✅ Тайтл удалён');
+            await loadTitlesFromFirestore();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    window.refreshTitles = async function() {
+        await loadTitlesFromFirestore();
+    };
+
+    async function loadTitlesFromFirestore() {
+        const container = document.getElementById('titles-container');
+        container.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
+        const result = await getTitles();
+        if (result.success) {
+            allTitles = result.titles;
+            renderTitles();
+        } else {
+            container.innerHTML = `<p style="color:#ff6b6b; text-align:center;">❌ Ошибка загрузки: ${result.error}</p>`;
+        }
+    }
+
+    onAuthStateChangedListener(async (user) => {
+        updateAuthButton(user);
+        await updateDubInLink(user);
+        await checkAdmin(user);
+        if (user) {
+            await loadTitlesFromFirestore();
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const user = getCurrentUser();
+        updateAuthButton(user);
+        await updateDubInLink(user);
+        await checkAdmin(user);
+        await loadTitlesFromFirestore();
+        setupFilters();
+    });
+</script>
+
+</body>
+</html>

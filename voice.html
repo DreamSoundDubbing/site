@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Даббер - Dream Sound Dubbing</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="data.js"></script>
+    <script type="module" src="firebase-config.js"></script>
+    <style>
+        .voice-profile {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #e8f0ff, #ffe8f0);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .voice-avatar-large {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #4a90d9;
+            box-shadow: 0 0 20px rgba(74, 144, 217, 0.3);
+        }
+        .voice-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        .voice-name {
+            font-size: 36px;
+            color: #4a90d9;
+            margin: 0 0 10px 0;
+        }
+        .voice-status {
+            display: inline-block;
+            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 25px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .voice-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        .voice-meta-item {
+            background: #d4e8ff;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+        .voice-bio {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 10px;
+            line-height: 1.6;
+            margin: 15px 0;
+            border-left: 4px solid #4a90d9;
+            color: #2c3e50;
+        }
+        .voice-social {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 15px;
+            background: #4a90d9;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 19px;
+            transition: all 0.3s;
+        }
+        .social-link:hover {
+            background: #d472a0;
+            transform: translateY(-2px);
+        }
+        .stats-grid {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .stat-box {
+            flex: 1;
+            min-width: 120px;
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4a90d9;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .admin-edit-btn {
+            display: inline-block;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .admin-edit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+        .admin-panel {
+            display: none;
+            padding: 20px;
+            background: rgba(74, 144, 217, 0.08);
+            border-radius: 15px;
+            border: 1px solid #4a90d9;
+            margin-top: 15px;
+        }
+        .admin-panel.active {
+            display: block;
+        }
+        .admin-panel .form-group {
+            margin-bottom: 12px;
+        }
+        .admin-panel .form-group label {
+            color: #666;
+            font-size: 13px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .admin-panel .form-group input,
+        .admin-panel .form-group textarea,
+        .admin-panel .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid #d4e8ff;
+            background: #f8faff;
+            color: #2c3e50;
+            font-size: 14px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .admin-panel .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .admin-panel .form-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .admin-panel .form-row .form-group {
+            flex: 1;
+            min-width: 140px;
+        }
+        .admin-panel .save-btn {
+            padding: 10px 30px;
+            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .admin-panel .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+        .admin-panel .cancel-btn {
+            padding: 10px 30px;
+            background: #f0f4f8;
+            color: #666;
+            border: 2px solid #d4e8ff;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .admin-panel .cancel-btn:hover {
+            border-color: #4a90d9;
+            color: #2c3e50;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+        }
+        .not-found {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+        }
+        @media (max-width: 768px) {
+            .voice-avatar-large {
+                width: 130px;
+                height: 130px;
+            }
+            .voice-name {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="fixed-header">
+    <div class="nav-buttons">
+        <a href="index.html">
+            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo">
+        </a>
+        <a href="index.html" class="nav-icon-btn">🏠Главная</a>
+        <a href="titles.html" class="nav-icon-btn">🎦Тайтлы</a>
+        <a href="sostav.html" class="nav-icon-btn">🎭Состав</a>
+        <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
+        <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
+        <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
+        <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="header">
+        <hr>
+        <h1 class="title" style="font-size:32px;">🎙️ Даббер</h1>
+        <hr>
+    </div>
+    
+    <div class="content-box" id="voice-content">
+        <div class="loading">⏳ Загрузка...</div>
+    </div>
+</div>
+
+<div class="container" style="text-align: center;">
+    <hr>
+    <p style="color:#888;">© 2026 Dream Sound Dubbing</p>
+</div>
+
+<script type="module">
+    import { 
+        getCurrentUser, 
+        onAuthStateChangedListener,
+        getUserRole,
+        getVoiceById,
+        updateVoice
+    } from './firebase-config.js';
+
+    const voiceId = new URLSearchParams(window.location.search).get('id');
+    let isAdmin = false;
+    let currentVoice = null;
+
+    function updateAuthButton(user) {
+        const btn = document.getElementById('authBtn');
+        if (user) {
+            btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
+            btn.href = 'profile.html';
+        } else {
+            btn.textContent = '🔑 Вход';
+            btn.href = 'login.html';
+        }
+    }
+
+    async function updateDubInLink(user) {
+        const link = document.getElementById('dubInLink');
+        if (!link) return;
+        if (user) {
+            const role = await getUserRole(user.uid);
+            link.style.display = (role === 'dubber' || role === 'admin') ? 'inline-flex' : 'none';
+        } else {
+            link.style.display = 'none';
+        }
+    }
+
+    window.toggleAdminEdit = function() {
+        const panel = document.getElementById('adminEditPanel');
+        panel.classList.toggle('active');
+        if (panel.classList.contains('active')) {
+            fillAdminForm();
+        }
+    };
+
+    function fillAdminForm() {
+        if (!currentVoice) return;
+        const v = currentVoice;
+        document.getElementById('editName').value = v.name || '';
+        document.getElementById('editNameEn').value = v.nameEn || '';
+        document.getElementById('editNameRu').value = v.nameRu || '';
+        document.getElementById('editImage').value = v.image || '';
+        document.getElementById('editRoleType').value = v.roleType || 'dubber';
+        document.getElementById('editStatus').value = v.status || '';
+        document.getElementById('editJoinDate').value = v.joinDate || '';
+        document.getElementById('editBio').value = v.bio || '';
+        document.getElementById('editSocial').value = JSON.stringify(v.social || {}, null, 2);
+    }
+
+    window.saveAdminEdit = async function() {
+        const saveBtn = document.getElementById('saveEditBtn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = '⏳ Сохранение...';
+        
+        let social = {};
+        try {
+            const raw = document.getElementById('editSocial').value.trim();
+            if (raw) {
+                social = JSON.parse(raw);
+            }
+        } catch (e) {
+            alert('❌ Ошибка в формате JSON соцсетей. Проверьте синтаксис.');
+            saveBtn.disabled = false;
+            saveBtn.textContent = '💾 Сохранить';
+            return;
+        }
+        
+        const data = {
+            name: document.getElementById('editName').value.trim(),
+            nameEn: document.getElementById('editNameEn').value.trim(),
+            nameRu: document.getElementById('editNameRu').value.trim(),
+            image: document.getElementById('editImage').value.trim(),
+            roleType: document.getElementById('editRoleType').value,
+            status: document.getElementById('editStatus').value.trim(),
+            joinDate: document.getElementById('editJoinDate').value.trim() || '2026',
+            bio: document.getElementById('editBio').value.trim(),
+            social: social
+        };
+        
+        const result = await updateVoice(voiceId, data);
+        if (result.success) {
+            alert('✅ Профиль даббера обновлён!');
+            document.getElementById('adminEditPanel').classList.remove('active');
+            await loadVoice();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+        
+        saveBtn.disabled = false;
+        saveBtn.textContent = '💾 Сохранить изменения';
+    };
+
+    async function loadVoice() {
+        const container = document.getElementById('voice-content');
+        container.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
+        
+        const result = await getVoiceById(voiceId);
+        
+        if (!result.success || !result.data) {
+            const localVoice = window.getVoiceById?.(voiceId);
+            if (localVoice) {
+                currentVoice = localVoice;
+            } else {
+                container.innerHTML = '<div class="not-found">❌ Даббер не найден</div>';
+                return;
+            }
+        } else {
+            currentVoice = result.data;
+        }
+        
+        const voice = currentVoice;
+        const titles = window.getTitlesByVoiceId?.(voiceId) || [];
+        const stats = window.getVoiceStats?.(voiceId) || { totalTitles: titles.length, totalRoles: 0, mainRoles: 0 };
+        
+        let socialHtml = '';
+        if (voice.social) {
+            if (voice.social.telegram) socialHtml += `<a href="https://t.me/${voice.social.telegram}" target="_blank" class="social-link">📱 Telegram</a>`;
+            if (voice.social.vk) socialHtml += `<a href="https://vk.com/${voice.social.vk}" target="_blank" class="social-link">📘 VK</a>`;
+            if (voice.social.github) socialHtml += `<a href="https://github.com/${voice.social.github}" target="_blank" class="social-link">🐙 GitHub</a>`;
+        }
+        
+        let titlesHtml = '';
+        if (titles.length > 0) {
+            titlesHtml = '<h2 class="title">Участие в проектах</h2>';
+            titles.forEach(title => {
+                const roles = title.roles || [];
+                titlesHtml += `
+                    <a href="title.html?id=${title.id}" class="title-card-voice">
+                        <img src="${title.image}" class="title-card-voice-image" onerror="this.src='https://via.placeholder.com/80/d4e8ff/4a90d9?text=?'">
+                        <div>
+                            <div class="title-card-voice-name">${title.name}</div>
+                            <div class="roles-list">
+                                ${roles.map(r => `<span class="role-badge ${r.type}">${r.character}</span>`).join('')}
+                            </div>
+                        </div>
+                    </a>
+                `;
+            });
+        }
+
+        let adminHtml = '';
+        if (isAdmin) {
+            adminHtml = `
+                <button class="admin-edit-btn" onclick="toggleAdminEdit()">✏️ Редактировать профиль</button>
+                <div id="adminEditPanel" class="admin-panel">
+                    <h3 style="color:#4a90d9;">✏️ Редактирование профиля</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Имя</label>
+                            <input type="text" id="editName">
+                        </div>
+                        <div class="form-group">
+                            <label>Имя (англ.)</label>
+                            <input type="text" id="editNameEn">
+                        </div>
+                        <div class="form-group">
+                            <label>Имя (рус.)</label>
+                            <input type="text" id="editNameRu">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Ссылка на аватарку</label>
+                        <input type="text" id="editImage">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Тип роли</label>
+                            <select id="editRoleType">
+                                <option value="dubber">Даббер</option>
+                                <option value="tech">Тех. персонал</option>
+                                <option value="both">И даббер, и тех.</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Статус</label>
+                            <input type="text" id="editStatus">
+                        </div>
+                        <div class="form-group">
+                            <label>Год присоединения</label>
+                            <input type="text" id="editJoinDate">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Биография</label>
+                        <textarea id="editBio"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Соцсети (JSON)</label>
+                        <textarea id="editSocial" style="min-height:60px;"></textarea>
+                        <small style="color:#888;">Формат: {"telegram":"username","vk":"id","github":"username"}</small>
+                    </div>
+                    <div style="display:flex; gap:10px; margin-top:15px;">
+                        <button class="save-btn" id="saveEditBtn" onclick="saveAdminEdit()">💾 Сохранить изменения</button>
+                        <button class="cancel-btn" onclick="document.getElementById('adminEditPanel').classList.remove('active')">Отмена</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        container.innerHTML = `
+            <div class="voice-profile">
+                <img src="${voice.image || 'https://via.placeholder.com/200/d4e8ff/4a90d9?text=?'}" class="voice-avatar-large" onerror="this.src='https://via.placeholder.com/200/d4e8ff/4a90d9?text=?'">
+                <div class="voice-info">
+                    <h1 class="voice-name">${voice.name}</h1>
+                    <span class="voice-status">${voice.status || 'Даббер'}</span>
+                    <div class="voice-meta">
+                        <span class="voice-meta-item">📅 В команде с ${voice.joinDate || '?'}</span>
+                        <span class="voice-meta-item">🎭 ${stats.totalRoles} ролей</span>
+                        <span class="voice-meta-item">🎬 ${stats.totalTitles} проектов</span>
+                    </div>
+                    ${voice.bio ? `<div class="voice-bio">${voice.bio}</div>` : ''}
+                    ${socialHtml ? `<div class="voice-social">${socialHtml}</div>` : ''}
+                    ${adminHtml}
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-box"><div class="stat-number">${stats.totalTitles}</div><div class="text">Проектов</div></div>
+                <div class="stat-box"><div class="stat-number">${stats.totalRoles}</div><div class="text">Всего ролей</div></div>
+                <div class="stat-box"><div class="stat-number">${stats.mainRoles}</div><div class="text">Главных ролей</div></div>
+            </div>
+            
+            ${titlesHtml}
+        `;
+    }
+
+    onAuthStateChangedListener(async (user) => {
+        updateAuthButton(user);
+        await updateDubInLink(user);
+        if (user) {
+            const role = await getUserRole(user.uid);
+            isAdmin = role === 'admin';
+        } else {
+            isAdmin = false;
+        }
+        await loadVoice();
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const user = getCurrentUser();
+        updateAuthButton(user);
+        await updateDubInLink(user);
+        if (user) {
+            const role = await getUserRole(user.uid);
+            isAdmin = role === 'admin';
+        }
+        await loadVoice();
+    });
+</script>
+
+</body>
+</html>

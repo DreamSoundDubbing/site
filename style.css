@@ -1,0 +1,746 @@
+/* ========== ОБЩИЕ СТИЛИ ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body { 
+    background: linear-gradient(135deg, #f0f8ff 0%, #ffe4f0 100%);
+    background-attachment: fixed;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    min-height: 100vh;
+    padding-top: 200px; /* Отступ для фиксированного хедера */
+}
+
+/* ========== ФИКСИРОВАННАЯ ВЕРХНЯЯ ПАНЕЛЬ ========== */
+.fixed-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #4a90d9 0%, #e8a0bf 100%);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(74, 144, 217, 0.3);
+    z-index: 1000;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.header-logo {
+    height: 100px;
+    width: auto;
+    border-radius: 10px;
+    transition: transform 0.3s;
+}
+
+.header-logo:hover {
+    transform: scale(1.05);
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.nav-icon-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.25);
+    padding: 12px 24px;
+    border-radius: 40px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+    white-space: nowrap;
+}
+
+.nav-icon-btn:hover {
+    background: rgba(255,255,255,0.4);
+    transform: translateY(-2px);
+    color: #2c3e50;
+}
+
+.nav-icon {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1);
+}
+
+/* ========== ОСНОВНОЙ КОНТЕЙНЕР ========== */
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 25px;
+    background-color: rgba(255, 255, 255, 0.92);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(74, 144, 217, 0.15);
+    backdrop-filter: blur(2px);
+}
+
+/* ========== ОСТАЛЬНЫЕ СТИЛИ ========== */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.avatar {
+    display: block;
+    margin: 0 auto 0px;
+    border-radius: 20px;
+    max-width: 480px;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.title {
+    font-size: 32px;
+    background: linear-gradient(135deg, #4a90d9, #e8a0bf);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 10px;
+}
+
+.bold-comment {
+    font-size: 35px;
+    background: linear-gradient(135deg, #4a90d9, #e8a0bf);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 10px;
+}
+
+.text, p {
+    font-size: 18px;
+    color: #2c3e50;
+    line-height: 1.5;
+}
+
+.h2 {
+    font-size: 24px;
+    color: #2c3e50;
+    line-height: 1.5;
+}
+
+hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #4a90d9, #e8a0bf, transparent);
+    margin: 0px 0;
+}
+
+.content-box {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.content-box2 {
+    background: linear-gradient(135deg, #d4e8ff, #ffe0f0);
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* Кнопки внутри контента */
+.nav-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #4a90d9 0%, #d472a0 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.nav-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(74, 144, 217, 0.4);
+}
+
+/* Карточки тайтлов и команды */
+.titles-grid, .featured-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.title-card {
+    width: 210px;
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    border: 2px solid #e8e8e8;
+}
+
+.title-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(74, 144, 217, 0.2);
+    border-color: #4a90d9;
+}
+
+.title-card-image, .featured-image {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    display: block;
+}
+
+.title-card-info {
+    padding: 12px;
+}
+
+.title-card-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4a90d9;
+    margin-bottom: 5px;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.welcome-banner {
+    background: linear-gradient(135deg, rgba(74, 144, 217, 0.15), rgba(232, 160, 191, 0.15));
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* Стили для страницы даббера и тайтла */
+.voice-profile {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+    padding: 25px;
+    background: linear-gradient(135deg, #e8f0ff, #ffe8f0);
+    border-radius: 20px;
+}
+
+.voice-avatar-large {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #4a90d9;
+}
+
+.team-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 20px 15px;
+    width: 210px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(74, 144, 217, 0.15);
+    text-decoration: none;
+    color: inherit;
+    border: 2px solid #e8e8e8;
+}
+
+.team-card-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #4a90d9;
+    margin-bottom: 15px;
+}
+
+.team-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+}
+
+/* ========== СТАТИСТИКА ========== */
+.stat-box {
+    flex: 1;
+    min-width: 120px;
+    background: #f0f8ff;
+    padding: 18px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+}
+
+.stat-number {
+    font-size: 32px;
+    font-weight: bold;
+    color: #4a90d9;
+}
+
+.stat-label {
+    font-size: 19px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.team-card-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #4a90d9;
+    margin-bottom: 8px;
+}
+
+.title-card-meta {
+    font-size: 17px;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* ========== СТРАНИЦА ТАЙТЛА ========== */
+.anime-header {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.anime-poster {
+    max-width: 250px;
+    max-height: 400px;
+    width: auto;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+    object-fit: contain;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .anime-poster {
+        max-width: 180px;
+        max-height: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    .anime-poster {
+        max-width: 140px;
+        max-height: 220px;
+    }
+}
+
+.anime-info {
+    flex: 1;
+    min-width: 300px;
+}
+
+.anime-title {
+    font-size: 32px;
+    color: #4a90d9;
+    margin: 0 0 10px 0;
+}
+
+.anime-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 15px 0;
+}
+
+.anime-tag {
+    background: linear-gradient(135deg, #4a90d9, #d472a0);
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 25px;
+    font-size: 14px;
+}
+
+.anime-description {
+    color: #444;
+    line-height: 1.6;
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(74, 144, 217, 0.08);
+    border-radius: 10px;
+    border-left: 4px solid #4a90d9;
+}
+
+.player-container {
+    background: #f0f4f8;
+    border-radius: 15px;
+    overflow: hidden;
+    margin: 20px 0;
+    aspect-ratio: 16/9;
+    width: 100%;
+    border: 2px solid #d4e8ff;
+}
+
+.episodes-list {
+    margin-top: 20px;
+}
+
+.episode-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 18px;
+    background: rgba(74, 144, 217, 0.06);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    transition: background 0.3s;
+    cursor: pointer;
+}
+
+.episode-item:hover {
+    background: rgba(74, 144, 217, 0.15);
+}
+
+.episode-number {
+    font-weight: bold;
+    color: #4a90d9;
+    min-width: 70px;
+}
+
+.episode-title {
+    flex: 1;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.episode-status {
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-ready {
+    background: #4CAF50;
+    color: #fff;
+}
+
+.status-soon {
+    background: #ddd;
+    color: #888;
+}
+
+/* ========== ПЕРСОНАЖИ ========== */
+.characters-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.character-card {
+    width: 170px;
+    background: #f8f8f8;
+    border-radius: 15px;
+    overflow: hidden;
+    text-align: center;
+    padding-bottom: 12px;
+    box-shadow: 0 3px 12px rgba(74, 144, 217, 0.1);
+    border: 1px solid #d4e8ff;
+}
+
+.character-image {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+}
+
+.character-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px 0 5px 0;
+    color: #4a90d9;
+}
+
+.comment-card {
+    background: #f8f8f8;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    border-left: 4px solid #4a90d9;
+}
+
+/* ============================================================
+   ========== АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ ==========
+   ============================================================ */
+
+/* Планшеты */
+@media (max-width: 1024px) {
+    .fixed-header {
+        padding: 12px 20px;
+    }
+    
+    .header-logo {
+        height: 80px;
+    }
+    
+    .nav-icon-btn {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+}
+
+/* Телефоны */
+@media (max-width: 768px) {
+    body {
+        padding-top: 190px;
+        background: #f5faff;
+    }
+    
+    .fixed-header {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 12px 18px;
+        gap: 12px;
+    }
+    
+    .header-logo {
+        height: 65px;
+        margin-right: auto;
+    }
+    
+    .nav-buttons {
+        gap: 10px;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .nav-icon-btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        gap: 8px;
+        border-radius: 40px;
+    }
+    
+    .nav-icon {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .container {
+        margin: 15px 10px;
+        padding: 18px;
+        background-color: rgba(255, 255, 255, 0.95);
+    }
+    
+    .title {
+        font-size: 28px;
+    }
+    
+    .text, p {
+        font-size: 16px;
+    }
+    
+    .title-card, .team-card {
+        width: 160px;
+    }
+    
+    .title-card-image {
+        height: 220px;
+    }
+    
+    .avatar {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    .anime-poster {
+        width: 180px;
+    }
+    
+    .anime-title {
+        font-size: 26px;
+    }
+    
+    .episode-item {
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 10px 14px;
+    }
+    
+    .episode-title {
+        width: 100%;
+        order: 2;
+        font-size: 14px;
+    }
+    
+    .episode-status {
+        margin-left: auto;
+        font-size: 11px;
+        padding: 3px 10px;
+    }
+    
+    .episode-number {
+        min-width: 60px;
+        font-size: 14px;
+    }
+    
+    .stat-box {
+        min-width: 80px;
+        padding: 12px;
+    }
+    
+    .stat-number {
+        font-size: 24px;
+    }
+    
+    .stat-label {
+        font-size: 14px;
+    }
+}
+
+/* Маленькие телефоны */
+@media (max-width: 480px) {
+    body {
+        padding-top: 180px;
+    }
+    
+    .fixed-header {
+        padding: 10px 14px;
+        gap: 10px;
+    }
+    
+    .header-logo {
+        height: 55px;
+    }
+    
+    .nav-buttons {
+        gap: 8px;
+    }
+    
+    .nav-icon-btn {
+        padding: 8px 16px;
+        font-size: 14px;
+        gap: 6px;
+        border-radius: 35px;
+    }
+    
+    .nav-icon {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .container {
+        margin: 10px 8px;
+        padding: 14px;
+        border-radius: 15px;
+    }
+    
+    .title {
+        font-size: 24px;
+    }
+    
+    .text, p {
+        font-size: 14px;
+    }
+    
+    .title-card, .team-card {
+        width: 140px;
+    }
+    
+    .title-card-image {
+        height: 180px;
+    }
+    
+    .content-box {
+        padding: 15px;
+    }
+    
+    .anime-poster {
+        width: 140px;
+    }
+    
+    .anime-title {
+        font-size: 22px;
+    }
+    
+    .anime-tag {
+        font-size: 12px;
+        padding: 3px 10px;
+    }
+    
+    .voice-avatar-large {
+        width: 130px;
+        height: 130px;
+    }
+    
+    .team-card-avatar {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .character-card {
+        width: 140px;
+    }
+    
+    .character-image {
+        height: 110px;
+    }
+}
+
+/* Очень узкие экраны */
+@media (max-width: 380px) {
+    body {
+        padding-top: 200px;
+    }
+    
+    .fixed-header {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 12px;
+        gap: 8px;
+    }
+    
+    .header-logo {
+        height: 50px;
+        margin-right: 0;
+    }
+    
+    .nav-buttons {
+        justify-content: center;
+        gap: 6px;
+    }
+    
+    .nav-icon-btn {
+        font-size: 13px;
+        padding: 6px 14px;
+        gap: 5px;
+    }
+    
+    .nav-icon {
+        width: 16px;
+        height: 16px;
+    }
+}

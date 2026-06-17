@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заявка на озвучку - Dream Sound Dubbing</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="firebase-config.js"></script>
+    <style>
+        .order-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .order-form .form-group {
+            margin-bottom: 20px;
+        }
+        .order-form .form-group label {
+            color: #666;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .order-form .form-group input,
+        .order-form .form-group textarea,
+        .order-form .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 2px solid #d4e8ff;
+            background: #f8faff;
+            color: #2c3e50;
+            font-size: 15px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .order-form .form-group input:focus,
+        .order-form .form-group textarea:focus {
+            border-color: #4a90d9;
+            outline: none;
+            box-shadow: 0 0 20px rgba(74, 144, 217, 0.2);
+        }
+        .order-form .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .order-form .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .order-form .form-row .form-group {
+            flex: 1;
+            min-width: 150px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .price-display {
+            background: rgba(74, 144, 217, 0.08);
+            border: 1px solid #4a90d9;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .price-display .price {
+            font-size: 36px;
+            font-weight: bold;
+            color: #4a90d9;
+        }
+        .price-display .price-desc {
+            color: #888;
+            font-size: 14px;
+        }
+        .price-display .price-label {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .info-box {
+            background: #f8faff;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #4a90d9;
+            color: #2c3e50;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .info-box strong {
+            color: #4a90d9;
+        }
+        .info-box .price-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        .info-box .price-row:last-child {
+            border-bottom: none;
+        }
+        .info-box .price-row .amount {
+            color: #4a90d9;
+            font-weight: bold;
+        }
+
+        .payment-result {
+            text-align: center;
+            padding: 30px;
+        }
+        .payment-result .icon {
+            font-size: 64px;
+        }
+        .payment-result .success {
+            color: #4CAF50;
+        }
+        .payment-result .error {
+            color: #ff6b6b;
+        }
+        .payment-result .pending {
+            color: #ffaa00;
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 10px 30px;
+            background: #f0f4f8;
+            color: #888;
+            border: 2px solid #d4e8ff;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+        .back-btn:hover {
+            border-color: #4a90d9;
+            color: #2c3e50;
+        }
+        .telegram-btn {
+            display: inline-block;
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #0088cc, #005f8a);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 15px 0;
+            text-decoration: none;
+        }
+        .telegram-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4);
+        }
+        .telegram-btn .icon {
+            font-size: 24px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        .auth-prompt {
+            text-align: center;
+            padding: 40px;
+        }
+        .auth-prompt h2 {
+            color: #4a90d9;
+        }
+        .auth-prompt p {
+            color: #888;
+        }
+        .auth-btn {
+            display: inline-block;
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+
+        /* Стили для отображения заявки после отправки */
+        .order-summary {
+            background: #f8faff;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 1px solid #d4e8ff;
+        }
+        .order-summary .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e8e8f0;
+        }
+        .order-summary .summary-row:last-child {
+            border-bottom: none;
+        }
+        .order-summary .summary-label {
+            color: #666;
+        }
+        .order-summary .summary-value {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        .order-summary .summary-value.price {
+            color: #4a90d9;
+            font-size: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .info-box .price-row {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 8px 0;
+            }
+            .order-summary .summary-row {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 8px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="fixed-header">
+    <div class="nav-buttons">
+        <a href="index.html">
+            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo">
+        </a>
+        <a href="index.html" class="nav-icon-btn">🏠Главная</a>
+        <a href="titles.html" class="nav-icon-btn">🎦Тайтлы</a>
+        <a href="sostav.html" class="nav-icon-btn">🎭Состав</a>
+        <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
+        <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
+        <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
+        <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="header">
+        <h1 class="title">📝 Заявка на озвучку</h1>
+        <hr>
+    </div>
+    
+    <div class="content-box">
+        <div class="order-container" id="orderContent">
+            <div class="loading" style="text-align:center; padding:40px; color:#888;">⏳ Загрузка...</div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { 
+        getCurrentUser, 
+        onAuthStateChangedListener,
+        getUserRole,
+        createVoiceOrder
+    } from './firebase-config.js';
+
+    let currentUser = null;
+    let isDubber = false;
+
+    function updateAuthButton(user) {
+        const btn = document.getElementById('authBtn');
+        if (user) {
+            btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
+            btn.href = 'profile.html';
+        } else {
+            btn.textContent = '🔑 Вход';
+            btn.href = 'login.html';
+        }
+    }
+
+    // ===== НОВЫЕ РАСЦЕНКИ =====
+    const PRICES = {
+        '1-12': 25000,
+        '13-24': 45000,
+        'movie': 35000,
+        'achievement': 2500
+    };
+
+    function getPrice(type, episodes) {
+        if (type === 'Фильм') return PRICES['movie'];
+        if (type === 'Ачивка') return PRICES['achievement'];
+        if (episodes <= 12) return PRICES['1-12'];
+        if (episodes <= 24) return PRICES['13-24'];
+        return PRICES['13-24']; // По умолчанию для >24 серий
+    }
+
+    function getPriceLabel(type, episodes) {
+        if (type === 'Фильм') return 'Фильм (до 2ч)';
+        if (type === 'Ачивка') return 'Кастомная ачивка';
+        if (episodes <= 12) return 'Тайтл (1-12 серий)';
+        if (episodes <= 24) return 'Тайтл (13-24 серий)';
+        return 'Тайтл (13-24 серий)';
+    }
+
+    function renderOrderForm() {
+        const container = document.getElementById('orderContent');
+        
+        if (!currentUser) {
+            container.innerHTML = `
+                <div class="auth-prompt">
+                    <h2>🔒 Требуется авторизация</h2>
+                    <p>Войдите, чтобы подать заявку на озвучку</p>
+                    <br>
+                    <a href="login.html" class="auth-btn">🔑 Войти</a>
+                </div>
+            `;
+            return;
+        }
+        
+        if (!isDubber) {
+            container.innerHTML = `
+                <div style="text-align:center; padding:40px;">
+                    <h2 style="color:#ff6b6b;">🚫 Недостаточно прав</h2>
+                    <p style="color:#888;">Только дабберы и администраторы могут подавать заявки на озвучку</p>
+                    <br>
+                    <a href="index.html" class="back-btn">🏠 На главную</a>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = `
+            <form class="order-form" id="orderForm" onsubmit="submitOrder(event)">
+                <div class="info-box">
+                    <strong>📌 Расценки на озвучку:</strong><br><br>
+                    <div class="price-row">
+                        <span>🎬 Тайтл (1-12 серий)</span>
+                        <span class="amount">25 000 ₽</span>
+                    </div>
+                    <div class="price-row">
+                        <span>🎬 Тайтл (13-24 серий)</span>
+                        <span class="amount">45 000 ₽</span>
+                    </div>
+                    <div class="price-row">
+                        <span>🎥 Фильм (до 2 часов)</span>
+                        <span class="amount">35 000 ₽</span>
+                    </div>
+                    <div class="price-row">
+                        <span>🏅 Кастомная ачивка</span>
+                        <span class="amount">2 500 ₽</span>
+                    </div>
+                    <br>
+                    <small style="color:#888;">💡 Стоимость рассчитывается автоматически при выборе типа и количества серий</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Название тайтла / проекта *</label>
+                    <input type="text" id="orderTitle" placeholder="Например: ДанДаДан" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Тип проекта *</label>
+                        <select id="orderType" required>
+                            <option value="Сериал">Сериал</option>
+                            <option value="Фильм">Фильм</option>
+                            <option value="Ачивка">Кастомная ачивка</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="episodesGroup">
+                        <label>Количество серий *</label>
+                        <input type="number" id="orderEpisodes" placeholder="12" min="1" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Дополнительная информация</label>
+                    <textarea id="orderDescription" placeholder="Опишите, что нужно озвучить, особенности, сроки и т.д."></textarea>
+                </div>
+
+                <div class="price-display" id="priceDisplay">
+                    <div class="price-label">💰 Стоимость заказа</div>
+                    <div class="price" id="priceAmount">0 ₽</div>
+                    <div style="color:#888; font-size:13px; margin-top:5px;" id="priceTypeLabel">Выберите тип и количество</div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">📤 Подать заявку</button>
+            </form>
+        `;
+
+        // Обновляем цену при изменении типа или количества серий
+        const typeSelect = document.getElementById('orderType');
+        const episodesInput = document.getElementById('orderEpisodes');
+        const episodesGroup = document.getElementById('episodesGroup');
+
+        function updatePrice() {
+            const type = typeSelect.value;
+            const episodes = parseInt(episodesInput.value) || 0;
+            
+            if (type === 'Ачивка') {
+                episodesGroup.style.display = 'none';
+                const price = PRICES['achievement'];
+                document.getElementById('priceAmount').textContent = price.toLocaleString() + ' ₽';
+                document.getElementById('priceTypeLabel').textContent = 'Кастомная ачивка';
+                return;
+            } else {
+                episodesGroup.style.display = 'block';
+            }
+
+            if (type === 'Фильм') {
+                const price = PRICES['movie'];
+                document.getElementById('priceAmount').textContent = price.toLocaleString() + ' ₽';
+                document.getElementById('priceTypeLabel').textContent = 'Фильм (до 2 часов)';
+                return;
+            }
+
+            if (episodes > 0) {
+                const price = getPrice(type, episodes);
+                const label = getPriceLabel(type, episodes);
+                document.getElementById('priceAmount').textContent = price.toLocaleString() + ' ₽';
+                document.getElementById('priceTypeLabel').textContent = label;
+            } else {
+                document.getElementById('priceAmount').textContent = '0 ₽';
+                document.getElementById('priceTypeLabel').textContent = 'Введите количество серий';
+            }
+        }
+
+        typeSelect.addEventListener('change', updatePrice);
+        episodesInput.addEventListener('input', updatePrice);
+        updatePrice();
+    }
+
+    window.submitOrder = async function(event) {
+        event.preventDefault();
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Отправка...';
+        
+        const title = document.getElementById('orderTitle').value.trim();
+        const type = document.getElementById('orderType').value;
+        const episodes = parseInt(document.getElementById('orderEpisodes').value) || 0;
+        const description = document.getElementById('orderDescription').value.trim();
+        
+        if (!title) {
+            alert('❌ Введите название проекта');
+            submitBtn.disabled = false;
+            submitBtn.textContent = '📤 Подать заявку';
+            return;
+        }
+
+        // Для ачивки не требуется количество серий
+        if (type !== 'Ачивка' && (!episodes || episodes < 1)) {
+            alert('❌ Укажите количество серий');
+            submitBtn.disabled = false;
+            submitBtn.textContent = '📤 Подать заявку';
+            return;
+        }
+
+        const price = getPrice(type, episodes);
+        const priceLabel = getPriceLabel(type, episodes);
+        
+        const orderData = {
+            title: title,
+            type: type,
+            episodes: type === 'Ачивка' ? 0 : episodes,
+            description: description,
+            price: price,
+            priceLabel: priceLabel,
+            status: 'pending'
+        };
+        
+        const result = await createVoiceOrder(orderData);
+        
+        if (result.success) {
+            showSuccessScreen(result.id, title, priceLabel, price, description, type, episodes);
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+            submitBtn.disabled = false;
+            submitBtn.textContent = '📤 Подать заявку';
+        }
+    };
+
+    function showSuccessScreen(orderId, title, priceLabel, price, description, type, episodes) {
+        const container = document.getElementById('orderContent');
+        
+        const telegramLink = 'https://t.me/Bill_Heringtton';
+        
+        container.innerHTML = `
+            <div class="payment-result">
+                <div class="icon">✅</div>
+                <h2 style="color:#4CAF50;">Заявка успешно создана!</h2>
+                
+                <div class="order-summary">
+                    <div class="summary-row">
+                        <span class="summary-label">📋 Проект</span>
+                        <span class="summary-value">${title}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">📂 Тип</span>
+                        <span class="summary-value">${type}${type === 'Ачивка' ? '' : ' • ' + episodes + ' серий'}</span>
+                    </div>
+                    ${description ? `
+                        <div class="summary-row">
+                            <span class="summary-label">📝 Описание</span>
+                            <span class="summary-value">${description}</span>
+                        </div>
+                    ` : ''}
+                    <div class="summary-row">
+                        <span class="summary-label">💰 Стоимость</span>
+                        <span class="summary-value price">${price.toLocaleString()} ₽</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">📊 Тариф</span>
+                        <span class="summary-value">${priceLabel}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">📌 Статус</span>
+                        <span class="summary-value" style="color:#ffaa00;">⏳ Ожидает подтверждения</span>
+                    </div>
+                </div>
+
+                <p style="color:#888; margin: 15px 0;">
+                    Свяжитесь с нашим менеджером для обсуждения деталей и подтверждения заявки:
+                </p>
+                
+                <a href="${telegramLink}" target="_blank" class="telegram-btn">
+                    <span class="icon">📱</span> Написать в Telegram
+                </a>
+                
+                <br><br>
+                <a href="profile.html" class="back-btn">📋 Посмотреть все заявки</a>
+                <br><br>
+                <a href="index.html" class="back-btn">🏠 На главную</a>
+            </div>
+        `;
+    }
+
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
+
+    onAuthStateChangedListener(async (user) => {
+        currentUser = user;
+        updateAuthButton(user);
+        if (user) {
+            const role = await getUserRole(user.uid);
+            isDubber = role === 'dubber' || role === 'admin';
+        }
+        renderOrderForm();
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const user = getCurrentUser();
+        currentUser = user;
+        updateAuthButton(user);
+        if (user) {
+            const role = await getUserRole(user.uid);
+            isDubber = role === 'dubber' || role === 'admin';
+        }
+        renderOrderForm();
+    });
+</script>
+
+</body>
+</html>

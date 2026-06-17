@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль - Dream Sound Dubbing</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="firebase-config.js"></script>
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .profile-header {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #e8f0ff, #ffe8f0);
+            border-radius: 20px;
+            border: 1px solid #d4e8ff;
+        }
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #4a90d9;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .profile-avatar-large:hover {
+            transform: scale(1.05);
+        }
+        .profile-info {
+            flex: 1;
+        }
+        .profile-name {
+            font-size: 28px;
+            color: #4a90d9;
+            margin: 0;
+        }
+        .profile-email {
+            color: #888;
+            font-size: 14px;
+        }
+        .profile-role {
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        .role-admin { background: #4a90d9; color: #fff; }
+        .role-dubber { background: #d472a0; color: #fff; }
+        .role-user { background: #d4e8ff; color: #4a90d9; }
+
+        .profile-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            justify-content: center;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 10px 20px;
+            background: #f8faff;
+            border-radius: 12px;
+            border: 1px solid #d4e8ff;
+            min-width: 80px;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4a90d9;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+        }
+        .stat-clickable {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .stat-clickable:hover {
+            background: #e8f0ff;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        .action-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        .action-btn.primary {
+            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            color: #fff;
+        }
+        .action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+        .action-btn.danger {
+            background: #ff6b6b;
+            color: #fff;
+        }
+        .action-btn.danger:hover {
+            background: #e05555;
+        }
+        .action-btn.outline {
+            background: transparent;
+            border: 2px solid #4a90d9;
+            color: #4a90d9;
+        }
+        .action-btn.outline:hover {
+            background: #4a90d9;
+            color: #fff;
+        }
+        .action-btn.subscribed {
+            background: #e8f5e9;
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
+        }
+        .action-btn.success {
+            background: #4CAF50;
+            color: #fff;
+        }
+        .action-btn.success:hover {
+            background: #388E3C;
+        }
+
+        .achievements-section {
+            margin-top: 30px;
+        }
+        .achievements-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .achievement-card {
+            padding: 10px 16px;
+            background: #f8faff;
+            border: 1px solid #4a90d9;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 100px;
+        }
+        .achievement-icon {
+            font-size: 28px;
+        }
+        .achievement-name {
+            font-size: 12px;
+            color: #4a90d9;
+            margin-top: 4px;
+        }
+        .achievement-desc {
+            font-size: 10px;
+            color: #888;
+        }
+
+        .admin-panel {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8faff;
+            border: 1px solid #4a90d9;
+            border-radius: 15px;
+        }
+        .admin-panel h3 {
+            color: #4a90d9;
+            margin-bottom: 15px;
+        }
+        .admin-panel .form-group {
+            margin-bottom: 12px;
+        }
+        .admin-panel .form-group label {
+            color: #666;
+            font-size: 13px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .admin-panel .form-group input,
+        .admin-panel .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid #d4e8ff;
+            background: #fff;
+            color: #2c3e50;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .admin-panel .form-group input:focus,
+        .admin-panel .form-group select:focus {
+            border-color: #4a90d9;
+            outline: none;
+        }
+        .admin-panel .form-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .admin-panel .form-row .form-group {
+            flex: 1;
+            min-width: 150px;
+        }
+        .admin-panel .search-btn {
+            padding: 8px 20px;
+            background: #4a90d9;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .admin-panel .search-btn:hover {
+            background: #d472a0;
+        }
+        .admin-panel .role-select {
+            padding: 6px 12px;
+            border-radius: 15px;
+            border: 1px solid #d4e8ff;
+            background: #fff;
+            color: #2c3e50;
+        }
+
+        .user-search-result {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f8faff;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .user-search-result .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-search-result .user-avatar-small {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .user-search-result .user-name {
+            color: #4a90d9;
+        }
+        .user-search-result .user-email {
+            color: #888;
+            font-size: 12px;
+        }
+        .user-search-result .user-current-role {
+            font-size: 12px;
+            color: #888;
+            margin: 0 10px;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 95%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid #4a90d9;
+            position: relative;
+        }
+        .modal-content h2 {
+            color: #4a90d9;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            color: #888;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .modal-close:hover {
+            color: #2c3e50;
+        }
+        .modal-content .form-group {
+            margin-bottom: 12px;
+        }
+        .modal-content .form-group label {
+            color: #666;
+            font-size: 13px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .modal-content .form-group input,
+        .modal-content .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid #d4e8ff;
+            background: #f8faff;
+            color: #2c3e50;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .modal-content .form-group textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+        .modal-content .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        .modal-content .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+
+        .auth-message {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .auth-message h2 {
+            color: #4a90d9;
+        }
+        .auth-message p {
+            color: #888;
+        }
+        .auth-btn {
+            display: inline-block;
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .profile-stats {
+                justify-content: center;
+            }
+            .admin-panel .form-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="fixed-header">
+    <div class="nav-buttons">
+        <a href="index.html">
+            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo">
+        </a>
+        <a href="index.html" class="nav-icon-btn">🏠Главная</a>
+        <a href="titles.html" class="nav-icon-btn">🎦Тайтлы</a>
+        <a href="sostav.html" class="nav-icon-btn">🎭Состав</a>
+        <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
+        <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
+        <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
+        <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="header">
+        <h1 class="title">Профиль</h1>
+        <hr>
+    </div>
+    
+    <div class="content-box">
+        <div id="profileContent">
+            <div class="loading" style="text-align:center; padding:40px; color:#888;">⏳ Загрузка...</div>
+        </div>
+    </div>
+    
+    <div id="ordersSection" style="margin-top:30px;">
+        <h3 style="color:#4a90d9;">📋 Мои заявки на озвучку</h3>
+        <div id="ordersList" style="margin-top:10px;">
+            <p style="color:#888;">Загрузка...</p>
+        </div>
+        <br>
+        <a href="voice-order.html" class="action-btn primary" style="display:inline-block; padding:10px 25px; background:linear-gradient(135deg,#4a90d9,#d472a0); color:#fff; border:none; border-radius:25px; text-decoration:none; font-weight:bold; transition:all 0.3s;">
+            ➕ Создать заявку
+        </a>
+    </div>
+</div>
+
+<div class="modal-overlay" id="usersModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeUsersModal()">✕</button>
+        <h2 id="usersModalTitle">Пользователи</h2>
+        <div id="usersModalBody"></div>
+    </div>
+</div>
+
+<script type="module">
+    import { 
+        getCurrentUser, 
+        onAuthStateChangedListener,
+        getUserData,
+        getUserByEmail,
+        updateUserProfile,
+        updateUserRole,
+        getAllUsers,
+        toggleSubscribe,
+        isSubscribed,
+        getSubscribersCount,
+        addCustomAchievement,
+        logoutUser,
+        isAdmin,
+        getVoiceOrders
+    } from './firebase-config.js';
+
+    let currentUser = null;
+    let currentUserData = null;
+    let viewedUserData = null;
+    let viewedUserId = null;
+    let isAdminUser = false;
+    let isOwnProfile = true;
+    let searchResults = [];
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const viewedId = urlParams.get('uid');
+    const viewedEmail = urlParams.get('email');
+
+    async function loadOrders() {
+        const container = document.getElementById('ordersList');
+        if (!container) return;
+        const user = getCurrentUser();
+        if (!user) {
+            container.innerHTML = '<p style="color:#888;">Войдите, чтобы увидеть заявки</p>';
+            return;
+        }
+        const result = await getVoiceOrders(user.uid);
+        if (!result.success || result.orders.length === 0) {
+            container.innerHTML = '<p style="color:#888;">У вас пока нет заявок</p>';
+            return;
+        }
+        const statusMap = {
+            'pending': '⏳ Ожидает оплаты',
+            'paid': '✅ Оплачено',
+            'completed': '🎉 Выполнено',
+            'cancelled': '❌ Отменено'
+        };
+        container.innerHTML = result.orders.map(order => `
+            <div style="background:#f8faff; border-radius:10px; padding:15px; margin-bottom:10px; border-left:4px solid ${order.status === 'paid' ? '#4CAF50' : order.status === 'completed' ? '#4a90d9' : '#ffaa00'};">
+                <div style="display:flex; justify-content:space-between; flex-wrap:wrap;">
+                    <strong style="color:#4a90d9;">${order.title}</strong>
+                    <span style="color:#888;">${order.type} • ${order.episodes} серий</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; flex-wrap:wrap; margin-top:5px;">
+                    <span style="color:#888; font-size:13px;">${order.description || 'Без описания'}</span>
+                    <span style="color:#ffaa00; font-weight:bold;">${order.price} ₽</span>
+                </div>
+                <div style="margin-top:5px;">
+                    <span style="color:#888; font-size:12px;">${statusMap[order.status] || order.status}</span>
+                    ${order.status === 'paid' ? '<span style="color:#4CAF50; font-size:12px; margin-left:10px;">🎙️ Ждите связи</span>' : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function updateAuthButton(user) {
+        const btn = document.getElementById('authBtn');
+        if (user) {
+            btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
+            btn.href = 'profile.html';
+        } else {
+            btn.textContent = '🔑 Вход';
+            btn.href = 'login.html';
+        }
+    }
+
+    async function updateDubInLink(user) {
+        const link = document.getElementById('dubInLink');
+        if (!link) return;
+        if (user) {
+            const role = await getUserData(user.uid);
+            const isDubber = role.success && (role.data.role === 'dubber' || role.data.role === 'admin');
+            link.style.display = isDubber ? 'inline-flex' : 'none';
+        } else {
+            link.style.display = 'none';
+        }
+    }
+
+    window.openUsersModal = function(title, users) {
+        document.getElementById('usersModalTitle').textContent = title;
+        const body = document.getElementById('usersModalBody');
+        if (!users || users.length === 0) {
+            body.innerHTML = '<p style="color:#888; text-align:center;">Нет пользователей</p>';
+        } else {
+            body.innerHTML = users.map(uid => `
+                <a href="profile.html?uid=${uid}" class="user-search-result" style="text-decoration:none;">
+                    <div class="user-info">
+                        <img src="https://via.placeholder.com/32/d4e8ff/4a90d9?text=?" class="user-avatar-small">
+                        <span class="user-name">${uid}</span>
+                    </div>
+                    <span style="color:#888;">→</span>
+                </a>
+            `).join('');
+        }
+        document.getElementById('usersModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.closeUsersModal = function() {
+        document.getElementById('usersModal').classList.remove('active');
+        document.body.style.overflow = '';
+    };
+
+    document.getElementById('usersModal').addEventListener('click', function(e) {
+        if (e.target === this) closeUsersModal();
+    });
+
+    window.searchUserByEmail = async function() {
+        const input = document.getElementById('adminSearchEmail');
+        const email = input.value.trim();
+        const resultsContainer = document.getElementById('adminSearchResults');
+        if (!email) {
+            resultsContainer.innerHTML = '<p style="color:#888;">Введите email для поиска</p>';
+            return;
+        }
+        resultsContainer.innerHTML = '<p style="color:#888;">⏳ Поиск...</p>';
+        const result = await getUserByEmail(email);
+        if (result.success) {
+            const user = result.data;
+            searchResults = [user];
+            const roleNames = { 'admin': 'Администратор', 'dubber': 'Даббер', 'user': 'Пользователь' };
+            resultsContainer.innerHTML = `
+                <div class="user-search-result">
+                    <div class="user-info">
+                        <img src="${user.photoURL || 'https://via.placeholder.com/32/d4e8ff/4a90d9?text=?'}" class="user-avatar-small" onerror="this.src='https://via.placeholder.com/32/d4e8ff/4a90d9?text=?'">
+                        <div>
+                            <div class="user-name">${user.displayName || 'Без имени'}</div>
+                            <div class="user-email">${user.email}</div>
+                        </div>
+                        <span class="user-current-role">Текущая роль: <strong>${roleNames[user.role] || user.role}</strong></span>
+                    </div>
+                    <div>
+                        <select class="role-select" id="roleSelect_${user.id}" onchange="applyRole('${user.id}')">
+                            <option value="user" ${user.role === 'user' ? 'selected' : ''}>Пользователь</option>
+                            <option value="dubber" ${user.role === 'dubber' ? 'selected' : ''}>Даббер</option>
+                            <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Администратор</option>
+                        </select>
+                        <button class="action-btn primary" style="padding:4px 12px; font-size:12px;" onclick="applyRole('${user.id}')">✅ Применить</button>
+                    </div>
+                </div>
+                <div style="margin-top:10px;">
+                    <h4 style="color:#888; font-size:14px;">🎯 Выдать достижение</h4>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <input type="text" id="customAchName_${user.id}" placeholder="Название" style="flex:1; padding:6px 12px; border-radius:8px; border:2px solid #d4e8ff; background:#f8faff; color:#2c3e50;">
+                        <input type="text" id="customAchIcon_${user.id}" placeholder="Иконка" style="width:60px; padding:6px 12px; border-radius:8px; border:2px solid #d4e8ff; background:#f8faff; color:#2c3e50;">
+                        <button class="action-btn success" style="padding:4px 16px; font-size:12px;" onclick="giveCustomAchievement('${user.id}')">🏅 Выдать</button>
+                    </div>
+                </div>
+            `;
+        } else {
+            resultsContainer.innerHTML = `<p style="color:#ff6b6b;">❌ ${result.error}</p>`;
+        }
+    };
+
+    window.applyRole = async function(userId) {
+        const select = document.getElementById(`roleSelect_${userId}`);
+        if (!select) return;
+        const newRole = select.value;
+        if (!confirm(`Изменить роль пользователя на "${newRole}"?`)) return;
+        const result = await updateUserRole(userId, newRole);
+        if (result.success) {
+            alert('✅ Роль обновлена!');
+            await searchUserByEmail();
+            if (userId === currentUser?.uid) {
+                await loadProfile();
+            }
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    window.giveCustomAchievement = async function(userId) {
+        const nameInput = document.getElementById(`customAchName_${userId}`);
+        const iconInput = document.getElementById(`customAchIcon_${userId}`);
+        const name = nameInput?.value?.trim();
+        const icon = iconInput?.value?.trim() || '🏅';
+        if (!name) {
+            alert('Введите название достижения');
+            return;
+        }
+        if (!confirm(`Выдать достижение "${name}" пользователю?`)) return;
+        const achievement = { id: 'custom_' + Date.now(), name: name, icon: icon, description: 'Кастомное достижение' };
+        const result = await addCustomAchievement(userId, achievement);
+        if (result.success) {
+            alert('✅ Достижение выдано!');
+            nameInput.value = '';
+            iconInput.value = '';
+            await searchUserByEmail();
+            if (userId === currentUser?.uid) {
+                await loadProfile();
+            }
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    window.handleSubscribe = async function() {
+        if (!currentUser) {
+            alert('Войдите, чтобы подписаться');
+            return;
+        }
+        if (currentUser.uid === viewedUserId) {
+            alert('Нельзя подписаться на себя');
+            return;
+        }
+        const result = await toggleSubscribe(currentUser.uid, viewedUserId);
+        if (result.success) {
+            await loadProfile();
+        } else {
+            alert('Ошибка: ' + result.error);
+        }
+    };
+
+    window.handleEditProfile = function() {
+        const name = prompt('Новое имя:', currentUserData?.displayName || '');
+        if (name && name.trim()) {
+            updateUserProfile(currentUser.uid, { displayName: name.trim() });
+            setTimeout(loadProfile, 500);
+        }
+        const avatar = prompt('Ссылка на аватарку:', currentUserData?.photoURL || '');
+        if (avatar !== null) {
+            updateUserProfile(currentUser.uid, { photoURL: avatar.trim() });
+            setTimeout(loadProfile, 500);
+        }
+    };
+
+    window.handleLogout = async function() {
+        if (!confirm('Вы уверены, что хотите выйти?')) return;
+        const result = await logoutUser();
+        if (result.success) {
+            window.location.href = 'index.html';
+        }
+    };
+
+    async function renderProfile(user, userData, isOwn) {
+        const container = document.getElementById('profileContent');
+        const avatarUrl = userData.photoURL || '';
+        const displayName = userData.displayName || 'Пользователь';
+        const email = userData.email || 'Не указан';
+        const role = userData.role || 'user';
+        const viewsCount = userData.viewsCount || 0;
+        const commentsCount = userData.commentsCount || 0;
+        const subscribers = userData.subscribers || [];
+        const subscriptions = userData.subscriptions || [];
+        const achievements = userData.achievements || [];
+
+        const roleNames = { 'admin': '👑 Администратор', 'dubber': '🎙️ Даббер', 'user': '👤 Пользователь' };
+        const roleClass = { 'admin': 'role-admin', 'dubber': 'role-dubber', 'user': 'role-user' };
+
+        let subscribeButton = '';
+        if (!isOwn && currentUser) {
+            const isSub = await isSubscribed(currentUser.uid, viewedUserId);
+            subscribeButton = `
+                <button class="action-btn ${isSub ? 'subscribed' : 'outline'}" onclick="handleSubscribe()">
+                    ${isSub ? '✅ Подписан' : '➕ Подписаться'}
+                </button>
+            `;
+        }
+
+        let adminPanel = '';
+        if (isAdminUser && !isOwn) {
+            adminPanel = `
+                <div class="admin-panel">
+                    <h3>👑 Управление пользователем</h3>
+                    <div style="margin-bottom:15px;">
+                        <p style="color:#888; font-size:14px;">Текущая роль: <strong style="color:#4a90d9;">${roleNames[role] || role}</strong></p>
+                        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                            <select id="adminRoleSelect" style="padding:8px 16px; border-radius:15px; border:2px solid #d4e8ff; background:#fff; color:#2c3e50; font-size:14px;">
+                                <option value="user" ${role === 'user' ? 'selected' : ''}>👤 Пользователь</option>
+                                <option value="dubber" ${role === 'dubber' ? 'selected' : ''}>🎙️ Даббер</option>
+                                <option value="admin" ${role === 'admin' ? 'selected' : ''}>👑 Администратор</option>
+                            </select>
+                            <button class="action-btn primary" onclick="handleRoleChange()">💾 Применить роль</button>
+                        </div>
+                    </div>
+                    <hr style="border-color:#d4e8ff; margin:15px 0;">
+                    <div>
+                        <p style="color:#888; font-size:14px;">🏅 Выдать кастомное достижение</p>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <input type="text" id="customAchievementName" placeholder="Название" style="flex:1; padding:8px 14px; border-radius:8px; border:2px solid #d4e8ff; background:#f8faff; color:#2c3e50; min-width:150px;">
+                            <input type="text" id="customAchievementIcon" placeholder="Иконка" style="width:60px; padding:8px 14px; border-radius:8px; border:2px solid #d4e8ff; background:#f8faff; color:#2c3e50;">
+                            <button class="action-btn success" onclick="handleCustomAchievement()">🏅 Выдать</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        let adminOwnPanel = '';
+        if (isAdminUser && isOwn) {
+            adminOwnPanel = `
+                <div class="admin-panel">
+                    <h3>👑 Админ-панель</h3>
+                    <p style="color:#888; font-size:14px; margin-bottom:15px;">Управление пользователями по email</p>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <input type="email" id="adminSearchEmail" placeholder="Введите email пользователя" style="flex:1; padding:10px 16px; border-radius:10px; border:2px solid #d4e8ff; background:#f8faff; color:#2c3e50; font-size:14px; min-width:200px;">
+                        <button class="search-btn" onclick="searchUserByEmail()">🔍 Найти</button>
+                    </div>
+                    <div id="adminSearchResults" style="margin-top:15px;">
+                        <p style="color:#888;">Введите email для поиска пользователя</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        let achievementsHtml = '';
+        if (achievements.length > 0) {
+            achievementsHtml = `
+                <div class="achievements-section">
+                    <h3 style="color:#4a90d9;">🏆 Достижения</h3>
+                    <div class="achievements-grid">
+                        ${achievements.map(a => `
+                            <div class="achievement-card">
+                                <div class="achievement-icon">${a.icon || '🏅'}</div>
+                                <div class="achievement-name">${a.name}</div>
+                                <div class="achievement-desc">${a.description || ''}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        const subscribersCount = subscribers.length;
+        const subscriptionsCount = subscriptions.length;
+
+        container.innerHTML = `
+            <div class="profile-container">
+                <div class="profile-header">
+                    <img src="${avatarUrl || 'https://via.placeholder.com/120/d4e8ff/4a90d9?text=?'}" 
+                         class="profile-avatar-large" 
+                         onerror="this.src='https://via.placeholder.com/120/d4e8ff/4a90d9?text=?'">
+                    <div class="profile-info">
+                        <h1 class="profile-name">${displayName}</h1>
+                        <div class="profile-email">${isOwn ? email : ''}</div>
+                        <span class="profile-role ${roleClass[role] || 'role-user'}">${roleNames[role] || 'Пользователь'}</span>
+                        <div class="profile-actions">
+                            ${isOwn ? `
+                                <button class="action-btn primary" onclick="handleEditProfile()">✏️ Редактировать</button>
+                                <button class="action-btn danger" onclick="handleLogout()">🚪 Выйти</button>
+                            ` : subscribeButton}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">${viewsCount}</div>
+                        <div class="stat-label">Просмотров</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${commentsCount}</div>
+                        <div class="stat-label">Комментариев</div>
+                    </div>
+                    <div class="stat-item stat-clickable" onclick="openUsersModal('Подписчики', ${JSON.stringify(subscribers)})">
+                        <div class="stat-number">${subscribersCount}</div>
+                        <div class="stat-label">Подписчиков</div>
+                    </div>
+                    <div class="stat-item stat-clickable" onclick="openUsersModal('Подписки', ${JSON.stringify(subscriptions)})">
+                        <div class="stat-number">${subscriptionsCount}</div>
+                        <div class="stat-label">Подписок</div>
+                    </div>
+                </div>
+
+                ${achievementsHtml}
+                ${adminPanel}
+                ${adminOwnPanel}
+            </div>
+        `;
+    }
+
+    window.handleRoleChange = async function() {
+        const select = document.getElementById('adminRoleSelect');
+        const newRole = select.value;
+        if (!confirm(`Изменить роль пользователя на "${newRole}"?`)) return;
+        const result = await updateUserRole(viewedUserId, newRole);
+        if (result.success) {
+            alert('✅ Роль обновлена!');
+            await loadProfile();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    window.handleCustomAchievement = async function() {
+        const nameInput = document.getElementById('customAchievementName');
+        const iconInput = document.getElementById('customAchievementIcon');
+        const name = nameInput?.value?.trim();
+        const icon = iconInput?.value?.trim() || '🏅';
+        if (!name) {
+            alert('Введите название достижения');
+            return;
+        }
+        if (!confirm(`Выдать достижение "${name}" пользователю?`)) return;
+        const achievement = { id: 'custom_' + Date.now(), name: name, icon: icon, description: 'Кастомное достижение' };
+        const result = await addCustomAchievement(viewedUserId, achievement);
+        if (result.success) {
+            alert('✅ Достижение выдано!');
+            nameInput.value = '';
+            iconInput.value = '';
+            await loadProfile();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    async function loadProfile() {
+        const container = document.getElementById('profileContent');
+        container.innerHTML = '<div class="loading" style="text-align:center; padding:40px; color:#888;">⏳ Загрузка...</div>';
+        const user = getCurrentUser();
+        currentUser = user;
+        let targetUid = null;
+        let targetEmail = viewedEmail;
+        if (viewedId) {
+            targetUid = viewedId;
+        } else if (viewedEmail) {
+            const result = await getUserByEmail(viewedEmail);
+            if (result.success) {
+                targetUid = result.data.id;
+                viewedUserData = result.data;
+            } else {
+                container.innerHTML = `<p style="color:#ff6b6b; text-align:center;">❌ Пользователь с email "${viewedEmail}" не найден</p>`;
+                return;
+            }
+        } else if (user) {
+            targetUid = user.uid;
+        }
+        if (!targetUid) {
+            container.innerHTML = `
+                <div class="auth-message">
+                    <h2>🔒 Вы не авторизованы</h2>
+                    <p>Войдите или зарегистрируйтесь, чтобы увидеть профиль</p>
+                    <br>
+                    <a href="login.html" class="auth-btn">🔑 Войти</a>
+                </div>
+            `;
+            return;
+        }
+        viewedUserId = targetUid;
+        isOwnProfile = user && user.uid === targetUid;
+        const result = await getUserData(targetUid);
+        if (!result.success) {
+            container.innerHTML = `<p style="color:#ff6b6b; text-align:center;">❌ ${result.error}</p>`;
+            return;
+        }
+        viewedUserData = result.data;
+        if (isOwnProfile) {
+            currentUserData = result.data;
+        }
+        if (user) {
+            isAdminUser = await isAdmin(user.uid);
+        } else {
+            isAdminUser = false;
+        }
+        await renderProfile(user, viewedUserData, isOwnProfile);
+        await loadOrders();
+    }
+
+    onAuthStateChangedListener(async (user) => {
+        currentUser = user;
+        updateAuthButton(user);
+        await updateDubInLink(user);
+        await loadProfile();
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const user = getCurrentUser();
+        currentUser = user;
+        updateAuthButton(user);
+        await updateDubInLink(user);
+        await loadProfile();
+    });
+</script>
+
+</body>
+</html>

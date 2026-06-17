@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Состав - Dream Sound Dubbing</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="data.js"></script>
+    <script type="module" src="firebase-config.js"></script>
+    <style>
+        .admin-toolbar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            padding: 15px;
+            background: rgba(74, 144, 217, 0.08);
+            border-radius: 15px;
+            border: 1px solid #4a90d9;
+        }
+        .admin-toolbar .admin-btn {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        .admin-toolbar .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+
+        .team-card-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .team-card-wrapper .admin-actions {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 10;
+        }
+        .team-card-wrapper:hover .admin-actions {
+            opacity: 1;
+        }
+        .team-card-wrapper .admin-actions button {
+            padding: 4px 10px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .team-card-wrapper .admin-actions .edit-btn {
+            background: #4a90d9;
+            color: #fff;
+        }
+        .team-card-wrapper .admin-actions .edit-btn:hover {
+            background: #3a7bc8;
+        }
+        .team-card-wrapper .admin-actions .delete-btn {
+            background: #ff6b6b;
+            color: #fff;
+        }
+        .team-card-wrapper .admin-actions .delete-btn:hover {
+            background: #e05555;
+        }
+
+        .team-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .team-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 20px 15px;
+            width: 210px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(74, 144, 217, 0.12);
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid #e8e8e8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .team-card:hover {
+            transform: translateY(-5px);
+            border-color: #4a90d9;
+            box-shadow: 0 10px 30px rgba(74, 144, 217, 0.2);
+        }
+
+        .team-card-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #4a90d9;
+            margin-bottom: 15px;
+        }
+
+        .team-card-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4a90d9;
+            margin-bottom: 5px;
+            word-wrap: break-word;
+        }
+
+        .team-card-status {
+            font-size: 13px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid #4a90d9;
+            position: relative;
+        }
+        .modal-content h2 {
+            color: #4a90d9;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            color: #888;
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: color 0.3s;
+        }
+        .modal-close:hover {
+            color: #2c3e50;
+        }
+        .modal-content .form-group {
+            margin-bottom: 15px;
+        }
+        .modal-content .form-group label {
+            color: #666;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .modal-content .form-group input,
+        .modal-content .form-group textarea,
+        .modal-content .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 2px solid #d4e8ff;
+            background: #f8faff;
+            color: #2c3e50;
+            font-size: 14px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .modal-content .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .modal-content .form-group input:focus,
+        .modal-content .form-group textarea:focus {
+            border-color: #4a90d9;
+            outline: none;
+        }
+        .modal-content .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .modal-content .form-row .form-group {
+            flex: 1;
+            min-width: 150px;
+        }
+        .modal-content .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        .modal-content .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+        .modal-content .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .stat-box {
+            flex: 1;
+            min-width: 120px;
+            background: #f0f8ff;
+            padding: 18px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #4a90d9;
+        }
+        .stat-label {
+            font-size: 16px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .socials-editor {
+            margin-top: 10px;
+        }
+        .social-edit-item {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f8faff;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            border: 1px solid #d4e8ff;
+        }
+        .social-edit-item:hover {
+            border-color: #4a90d9;
+        }
+        .social-edit-item .social-type {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #d4e8ff;
+            background: #fff;
+            color: #2c3e50;
+            font-size: 13px;
+            min-width: 100px;
+        }
+        .social-edit-item .social-type option {
+            background: #fff;
+        }
+        .social-edit-item .social-value {
+            flex: 2;
+            min-width: 150px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #d4e8ff;
+            background: #fff;
+            color: #2c3e50;
+            font-size: 13px;
+        }
+        .social-edit-item .remove-social-btn {
+            background: #ff6b6b;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+        .social-edit-item .remove-social-btn:hover {
+            background: #e05555;
+        }
+
+        .add-social-btn {
+            padding: 8px 20px;
+            background: #4a90d9;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+        .add-social-btn:hover {
+            background: #d472a0;
+            transform: translateY(-2px);
+        }
+
+        .socials-empty {
+            color: #999;
+            text-align: center;
+            padding: 15px;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .team-card-wrapper .admin-actions {
+                opacity: 1;
+            }
+            .admin-toolbar {
+                justify-content: center;
+            }
+            .team-card {
+                width: 160px;
+                padding: 15px 10px;
+            }
+            .team-card-avatar {
+                width: 80px;
+                height: 80px;
+            }
+            .team-card-name {
+                font-size: 16px;
+            }
+            .social-edit-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .social-edit-item .social-type,
+            .social-edit-item .social-value {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="fixed-header">
+    <div class="nav-buttons">
+        <a href="index.html">
+            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo">
+        </a>
+        <a href="index.html" class="nav-icon-btn">🏠Главная</a>
+        <a href="titles.html" class="nav-icon-btn">🎦Тайтлы</a>
+        <a href="sostav.html" class="nav-icon-btn">🎭Состав</a>
+        <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
+        <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
+        <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
+        <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="header">
+        <h1 class="title">Состав команды</h1>
+        <hr>
+    </div>
+    
+    <div class="welcome-banner">
+        <h2 class="h2">Наша команда</h2>
+        <p>Всего: <span id="totalCount">0</span> человек</p>
+    </div>
+
+    <div class="content-box">
+        <div id="adminPanel" style="display:none;" class="admin-toolbar">
+            <button class="admin-btn" onclick="openAddVoiceModal()">➕ Добавить даббера</button>
+            <button class="admin-btn" onclick="refreshVoices()">🔄 Обновить</button>
+            <span style="color:#888; font-size:14px; margin-left:auto;">👑 Режим администратора</span>
+        </div>
+
+        <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap;">
+            <div class="stat-box">
+                <div class="stat-number" id="dubberCount">0</div>
+                <div class="stat-label">Дабберы</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="techCount">0</div>
+                <div class="stat-label">Тех. персонал</div>
+            </div>
+        </div>
+
+        <h2 style="color: #4a90d9; border-left: 5px solid #4a90d9; padding-left: 15px; margin-top: 30px;">
+            🎙️ Дабберы
+        </h2>
+        <div id="dubberList" class="team-list"></div>
+
+        <hr>
+
+        <h2 style="color: #4a90d9; border-left: 5px solid #4a90d9; padding-left: 15px; margin-top: 30px;">
+            🔧 Технический персонал
+        </h2>
+        <div id="techList" class="team-list"></div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="voiceModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeVoiceModal()">✕</button>
+        <h2 id="voiceModalTitle">Добавить даббера</h2>
+        <form id="voiceForm" onsubmit="saveVoice(event)">
+            <input type="hidden" id="editVoiceId" value="">
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>ID (уникальный)</label>
+                    <input type="text" id="voiceId" placeholder="например: runi" required>
+                </div>
+                <div class="form-group">
+                    <label>Имя</label>
+                    <input type="text" id="voiceName" placeholder="Имя" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Имя (англ.)</label>
+                    <input type="text" id="voiceNameEn" placeholder="English name">
+                </div>
+                <div class="form-group">
+                    <label>Имя (рус.)</label>
+                    <input type="text" id="voiceNameRu" placeholder="Имя на русском">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Ссылка на аватарку</label>
+                <input type="text" id="voiceImage" placeholder="images/voice.jpg">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Тип роли</label>
+                    <select id="voiceRoleType">
+                        <option value="dubber">Даббер</option>
+                        <option value="tech">Тех. персонал</option>
+                        <option value="both">И даббер, и тех.</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Статус</label>
+                    <input type="text" id="voiceStatus" placeholder="Даббер" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Дата присоединения</label>
+                    <input type="text" id="voiceJoinDate" placeholder="2026">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Биография</label>
+                <textarea id="voiceBio" placeholder="Расскажите о даббере..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>🔗 Социальные сети</span>
+                    <button type="button" class="add-social-btn" onclick="addSocial()">➕ Добавить соцсеть</button>
+                </label>
+                <div id="socialsEditor" class="socials-editor">
+                    <div class="socials-empty">Нет добавленных соцсетей</div>
+                </div>
+                <small style="color:#999; display:block; margin-top:5px;">Выберите тип соцсети и введите имя пользователя или ссылку</small>
+            </div>
+            
+            <button type="submit" class="submit-btn" id="voiceSubmitBtn">💾 Сохранить</button>
+        </form>
+    </div>
+</div>
+
+<div class="container" style="text-align: center;">
+    <hr>
+    <p style="color:#888;">© 2026 Dream Sound Dubbing</p>
+</div>
+
+<script type="module">
+    import { 
+        getCurrentUser, 
+        onAuthStateChangedListener, 
+        getUserRole,
+        getVoices,
+        addVoice,
+        updateVoice,
+        deleteVoice
+    } from './firebase-config.js';
+
+    let allVoices = [];
+    let isAdmin = false;
+
+    function updateAuthButton(user) {
+        const btn = document.getElementById('authBtn');
+        if (user) {
+            btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
+            btn.href = 'profile.html';
+        } else {
+            btn.textContent = '🔑 Вход';
+            btn.href = 'login.html';
+        }
+    }
+
+    async function updateDubInLink(user) {
+        const link = document.getElementById('dubInLink');
+        if (!link) return;
+        if (user) {
+            const role = await getUserRole(user.uid);
+            link.style.display = (role === 'dubber' || role === 'admin') ? 'inline-flex' : 'none';
+        } else {
+            link.style.display = 'none';
+        }
+    }
+
+    async function checkAdmin(user) {
+        if (user) {
+            const role = await getUserRole(user.uid);
+            isAdmin = role === 'admin';
+            document.getElementById('adminPanel').style.display = isAdmin ? 'flex' : 'none';
+        } else {
+            isAdmin = false;
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+    }
+
+    function renderSocialsEditor(socials) {
+        const container = document.getElementById('socialsEditor');
+        let socialArray = [];
+        if (socials && typeof socials === 'object' && !Array.isArray(socials)) {
+            socialArray = Object.entries(socials).map(([type, value]) => ({ type, value }));
+        } else if (Array.isArray(socials)) {
+            socialArray = socials;
+        }
+        if (!socialArray || socialArray.length === 0) {
+            container.innerHTML = `<div class="socials-empty">📭 Нет добавленных соцсетей</div>`;
+            return;
+        }
+        const socialTypes = [
+            { value: 'telegram', label: '📱 Telegram' },
+            { value: 'vk', label: '📘 VK' },
+            { value: 'github', label: '🐙 GitHub' },
+            { value: 'instagram', label: '📸 Instagram' },
+            { value: 'twitter', label: '🐦 Twitter/X' },
+            { value: 'youtube', label: '▶️ YouTube' },
+            { value: 'discord', label: '💬 Discord' },
+            { value: 'website', label: '🌐 Сайт' },
+            { value: 'other', label: '🔗 Другое' }
+        ];
+        container.innerHTML = socialArray.map((social, index) => `
+            <div class="social-edit-item">
+                <select class="social-type" data-index="${index}" data-field="type">
+                    ${socialTypes.map(st => `<option value="${st.value}" ${social.type === st.value ? 'selected' : ''}>${st.label}</option>`).join('')}
+                </select>
+                <input type="text" class="social-value" value="${social.value || ''}" placeholder="Имя пользователя или ссылка" data-index="${index}" data-field="value">
+                <button class="remove-social-btn" onclick="removeSocial(${index})" title="Удалить соцсеть">✕</button>
+            </div>
+        `).join('');
+    }
+
+    window.addSocial = function() {
+        const socials = getSocialsFromEditor();
+        socials.push({ type: 'telegram', value: '' });
+        renderSocialsEditor(socials);
+    };
+
+    window.removeSocial = function(index) {
+        const socials = getSocialsFromEditor();
+        socials.splice(index, 1);
+        renderSocialsEditor(socials);
+    };
+
+    function getSocialsFromEditor() {
+        const container = document.getElementById('socialsEditor');
+        const items = container.querySelectorAll('.social-edit-item');
+        const socials = [];
+        items.forEach(el => {
+            const type = el.querySelector('[data-field="type"]').value || 'other';
+            const value = el.querySelector('[data-field="value"]').value || '';
+            if (value.trim()) {
+                socials.push({ type, value: value.trim() });
+            }
+        });
+        return socials;
+    }
+
+    function socialsArrayToObject(socialsArray) {
+        const obj = {};
+        socialsArray.forEach(s => {
+            if (s.value && s.value.trim()) {
+                obj[s.type] = s.value.trim();
+            }
+        });
+        return obj;
+    }
+
+    function renderVoices() {
+        const dubbers = allVoices.filter(v => v.roleType === 'dubber' || v.roleType === 'both');
+        const techStaff = allVoices.filter(v => v.roleType === 'tech' || v.roleType === 'both');
+        document.getElementById('dubberCount').innerText = dubbers.length;
+        document.getElementById('techCount').innerText = techStaff.length;
+        document.getElementById('totalCount').innerText = allVoices.length;
+        
+        const renderList = (voices, containerId) => {
+            const container = document.getElementById(containerId);
+            if (voices.length === 0) {
+                container.innerHTML = `<div style="color:#888; text-align:center; padding:20px; width:100%;">Нет участников</div>`;
+                return;
+            }
+            container.innerHTML = voices.map(voice => {
+                let adminButtons = '';
+                if (isAdmin) {
+                    adminButtons = `
+                        <div class="admin-actions">
+                            <button class="edit-btn" onclick="event.preventDefault(); openEditVoiceModal('${voice.id}')" title="Редактировать">✏️</button>
+                            <button class="delete-btn" onclick="event.preventDefault(); handleDeleteVoice('${voice.id}')" title="Удалить">🗑️</button>
+                        </div>
+                    `;
+                }
+                const avatarUrl = voice.image || 'https://via.placeholder.com/100/d4e8ff/4a90d9?text=?';
+                return `
+                    <div class="team-card-wrapper">
+                        <a href="voice.html?id=${voice.id}" class="team-card">
+                            <img src="${avatarUrl}" class="team-card-avatar" onerror="this.src='https://via.placeholder.com/100/d4e8ff/4a90d9?text=?'">
+                            <div class="team-card-name">${voice.name || 'Без имени'}</div>
+                            <div class="team-card-status">${voice.status || 'Даббер'}</div>
+                        </a>
+                        ${adminButtons}
+                    </div>
+                `;
+            }).join('');
+        };
+        renderList(dubbers, 'dubberList');
+        renderList(techStaff, 'techList');
+    }
+
+    window.openAddVoiceModal = function() {
+        document.getElementById('voiceModalTitle').textContent = '➕ Добавить даббера';
+        document.getElementById('voiceSubmitBtn').textContent = '💾 Создать';
+        document.getElementById('editVoiceId').value = '';
+        document.getElementById('voiceForm').reset();
+        document.getElementById('voiceId').disabled = false;
+        renderSocialsEditor([]);
+        document.getElementById('voiceModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.openEditVoiceModal = function(voiceId) {
+        const voice = allVoices.find(v => v.id === voiceId);
+        if (!voice) return;
+        document.getElementById('voiceModalTitle').textContent = '✏️ Редактировать: ' + voice.name;
+        document.getElementById('voiceSubmitBtn').textContent = '💾 Обновить';
+        document.getElementById('editVoiceId').value = voice.id;
+        document.getElementById('voiceId').value = voice.id;
+        document.getElementById('voiceId').disabled = true;
+        document.getElementById('voiceName').value = voice.name || '';
+        document.getElementById('voiceNameEn').value = voice.nameEn || '';
+        document.getElementById('voiceNameRu').value = voice.nameRu || '';
+        document.getElementById('voiceImage').value = voice.image || '';
+        document.getElementById('voiceRoleType').value = voice.roleType || 'dubber';
+        document.getElementById('voiceStatus').value = voice.status || '';
+        document.getElementById('voiceJoinDate').value = voice.joinDate || '';
+        document.getElementById('voiceBio').value = voice.bio || '';
+        renderSocialsEditor(voice.social || {});
+        document.getElementById('voiceModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.closeVoiceModal = function() {
+        document.getElementById('voiceModal').classList.remove('active');
+        document.body.style.overflow = '';
+        document.getElementById('voiceId').disabled = false;
+    };
+
+    window.saveVoice = async function(event) {
+        event.preventDefault();
+        const submitBtn = document.getElementById('voiceSubmitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Сохранение...';
+        
+        const editId = document.getElementById('editVoiceId').value;
+        const id = document.getElementById('voiceId').value.trim();
+        const name = document.getElementById('voiceName').value.trim();
+        const nameEn = document.getElementById('voiceNameEn').value.trim();
+        const nameRu = document.getElementById('voiceNameRu').value.trim();
+        const image = document.getElementById('voiceImage').value.trim();
+        const roleType = document.getElementById('voiceRoleType').value;
+        const status = document.getElementById('voiceStatus').value.trim();
+        const joinDate = document.getElementById('voiceJoinDate').value.trim();
+        const bio = document.getElementById('voiceBio').value.trim();
+        const socialsArray = getSocialsFromEditor();
+        const social = socialsArrayToObject(socialsArray);
+        const data = { id, name, nameEn, nameRu, image, roleType, status, joinDate: joinDate || '2026', bio, social };
+        
+        let result;
+        if (editId) {
+            result = await updateVoice(editId, data);
+        } else {
+            result = await addVoice(data);
+        }
+        if (result.success) {
+            alert('✅ Даббер сохранён!');
+            closeVoiceModal();
+            await loadVoicesFromFirestore();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+        submitBtn.disabled = false;
+        submitBtn.textContent = '💾 Сохранить';
+    };
+
+    window.handleDeleteVoice = async function(voiceId) {
+        const voice = allVoices.find(v => v.id === voiceId);
+        if (!confirm(`Удалить даббера "${voice?.name || voiceId}"?`)) return;
+        const result = await deleteVoice(voiceId);
+        if (result.success) {
+            alert('✅ Даббер удалён');
+            await loadVoicesFromFirestore();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    window.refreshVoices = async function() {
+        await loadVoicesFromFirestore();
+    };
+
+    async function loadVoicesFromFirestore() {
+        const result = await getVoices();
+        if (result.success) {
+            allVoices = result.voices;
+            renderVoices();
+        } else {
+            console.error('Ошибка загрузки дабберов:', result.error);
+        }
+    }
+
+    onAuthStateChangedListener(async (user) => {
+        updateAuthButton(user);
+        await updateDubInLink(user);
+        await checkAdmin(user);
+        if (user) {
+            await loadVoicesFromFirestore();
+        } else {
+            if (window.voicesDatabase) {
+                allVoices = window.voicesDatabase;
+                renderVoices();
+            }
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const user = getCurrentUser();
+        updateAuthButton(user);
+        await updateDubInLink(user);
+        await checkAdmin(user);
+        if (user) {
+            await loadVoicesFromFirestore();
+        } else if (window.voicesDatabase) {
+            allVoices = window.voicesDatabase;
+            renderVoices();
+        }
+    });
+</script>
+
+</body>
+</html>

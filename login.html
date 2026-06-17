@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход - Dream Sound Dubbing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="fixed-header">
+    <div class="nav-buttons">
+        <a href="index.html">
+            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo">
+        </a>
+        <a href="index.html" class="nav-icon-btn">🏠Главная</a>
+        <a href="titles.html" class="nav-icon-btn">🎦Тайтлы</a>
+        <a href="sostav.html" class="nav-icon-btn">🎭Состав</a>
+        <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
+        <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
+        <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
+        <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+    </div>
+</header>
+
+<script type="module">
+    import { getCurrentUser, onAuthStateChangedListener, getUserRole } from './firebase-config.js';
+
+    function updateAuthButton(user) {
+        const btn = document.getElementById('authBtn');
+        if (user) {
+            btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
+            btn.href = 'profile.html';
+        } else {
+            btn.textContent = '🔑 Вход';
+            btn.href = 'login.html';
+        }
+    }
+
+    async function updateDubInLink(user) {
+        const link = document.getElementById('dubInLink');
+        if (!link) return;
+        if (user) {
+            const role = await getUserRole(user.uid);
+            link.style.display = (role === 'dubber' || role === 'admin') ? 'inline-flex' : 'none';
+        } else {
+            link.style.display = 'none';
+        }
+    }
+
+    onAuthStateChangedListener(async (user) => {
+        updateAuthButton(user);
+        await updateDubInLink(user);
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const user = getCurrentUser();
+        updateAuthButton(user);
+        await updateDubInLink(user);
+    });
+</script>
+
+<div class="container">
+    <div class="header">
+        <h1 class="title">Авторизация</h1>
+        <hr>
+    </div>
+    
+    <div class="content-box">
+        <div id="authContainer">
+            <div id="loginForm">
+                <h2 class="title" style="text-align:center;">🔐 Вход</h2>
+                <div style="max-width:400px; margin:0 auto;">
+                    <input type="email" id="loginEmail" placeholder="Email" style="width:100%; padding:14px; margin:10px 0; border-radius:10px; border:2px solid #4a90d9; background:#f8faff; color:#2c3e50; font-size:16px; box-sizing:border-box;">
+                    <input type="password" id="loginPassword" placeholder="Пароль" style="width:100%; padding:14px; margin:10px 0; border-radius:10px; border:2px solid #4a90d9; background:#f8faff; color:#2c3e50; font-size:16px; box-sizing:border-box;">
+                    <button onclick="handleLogin()" class="search-button" style="width:100%; padding:14px; font-size:18px;">Войти</button>
+                    <p style="text-align:center; margin-top:15px; color:#888;">
+                        Нет аккаунта? <a href="#" onclick="showRegister()" style="color:#4a90d9;">Зарегистрироваться</a>
+                    </p>
+                </div>
+            </div>
+            
+            <div id="registerForm" style="display:none;">
+                <h2 class="title" style="text-align:center;">📝 Регистрация</h2>
+                <div style="max-width:400px; margin:0 auto;">
+                    <input type="text" id="registerName" placeholder="Имя" style="width:100%; padding:14px; margin:10px 0; border-radius:10px; border:2px solid #4a90d9; background:#f8faff; color:#2c3e50; font-size:16px; box-sizing:border-box;">
+                    <input type="email" id="registerEmail" placeholder="Email" style="width:100%; padding:14px; margin:10px 0; border-radius:10px; border:2px solid #4a90d9; background:#f8faff; color:#2c3e50; font-size:16px; box-sizing:border-box;">
+                    <input type="password" id="registerPassword" placeholder="Пароль (мин. 6 символов)" style="width:100%; padding:14px; margin:10px 0; border-radius:10px; border:2px solid #4a90d9; background:#f8faff; color:#2c3e50; font-size:16px; box-sizing:border-box;">
+                    <button onclick="handleRegister()" class="search-button" style="width:100%; padding:14px; font-size:18px;">Зарегистрироваться</button>
+                    <p style="text-align:center; margin-top:15px; color:#888;">
+                        Уже есть аккаунт? <a href="#" onclick="showLogin()" style="color:#4a90d9;">Войти</a>
+                    </p>
+                </div>
+            </div>
+            
+            <div id="authMessage" style="text-align:center; margin-top:20px; padding:10px; border-radius:10px; display:none;"></div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { loginUser, registerUser, getCurrentUser } from './firebase-config.js';
+
+    window.showRegister = function() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+        document.getElementById('authMessage').style.display = 'none';
+    };
+    
+    window.showLogin = function() {
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('authMessage').style.display = 'none';
+    };
+
+    window.handleLogin = async function() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        const msg = document.getElementById('authMessage');
+        if (!email || !password) {
+            msg.style.display = 'block';
+            msg.style.background = '#fff0f0';
+            msg.style.color = '#ff6b6b';
+            msg.textContent = '❌ Заполните все поля';
+            return;
+        }
+        const result = await loginUser(email, password);
+        if (result.success) {
+            msg.style.display = 'block';
+            msg.style.background = '#e8f5e9';
+            msg.style.color = '#4CAF50';
+            msg.textContent = '✅ Вход выполнен! Перенаправление...';
+            setTimeout(() => window.location.href = 'index.html', 1500);
+        } else {
+            msg.style.display = 'block';
+            msg.style.background = '#fff0f0';
+            msg.style.color = '#ff6b6b';
+            msg.textContent = '❌ ' + result.error;
+        }
+    };
+
+    window.handleRegister = async function() {
+        const name = document.getElementById('registerName').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+        const msg = document.getElementById('authMessage');
+        if (!name || !email || !password) {
+            msg.style.display = 'block';
+            msg.style.background = '#fff0f0';
+            msg.style.color = '#ff6b6b';
+            msg.textContent = '❌ Заполните все поля';
+            return;
+        }
+        if (password.length < 6) {
+            msg.style.display = 'block';
+            msg.style.background = '#fff0f0';
+            msg.style.color = '#ff6b6b';
+            msg.textContent = '❌ Пароль должен быть минимум 6 символов';
+            return;
+        }
+        const result = await registerUser(email, password, name);
+        if (result.success) {
+            msg.style.display = 'block';
+            msg.style.background = '#e8f5e9';
+            msg.style.color = '#4CAF50';
+            msg.textContent = '✅ Регистрация успешна! Перенаправление...';
+            setTimeout(() => window.location.href = 'index.html', 1500);
+        } else {
+            msg.style.display = 'block';
+            msg.style.background = '#fff0f0';
+            msg.style.color = '#ff6b6b';
+            msg.textContent = '❌ ' + result.error;
+        }
+    };
+
+    const user = getCurrentUser();
+    if (user) {
+        window.location.href = 'index.html';
+    }
+</script>
+
+</body>
+</html>

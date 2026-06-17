@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Просмотр - Dream Sound Dubbing</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="data.js"></script>
+    <script type="module" src="firebase-config.js"></script>
+    <style>
+        .comment-item {
+            background: #f0f8ff;
+            border-left: 4px solid #4a90d9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .comment-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .comment-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: 2px solid transparent;
+        }
+        .comment-avatar:hover {
+            transform: scale(1.1);
+            border-color: #4a90d9;
+        }
+        .comment-name {
+            color: #4a90d9;
+            font-weight: bold;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .comment-name:hover {
+            color: #d472a0;
+            text-decoration: underline;
+        }
+        .comment-rating {
+            color: #ffaa00;
+        }
+        .comment-text {
+            color: #2c3e50;
+            margin-top: 8px;
+            word-wrap: break-word;
+            line-height: 1.5;
+        }
+        .comment-text .mention {
+            color: #4a90d9;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .comment-text .mention:hover {
+            color: #d472a0;
+            text-decoration: underline;
+        }
+        .comment-time {
+            color: #999;
+            font-size: 12px;
+        }
+        .comment-delete {
+            background: #4a90d9;
+            color: #fff;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+        .comment-delete:hover {
+            background: #d472a0;
+        }
+
+        .comment-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .comment-form textarea {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid #4a90d9;
+            background: #f8faff;
+            color: #2c3e50;
+            min-height: 80px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        .comment-form textarea:focus {
+            border-color: #d472a0;
+            outline: none;
+            box-shadow: 0 0 20px rgba(74, 144, 217, 0.2);
+        }
+        .comment-form .form-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .comment-form select {
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid #4a90d9;
+            background: #fff;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+        .comment-form button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .comment-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+        .comment-form button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .comment-form .hint {
+            color: #999;
+            font-size: 12px;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .no-comments {
+            color: #888;
+            text-align: center;
+            padding: 20px;
+        }
+        .auth-prompt {
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: #888;
+        }
+        .auth-prompt a {
+            color: #4a90d9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .auth-prompt a:hover {
+            color: #d472a0;
+            text-decoration: underline;
+        }
+
+        .admin-edit-btn {
+            display: inline-block;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .admin-edit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+
+        .admin-panel {
+            display: none;
+            padding: 20px;
+            background: rgba(74, 144, 217, 0.08);
+            border-radius: 15px;
+            border: 1px solid #4a90d9;
+            margin-top: 15px;
+        }
+        .admin-panel.active {
+            display: block;
+        }
+        .admin-panel .form-group {
+            margin-bottom: 12px;
+        }
+        .admin-panel .form-group label {
+            color: #666;
+            font-size: 13px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .admin-panel .form-group input,
+        .admin-panel .form-group textarea,
+        .admin-panel .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid #d4e8ff;
+            background: #f8faff;
+            color: #2c3e50;
+            font-size: 14px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .admin-panel .form-group textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+        .admin-panel .form-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .admin-panel .form-row .form-group {
+            flex: 1;
+            min-width: 140px;
+        }
+        .admin-panel .save-btn {
+            padding: 10px 30px;
+            background: linear-gradient(135deg, #4a90d9, #d472a0);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .admin-panel .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+        .admin-panel .cancel-btn {
+            padding: 10px 30px;
+            background: #f0f4f8;
+            color: #666;
+            border: 2px solid #d4e8ff;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .admin-panel .cancel-btn:hover {
+            border-color: #4a90d9;
+            color: #2c3e50;
+        }
+
+        .episodes-editor {
+            margin-top: 10px;
+        }
+        .episode-edit-item {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f8faff;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            border: 1px solid #d4e8ff;
+        }
+        .episode-edit-item:hover {
+            border-color: #4a90d9;
+        }
+        .episode-edit-item .ep-number {
+            width: 50px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid #d4e8ff;
+            background: #fff;
+            color: #2c3e50;
+            font-size: 13px;
+            text-align: center;
+        }
+        .episode-edit-item .ep-title {
+            flex: 2;
+            min-width: 120px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #d4e8ff;
+            background: #fff;
+            color: #2c3e50;
+            font-size: 13px;
+        }
+        .episode-edit-item .ep-url {
+            flex: 3;
+            min-width: 150px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #d4e8ff;
+            background: #fff;
+            color: #2c3e50;
+            font-size: 13px;
+        }
+        .episode-edit-item .ep-status {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #d4e8ff;
+            background: #fff;
+            color: #2c3e50;
+            font-size: 13px;
+            min-width: 80px;
+        }
+        .episode-edit-item .ep-status option {
+            background: #fff;
+        }
+        .episode-edit-item .remove-ep-btn {
+            background: #ff6b6b;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+        .episode-edit-item .remove-ep-btn:hover {
+            background: #e05555;
+        }
+
+        .add-episode-btn {
+            padding: 8px 20px;
+            background: #4a90d9;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+        .add-episode-btn:hover {
+            background: #d472a0;
+            transform: translateY(-2px);
+        }
+
+        .episodes-empty {
+            color: #999;
+            text-align: center;
+            padding: 15px;
+            font-style: italic;
+        }
+
+        .avg-rating {
+            display: inline-block;
+            background: rgba(74, 144, 217, 0.12);
+            padding: 4px 16px;
+            border-radius: 25px;
+            border: 1px solid #4a90d9;
+            margin-left: 10px;
+            font-size: 14px;
+            color: #ffaa00;
+        }
+
+        @media (max-width: 768px) {
+            .comment-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .comment-user {
+                flex-wrap: wrap;
+            }
+            .episode-edit-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .episode-edit-item .ep-number {
+                width: 100%;
+            }
+            .episode-edit-item .ep-title,
+            .episode-edit-item .ep-url,
+            .episode-edit-item .ep-status {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="fixed-header">
+    <div class="nav-buttons">
+        <a href="index.html">
+            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo">
+        </a>
+        <a href="index.html" class="nav-icon-btn">🏠Главная</a>
+        <a href="titles.html" class="nav-icon-btn">🎦Тайтлы</a>
+        <a href="sostav.html" class="nav-icon-btn">🎭Состав</a>
+        <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
+        <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
+        <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
+        <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="header">
+        <hr>
+        <h1 class="title" style="font-size:32px;">🎬 Просмотр</h1>
+        <hr>
+    </div>
+    
+    <div class="content-box" id="title-content">
+        <div class="loading">⏳ Загрузка...</div>
+    </div>
+</div>
+
+<div class="container" style="text-align: center;">
+    <hr>
+    <p style="color:#888;">© 2026 Dream Sound Dubbing</p>
+</div>
+
+<script type="module">
+    import { 
+        getCurrentUser, 
+        onAuthStateChangedListener,
+        getUserRole,
+        getTitleById,
+        updateTitle,
+        addComment,
+        getComments,
+        deleteComment,
+        getAverageRating,
+        trackView,
+        getUserByEmail,
+        getUserData
+    } from './firebase-config.js';
+
+    const titleId = new URLSearchParams(window.location.search).get('id');
+    let currentUser = null;
+    let isAdmin = false;
+    let currentTitle = null;
+    let allComments = [];
+
+    function updateAuthButton(user) {
+        const btn = document.getElementById('authBtn');
+        if (user) {
+            btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
+            btn.href = 'profile.html';
+        } else {
+            btn.textContent = '🔑 Вход';
+            btn.href = 'login.html';
+        }
+    }
+
+    async function updateDubInLink(user) {
+        const link = document.getElementById('dubInLink');
+        if (!link) return;
+        if (user) {
+            const role = await getUserRole(user.uid);
+            link.style.display = (role === 'dubber' || role === 'admin') ? 'inline-flex' : 'none';
+        } else {
+            link.style.display = 'none';
+        }
+    }
+
+    function renderComments(comments) {
+        const container = document.getElementById('comments-list');
+        if (!container) return;
+        
+        if (!comments || comments.length === 0) {
+            container.innerHTML = '<div class="no-comments">💬 Пока нет комментариев. Будьте первым!</div>';
+            return;
+        }
+        
+        const user = getCurrentUser();
+        container.innerHTML = comments.map(c => {
+            const isOwner = user && c.uid === user.uid;
+            
+            let textHtml = c.text || '';
+            if (c.mentions) {
+                c.mentions.forEach(email => {
+                    textHtml = textHtml.replace(
+                        new RegExp(`@${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'),
+                        `<a href="profile.html?email=${encodeURIComponent(email)}" class="mention">@${email}</a>`
+                    );
+                });
+            }
+            
+            textHtml = textHtml.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            textHtml = textHtml.replace(
+                /&lt;a href="profile\.html\?email=([^"]+)" class="mention"&gt;@([^&]+)&lt;\/a&gt;/g,
+                `<a href="profile.html?email=$1" class="mention">@$2</a>`
+            );
+            
+            const avatarHtml = c.photoURL ? 
+                `<a href="profile.html?uid=${c.uid}"><img src="${c.photoURL}" class="comment-avatar" onerror="this.style.display='none'"></a>` : 
+                `<a href="profile.html?uid=${c.uid}"><div style="width:36px;height:36px;border-radius:50%;background:#d4e8ff;display:flex;align-items:center;justify-content:center;color:#4a90d9;font-size:16px;cursor:pointer;">👤</div></a>`;
+            
+            return `
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <div class="comment-user">
+                            ${avatarHtml}
+                            <a href="profile.html?uid=${c.uid}" class="comment-name">${c.name || 'Аноним'}</a>
+                            <span class="comment-rating">${'⭐'.repeat(Math.min(c.rating || 5, 5))}</span>
+                        </div>
+                        ${isOwner ? `<button class="comment-delete" onclick="handleDeleteComment('${c.id}')">🗑️</button>` : ''}
+                    </div>
+                    <div class="comment-text">${textHtml}</div>
+                    <div class="comment-time">${c.time ? new Date(c.time.seconds * 1000).toLocaleString() : 'Только что'}</div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    async function loadComments() {
+        const container = document.getElementById('comments-list');
+        if (!container) return;
+        
+        container.innerHTML = '<div style="color:#888; text-align:center; padding:10px;">⏳ Загрузка комментариев...</div>';
+        
+        try {
+            const comments = await getComments(titleId);
+            allComments = comments;
+            renderComments(comments);
+        } catch (error) {
+            console.error('Ошибка загрузки комментариев:', error);
+            container.innerHTML = `<div class="no-comments" style="color:#ff6b6b;">❌ Ошибка загрузки комментариев</div>`;
+        }
+    }
+
+    window.handleAddComment = async function() {
+        const text = document.getElementById('commentText');
+        const rating = document.getElementById('commentRating');
+        const button = document.querySelector('.comment-form button');
+        
+        if (!text || !text.value.trim()) {
+            alert('Введите текст комментария');
+            return;
+        }
+        
+        button.disabled = true;
+        button.textContent = '⏳ Отправка...';
+        
+        const result = await addComment(titleId, text.value.trim(), parseInt(rating.value));
+        
+        if (result.success) {
+            text.value = '';
+            await loadComments();
+            await updateAverageRating();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+        
+        button.disabled = false;
+        button.textContent = '📤 Отправить';
+    };
+
+    window.handleDeleteComment = async function(commentId) {
+        if (!confirm('Удалить комментарий?')) return;
+        const result = await deleteComment(commentId);
+        if (result.success) {
+            await loadComments();
+            await updateAverageRating();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    function renderCommentForm() {
+        const container = document.getElementById('comments-container');
+        if (!container) return;
+        
+        const user = getCurrentUser();
+        
+        if (user) {
+            container.innerHTML = `
+                <h2 style="color:#4a90d9; margin-top:30px;">💬 Комментарии</h2>
+                <div class="comment-form">
+                    <textarea id="commentText" placeholder="Напишите ваш комментарий... (используйте @email для отметки)"></textarea>
+                    <div class="form-actions">
+                        <select id="commentRating">
+                            <option value="5">⭐⭐⭐⭐⭐</option>
+                            <option value="4">⭐⭐⭐⭐</option>
+                            <option value="3">⭐⭐⭐</option>
+                            <option value="2">⭐⭐</option>
+                            <option value="1">⭐</option>
+                        </select>
+                        <button onclick="handleAddComment()">📤 Отправить</button>
+                    </div>
+                    <div class="hint">💡 Используйте <strong style="color:#4a90d9;">@email</strong> чтобы отметить пользователя</div>
+                </div>
+                <div id="comments-list"></div>
+            `;
+        } else {
+            container.innerHTML = `
+                <h2 style="color:#4a90d9; margin-top:30px;">💬 Комментарии</h2>
+                <div class="auth-prompt">
+                    <a href="login.html">Войдите</a>, чтобы оставить комментарий
+                </div>
+                <div id="comments-list"></div>
+            `;
+        }
+        
+        loadComments();
+    }
+
+    async function updateAverageRating() {
+        const container = document.getElementById('avgRatingContainer');
+        if (!container) return;
+        
+        const avg = await getAverageRating(titleId);
+        if (avg > 0) {
+            container.innerHTML = `⭐ ${avg.toFixed(1)} (${allComments.length} оценок)`;
+            container.style.display = 'inline-block';
+        } else {
+            container.style.display = 'none';
+        }
+    }
+
+    async function trackViewEpisode(episodeNumber) {
+        const user = getCurrentUser();
+        if (user) {
+            await trackView(user.uid, titleId, episodeNumber);
+        }
+    }
+
+    window.toggleAdminEdit = function() {
+        const panel = document.getElementById('adminEditPanel');
+        panel.classList.toggle('active');
+        if (panel.classList.contains('active')) {
+            fillAdminForm();
+        }
+    };
+
+    function fillAdminForm() {
+        if (!currentTitle) return;
+        const t = currentTitle;
+        document.getElementById('editName').value = t.name || '';
+        document.getElementById('editNameEn').value = t.nameEn || '';
+        document.getElementById('editType').value = t.type || 'Сериал';
+        document.getElementById('editYear').value = t.year || '';
+        document.getElementById('editEpisodes').value = t.episodes || '';
+        document.getElementById('editRating').value = t.rating || '';
+        document.getElementById('editGenres').value = (t.genres || []).join(', ');
+        document.getElementById('editImageVert').value = t.imageVertical || '';
+        document.getElementById('editImageHoriz').value = t.imageHorizontal || '';
+        document.getElementById('editDescription').value = t.description || '';
+        renderEpisodeEditor(t.episodesList || []);
+    }
+
+    function renderEpisodeEditor(episodes) {
+        const container = document.getElementById('episodesEditor');
+        
+        if (!episodes || episodes.length === 0) {
+            container.innerHTML = `
+                <div class="episodes-empty">📭 Список серий пуст. Нажмите "➕ Добавить серию"</div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = episodes.map((ep, index) => `
+            <div class="episode-edit-item">
+                <input type="number" class="ep-number" value="${ep.number}" placeholder="№" data-index="${index}" data-field="number" min="1">
+                <input type="text" class="ep-title" value="${ep.title || ''}" placeholder="Название серии" data-index="${index}" data-field="title">
+                <input type="text" class="ep-url" value="${ep.url || ''}" placeholder="Ссылка на Google Drive" data-index="${index}" data-field="url">
+                <select class="ep-status" data-index="${index}" data-field="status">
+                    <option value="Озвучено" ${ep.status === 'Озвучено' ? 'selected' : ''}>✅ Озвучено</option>
+                    <option value="Скоро" ${ep.status === 'Скоро' ? 'selected' : ''}>⏳ Скоро</option>
+                    <option value="В работе" ${ep.status === 'В работе' ? 'selected' : ''}>🔧 В работе</option>
+                </select>
+                <button class="remove-ep-btn" onclick="removeEpisode(${index})" title="Удалить серию">✕</button>
+            </div>
+        `).join('');
+    }
+
+    window.removeEpisode = function(index) {
+        const episodes = getEpisodesFromEditor();
+        if (episodes.length <= 1) {
+            if (!confirm('Удалить последнюю серию?')) return;
+        }
+        episodes.splice(index, 1);
+        episodes.forEach((ep, i) => ep.number = i + 1);
+        renderEpisodeEditor(episodes);
+    };
+
+    window.addEpisode = function() {
+        const episodes = getEpisodesFromEditor();
+        episodes.push({ 
+            number: episodes.length + 1, 
+            title: '', 
+            url: '', 
+            status: 'Скоро' 
+        });
+        renderEpisodeEditor(episodes);
+    };
+
+    function getEpisodesFromEditor() {
+        const container = document.getElementById('episodesEditor');
+        const items = container.querySelectorAll('.episode-edit-item');
+        const episodes = [];
+        items.forEach(el => {
+            const number = parseInt(el.querySelector('[data-field="number"]').value) || 0;
+            const title = el.querySelector('[data-field="title"]').value || '';
+            const url = el.querySelector('[data-field="url"]').value || '';
+            const status = el.querySelector('[data-field="status"]').value || 'Скоро';
+            episodes.push({ number, title, url, status });
+        });
+        return episodes;
+    }
+
+    function setupEpisodesAutoSave() {
+        const container = document.getElementById('episodesEditor');
+        if (!container) return;
+        container.addEventListener('change', function(e) {
+            const target = e.target;
+            if (target.classList.contains('ep-number')) {
+                const items = container.querySelectorAll('.episode-edit-item');
+                items.forEach((el, index) => {
+                    const numInput = el.querySelector('[data-field="number"]');
+                    if (numInput) {
+                        const val = parseInt(numInput.value);
+                        if (!val || val < 1) {
+                            numInput.value = index + 1;
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    window.saveAdminEdit = async function() {
+        const saveBtn = document.getElementById('saveEditBtn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = '⏳ Сохранение...';
+        
+        const episodes = getEpisodesFromEditor();
+        episodes.forEach((ep, i) => {
+            if (!ep.number || ep.number < 1) {
+                ep.number = i + 1;
+            }
+        });
+        
+        const data = {
+            name: document.getElementById('editName').value.trim(),
+            nameEn: document.getElementById('editNameEn').value.trim(),
+            type: document.getElementById('editType').value,
+            year: parseInt(document.getElementById('editYear').value) || 0,
+            episodes: parseInt(document.getElementById('editEpisodes').value) || episodes.length,
+            rating: parseFloat(document.getElementById('editRating').value) || 0,
+            genres: document.getElementById('editGenres').value.split(',').map(s => s.trim()).filter(Boolean),
+            imageVertical: document.getElementById('editImageVert').value.trim(),
+            imageHorizontal: document.getElementById('editImageHoriz').value.trim(),
+            description: document.getElementById('editDescription').value.trim(),
+            episodesList: episodes
+        };
+        
+        if (data.episodes !== episodes.length) {
+            data.episodes = episodes.length;
+        }
+        
+        const result = await updateTitle(titleId, data);
+        if (result.success) {
+            alert('✅ Тайтл обновлён!');
+            document.getElementById('adminEditPanel').classList.remove('active');
+            await loadTitle();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+        
+        saveBtn.disabled = false;
+        saveBtn.textContent = '💾 Сохранить изменения';
+    };
+
+    window.playEpisode = function(url, episodeNumber) {
+        const container = document.getElementById('playerContainer');
+        if (!url) {
+            container.innerHTML = `
+                <div style="display:flex; align-items:center; justify-content:center; height:100%; color:#888; background:#f5faff;">
+                    <p>Серия ещё не доступна</p>
+                </div>
+            `;
+            return;
+        }
+        container.innerHTML = `
+            <iframe id="playerFrame" width="100%" height="100%" src="${url}" frameborder="0" allowfullscreen></iframe>
+        `;
+        if (episodeNumber) {
+            trackViewEpisode(episodeNumber);
+        }
+    };
+
+    async function loadTitle() {
+        const content = document.getElementById('title-content');
+        content.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
+        
+        const result = await getTitleById(titleId);
+        
+        if (!result.success || !result.data) {
+            const localTitle = window.getTitleById?.(titleId) || window.titlesDatabase?.find(t => t.id === titleId);
+            if (localTitle) {
+                currentTitle = localTitle;
+            } else {
+                content.innerHTML = '<div style="text-align:center; padding:50px; color:#888;">❌ Тайтл не найден</div>';
+                return;
+            }
+        } else {
+            currentTitle = result.data;
+        }
+        
+        const title = currentTitle;
+        const roles = window.rolesDatabase?.filter(r => r.titleId === titleId) || [];
+        
+        let charactersHtml = '';
+        if (roles.length > 0) {
+            charactersHtml = '<h2 style="color:#4a90d9; margin-top:30px;">🎭 Персонажи и озвучка</h2><div class="characters-grid">';
+            roles.forEach(role => {
+                const voice = window.voicesDatabase?.find(v => v.id === role.voiceId);
+                charactersHtml += `
+                    <div class="character-card">
+                        <img src="${role.characterImage || 'https://via.placeholder.com/180x150/d4e8ff/4a90d9?text=Персонаж'}" class="character-image" onerror="this.src='https://via.placeholder.com/180x150/d4e8ff/4a90d9?text=?'">
+                        <div class="character-name">${role.character}</div>
+                        <p style="color:#888;">Озвучивает: <a href="voice.html?id=${role.voiceId}" style="color:#4a90d9;">${voice?.name || role.voiceId}</a></p>
+                    </div>
+                `;
+            });
+            charactersHtml += '</div>';
+        }
+
+        const episodes = title.episodesList || [];
+        let episodesHtml = '';
+        if (episodes.length > 0) {
+            episodesHtml = `
+                <h2 style="color:#4a90d9; margin-top:30px;">📺 Список серий</h2>
+                <div class="episodes-list">
+                    ${episodes.map(ep => `
+                        <div class="episode-item" onclick="playEpisode('${ep.url}', ${ep.number})" style="cursor:pointer;">
+                            <span class="episode-number">Серия ${ep.number}</span>
+                            <span class="episode-title" style="color:#2c3e50;">${ep.title}</span>
+                            <span class="episode-status ${ep.status === 'Озвучено' ? 'status-ready' : 'status-soon'}">${ep.status}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        const firstEpisode = episodes.find(ep => ep.url) || { url: '', number: 1 };
+        const posterImage = title.imageHorizontal || title.imageVertical || title.image || 'https://via.placeholder.com/250/d4e8ff/4a90d9?text=No+Image';
+
+        const avgRating = await getAverageRating(titleId);
+        const avgRatingHtml = avgRating > 0 ? 
+            `<span class="avg-rating" id="avgRatingContainer">⭐ ${avgRating.toFixed(1)} (${allComments.length} оценок)</span>` : 
+            `<span class="avg-rating" id="avgRatingContainer" style="display:none;"></span>`;
+
+        let adminHtml = '';
+        if (isAdmin) {
+            adminHtml = `
+                <button class="admin-edit-btn" onclick="toggleAdminEdit()">✏️ Редактировать тайтл</button>
+                <div id="adminEditPanel" class="admin-panel">
+                    <h3 style="color:#4a90d9;">✏️ Редактирование тайтла</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Название (рус.)</label>
+                            <input type="text" id="editName">
+                        </div>
+                        <div class="form-group">
+                            <label>Название (англ.)</label>
+                            <input type="text" id="editNameEn">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Тип</label>
+                            <select id="editType">
+                                <option value="Сериал">Сериал</option>
+                                <option value="Фильм">Фильм</option>
+                                <option value="Короткометражка">Короткометражка</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Год</label>
+                            <input type="number" id="editYear">
+                        </div>
+                        <div class="form-group">
+                            <label>Кол-во серий</label>
+                            <input type="number" id="editEpisodes" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Рейтинг</label>
+                            <input type="number" id="editRating" step="0.1" min="0" max="5">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Жанры (через запятую)</label>
+                        <input type="text" id="editGenres">
+                    </div>
+                    <div class="form-group">
+                        <label>Вертикальная обложка</label>
+                        <input type="text" id="editImageVert">
+                    </div>
+                    <div class="form-group">
+                        <label>Горизонтальная обложка</label>
+                        <input type="text" id="editImageHoriz">
+                    </div>
+                    <div class="form-group">
+                        <label>Описание</label>
+                        <textarea id="editDescription"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label style="display:flex; justify-content:space-between; align-items:center;">
+                            <span>📺 Список серий</span>
+                            <button type="button" class="add-episode-btn" onclick="addEpisode()">➕ Добавить серию</button>
+                        </label>
+                        <div id="episodesEditor" class="episodes-editor">
+                            <div class="episodes-empty">Загрузка...</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:10px; margin-top:20px;">
+                        <button class="save-btn" id="saveEditBtn" onclick="saveAdminEdit()">💾 Сохранить изменения</button>
+                        <button class="cancel-btn" onclick="document.getElementById('adminEditPanel').classList.remove('active')">Отмена</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        content.innerHTML = `
+            <div class="anime-header">
+                <img src="${posterImage}" alt="${title.name}" class="anime-poster" onerror="this.src='https://via.placeholder.com/250/d4e8ff/4a90d9?text=${title.name}'">
+                <div class="anime-info">
+                    <h1 class="anime-title">
+                        ${title.name}
+                        ${avgRatingHtml}
+                    </h1>
+                    <div class="anime-meta">
+                        <span class="anime-tag">${title.type || 'Аниме'}</span>
+                        <span class="anime-tag">${title.year || '2025'}</span>
+                        <span class="anime-tag">${title.episodes || '?'} серий</span>
+                        <span class="anime-tag">⭐ ${title.rating || '4.5'}</span>
+                    </div>
+                    <p style="color:#2c3e50;"><strong style="color:#4a90d9;">Жанры:</strong> ${title.genres?.join(', ') || 'Не указаны'}</p>
+                    <div class="anime-description">${title.description || 'Описание отсутствует'}</div>
+                    ${adminHtml}
+                </div>
+            </div>
+            
+            <h2 style="color:#4a90d9;">▶ Смотреть онлайн</h2>
+            <div class="player-container" id="playerContainer">
+                ${firstEpisode.url ? `
+                    <iframe id="playerFrame" width="100%" height="100%" src="${firstEpisode.url}" frameborder="0" allowfullscreen></iframe>
+                ` : `
+                    <div style="display:flex; align-items:center; justify-content:center; height:100%; color:#888; background:#f5faff;">
+                        <p>Скоро появится</p>
+                    </div>
+                `}
+            </div>
+            
+            ${episodesHtml}
+            ${charactersHtml}
+            <div id="comments-container"></div>
+        `;
+
+        renderCommentForm();
+        setTimeout(updateAverageRating, 500);
+        setTimeout(setupEpisodesAutoSave, 100);
+    }
+
+    onAuthStateChangedListener(async (user) => {
+        currentUser = user;
+        updateAuthButton(user);
+        await updateDubInLink(user);
+        if (user) {
+            const role = await getUserRole(user.uid);
+            isAdmin = role === 'admin';
+        } else {
+            isAdmin = false;
+        }
+        await loadTitle();
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const user = getCurrentUser();
+        currentUser = user;
+        updateAuthButton(user);
+        await updateDubInLink(user);
+        if (user) {
+            const role = await getUserRole(user.uid);
+            isAdmin = role === 'admin';
+        }
+        await loadTitle();
+    });
+</script>
+
+</body>
+</html>
