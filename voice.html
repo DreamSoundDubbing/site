@@ -560,6 +560,29 @@
         await loadVoice();
     });
 </script>
+<script>
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) {
+            btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
+        }
+    }
 
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) {
+            btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
+        }
+    }
+
+    loadTheme();
+</script>
 </body>
 </html>
