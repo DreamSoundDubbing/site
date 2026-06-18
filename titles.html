@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тайтлы - Dream Sound Dubbing</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="data.js"></script>
     <script type="module" src="firebase-config.js"></script>
     <style>
@@ -437,22 +438,78 @@
 </head>
 <body>
 
+<!-- ========== HEADER ========== -->
 <header class="fixed-header">
     <div class="nav-buttons">
+        <button class="burger-btn" onclick="openSidebar()" title="Меню" aria-label="Открыть меню">
+            <span></span><span></span><span></span>
+        </button>
+        
         <a href="index.html">
             <img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo">
         </a>
-        <a href="index.html" class="nav-icon-btn">🏠Главная</a>
-        <a href="titles.html" class="nav-icon-btn">🎦Тайтлы</a>
-        <a href="sostav.html" class="nav-icon-btn">🎭Состав</a>
+        
+        <a href="index.html" class="nav-icon-btn" id="homeLink" style="display:none;">🏠Главная</a>
+        <a href="titles.html" class="nav-icon-btn" id="titlesLink" style="display:none;">🎦Тайтлы</a>
+        <a href="sostav.html" class="nav-icon-btn" id="sostavLink" style="display:none;">🎭Состав</a>
         <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
-        <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
+        <a href="search.html" class="nav-icon-btn" id="searchLink" style="display:none;">🔍Поиск</a>
         <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
-        <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+        <a href="voice-order.html" class="nav-icon-btn" id="voiceOrderLink" style="display:none;">📝Заявка</a>
         <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
+        
         <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
     </div>
 </header>
+
+<!-- ========== SIDEBAR ========== -->
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<aside id="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="sidebar-logo-img">
+            <span>DSD <span style="color:var(--color-accent2);">Menu</span></span>
+        </div>
+        <button class="sidebar-close-btn" onclick="closeSidebar()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    
+    <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Навигация</div>
+        <a href="index.html" class="sidebar-link"><i class="fas fa-home"></i><span>Главная</span></a>
+        <a href="titles.html" class="sidebar-link"><i class="fas fa-film"></i><span>Тайтлы</span></a>
+        <a href="sostav.html" class="sidebar-link"><i class="fas fa-users"></i><span>Состав</span></a>
+        <a href="search.html" class="sidebar-link"><i class="fas fa-search"></i><span>Поиск</span></a>
+        
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Личное</div>
+        <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
+        <a href="profile.html#playlists" class="sidebar-link"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
+        <a href="profile.html#shop" class="sidebar-link"><i class="fas fa-coins"></i><span>Магазин DSCoins</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
+        
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Студия</div>
+        <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
+        <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заявка на озвучку</span></a>
+        <a href="#" class="sidebar-link" onclick="openDSCoinOrder(); return false;"><i class="fas fa-coins"></i><span>Купить DSCoins</span></a>
+        
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Администрирование</div>
+        <a href="admin-orders.html" class="sidebar-link" id="sidebarAdminOrders" style="display:none;"><i class="fas fa-clipboard-list"></i><span>Заказы</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+        <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;"><i class="fas fa-coins"></i><span>Управление DSCoins</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+    </nav>
+    
+    <div class="sidebar-footer">
+        <div class="sidebar-socials">
+            <a href="#" target="_blank"><i class="fab fa-vk"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px;letter-spacing:1px;">© Dream Sound Dubbing</div>
+    </div>
+</aside>
 
 <script>
     function toggleTheme() {
@@ -462,23 +519,84 @@
         html.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
         const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
-        }
+        if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
     }
-
     function loadTheme() {
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
         const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
-        }
+        if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
     }
-
     document.addEventListener('DOMContentLoaded', loadTheme);
+
+    function openSidebar() {
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebar-overlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebar-overlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeSidebar();
+    });
+
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    function openDSCoinOrder() { closeSidebar(); openModal('m-dscoin-order'); }
+    function openAdminDSCoins() { closeSidebar(); openModal('m-admin-dscoins'); }
 </script>
 
+<!-- ========== DSCOIN МОДАЛКИ ========== -->
+<div class="modal-overlay" id="m-dscoin-order">
+    <div class="modal-content" style="max-width:440px;">
+        <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
+        <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Покупка DSCoins</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">После оформления заявки напишите менеджеру в Telegram для оплаты.</p>
+        <div class="form-group"><label>Ваш Email *</label><input type="email" id="dscoin-order-email" placeholder="your@email.com"></div>
+        <div class="form-group">
+            <label>Количество DSCoins *</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(100)">100</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(250)">250</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(500)">500</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(1000)">1000</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(2000)">2000</button>
+            </div>
+            <input type="number" id="dscoin-order-amount" placeholder="Введите количество..." min="1">
+        </div>
+        <div style="background:var(--bg-welcome);padding:12px;border-radius:10px;margin:12px 0;text-align:center;">
+            <span style="color:var(--text-muted);">Стоимость: </span>
+            <span id="dscoin-order-price" style="color:var(--color-accent);font-weight:bold;font-size:18px;">0 ₽</span>
+            <div style="font-size:11px;color:var(--text-muted);">1 DSCoin = 1 ₽</div>
+        </div>
+        <button class="submit-btn" style="width:100%;" onclick="submitDSCoinOrder()"><i class="fas fa-paper-plane"></i> Оформить заявку</button>
+        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-dscoin-order')">Отмена</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="m-admin-dscoins">
+    <div class="modal-content" style="max-width:480px;">
+        <button class="modal-close" onclick="closeModal('m-admin-dscoins')">✕</button>
+        <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Управление DSCoins</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">Добавьте монеты пользователю по email.</p>
+        <div class="form-group"><label>Email пользователя *</label><input type="email" id="admin-dscoin-email" placeholder="user@example.com"></div>
+        <div class="form-group"><label>Количество DSCoins *</label><input type="number" id="admin-dscoin-amount" placeholder="100" min="1"></div>
+        <div class="form-group"><label>Причина</label><input type="text" id="admin-dscoin-reason" value="Начисление администратором"></div>
+        <button class="submit-btn" style="width:100%;background:var(--gradient-primary);" onclick="adminAddDSCoins()"><i class="fas fa-plus"></i> Добавить монеты</button>
+        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-admin-dscoins')">Отмена</button>
+    </div>
+</div>
+
+<!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
 <div class="container">
     <div class="header">
         <h1 class="title">Наши тайтлы</h1>
@@ -509,9 +627,7 @@
                 <input type="number" class="episode-input" id="episodeTo" placeholder="∞" min="0">
                 <button class="reset-episodes-btn" id="resetEpisodes">✕ Сбросить</button>
             </div>
-            <div class="titles-count">
-                Найдено: <span id="titlesCount">0</span>
-            </div>
+            <div class="titles-count">Найдено: <span id="titlesCount">0</span></div>
         </div>
         
         <div class="titles-grid" id="titles-container">
@@ -522,81 +638,33 @@
 
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal-content">
-        <button class="modal-close" onclick="closeModal()">✕</button>
+        <button class="modal-close" onclick="closeModal('modalOverlay')">✕</button>
         <h2 id="modalTitle">Добавить тайтл</h2>
         <form id="titleForm" onsubmit="saveTitle(event)">
             <input type="hidden" id="editId" value="">
-            
-            <div class="form-group">
-                <label>ID тайтла (уникальный, латиница) *</label>
-                <input type="text" id="titleId" placeholder="например: dandadan" required>
-            </div>
-            
+            <div class="form-group"><label>ID тайтла (уникальный, латиница) *</label><input type="text" id="titleId" placeholder="например: dandadan" required></div>
             <div class="form-row">
-                <div class="form-group">
-                    <label>Название (рус.) *</label>
-                    <input type="text" id="titleName" placeholder="Название" required>
-                </div>
-                <div class="form-group">
-                    <label>Название (англ.)</label>
-                    <input type="text" id="titleNameEn" placeholder="English name">
-                </div>
+                <div class="form-group"><label>Название (рус.) *</label><input type="text" id="titleName" placeholder="Название" required></div>
+                <div class="form-group"><label>Название (англ.)</label><input type="text" id="titleNameEn" placeholder="English name"></div>
             </div>
-            
             <div class="form-row">
-                <div class="form-group">
-                    <label>Тип</label>
-                    <select id="titleType">
-                        <option value="Сериал">Сериал</option>
-                        <option value="Фильм">Фильм</option>
-                        <option value="Короткометражка">Короткометражка</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Год</label>
-                    <input type="number" id="titleYear" placeholder="2024">
-                </div>
-                <div class="form-group">
-                    <label>Кол-во серий</label>
-                    <input type="number" id="titleEpisodes" placeholder="12" min="1">
-                </div>
-                <div class="form-group">
-                    <label>Рейтинг</label>
-                    <input type="number" id="titleRating" placeholder="5" min="0" max="5" step="0.1">
-                </div>
+                <div class="form-group"><label>Тип</label><select id="titleType"><option value="Сериал">Сериал</option><option value="Фильм">Фильм</option><option value="Короткометражка">Короткометражка</option></select></div>
+                <div class="form-group"><label>Год</label><input type="number" id="titleYear" placeholder="2024"></div>
+                <div class="form-group"><label>Кол-во серий</label><input type="number" id="titleEpisodes" placeholder="12" min="1"></div>
+                <div class="form-group"><label>Рейтинг</label><input type="number" id="titleRating" placeholder="5" min="0" max="5" step="0.1"></div>
             </div>
-            
-            <div class="form-group">
-                <label>Жанры (через запятую)</label>
-                <input type="text" id="titleGenres" placeholder="Комедия, Экшен, Романтика">
-            </div>
-            
-            <div class="form-group">
-                <label>Ссылка на вертикальную обложку</label>
-                <input type="text" id="titleImageVert" placeholder="images/title_vert.jpg">
-            </div>
-            
-            <div class="form-group">
-                <label>Ссылка на горизонтальную обложку</label>
-                <input type="text" id="titleImageHoriz" placeholder="images/title_horiz.jpg">
-            </div>
-            
-            <div class="form-group">
-                <label>Описание</label>
-                <textarea id="titleDescription" placeholder="Описание тайтла..."></textarea>
-            </div>
-            
+            <div class="form-group"><label>Жанры (через запятую)</label><input type="text" id="titleGenres" placeholder="Комедия, Экшен, Романтика"></div>
+            <div class="form-group"><label>Ссылка на вертикальную обложку</label><input type="text" id="titleImageVert" placeholder="images/title_vert.jpg"></div>
+            <div class="form-group"><label>Ссылка на горизонтальную обложку</label><input type="text" id="titleImageHoriz" placeholder="images/title_horiz.jpg"></div>
+            <div class="form-group"><label>Описание</label><textarea id="titleDescription" placeholder="Описание тайтла..."></textarea></div>
             <div class="form-group">
                 <label style="display:flex; justify-content:space-between; align-items:center;">
                     <span>📺 Список серий</span>
                     <button type="button" class="add-episode-btn" onclick="addEpisode()">➕ Добавить серию</button>
                 </label>
-                <div id="episodesEditor" class="episodes-editor">
-                    <div class="episodes-empty">Загрузка...</div>
-                </div>
+                <div id="episodesEditor" class="episodes-editor"><div class="episodes-empty">Загрузка...</div></div>
                 <small style="color:var(--text-muted); display:block; margin-top:5px;">Номер, название, ссылка на Google Drive и статус серии</small>
             </div>
-            
             <button type="submit" class="submit-btn" id="submitBtn">💾 Сохранить</button>
         </form>
     </div>
@@ -608,15 +676,12 @@
 </div>
 
 <script type="module">
-    import { 
-        getCurrentUser, 
-        onAuthStateChangedListener, 
-        getUserRole,
-        getTitles,
-        addTitle,
-        updateTitle,
-        deleteTitle
-    } from './firebase-config.js';
+    import { getCurrentUser, onAuthStateChangedListener, getUserRole, getTitles, addTitle, updateTitle, deleteTitle, getUserDSCoins, getUserByEmail, addDSCoins, createDSCoinOrder } from './firebase-config.js';
+
+    window.getUserDSCoins = getUserDSCoins;
+    window.getUserByEmail = getUserByEmail;
+    window.addDSCoins = addDSCoins;
+    window.createDSCoinOrder = createDSCoinOrder;
 
     let allTitles = [];
     let currentFilterType = 'all';
@@ -638,38 +703,96 @@
 
     async function updateDubInLink(user) {
         const link = document.getElementById('dubInLink');
+        const sidebarLink = document.getElementById('sidebarDubIn');
         if (!link) return;
         if (user) {
             const role = await getUserRole(user.uid);
-            link.style.display = (role === 'dubber' || role === 'admin') ? 'inline-flex' : 'none';
+            const show = (role === 'dubber' || role === 'admin');
+            link.style.display = show ? 'inline-flex' : 'none';
+            if (sidebarLink) sidebarLink.style.display = show ? 'flex' : 'none';
         } else {
             link.style.display = 'none';
+            if (sidebarLink) sidebarLink.style.display = 'none';
         }
     }
 
-    async function updateAdminLink(user) {
-        const link = document.getElementById('adminLink');
-        if (!link) return;
+    async function updateAdminLinks(user) {
+        const adminLink = document.getElementById('adminLink');
+        const sidebarAdminOrders = document.getElementById('sidebarAdminOrders');
+        const sidebarAdminDSCoins = document.getElementById('sidebarAdminDSCoins');
         if (user) {
             const role = await getUserRole(user.uid);
-            link.style.display = role === 'admin' ? 'inline-flex' : 'none';
+            const isAdminRole = role === 'admin';
+            if (adminLink) adminLink.style.display = isAdminRole ? 'inline-flex' : 'none';
+            if (sidebarAdminOrders) sidebarAdminOrders.style.display = isAdminRole ? 'flex' : 'none';
+            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = isAdminRole ? 'flex' : 'none';
         } else {
-            link.style.display = 'none';
+            if (adminLink) adminLink.style.display = 'none';
+            if (sidebarAdminOrders) sidebarAdminOrders.style.display = 'none';
+            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = 'none';
         }
     }
 
-    async function checkAdmin(user) {
+    async function updateSidebarBalance(user) {
+        const balanceEl = document.getElementById('sidebarBalance');
+        if (!balanceEl) return;
         if (user) {
-            const role = await getUserRole(user.uid);
-            isAdmin = role === 'admin';
-            const panel = document.getElementById('adminPanel');
-            panel.style.display = isAdmin ? 'flex' : 'none';
+            const result = await getUserDSCoins(user.uid);
+            balanceEl.textContent = result.success ? result.coins : '0';
         } else {
-            isAdmin = false;
-            document.getElementById('adminPanel').style.display = 'none';
+            balanceEl.textContent = '0';
         }
     }
 
+    window.setDSCoinAmount = function(amount) {
+        document.getElementById('dscoin-order-amount').value = amount;
+        updateDSCoinPrice();
+    };
+
+    window.updateDSCoinPrice = function() {
+        const amount = parseInt(document.getElementById('dscoin-order-amount').value) || 0;
+        const priceEl = document.getElementById('dscoin-order-price');
+        if (priceEl) priceEl.textContent = amount + ' ₽';
+    };
+
+    window.submitDSCoinOrder = async function() {
+        const email = document.getElementById('dscoin-order-email').value.trim();
+        const amount = parseInt(document.getElementById('dscoin-order-amount').value);
+        if (!email) { alert('❌ Введите email'); return; }
+        if (!amount || amount < 1) { alert('❌ Введите количество DSCoins'); return; }
+        const result = await createDSCoinOrder({ email, amount, price: amount });
+        if (result.success) {
+            alert('✅ Заявка создана! Напишите менеджеру в Telegram для оплаты.');
+            closeModal('m-dscoin-order');
+            window.open('https://t.me/Bill_Heringtton', '_blank');
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    window.adminAddDSCoins = async function() {
+        const email = document.getElementById('admin-dscoin-email').value.trim();
+        const amount = parseInt(document.getElementById('admin-dscoin-amount').value);
+        const reason = document.getElementById('admin-dscoin-reason').value.trim() || 'Начисление администратором';
+        if (!email) { alert('❌ Введите email пользователя'); return; }
+        if (!amount || amount < 1) { alert('❌ Введите количество DSCoins'); return; }
+        const userResult = await getUserByEmail(email);
+        if (!userResult.success) { alert('❌ Пользователь не найден'); return; }
+        const result = await addDSCoins(userResult.data.id, amount, reason);
+        if (result.success) {
+            alert('✅ Добавлено ' + amount + ' DSCoins пользователю ' + email);
+            closeModal('m-admin-dscoins');
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const amountInput = document.getElementById('dscoin-order-amount');
+        if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
+    });
+
+    // Остальные функции для работы с тайтлами (без изменений)
     function renderEpisodesEditor(episodes) {
         const container = document.getElementById('episodesEditor');
         if (!episodes || episodes.length === 0) {
@@ -693,9 +816,7 @@
 
     window.removeEpisode = function(index) {
         const episodes = getEpisodesFromEditor();
-        if (episodes.length <= 1) {
-            if (!confirm('Удалить последнюю серию?')) return;
-        }
+        if (episodes.length <= 1) { if (!confirm('Удалить последнюю серию?')) return; }
         episodes.splice(index, 1);
         episodes.forEach((ep, i) => ep.number = i + 1);
         renderEpisodesEditor(episodes);
@@ -705,13 +826,6 @@
         const episodes = getEpisodesFromEditor();
         episodes.push({ number: episodes.length + 1, title: '', url: '', status: 'Скоро' });
         renderEpisodesEditor(episodes);
-        const container = document.getElementById('episodesEditor');
-        const lastItem = container.lastElementChild;
-        if (lastItem) {
-            lastItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            const firstInput = lastItem.querySelector('input');
-            if (firstInput) firstInput.focus();
-        }
     };
 
     function getEpisodesFromEditor() {
@@ -719,24 +833,20 @@
         const items = container.querySelectorAll('.episode-edit-item');
         const episodes = [];
         items.forEach(el => {
-            const number = parseInt(el.querySelector('[data-field="number"]').value) || 0;
-            const title = el.querySelector('[data-field="title"]').value || '';
-            const url = el.querySelector('[data-field="url"]').value || '';
-            const status = el.querySelector('[data-field="status"]').value || 'Скоро';
-            episodes.push({ number, title, url, status });
+            episodes.push({
+                number: parseInt(el.querySelector('[data-field="number"]').value) || 0,
+                title: el.querySelector('[data-field="title"]').value || '',
+                url: el.querySelector('[data-field="url"]').value || '',
+                status: el.querySelector('[data-field="status"]').value || 'Скоро'
+            });
         });
         return episodes;
     }
 
     function getFilteredTitles() {
         let titles = allTitles;
-        if (currentFilterType !== 'all') {
-            titles = titles.filter(t => t.type === currentFilterType);
-        }
-        titles = titles.filter(t => {
-            const eps = t.episodes || 0;
-            return eps >= currentEpisodeFrom && eps <= currentEpisodeTo;
-        });
+        if (currentFilterType !== 'all') titles = titles.filter(t => t.type === currentFilterType);
+        titles = titles.filter(t => { const eps = t.episodes || 0; return eps >= currentEpisodeFrom && eps <= currentEpisodeTo; });
         return titles;
     }
 
@@ -744,21 +854,12 @@
         const container = document.getElementById('titles-container');
         const countEl = document.getElementById('titlesCount');
         const filtered = getFilteredTitles();
-        
         if (filtered.length === 0) {
-            container.innerHTML = `
-                <div style="text-align:center; padding:40px; color:var(--text-muted); width:100%;">
-                    <p style="font-size:24px;">😕</p>
-                    <p>По выбранным фильтрам ничего не найдено</p>
-                    <button onclick="resetAllFilters()" style="margin-top:15px; padding:10px 25px; background:var(--gradient-primary); color:#fff; border:none; border-radius:25px; cursor:pointer;">Сбросить фильтры</button>
-                </div>
-            `;
+            container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);width:100%;"><p style="font-size:24px;">😕</p><p>По выбранным фильтрам ничего не найдено</p><button onclick="resetAllFilters()" style="margin-top:15px;padding:10px 25px;background:var(--gradient-primary);color:#fff;border:none;border-radius:25px;cursor:pointer;">Сбросить фильтры</button></div>`;
             countEl.textContent = '0';
             return;
         }
-        
         countEl.textContent = filtered.length;
-        
         container.innerHTML = filtered.map(title => {
             const image = title.imageVertical || title.imageHorizontal || title.image || 'https://via.placeholder.com/200x280/d4e8ff/4a90d9?text=No+Image';
             let adminButtons = '';
@@ -780,8 +881,8 @@
                                 <span>${title.type}</span>
                                 <span>${title.episodes} серий</span>
                             </div>
-                            <div style="display:flex; justify-content:space-between; margin-top:5px;">
-                                <span style="color:var(--text-muted); font-size:13px;">${title.year || ''}</span>
+                            <div style="display:flex;justify-content:space-between;margin-top:5px;">
+                                <span style="color:var(--text-muted);font-size:13px;">${title.year || ''}</span>
                                 <span style="color:var(--color-warning);">⭐ ${title.rating}</span>
                             </div>
                         </div>
@@ -812,7 +913,6 @@
                 renderTitles();
             });
         });
-
         const episodeFrom = document.getElementById('episodeFrom');
         const episodeTo = document.getElementById('episodeTo');
         const updateEpisodeFilter = function() {
@@ -841,17 +941,13 @@
         document.getElementById('titleForm').reset();
         document.getElementById('titleId').disabled = false;
         renderEpisodesEditor([]);
-        document.getElementById('modalOverlay').classList.add('active');
-        document.body.style.overflow = 'hidden';
+        openModal('modalOverlay');
     };
 
     window.openEditModal = function(titleId) {
         if (isSaving) return;
         const title = allTitles.find(t => t.id === titleId);
-        if (!title) {
-            alert('❌ Тайтл не найден');
-            return;
-        }
+        if (!title) { alert('❌ Тайтл не найден'); return; }
         document.getElementById('modalTitle').textContent = '✏️ Редактировать: ' + title.name;
         document.getElementById('submitBtn').textContent = '💾 Обновить';
         document.getElementById('editId').value = title.id;
@@ -868,26 +964,16 @@
         document.getElementById('titleImageHoriz').value = title.imageHorizontal || '';
         document.getElementById('titleDescription').value = title.description || '';
         renderEpisodesEditor(title.episodesList || []);
-        document.getElementById('modalOverlay').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    };
-
-    window.closeModal = function() {
-        if (isSaving) return;
-        document.getElementById('modalOverlay').classList.remove('active');
-        document.body.style.overflow = '';
-        document.getElementById('titleId').disabled = false;
+        openModal('modalOverlay');
     };
 
     window.saveTitle = async function(event) {
         event.preventDefault();
         if (isSaving) return;
-        
         const submitBtn = document.getElementById('submitBtn');
         isSaving = true;
         submitBtn.disabled = true;
         submitBtn.textContent = '⏳ Сохранение...';
-        
         const editId = document.getElementById('editId').value;
         const id = document.getElementById('titleId').value.trim();
         const name = document.getElementById('titleName').value.trim();
@@ -902,65 +988,21 @@
         const description = document.getElementById('titleDescription').value.trim();
         const episodesList = getEpisodesFromEditor();
         const finalEpisodes = episodes > 0 ? episodes : episodesList.length;
-        
-        if (!id) {
-            alert('❌ Введите ID тайтла');
-            isSaving = false;
-            submitBtn.disabled = false;
-            submitBtn.textContent = editId ? '💾 Обновить' : '💾 Создать';
-            return;
-        }
-        
-        if (!name) {
-            alert('❌ Введите название тайтла');
-            isSaving = false;
-            submitBtn.disabled = false;
-            submitBtn.textContent = editId ? '💾 Обновить' : '💾 Создать';
-            return;
-        }
-        
-        // Проверяем, не занят ли ID при создании
+        if (!id) { alert('❌ Введите ID тайтла'); isSaving = false; submitBtn.disabled = false; submitBtn.textContent = editId ? '💾 Обновить' : '💾 Создать'; return; }
+        if (!name) { alert('❌ Введите название тайтла'); isSaving = false; submitBtn.disabled = false; submitBtn.textContent = editId ? '💾 Обновить' : '💾 Создать'; return; }
         if (!editId) {
             const existing = allTitles.find(t => t.id === id);
-            if (existing) {
-                alert('❌ Тайтл с таким ID уже существует!');
-                isSaving = false;
-                submitBtn.disabled = false;
-                submitBtn.textContent = '💾 Создать';
-                return;
-            }
+            if (existing) { alert('❌ Тайтл с таким ID уже существует!'); isSaving = false; submitBtn.disabled = false; submitBtn.textContent = '💾 Создать'; return; }
         }
-        
-        const data = { 
-            id, 
-            name, 
-            nameEn, 
-            type, 
-            year, 
-            episodes: finalEpisodes, 
-            rating, 
-            genres, 
-            imageVertical, 
-            imageHorizontal, 
-            description, 
-            episodesList 
-        };
-        
-        let result;
-        if (editId) {
-            result = await updateTitle(editId, data);
-        } else {
-            result = await addTitle(data);
-        }
-        
+        const data = { id, name, nameEn, type, year, episodes: finalEpisodes, rating, genres, imageVertical, imageHorizontal, description, episodesList };
+        let result = editId ? await updateTitle(editId, data) : await addTitle(data);
         if (result.success) {
             alert('✅ Тайтл сохранён!');
-            closeModal();
+            closeModal('modalOverlay');
             await loadTitlesFromFirestore();
         } else {
             alert('❌ Ошибка: ' + result.error);
         }
-        
         isSaving = false;
         submitBtn.disabled = false;
         submitBtn.textContent = editId ? '💾 Обновить' : '💾 Создать';
@@ -969,73 +1011,51 @@
     window.handleDelete = async function(titleId) {
         if (!confirm(`Удалить тайтл "${allTitles.find(t => t.id === titleId)?.name || titleId}"?`)) return;
         const result = await deleteTitle(titleId);
-        if (result.success) {
-            alert('✅ Тайтл удалён');
-            await loadTitlesFromFirestore();
-        } else {
-            alert('❌ Ошибка: ' + result.error);
-        }
+        if (result.success) { alert('✅ Тайтл удалён'); await loadTitlesFromFirestore(); } 
+        else { alert('❌ Ошибка: ' + result.error); }
     };
 
-    window.refreshTitles = async function() {
-        await loadTitlesFromFirestore();
-    };
+    window.refreshTitles = async function() { await loadTitlesFromFirestore(); };
 
     async function loadTitlesFromFirestore() {
         const container = document.getElementById('titles-container');
         container.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
         const result = await getTitles();
-        if (result.success) {
-            allTitles = result.titles;
-            renderTitles();
+        if (result.success) { allTitles = result.titles; renderTitles(); } 
+        else { container.innerHTML = `<p style="color:var(--color-danger);text-align:center;">❌ Ошибка загрузки: ${result.error}</p>`; }
+    }
+
+    async function checkAdmin(user) {
+        if (user) {
+            const role = await getUserRole(user.uid);
+            isAdmin = role === 'admin';
+            document.getElementById('adminPanel').style.display = isAdmin ? 'flex' : 'none';
         } else {
-            container.innerHTML = `<p style="color:var(--color-danger); text-align:center;">❌ Ошибка загрузки: ${result.error}</p>`;
+            isAdmin = false;
+            document.getElementById('adminPanel').style.display = 'none';
         }
     }
 
     onAuthStateChangedListener(async (user) => {
         updateAuthButton(user);
         await updateDubInLink(user);
-        await updateAdminLink(user);
+        await updateAdminLinks(user);
+        await updateSidebarBalance(user);
         await checkAdmin(user);
-        if (user) {
-            await loadTitlesFromFirestore();
-        }
+        if (user) await loadTitlesFromFirestore();
     });
 
     document.addEventListener('DOMContentLoaded', async () => {
         const user = getCurrentUser();
         updateAuthButton(user);
         await updateDubInLink(user);
-        await updateAdminLink(user);
+        await updateAdminLinks(user);
+        await updateSidebarBalance(user);
         await checkAdmin(user);
         await loadTitlesFromFirestore();
         setupFilters();
     });
 </script>
-<script>
-    function toggleTheme() {
-        const html = document.documentElement;
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
-        }
-    }
 
-    function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
-        }
-    }
-
-    loadTheme();
-</script>
 </body>
 </html>

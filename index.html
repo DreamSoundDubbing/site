@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dream Sound Dubbing - Главная</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="data.js"></script>
     <script type="module" src="firebase-config.js"></script>
     <style>
@@ -44,23 +45,127 @@
 </head>
 <body>
 
+<!-- ========== HEADER ========== -->
 <header class="fixed-header">
     <div class="nav-buttons">
+        <button class="burger-btn" onclick="openSidebar()" title="Меню" aria-label="Открыть меню">
+            <span></span><span></span><span></span>
+        </button>
+        
         <a href="index.html">
             <img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo">
         </a>
-        <a href="index.html" class="nav-icon-btn">🏠Главная</a>
-        <a href="titles.html" class="nav-icon-btn">🎦Тайтлы</a>
-        <a href="sostav.html" class="nav-icon-btn">🎭Состав</a>
+        
+        <!-- Скрытые навигационные ссылки (видны только в sidebar) -->
+        <a href="index.html" class="nav-icon-btn" id="homeLink" style="display:none;">🏠Главная</a>
+        <a href="titles.html" class="nav-icon-btn" id="titlesLink" style="display:none;">🎦Тайтлы</a>
+        <a href="sostav.html" class="nav-icon-btn" id="sostavLink" style="display:none;">🎭Состав</a>
         <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
-        <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
+        <a href="search.html" class="nav-icon-btn" id="searchLink" style="display:none;">🔍Поиск</a>
         <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
-        <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+        <a href="voice-order.html" class="nav-icon-btn" id="voiceOrderLink" style="display:none;">📝Заявка</a>
         <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
+        
         <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
     </div>
 </header>
 
+<!-- ========== SIDEBAR ========== -->
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<aside id="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="sidebar-logo-img">
+            <span>DSD <span style="color:var(--color-accent2);">Menu</span></span>
+        </div>
+        <button class="sidebar-close-btn" onclick="closeSidebar()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    
+    <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Навигация</div>
+        
+        <a href="index.html" class="sidebar-link">
+            <i class="fas fa-home"></i>
+            <span>Главная</span>
+        </a>
+        <a href="titles.html" class="sidebar-link">
+            <i class="fas fa-film"></i>
+            <span>Тайтлы</span>
+        </a>
+        <a href="sostav.html" class="sidebar-link">
+            <i class="fas fa-users"></i>
+            <span>Состав</span>
+        </a>
+        <a href="search.html" class="sidebar-link">
+            <i class="fas fa-search"></i>
+            <span>Поиск</span>
+        </a>
+        
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Личное</div>
+        
+        <a href="profile.html" class="sidebar-link">
+            <i class="fas fa-user"></i>
+            <span>Профиль</span>
+        </a>
+        <a href="profile.html#playlists" class="sidebar-link" id="sidebarPlaylists">
+            <i class="fas fa-layer-group"></i>
+            <span>Плейлисты</span>
+        </a>
+        <a href="profile.html#shop" class="sidebar-link" id="sidebarShop">
+            <i class="fas fa-coins"></i>
+            <span>Магазин DSCoins</span>
+            <span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span>
+        </a>
+        
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Студия</div>
+        
+        <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;">
+            <i class="fas fa-microphone-alt"></i>
+            <span>DUB-in</span>
+            <span class="sidebar-badge">Studio</span>
+        </a>
+        <a href="voice-order.html" class="sidebar-link">
+            <i class="fas fa-wand-magic-sparkles"></i>
+            <span>Заявка на озвучку</span>
+        </a>
+        <a href="#" class="sidebar-link" onclick="openDSCoinOrder(); return false;">
+            <i class="fas fa-coins"></i>
+            <span>Купить DSCoins</span>
+        </a>
+        
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Администрирование</div>
+        
+        <a href="admin-orders.html" class="sidebar-link" id="sidebarAdminOrders" style="display:none;">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Заказы</span>
+            <span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span>
+        </a>
+        <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;">
+            <i class="fas fa-coins"></i>
+            <span>Управление DSCoins</span>
+            <span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span>
+        </a>
+    </nav>
+    
+    <div class="sidebar-footer">
+        <div class="sidebar-socials">
+            <a href="#" target="_blank"><i class="fab fa-vk"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px;letter-spacing:1px;">
+            © Dream Sound Dubbing
+        </div>
+    </div>
+</aside>
+
+<!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
 <div class="container">
     <div class="header">
         <hr>
@@ -86,6 +191,9 @@
         <div class="news-item" style="background:var(--bg-news1); padding:10px; border-radius:8px; margin-bottom:10px; border-left:4px solid var(--color-accent);">
             <p><strong>15.06.2026</strong> - Запущен новый сайт Dream Sound Dubbing!</p>
         </div>
+        <div class="news-item" style="background:var(--bg-news2); padding:10px; border-radius:8px; border-left:4px solid var(--color-accent2);">
+            <p><strong>10.06.2026</strong> - Вышла 7 серия "Молчаливой ведьмы"</p>
+        </div>
     </div>
 </div>
 
@@ -101,7 +209,70 @@
     <p style="color:var(--text-muted);">© 2026 Dream Sound Dubbing. Все права защищены.</p>
 </div>
 
+<!-- ========== МОДАЛКА ПОКУПКИ DSCOINS ========== -->
+<div class="modal-overlay" id="m-dscoin-order">
+    <div class="modal-content" style="max-width:440px;">
+        <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
+        <h3 style="margin-bottom:6px;"><i class="fas fa-coins" style="color:#fbbf24;"></i> Покупка DSCoins</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;font-style:italic;">
+            После оформления заявки напишите менеджеру в Telegram для оплаты.
+        </p>
+        <div class="form-group">
+            <label>Ваш Email *</label>
+            <input type="email" id="dscoin-order-email" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+            <label>Количество DSCoins *</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(100)">100</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(250)">250</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(500)">500</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(1000)">1000</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(2000)">2000</button>
+            </div>
+            <input type="number" id="dscoin-order-amount" placeholder="Введите количество..." min="1">
+        </div>
+        <div style="background:var(--bg-welcome);padding:12px;border-radius:10px;margin:12px 0;text-align:center;">
+            <span style="color:var(--text-muted);">Стоимость: </span>
+            <span id="dscoin-order-price" style="color:var(--color-accent);font-weight:bold;font-size:18px;">0 ₽</span>
+            <div style="font-size:11px;color:var(--text-muted);">1 DSCoin = 1 ₽</div>
+        </div>
+        <button class="submit-btn" style="width:100%;" onclick="submitDSCoinOrder()">
+            <i class="fas fa-paper-plane"></i> Оформить заявку
+        </button>
+        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-dscoin-order')">Отмена</button>
+    </div>
+</div>
+
+<!-- ========== МОДАЛКА АДМИН-УПРАВЛЕНИЯ DSCOINS ========== -->
+<div class="modal-overlay" id="m-admin-dscoins">
+    <div class="modal-content" style="max-width:480px;">
+        <button class="modal-close" onclick="closeModal('m-admin-dscoins')">✕</button>
+        <h3 style="margin-bottom:6px;"><i class="fas fa-coins" style="color:#fbbf24;"></i> Управление DSCoins</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;font-style:italic;">
+            Добавьте монеты пользователю по email.
+        </p>
+        <div class="form-group">
+            <label>Email пользователя *</label>
+            <input type="email" id="admin-dscoin-email" placeholder="user@example.com">
+        </div>
+        <div class="form-group">
+            <label>Количество DSCoins *</label>
+            <input type="number" id="admin-dscoin-amount" placeholder="100" min="1">
+        </div>
+        <div class="form-group">
+            <label>Причина</label>
+            <input type="text" id="admin-dscoin-reason" value="Начисление администратором">
+        </div>
+        <button class="submit-btn" style="width:100%;background:var(--gradient-primary);" onclick="adminAddDSCoins()">
+            <i class="fas fa-plus"></i> Добавить монеты
+        </button>
+        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-admin-dscoins')">Отмена</button>
+    </div>
+</div>
+
 <script>
+    // ========== УПРАВЛЕНИЕ ТЕМОЙ ==========
     function toggleTheme() {
         const html = document.documentElement;
         const currentTheme = html.getAttribute('data-theme');
@@ -124,6 +295,123 @@
     }
 
     document.addEventListener('DOMContentLoaded', loadTheme);
+
+    // ========== SIDEBAR ==========
+    function openSidebar() {
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebar-overlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebar-overlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeSidebar();
+    });
+
+    // ========== МОДАЛКИ ==========
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function openDSCoinOrder() {
+        closeSidebar();
+        openModal('m-dscoin-order');
+    }
+
+    function openAdminDSCoins() {
+        closeSidebar();
+        openModal('m-admin-dscoins');
+    }
+
+    // ========== DSCOINS ==========
+    function setDSCoinAmount(amount) {
+        document.getElementById('dscoin-order-amount').value = amount;
+        updateDSCoinPrice();
+    }
+
+    function updateDSCoinPrice() {
+        const amount = parseInt(document.getElementById('dscoin-order-amount').value) || 0;
+        document.getElementById('dscoin-order-price').textContent = amount + ' ₽';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const amountInput = document.getElementById('dscoin-order-amount');
+        if (amountInput) {
+            amountInput.addEventListener('input', updateDSCoinPrice);
+        }
+    });
+
+    // ========== DSCOIN ORDER ==========
+    async function submitDSCoinOrder() {
+        const email = document.getElementById('dscoin-order-email').value.trim();
+        const amount = parseInt(document.getElementById('dscoin-order-amount').value);
+
+        if (!email) {
+            alert('❌ Введите email');
+            return;
+        }
+        if (!amount || amount < 1) {
+            alert('❌ Введите количество DSCoins');
+            return;
+        }
+
+        const result = await createDSCoinOrder({
+            email: email,
+            amount: amount,
+            price: amount
+        });
+
+        if (result.success) {
+            alert('✅ Заявка на покупку DSCoins создана! Напишите менеджеру в Telegram для оплаты.');
+            closeModal('m-dscoin-order');
+            // Открываем Telegram
+            window.open('https://t.me/Bill_Heringtton', '_blank');
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    }
+
+    // ========== ADMIN DSCOINS ==========
+    async function adminAddDSCoins() {
+        const email = document.getElementById('admin-dscoin-email').value.trim();
+        const amount = parseInt(document.getElementById('admin-dscoin-amount').value);
+        const reason = document.getElementById('admin-dscoin-reason').value.trim() || 'Начисление администратором';
+
+        if (!email) {
+            alert('❌ Введите email пользователя');
+            return;
+        }
+        if (!amount || amount < 1) {
+            alert('❌ Введите количество DSCoins');
+            return;
+        }
+
+        // Находим пользователя по email
+        const userResult = await getUserByEmail(email);
+        if (!userResult.success) {
+            alert('❌ Пользователь с таким email не найден');
+            return;
+        }
+
+        const result = await addDSCoins(userResult.data.id, amount, reason);
+        if (result.success) {
+            alert('✅ Добавлено ' + amount + ' DSCoins пользователю ' + email);
+            closeModal('m-admin-dscoins');
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    }
 </script>
 
 <script type="module">
@@ -132,8 +420,18 @@
         onAuthStateChangedListener,
         getTitles,
         getUserRole,
-        initializeData
+        initializeData,
+        getUserDSCoins,
+        getUserByEmail,
+        addDSCoins,
+        createDSCoinOrder
     } from './firebase-config.js';
+
+    // Делаем функции доступными глобально
+    window.getUserDSCoins = getUserDSCoins;
+    window.getUserByEmail = getUserByEmail;
+    window.addDSCoins = addDSCoins;
+    window.createDSCoinOrder = createDSCoinOrder;
 
     setTimeout(async () => {
         await initializeData();
@@ -153,26 +451,51 @@
     async function updateDubInLink(user) {
         const headerLink = document.getElementById('dubInLink');
         const footerLink = document.getElementById('dubInFooter');
+        const sidebarLink = document.getElementById('sidebarDubIn');
         
         if (user) {
             const role = await getUserRole(user.uid);
             const show = (role === 'dubber' || role === 'admin');
             if (headerLink) headerLink.style.display = show ? 'inline-flex' : 'none';
             if (footerLink) footerLink.style.display = show ? 'inline' : 'none';
+            if (sidebarLink) sidebarLink.style.display = show ? 'flex' : 'none';
         } else {
             if (headerLink) headerLink.style.display = 'none';
             if (footerLink) footerLink.style.display = 'none';
+            if (sidebarLink) sidebarLink.style.display = 'none';
         }
     }
 
-    async function updateAdminLink(user) {
-        const link = document.getElementById('adminLink');
-        if (!link) return;
+    async function updateAdminLinks(user) {
+        const adminLink = document.getElementById('adminLink');
+        const sidebarAdminOrders = document.getElementById('sidebarAdminOrders');
+        const sidebarAdminDSCoins = document.getElementById('sidebarAdminDSCoins');
+        
         if (user) {
             const role = await getUserRole(user.uid);
-            link.style.display = role === 'admin' ? 'inline-flex' : 'none';
+            const isAdmin = role === 'admin';
+            if (adminLink) adminLink.style.display = isAdmin ? 'inline-flex' : 'none';
+            if (sidebarAdminOrders) sidebarAdminOrders.style.display = isAdmin ? 'flex' : 'none';
+            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = isAdmin ? 'flex' : 'none';
         } else {
-            link.style.display = 'none';
+            if (adminLink) adminLink.style.display = 'none';
+            if (sidebarAdminOrders) sidebarAdminOrders.style.display = 'none';
+            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = 'none';
+        }
+    }
+
+    async function updateSidebarBalance(user) {
+        const balanceEl = document.getElementById('sidebarBalance');
+        if (!balanceEl) return;
+        if (user) {
+            const result = await getUserDSCoins(user.uid);
+            if (result.success) {
+                balanceEl.textContent = result.coins;
+            } else {
+                balanceEl.textContent = '0';
+            }
+        } else {
+            balanceEl.textContent = '0';
         }
     }
 
@@ -204,40 +527,19 @@
     onAuthStateChangedListener(async (user) => {
         updateAuthButton(user);
         await updateDubInLink(user);
-        await updateAdminLink(user);
+        await updateAdminLinks(user);
+        await updateSidebarBalance(user);
     });
 
     document.addEventListener('DOMContentLoaded', async () => {
         const user = getCurrentUser();
         updateAuthButton(user);
         await updateDubInLink(user);
-        await updateAdminLink(user);
+        await updateAdminLinks(user);
+        await updateSidebarBalance(user);
         await loadFeaturedTitles();
     });
 </script>
-<script>
-    function toggleTheme() {
-        const html = document.documentElement;
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
-        }
-    }
 
-    function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
-        }
-    }
-
-    loadTheme();
-</script>
 </body>
 </html>
