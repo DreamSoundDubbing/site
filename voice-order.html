@@ -315,7 +315,6 @@
     } from './firebase-config.js';
 
     let currentUser = null;
-    let isDubber = false;
 
     function updateAuthButton(user) {
         const btn = document.getElementById('authBtn');
@@ -381,22 +380,8 @@
                 <div class="auth-prompt">
                     <h2>🔒 Требуется авторизация</h2>
                     <p>Войдите, чтобы подать заявку на озвучку</p>
-                    <p>Если вы уже вошли в аккаунт,</p>
-                    <p>подождите загрузку страницы.</p>
                     <br>
                     <a href="login.html" class="auth-btn">🔑 Войти</a>
-                </div>
-            `;
-            return;
-        }
-        
-        if (!isDubber) {
-            container.innerHTML = `
-                <div style="text-align:center; padding:40px;">
-                    <h2 style="color:var(--color-danger);">🚫 Недостаточно прав</h2>
-                    <p style="color:var(--text-muted);">Только дабберы и администраторы могут подавать заявки на озвучку</p>
-                    <br>
-                    <a href="index.html" class="back-btn">🏠 На главную</a>
                 </div>
             `;
             return;
@@ -610,10 +595,6 @@
         updateAuthButton(user);
         await updateDubInLink(user);
         await updateAdminLink(user);
-        if (user) {
-            const role = await getUserRole(user.uid);
-            isDubber = role === 'dubber' || role === 'admin';
-        }
         renderOrderForm();
     });
 
@@ -623,10 +604,6 @@
         updateAuthButton(user);
         await updateDubInLink(user);
         await updateAdminLink(user);
-        if (user) {
-            const role = await getUserRole(user.uid);
-            isDubber = role === 'dubber' || role === 'admin';
-        }
         renderOrderForm();
     });
 </script>
