@@ -378,6 +378,116 @@
             color: var(--color-warning);
         }
 
+        /* ===== ПОЛНОЭКРАННЫЙ РЕЖИМ ДЛЯ ПЛЕЕРА ===== */
+        .player-wrapper {
+            position: relative;
+            width: 100%;
+            background: var(--bg-player);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+            aspect-ratio: 16/9;
+            border: 2px solid var(--border-primary);
+        }
+
+        .player-wrapper.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            aspect-ratio: auto;
+            z-index: 99999;
+            border: none;
+            border-radius: 0;
+            margin: 0;
+            background: #000;
+        }
+
+        .player-wrapper.fullscreen .player-container {
+            border-radius: 0;
+            border: none;
+        }
+
+        .player-wrapper.fullscreen .player-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.6);
+            padding: 8px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .player-wrapper.fullscreen .player-controls button {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .player-wrapper.fullscreen .player-controls button:hover {
+            background: rgba(255,255,255,0.4);
+        }
+
+        .player-container {
+            width: 100%;
+            height: 100%;
+            background: var(--bg-player);
+            border-radius: 15px;
+            overflow: hidden;
+            border: none;
+        }
+
+        .player-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px 0;
+        }
+
+        .fullscreen-btn {
+            padding: 8px 20px;
+            background: var(--gradient-primary);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .fullscreen-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+
+        .fullscreen-btn .icon {
+            font-size: 18px;
+        }
+
+        /* Скрываем скролл в полноэкранном режиме */
+        body.fullscreen-mode {
+            overflow: hidden !important;
+        }
+
         @media (max-width: 768px) {
             .comment-header {
                 flex-direction: column;
@@ -397,6 +507,14 @@
             .episode-edit-item .ep-url,
             .episode-edit-item .ep-status {
                 width: 100%;
+            }
+            .player-wrapper.fullscreen .player-controls {
+                bottom: 15px;
+                padding: 6px 14px;
+            }
+            .player-wrapper.fullscreen .player-controls button {
+                font-size: 12px;
+                padding: 6px 12px;
             }
         }
     </style>
@@ -483,6 +601,7 @@
     let isAdmin = false;
     let currentTitle = null;
     let allComments = [];
+    let isFullscreen = false;
 
     function updateAuthButton(user) {
         const btn = document.getElementById('authBtn');
@@ -516,6 +635,37 @@
             link.style.display = 'none';
         }
     }
+
+    // ===== ПОЛНОЭКРАННЫЙ РЕЖИМ =====
+    window.toggleFullscreen = function() {
+        const wrapper = document.getElementById('playerWrapper');
+        const body = document.body;
+        
+        if (!wrapper) return;
+        
+        isFullscreen = !isFullscreen;
+        
+        if (isFullscreen) {
+            wrapper.classList.add('fullscreen');
+            body.classList.add('fullscreen-mode');
+        } else {
+            wrapper.classList.remove('fullscreen');
+            body.classList.remove('fullscreen-mode');
+        }
+    };
+
+    // Закрытие полноэкранного режима по Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && isFullscreen) {
+            const wrapper = document.getElementById('playerWrapper');
+            const body = document.body;
+            if (wrapper) {
+                wrapper.classList.remove('fullscreen');
+                body.classList.remove('fullscreen-mode');
+                isFullscreen = false;
+            }
+        }
+    });
 
     function renderComments(comments) {
         const container = document.getElementById('comments-list');
@@ -977,6 +1127,27 @@
             `;
         }
 
+        // Формируем HTML с плеером и кнопкой полноэкранного режима
+        const playerHtml = `
+            <h2 style="color:var(--color-accent);">▶ Смотреть онлайн</h2>
+            <div class="player-wrapper" id="playerWrapper">
+                <div class="player-container" id="playerContainer">
+                    ${firstEpisode.url ? `
+                        <iframe id="playerFrame" width="100%" height="100%" src="${firstEpisode.url}" frameborder="0" allowfullscreen></iframe>
+                    ` : `
+                        <div style="display:flex; align-items:center; justify-content:center; height:100%; color:var(--text-muted); background:var(--bg-player);">
+                            <p>Скоро появится</p>
+                        </div>
+                    `}
+                </div>
+                <div class="player-controls">
+                    <button class="fullscreen-btn" onclick="toggleFullscreen()">
+                        <span class="icon">⛶</span> На весь экран
+                    </button>
+                </div>
+            </div>
+        `;
+
         content.innerHTML = `
             <div class="anime-header">
                 <img src="${posterImage}" alt="${title.name}" class="anime-poster" onerror="this.src='https://via.placeholder.com/250/d4e8ff/4a90d9?text=${title.name}'">
@@ -997,16 +1168,7 @@
                 </div>
             </div>
             
-            <h2 style="color:var(--color-accent);">▶ Смотреть онлайн</h2>
-            <div class="player-container" id="playerContainer">
-                ${firstEpisode.url ? `
-                    <iframe id="playerFrame" width="100%" height="100%" src="${firstEpisode.url}" frameborder="0" allowfullscreen></iframe>
-                ` : `
-                    <div style="display:flex; align-items:center; justify-content:center; height:100%; color:var(--text-muted); background:var(--bg-player);">
-                        <p>Скоро появится</p>
-                    </div>
-                `}
-            </div>
+            ${playerHtml}
             
             ${episodesHtml}
             ${charactersHtml}
@@ -1045,6 +1207,7 @@
         await loadTitle();
     });
 </script>
+
 <script>
     function toggleTheme() {
         const html = document.documentElement;
@@ -1069,5 +1232,6 @@
 
     loadTheme();
 </script>
+
 </body>
 </html>
