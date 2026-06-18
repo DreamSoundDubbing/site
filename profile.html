@@ -489,7 +489,8 @@
         addCustomAchievement,
         logoutUser,
         isAdmin,
-        getVoiceOrders
+        getVoiceOrders,
+        getUserRole  // <-- ДОБАВЛЕН ИМПОРТ
     } from './firebase-config.js';
 
     let currentUser = null;
@@ -929,7 +930,7 @@
                 <div class="auth-message">
                     <h2>🔒 Вы не авторизованы</h2>
                     <p>Войдите или зарегистрируйтесь, чтобы увидеть профиль</p>
-                    <p>Если вы уже вошли в аккаунт, подождите загрузку страницы</p>
+                    <p>Если вы уже вошли в аккаунт, подождите загрузку страницы.</p>
                     <br>
                     <a href="login.html" class="auth-btn">🔑 Войти</a>
                 </div>
