@@ -1113,16 +1113,21 @@ async function addWallPost(uid, text, visibility = 'all') {
     try {
         const userData = await getUserData(uid);
         const userName = userData.success ? userData.data.displayName || 'Пользователь' : 'Пользователь';
+        
+        // Получаем текущую видимость стены пользователя
+        const wallVisibility = userData.success ? (userData.data.wallVisibility || 'all') : 'all';
+        
         const docRef = await addDoc(collection(db, "wallPosts"), {
             userId: uid,
             userName: userName,
             text: text,
-            visibility: visibility,
+            visibility: wallVisibility, // используем настройки пользователя
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
         });
         return { success: true, id: docRef.id };
     } catch (error) {
+        console.error('Ошибка добавления записи на стену:', error);
         return { success: false, error: error.message };
     }
 }

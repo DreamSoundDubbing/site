@@ -1104,76 +1104,118 @@
     }
 
     // ========== СТЕНА ==========
-    window.addWallPost = async function() {
-        const user = getCurrentUser();
-        if (!user) { alert('Войдите, чтобы оставить запись'); return; }
-        const text = document.getElementById('wallInput').value.trim();
-        if (!text) { alert('Введите текст'); return; }
-        const result = await addWallPost(user.uid, text);
-        if (result.success) {
-            document.getElementById('wallInput').value = '';
-            await loadWall();
-        } else {
-            alert('❌ Ошибка: ' + result.error);
-        }
-    };
+window.addWallPost = async function() {
+    const user = getCurrentUser();
+    if (!user) { alert('Войдите, чтобы оставить запись'); return; }
+    const text = document.getElementById('wallInput').value.trim();
+    if (!text) { alert('Введите текст'); return; }
+    
+    // Получаем настройки видимости стены
+    const userData = await getUserData(user.uid);
+    const visibility = userData.success ? (userData.data.wallVisibility || 'all') : 'all';
+    
+    const result = await addWallPost(user.uid, text, visibility);
+    if (result.success) {
+        document.getElementById('wallInput').value = '';
+        await loadWall();
+    } else {
+        alert('❌ Ошибка: ' + result.error);
+    }
+};
 
-    window.deleteWallPost = async function(id) {
-        if (!confirm('Удалить запись?')) return;
-        const result = await deleteWallPost(id);
-        if (result.success) {
-            await loadWall();
-        } else {
-            alert('❌ Ошибка: ' + result.error);
-        }
-    };
+window.deleteWallPost = async function(id) {
+    if (!confirm('Удалить запись?')) return;
+    const result = await deleteWallPost(id);
+    if (result.success) {
+        await loadWall();
+    } else {
+        alert('❌ Ошибка: ' + result.error);
+    }
+};
 
-    window.saveWallSettings = async function() {
-        const user = getCurrentUser();
-        if (!user) return;
-        const selected = document.querySelector('input[name="wallMode"]:checked');
-        if (!selected) return;
-        const result = await updateWallVisibility(user.uid, selected.value);
-        if (result.success) {
-            alert('✅ Настройки сохранены!');
-            closeModal('m-wall-settings');
-        } else {
-            alert('❌ Ошибка: ' + result.error);
-        }
-    };
+window.saveWallSettings = async function() {
+    const user = getCurrentUser();
+    if (!user) return;
+    const selected = document.querySelector('input[name="wallMode"]:checked');
+    if (!selected) return;
+    const result = await updateWallVisibility(user.uid, selected.value);
+    if (result.success) {
+        alert('✅ Настройки сохранены!');
+        closeModal('m-wall-settings');
+        await loadWall();
+    } else {
+        alert('❌ Ошибка: ' + result.error);
+    }
+};
 
-    async function loadWall() {
-        const user = getCurrentUser();
-        if (!user) return;
-        const result = await getWallPosts(user.uid);
-        const container = document.getElementById('wallContainer');
-        if (result.success) {
-            const posts = result.posts;
-            if (posts.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Пока нет записей на стене</p>';
-            } else {
-                container.innerHTML = posts.map(post => `
-                    <div class="wall-post">
-                        <div class="header">
-                            <div class="user">
-                                <div class="avatar" style="background:var(--color-accent);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;">${post.userName?.charAt(0) || '?'}</div>
-                                <span class="name">${post.userName || 'Пользователь'}</span>
-                                <span class="visibility-badge">${post.visibility === 'friends' ? '👥 Подписчики' : post.visibility === 'disabled' ? '🔒 Закрыто' : '🌍 Все'}</span>
-                            </div>
-                            <span class="time">${post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleDateString() : ''}</span>
-                        </div>
-                        <div class="text">${post.text}</div>
-                        ${isOwnProfile ? `
-                            <div class="actions">
-                                <button onclick="deleteWallPost('${post.id}')">🗑️ Удалить</button>
-                            </div>
-                        ` : ''}
-                    </div>
-                `).join('');
+async function loadWall() {
+    const container = document.getElementById('wallContainer');
+    if (!container) return;
+    
+    const user = getCurrentUser();
+    if (!user) {
+        container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Войдите, чтобы видеть стену</p>';
+        return;
+    }
+    
+    // Определяем, чей профиль смотрим
+    let targetUid = viewedUserId || user.uid;
+    
+    const result = await getWallPosts(targetUid);
+    if (result.success) {
+        const posts = result.posts;
+        if (posts.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Пока нет записей на стене</p>';
+            return;
+        }
+        
+        // Фильтруем посты в зависимости от видимости
+        let filteredPosts = posts;
+        const userData = await getUserData(targetUid);
+        const wallVisibility = userData.success ? (userData.data.wallVisibility || 'all') : 'all';
+        
+        // Если стена закрыта и это не владелец профиля
+        if (wallVisibility === 'disabled' && targetUid !== user.uid) {
+            container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">🔒 Стена закрыта для просмотра</p>';
+            return;
+        }
+        
+        // Если стена только для подписчиков
+        if (wallVisibility === 'friends' && targetUid !== user.uid) {
+            const isSub = await isSubscribed(user.uid, targetUid);
+            if (!isSub) {
+                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">👥 Стена доступна только подписчикам</p>';
+                return;
             }
         }
+        
+        container.innerHTML = filteredPosts.map(post => {
+            // Проверяем, может ли пользователь удалить пост
+            const canDelete = user && user.uid === post.userId;
+            
+            return `
+                <div class="wall-post">
+                    <div class="header">
+                        <div class="user">
+                            <div class="avatar" style="background:var(--color-accent);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px;">${post.userName?.charAt(0).toUpperCase() || '?'}</div>
+                            <span class="name">${post.userName || 'Пользователь'}</span>
+                            <span class="visibility-badge">${post.visibility === 'friends' ? '👥 Подписчики' : post.visibility === 'disabled' ? '🔒 Закрыто' : '🌍 Все'}</span>
+                        </div>
+                        <span class="time">${post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleString() : ''}</span>
+                    </div>
+                    <div class="text">${post.text}</div>
+                    ${canDelete ? `
+                        <div class="actions">
+                            <button onclick="deleteWallPost('${post.id}')">🗑️ Удалить</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }).join('');
+    } else {
+        container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки записей</p>';
     }
-
+}
     // ========== ЗАЯВКИ ==========
     async function loadOrders() {
         const container = document.getElementById('ordersList');
