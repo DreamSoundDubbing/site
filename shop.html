@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин DSCoins - Dream Sound Dubbing</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script type="module" src="firebase-config.js"></script>
+    <style>
+        .shop-container { max-width: 900px; margin: 0 auto; }
+        .shop-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .shop-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 20px 0;
+        }
+        .shop-item {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            border: 2px solid var(--border-secondary);
+            transition: all 0.3s ease;
+        }
+        .shop-item:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        .shop-item .icon { font-size: 48px; margin-bottom: 12px; }
+        .shop-item .name {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .shop-item .price {
+            color: #fbbf24;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 8px 0;
+        }
+        .shop-item .price i { margin-right: 4px; }
+        .shop-item .desc {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .shop-item .btn-buy {
+            padding: 10px 30px;
+            background: var(--gradient-primary);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .shop-item .btn-buy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+        .shop-balance {
+            background: var(--bg-welcome);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 1px solid var(--color-accent);
+        }
+        .shop-balance .amount {
+            font-size: 42px;
+            font-weight: bold;
+            color: #fbbf24;
+        }
+        .shop-balance .label {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .btn-coin {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-coin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.3);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<header class="fixed-header">
+    <div class="nav-buttons">
+        <button class="burger-btn" onclick="openSidebar()"><span></span><span></span><span></span></button>
+        <a href="index.html"><img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo"></a>
+        <a href="index.html" class="nav-icon-btn" id="homeLink" style="display:none;">🏠Главная</a>
+        <a href="titles.html" class="nav-icon-btn" id="titlesLink" style="display:none;">🎦Тайтлы</a>
+        <a href="sostav.html" class="nav-icon-btn" id="sostavLink" style="display:none;">🎭Состав</a>
+        <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
+        <a href="search.html" class="nav-icon-btn" id="searchLink" style="display:none;">🔍Поиск</a>
+        <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
+        <a href="voice-order.html" class="nav-icon-btn" id="voiceOrderLink" style="display:none;">📝Заявка</a>
+        <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">☀️</button>
+    </div>
+</header>
+
+<!-- SIDEBAR -->
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+<aside id="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="sidebar-logo-img">
+            <span>DSD <span style="color:var(--color-accent2);">Menu</span></span>
+        </div>
+        <button class="sidebar-close-btn" onclick="closeSidebar()"><i class="fas fa-times"></i></button>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Навигация</div>
+        <a href="index.html" class="sidebar-link"><i class="fas fa-home"></i><span>Главная</span></a>
+        <a href="titles.html" class="sidebar-link"><i class="fas fa-film"></i><span>Тайтлы</span></a>
+        <a href="sostav.html" class="sidebar-link"><i class="fas fa-users"></i><span>Состав</span></a>
+        <a href="search.html" class="sidebar-link"><i class="fas fa-search"></i><span>Поиск</span></a>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Личное</div>
+        <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
+        <a href="#playlists" class="sidebar-link"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
+        <a href="#shop" class="sidebar-link"><i class="fas fa-coins"></i><span>Магазин DSCoins</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Студия</div>
+        <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
+        <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заявка на озвучку</span></a>
+        <a href="#" class="sidebar-link" onclick="openDSCoinOrder(); return false;"><i class="fas fa-coins"></i><span>Купить DSCoins</span></a>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Администрирование</div>
+        <a href="admin-orders.html" class="sidebar-link" id="sidebarAdminOrders" style="display:none;"><i class="fas fa-clipboard-list"></i><span>Заказы</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+        <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;"><i class="fas fa-coins"></i><span>Управление DSCoins</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="sidebar-socials">
+            <a href="#"><i class="fab fa-vk"></i></a>
+            <a href="#"><i class="fab fa-telegram-plane"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px;letter-spacing:1px;">© Dream Sound Dubbing</div>
+    </div>
+</aside>
+
+<!-- Модалки -->
+<div class="modal-overlay" id="m-dscoin-order">
+    <div class="modal-content" style="max-width:440px;">
+        <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
+        <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Покупка DSCoins</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">После оформления заявки напишите менеджеру в Telegram для оплаты.</p>
+        <div class="form-group"><label>Ваш Email *</label><input type="email" id="dscoin-order-email" placeholder="your@email.com"></div>
+        <div class="form-group">
+            <label>Количество DSCoins *</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(100)">100</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(250)">250</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(500)">500</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(1000)">1000</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(2000)">2000</button>
+            </div>
+            <input type="number" id="dscoin-order-amount" placeholder="Введите количество..." min="1">
+        </div>
+        <div style="background:var(--bg-welcome);padding:12px;border-radius:10px;margin:12px 0;text-align:center;">
+            <span style="color:var(--text-muted);">Стоимость: </span>
+            <span id="dscoin-order-price" style="color:var(--color-accent);font-weight:bold;font-size:18px;">0 ₽</span>
+            <div style="font-size:11px;color:var(--text-muted);">1 DSCoin = 1 ₽</div>
+        </div>
+        <button class="submit-btn" style="width:100%;" onclick="submitDSCoinOrder()"><i class="fas fa-paper-plane"></i> Оформить заявку</button>
+        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-dscoin-order')">Отмена</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="m-admin-dscoins">
+    <div class="modal-content" style="max-width:480px;">
+        <button class="modal-close" onclick="closeModal('m-admin-dscoins')">✕</button>
+        <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Управление DSCoins</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">Добавьте монеты пользователю по email.</p>
+        <div class="form-group"><label>Email пользователя *</label><input type="email" id="admin-dscoin-email" placeholder="user@example.com"></div>
+        <div class="form-group"><label>Количество DSCoins *</label><input type="number" id="admin-dscoin-amount" placeholder="100" min="1"></div>
+        <div class="form-group"><label>Причина</label><input type="text" id="admin-dscoin-reason" value="Начисление администратором"></div>
+        <button class="submit-btn" style="width:100%;background:var(--gradient-primary);" onclick="adminAddDSCoins()"><i class="fas fa-plus"></i> Добавить монеты</button>
+        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-admin-dscoins')">Отмена</button>
+    </div>
+</div>
+
+<script>
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
+    }
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
+    }
+    document.addEventListener('DOMContentLoaded', loadTheme);
+
+    function openSidebar() {
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebar-overlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebar-overlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeSidebar();
+    });
+
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    function openDSCoinOrder() { closeSidebar(); openModal('m-dscoin-order'); }
+    function openAdminDSCoins() { closeSidebar(); openModal('m-admin-dscoins'); }
+
+    function setDSCoinAmount(amount) {
+        document.getElementById('dscoin-order-amount').value = amount;
+        updateDSCoinPrice();
+    }
+    function updateDSCoinPrice() {
+        const amount = parseInt(document.getElementById('dscoin-order-amount').value) || 0;
+        const priceEl = document.getElementById('dscoin-order-price');
+        if (priceEl) priceEl.textContent = amount + ' ₽';
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const amountInput = document.getElementById('dscoin-order-amount');
+        if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
+    });
+</script>
+
+<!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
+<div class="container">
+    <div class="shop-container">
+        <a href="profile.html" class="back-link">← Назад в профиль</a>
+        
+        <div class="shop-header">
+            <h1><i class="fas fa-coins"></i> Магазин DSCoins</h1>
+            <p style="color:var(--text-muted);">Покупайте эксклюзивные возможности для своего профиля</p>
+        </div>
+
+        <div class="shop-balance">
+            <div class="label"><i class="fas fa-coins" style="color:#fbbf24;"></i> Ваш баланс</div>
+            <div class="amount" id="shopBalance">0</div>
+            <button class="btn-coin" onclick="openDSCoinOrder()" style="margin-top:10px;"><i class="fas fa-plus"></i> Пополнить</button>
+        </div>
+
+        <div class="shop-grid" id="shopItems">
+            <!-- Товары будут загружены через JS -->
+            <div class="loading">Загрузка...</div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { 
+        getCurrentUser, 
+        onAuthStateChangedListener,
+        getUserRole,
+        getUserDSCoins,
+        getShopPrices,
+        purchaseColorNick,
+        purchasePrefix,
+        purchaseAchSlot,
+        getUserByEmail,
+        addDSCoins,
+        createDSCoinOrder
+    } from './firebase-config.js';
+
+    window.getUserDSCoins = getUserDSCoins;
+    window.getUserByEmail = getUserByEmail;
+    window.addDSCoins = addDSCoins;
+    window.createDSCoinOrder = createDSCoinOrder;
+    window.setDSCoinAmount = setDSCoinAmount;
+    window.updateDSCoinPrice = updateDSCoinPrice;
+
+    window.submitDSCoinOrder = async function() {
+        const email = document.getElementById('dscoin-order-email').value.trim();
+        const amount = parseInt(document.getElementById('dscoin-order-amount').value);
+        if (!email) { alert('❌ Введите email'); return; }
+        if (!amount || amount < 1) { alert('❌ Введите количество DSCoins'); return; }
+        const result = await createDSCoinOrder({ email, amount, price: amount });
+        if (result.success) {
+            alert('✅ Заявка создана! Напишите менеджеру в Telegram для оплаты.');
+            closeModal('m-dscoin-order');
+            window.open('https://t.me/Bill_Heringtton', '_blank');
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+    window.adminAddDSCoins = async function() {
+        const email = document.getElementById('admin-dscoin-email').value.trim();
+        const amount = parseInt(document.getElementById('admin-dscoin-amount').value);
+        const reason = document.getElementById('admin-dscoin-reason').value.trim() || 'Начисление администратором';
+        if (!email) { alert('❌ Введите email пользователя'); return; }
+        if (!amount || amount < 1) { alert('❌ Введите количество DSCoins'); return; }
+        const userResult = await getUserByEmail(email);
+        if (!userResult.success) { alert('❌ Пользователь не найден'); return; }
+        const result = await addDSCoins(userResult.data.id, amount, reason);
+        if (result.success) {
+            alert('✅ Добавлено ' + amount + ' DSCoins пользователю ' + email);
+            closeModal('m-admin-dscoins');
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    let currentUser = null;
+    let shopPrices = {};
+
+    function updateAuthButton(user) {
+        const btn = document.getElementById('authBtn');
+        if (user) {
+            btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
+            btn.href = 'profile.html';
+        } else {
+            btn.textContent = '🔑 Вход';
+            btn.href = 'login.html';
+        }
+    }
+
+    async function updateSidebarBalance(user) {
+        const balanceEl = document.getElementById('sidebarBalance');
+        if (!balanceEl) return;
+        if (user) {
+            const result = await getUserDSCoins(user.uid);
+            balanceEl.textContent = result.success ? result.coins : '0';
+        } else {
+            balanceEl.textContent = '0';
+        }
+    }
+
+    async function loadShop() {
+        const user = getCurrentUser();
+        if (!user) {
+            document.getElementById('shopItems').innerHTML = '<p style="color:var(--text-muted);text-align:center;">Войдите, чтобы просмотреть магазин</p>';
+            return;
+        }
+
+        // Баланс
+        const coinsResult = await getUserDSCoins(user.uid);
+        if (coinsResult.success) {
+            document.getElementById('shopBalance').textContent = coinsResult.coins;
+        }
+
+        // Цены
+        const pricesResult = await getShopPrices();
+        if (pricesResult.success) {
+            shopPrices = pricesResult.data;
+        }
+
+        // Товары
+        const items = [
+            { id: 'colorNick', icon: '🎨', name: 'Цветной никнейм', desc: 'Измените цвет своего имени в профиле', price: shopPrices.colorNick || 500 },
+            { id: 'prefix', icon: '🏷️', name: 'Префикс', desc: 'Добавьте стильный префикс перед ником', price: shopPrices.prefix || 300 },
+            { id: 'achSlot', icon: '📚', name: 'Слот ачивок', desc: 'Дополнительный слот для достижений', price: shopPrices.achSlot || 200 }
+        ];
+
+        document.getElementById('shopItems').innerHTML = items.map(item => `
+            <div class="shop-item">
+                <div class="icon">${item.icon}</div>
+                <div class="name">${item.name}</div>
+                <div class="price"><i class="fas fa-coins"></i> ${item.price}</div>
+                <div class="desc">${item.desc}</div>
+                <button class="btn-buy" onclick="buyItem('${item.id}')">Купить</button>
+            </div>
+        `).join('');
+    }
+
+    window.buyItem = async function(itemId) {
+        const user = getCurrentUser();
+        if (!user) { alert('Войдите, чтобы совершить покупку'); return; }
+
+        let result;
+        switch(itemId) {
+            case 'colorNick':
+                const color = prompt('Введите цвет (HEX):', '#ff6b6b');
+                if (!color) return;
+                result = await purchaseColorNick(user.uid, color);
+                break;
+            case 'prefix':
+                const prefix = prompt('Введите префикс:', '⭐');
+                if (!prefix) return;
+                result = await purchasePrefix(user.uid, prefix);
+                break;
+            case 'achSlot':
+                result = await purchaseAchSlot(user.uid);
+                break;
+        }
+        if (result && result.success) {
+            alert('✅ Покупка успешно совершена!');
+            await loadShop();
+        } else if (result) {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    function updateAuthButton(user) {
+        const btn = document.getElementById('authBtn');
+        if (user) {
+            btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
+            btn.href = 'profile.html';
+        } else {
+            btn.textContent = '🔑 Вход';
+            btn.href = 'login.html';
+        }
+    }
+
+    async function updateDubInLink(user) {
+        const link = document.getElementById('dubInLink');
+        const sidebarLink = document.getElementById('sidebarDubIn');
+        if (!link) return;
+        if (user) {
+            const role = await getUserRole(user.uid);
+            const show = (role === 'dubber' || role === 'admin');
+            link.style.display = show ? 'inline-flex' : 'none';
+            if (sidebarLink) sidebarLink.style.display = show ? 'flex' : 'none';
+        } else {
+            link.style.display = 'none';
+            if (sidebarLink) sidebarLink.style.display = 'none';
+        }
+    }
+
+    async function updateAdminLinks(user) {
+        const adminLink = document.getElementById('adminLink');
+        const sidebarAdminOrders = document.getElementById('sidebarAdminOrders');
+        const sidebarAdminDSCoins = document.getElementById('sidebarAdminDSCoins');
+        if (user) {
+            const role = await getUserRole(user.uid);
+            const isAdminRole = role === 'admin';
+            if (adminLink) adminLink.style.display = isAdminRole ? 'inline-flex' : 'none';
+            if (sidebarAdminOrders) sidebarAdminOrders.style.display = isAdminRole ? 'flex' : 'none';
+            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = isAdminRole ? 'flex' : 'none';
+        } else {
+            if (adminLink) adminLink.style.display = 'none';
+            if (sidebarAdminOrders) sidebarAdminOrders.style.display = 'none';
+            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = 'none';
+        }
+    }
+
+    onAuthStateChangedListener(async (user) => {
+        currentUser = user;
+        updateAuthButton(user);
+        await updateDubInLink(user);
+        await updateAdminLinks(user);
+        await updateSidebarBalance(user);
+        await loadShop();
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const user = getCurrentUser();
+        currentUser = user;
+        updateAuthButton(user);
+        await updateDubInLink(user);
+        await updateAdminLinks(user);
+        await updateSidebarBalance(user);
+        await loadShop();
+    });
+</script>
+
+</body>
+</html>

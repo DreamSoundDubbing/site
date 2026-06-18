@@ -69,7 +69,14 @@ async function registerUser(email, password, displayName) {
             commentsCount: 0,
             subscribers: [],
             subscriptions: [],
-            achievements: []
+            achievements: [],
+            dsCoins: 0,
+            wallVisibility: 'all',
+            achSlots: 1,
+            nickColor: null,
+            prefix: null,
+            bio: '',
+            socialLink: ''
         });
         
         return { success: true, user: user };
@@ -136,7 +143,14 @@ async function getUserData(uid) {
                     commentsCount: 0,
                     subscribers: [],
                     subscriptions: [],
-                    achievements: []
+                    achievements: [],
+                    dsCoins: 0,
+                    wallVisibility: 'all',
+                    achSlots: 1,
+                    nickColor: null,
+                    prefix: null,
+                    bio: '',
+                    socialLink: ''
                 };
                 await setDoc(docRef, newData);
                 return { success: true, data: newData };
@@ -245,19 +259,11 @@ async function toggleSubscribe(currentUserId, targetUserId) {
         
         await runTransaction(db, async (transaction) => {
             if (isSubscribed) {
-                transaction.update(targetRef, {
-                    subscribers: arrayRemove(currentUserId)
-                });
-                transaction.update(currentRef, {
-                    subscriptions: arrayRemove(targetUserId)
-                });
+                transaction.update(targetRef, { subscribers: arrayRemove(currentUserId) });
+                transaction.update(currentRef, { subscriptions: arrayRemove(targetUserId) });
             } else {
-                transaction.update(targetRef, {
-                    subscribers: arrayUnion(currentUserId)
-                });
-                transaction.update(currentRef, {
-                    subscriptions: arrayUnion(targetUserId)
-                });
+                transaction.update(targetRef, { subscribers: arrayUnion(currentUserId) });
+                transaction.update(currentRef, { subscriptions: arrayUnion(targetUserId) });
             }
         });
         
@@ -342,9 +348,7 @@ async function checkAndAddAchievement(uid, type, value) {
         if (newAchievements.length > 0) {
             const docRef = doc(db, "users", uid);
             for (const ach of newAchievements) {
-                await updateDoc(docRef, {
-                    achievements: arrayUnion(ach)
-                });
+                await updateDoc(docRef, { achievements: arrayUnion(ach) });
             }
         }
     } catch (error) {
@@ -355,9 +359,7 @@ async function checkAndAddAchievement(uid, type, value) {
 async function addCustomAchievement(uid, achievement) {
     try {
         const docRef = doc(db, "users", uid);
-        await updateDoc(docRef, {
-            achievements: arrayUnion(achievement)
-        });
+        await updateDoc(docRef, { achievements: arrayUnion(achievement) });
         return { success: true };
     } catch (error) {
         return { success: false, error: error.message };
@@ -365,7 +367,7 @@ async function addCustomAchievement(uid, achievement) {
 }
 
 // ============================================================
-// ========== КОММЕНТАРИИ (с отметками) ==========
+// ========== КОММЕНТАРИИ ==========
 // ============================================================
 
 async function addComment(titleId, text, rating, mentionedEmails = []) {
@@ -374,11 +376,8 @@ async function addComment(titleId, text, rating, mentionedEmails = []) {
         return { success: false, error: "Необходимо авторизоваться" };
     }
     try {
-        // Поиск упоминаний @email
         const mentions = text.match(/@([^\s]+)/g) || [];
         const mentionedEmailsFromText = mentions.map(m => m.substring(1));
-        
-        // Объединяем с переданными email
         const allMentions = [...new Set([...mentionedEmailsFromText, ...mentionedEmails])];
         
         const userData = await getUserData(user.uid);
@@ -397,9 +396,7 @@ async function addComment(titleId, text, rating, mentionedEmails = []) {
         });
         
         const userRef = doc(db, "users", user.uid);
-        await updateDoc(userRef, {
-            commentsCount: increment(1)
-        });
+        await updateDoc(userRef, { commentsCount: increment(1) });
         
         const newCommentsCount = (userData.success ? userData.data.commentsCount || 0 : 0) + 1;
         await checkAndAddAchievement(user.uid, 'comments', newCommentsCount);
@@ -441,15 +438,13 @@ async function deleteComment(commentId) {
 }
 
 // ============================================================
-// ========== ПРОСМОТРЫ СЕРИЙ ==========
+// ========== ПРОСМОТРЫ ==========
 // ============================================================
 
 async function trackView(uid, titleId, episodeNumber) {
     try {
         const userRef = doc(db, "users", uid);
-        await updateDoc(userRef, {
-            viewsCount: increment(1)
-        });
+        await updateDoc(userRef, { viewsCount: increment(1) });
         
         const result = await getUserData(uid);
         if (result.success) {
@@ -463,15 +458,12 @@ async function trackView(uid, titleId, episodeNumber) {
 }
 
 // ============================================================
-// ========== СРЕДНЯЯ ОЦЕНКА ТАЙТЛА ==========
+// ========== РЕЙТИНГИ ==========
 // ============================================================
 
 async function getAverageRating(titleId) {
     try {
-        const q = query(
-            collection(db, "comments"),
-            where("titleId", "==", titleId)
-        );
+        const q = query(collection(db, "comments"), where("titleId", "==", titleId));
         const snapshot = await getDocs(q);
         let total = 0;
         let count = 0;
@@ -490,10 +482,8 @@ async function getAverageRating(titleId) {
 }
 
 // ============================================================
-// ========== ДАННЫЕ (ТАЙТЛЫ, ДАББЕРЫ, РОЛИ) ==========
+// ========== ТАЙТЛЫ ==========
 // ============================================================
-
-// ---- ТАЙТЛЫ ----
 
 async function getTitles() {
     try {
@@ -527,16 +517,11 @@ async function addTitle(titleData) {
         if (!docId) {
             return { success: false, error: "ID тайтла не указан" };
         }
-        
         const docRef = doc(db, "titles", docId);
         const docSnap = await getDoc(docRef);
-        
-        // Если документ уже существует, возвращаем ошибку
         if (docSnap.exists()) {
             return { success: false, error: "Тайтл с таким ID уже существует" };
         }
-        
-        // Создаём новый документ
         await setDoc(docRef, {
             ...titleData,
             id: docId,
@@ -554,16 +539,12 @@ async function updateTitle(titleId, data) {
     try {
         const docRef = doc(db, "titles", titleId);
         const docSnap = await getDoc(docRef);
-        
-        // Если документ не существует, возвращаем ошибку
         if (!docSnap.exists()) {
             return { success: false, error: "Тайтл не найден для обновления" };
         }
-        
-        // Обновляем существующий документ
         await updateDoc(docRef, {
             ...data,
-            id: titleId, // сохраняем ID
+            id: titleId,
             updatedAt: serverTimestamp()
         });
         return { success: true, updated: true };
@@ -577,18 +558,19 @@ async function deleteTitle(titleId) {
     try {
         const docRef = doc(db, "titles", titleId);
         const docSnap = await getDoc(docRef);
-        
         if (!docSnap.exists()) {
             return { success: false, error: "Тайтл не найден" };
         }
-        
         await deleteDoc(docRef);
         return { success: true };
     } catch (error) {
         return { success: false, error: error.message };
     }
 }
-// ---- ДАББЕРЫ ----
+
+// ============================================================
+// ========== ДАББЕРЫ (VOICES) ==========
+// ============================================================
 
 async function getVoices() {
     try {
@@ -622,11 +604,8 @@ async function addVoice(voiceData) {
         if (!docId) {
             return { success: false, error: "ID даббера не указан" };
         }
-        
         const docRef = doc(db, "voices", docId);
         const docSnap = await getDoc(docRef);
-        
-        // Если документ существует, обновляем его (чтобы избежать дублирования)
         if (docSnap.exists()) {
             await updateDoc(docRef, {
                 ...voiceData,
@@ -634,8 +613,6 @@ async function addVoice(voiceData) {
             });
             return { success: true, id: docId, updated: true };
         }
-        
-        // Если не существует, создаём
         await setDoc(docRef, {
             ...voiceData,
             createdAt: serverTimestamp(),
@@ -652,10 +629,7 @@ async function updateVoice(voiceId, data) {
     try {
         const docRef = doc(db, "voices", voiceId);
         const docSnap = await getDoc(docRef);
-        
-        // Проверяем, существует ли документ
         if (!docSnap.exists()) {
-            // Если документ не существует, создаём его
             await setDoc(docRef, {
                 ...data,
                 id: voiceId,
@@ -664,8 +638,6 @@ async function updateVoice(voiceId, data) {
             });
             return { success: true, created: true };
         }
-        
-        // Если существует, обновляем
         await updateDoc(docRef, {
             ...data,
             updatedAt: serverTimestamp()
@@ -681,11 +653,9 @@ async function deleteVoice(voiceId) {
     try {
         const docRef = doc(db, "voices", voiceId);
         const docSnap = await getDoc(docRef);
-        
         if (!docSnap.exists()) {
             return { success: false, error: "Даббер не найден" };
         }
-        
         await deleteDoc(docRef);
         return { success: true };
     } catch (error) {
@@ -693,7 +663,9 @@ async function deleteVoice(voiceId) {
     }
 }
 
-// ---- РОЛИ ----
+// ============================================================
+// ========== РОЛИ ==========
+// ============================================================
 
 async function getRoles() {
     try {
@@ -770,7 +742,9 @@ async function deleteRole(roleId) {
     }
 }
 
-// ---- МАТЕРИАЛЫ ДЛЯ ОЗВУЧКИ ----
+// ============================================================
+// ========== МАТЕРИАЛЫ DUB-IN ==========
+// ============================================================
 
 async function getDubMaterials(titleId) {
     try {
@@ -829,9 +803,7 @@ async function createVoiceOrder(orderData) {
     if (!user) {
         return { success: false, error: "Необходимо авторизоваться" };
     }
-    
     try {
-        // Убедитесь, что используете правильную коллекцию
         const docRef = await addDoc(collection(db, "voiceOrders"), {
             ...orderData,
             userId: user.uid,
@@ -841,10 +813,8 @@ async function createVoiceOrder(orderData) {
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
         });
-        
         return { success: true, id: docRef.id };
     } catch (error) {
-        console.error('Ошибка создания заявки:', error);
         return { success: false, error: error.message };
     }
 }
@@ -889,88 +859,353 @@ async function updateVoiceOrder(orderId, data) {
 }
 
 // ============================================================
-// ========== ОПЛАТА ЧЕРЕЗ ЮMONEY ==========
+// ========== DSCOINS ==========
 // ============================================================
 
-async function createPayment(orderId, amount, description) {
+async function getUserDSCoins(uid) {
     try {
-        const response = await fetch('https://api.yoomoney.ru/v2/payments', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Bearer ' + YOOMONEY_ACCESS_TOKEN
-            },
-            body: new URLSearchParams({
-                'amount': amount.toString(),
-                'currency': 'RUB',
-                'payment_method_data[type]': 'bank_card',
-                'confirmation[type]': 'redirect',
-                'confirmation[return_url]': window.location.origin + '/profile.html?payment=success',
-                'description': description,
-                'metadata[order_id]': orderId
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (data.status === 'pending' || data.status === 'waiting_for_capture') {
-            await updateVoiceOrder(orderId, {
-                paymentId: data.id,
-                paymentStatus: data.status,
-                paymentAmount: amount
-            });
-            
-            return { 
-                success: true, 
-                paymentId: data.id,
-                confirmationUrl: data.confirmation?.confirmation_url || null,
-                status: data.status
-            };
-        } else {
-            return { success: false, error: 'Ошибка создания платежа: ' + JSON.stringify(data) };
+        const result = await getUserData(uid);
+        if (result.success) {
+            return { success: true, coins: result.data.dsCoins || 0 };
         }
+        return { success: false, error: result.error };
     } catch (error) {
-        console.error('Ошибка создания платежа:', error);
         return { success: false, error: error.message };
     }
 }
 
-async function checkPaymentStatus(paymentId) {
+async function addDSCoins(uid, amount, reason) {
     try {
-        const response = await fetch('https://api.yoomoney.ru/v2/payments/' + paymentId, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + YOOMONEY_ACCESS_TOKEN
-            }
+        const docRef = doc(db, "users", uid);
+        await updateDoc(docRef, {
+            dsCoins: increment(amount)
         });
-        
-        const data = await response.json();
-        
-        return { success: true, status: data.status, data: data };
+        await addDoc(collection(db, "dsCoinTransactions"), {
+            uid: uid,
+            amount: amount,
+            reason: reason || 'Пополнение',
+            timestamp: serverTimestamp(),
+            type: 'income'
+        });
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function spendDSCoins(uid, amount, reason) {
+    try {
+        const userResult = await getUserData(uid);
+        if (!userResult.success) {
+            return { success: false, error: "Пользователь не найден" };
+        }
+        const currentCoins = userResult.data.dsCoins || 0;
+        if (currentCoins < amount) {
+            return { success: false, error: "Недостаточно DSCoins" };
+        }
+        const docRef = doc(db, "users", uid);
+        await updateDoc(docRef, { dsCoins: increment(-amount) });
+        await addDoc(collection(db, "dsCoinTransactions"), {
+            uid: uid,
+            amount: -amount,
+            reason: reason || 'Покупка',
+            timestamp: serverTimestamp(),
+            type: 'spend'
+        });
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function getDSCoinTransactions(uid) {
+    try {
+        const q = query(
+            collection(db, "dsCoinTransactions"),
+            where("uid", "==", uid),
+            orderBy("timestamp", "desc"),
+            limit(50)
+        );
+        const snapshot = await getDocs(q);
+        const transactions = [];
+        snapshot.forEach(doc => {
+            transactions.push({ id: doc.id, ...doc.data() });
+        });
+        return { success: true, transactions: transactions };
     } catch (error) {
         return { success: false, error: error.message };
     }
 }
 
 // ============================================================
-// ========== АЧИВКИ ЗА ОПЛАТУ ==========
+// ========== ЗАЯВКИ НА ПОКУПКУ DSCOINS ==========
 // ============================================================
 
-async function grantPaymentAchievement(userId, orderId, achievementName, achievementIcon = '💎') {
+async function createDSCoinOrder(orderData) {
+    const user = getCurrentUser();
+    if (!user) {
+        return { success: false, error: "Необходимо авторизоваться" };
+    }
     try {
-        const achievement = {
-            id: 'payment_' + Date.now(),
-            name: achievementName || '💎 Платный заказ',
-            icon: achievementIcon,
-            description: 'Оплаченная заявка на озвучку #' + orderId,
-            type: 'payment'
-        };
-        
-        const result = await addCustomAchievement(userId, achievement);
-        return result;
+        const docRef = await addDoc(collection(db, "dsCoinOrders"), {
+            ...orderData,
+            userId: user.uid,
+            userEmail: user.email,
+            userName: user.displayName || 'Пользователь',
+            status: 'pending',
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+        });
+        return { success: true, id: docRef.id };
     } catch (error) {
         return { success: false, error: error.message };
     }
+}
+
+async function getDSCoinOrders(userId) {
+    try {
+        let q;
+        if (userId) {
+            q = query(
+                collection(db, "dsCoinOrders"),
+                where("userId", "==", userId),
+                orderBy("createdAt", "desc")
+            );
+        } else {
+            q = query(
+                collection(db, "dsCoinOrders"),
+                orderBy("createdAt", "desc")
+            );
+        }
+        const snapshot = await getDocs(q);
+        const orders = [];
+        snapshot.forEach(doc => {
+            orders.push({ id: doc.id, ...doc.data() });
+        });
+        return { success: true, orders: orders };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function updateDSCoinOrder(orderId, data) {
+    try {
+        const docRef = doc(db, "dsCoinOrders", orderId);
+        await updateDoc(docRef, {
+            ...data,
+            updatedAt: serverTimestamp()
+        });
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// ============================================================
+// ========== ПЛЕЙЛИСТЫ ==========
+// ============================================================
+
+async function getPlaylists(uid) {
+    try {
+        const q = query(
+            collection(db, "playlists"),
+            where("userId", "==", uid),
+            orderBy("createdAt", "desc")
+        );
+        const snapshot = await getDocs(q);
+        const playlists = [];
+        snapshot.forEach(doc => {
+            playlists.push({ id: doc.id, ...doc.data() });
+        });
+        return { success: true, playlists: playlists };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function createPlaylist(uid, data) {
+    try {
+        const docRef = await addDoc(collection(db, "playlists"), {
+            ...data,
+            userId: uid,
+            items: [],
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+        });
+        return { success: true, id: docRef.id };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function updatePlaylist(playlistId, data) {
+    try {
+        const docRef = doc(db, "playlists", playlistId);
+        await updateDoc(docRef, {
+            ...data,
+            updatedAt: serverTimestamp()
+        });
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function deletePlaylist(playlistId) {
+    try {
+        await deleteDoc(doc(db, "playlists", playlistId));
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function addToPlaylist(playlistId, item) {
+    try {
+        const docRef = doc(db, "playlists", playlistId);
+        await updateDoc(docRef, { items: arrayUnion(item) });
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function removeFromPlaylist(playlistId, itemId) {
+    try {
+        const docRef = doc(db, "playlists", playlistId);
+        const docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) {
+            return { success: false, error: "Плейлист не найден" };
+        }
+        const data = docSnap.data();
+        const items = (data.items || []).filter(item => item.id !== itemId);
+        await updateDoc(docRef, { items: items });
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// ============================================================
+// ========== СТЕНА ПРОФИЛЯ ==========
+// ============================================================
+
+async function getWallPosts(uid, limit = 20) {
+    try {
+        const q = query(
+            collection(db, "wallPosts"),
+            where("userId", "==", uid),
+            orderBy("createdAt", "desc"),
+            limit(limit)
+        );
+        const snapshot = await getDocs(q);
+        const posts = [];
+        snapshot.forEach(doc => {
+            posts.push({ id: doc.id, ...doc.data() });
+        });
+        return { success: true, posts: posts };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function addWallPost(uid, text, visibility = 'all') {
+    try {
+        const userData = await getUserData(uid);
+        const userName = userData.success ? userData.data.displayName || 'Пользователь' : 'Пользователь';
+        const docRef = await addDoc(collection(db, "wallPosts"), {
+            userId: uid,
+            userName: userName,
+            text: text,
+            visibility: visibility,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+        });
+        return { success: true, id: docRef.id };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function deleteWallPost(postId) {
+    try {
+        await deleteDoc(doc(db, "wallPosts", postId));
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function updateWallVisibility(uid, visibility) {
+    try {
+        const docRef = doc(db, "users", uid);
+        await updateDoc(docRef, { wallVisibility: visibility });
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// ============================================================
+// ========== МАГАЗИН DSCOINS ==========
+// ============================================================
+
+async function getShopPrices() {
+    try {
+        const docRef = doc(db, "settings", "shopPrices");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            return { success: true, data: docSnap.data() };
+        }
+        const defaultPrices = { colorNick: 500, prefix: 300, achSlot: 200 };
+        await setDoc(docRef, defaultPrices);
+        return { success: true, data: defaultPrices };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function updateShopPrices(prices) {
+    try {
+        const docRef = doc(db, "settings", "shopPrices");
+        await setDoc(docRef, prices);
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function purchaseColorNick(uid, color) {
+    const prices = await getShopPrices();
+    if (!prices.success) return { success: false, error: "Ошибка загрузки цен" };
+    const cost = prices.data.colorNick || 500;
+    const spendResult = await spendDSCoins(uid, cost, `Покупка цветного ника: ${color}`);
+    if (!spendResult.success) return spendResult;
+    await updateUserProfile(uid, { nickColor: color });
+    return { success: true };
+}
+
+async function purchasePrefix(uid, prefix) {
+    const prices = await getShopPrices();
+    if (!prices.success) return { success: false, error: "Ошибка загрузки цен" };
+    const cost = prices.data.prefix || 300;
+    const spendResult = await spendDSCoins(uid, cost, `Покупка префикса: ${prefix}`);
+    if (!spendResult.success) return spendResult;
+    await updateUserProfile(uid, { prefix: prefix });
+    return { success: true };
+}
+
+async function purchaseAchSlot(uid) {
+    const prices = await getShopPrices();
+    if (!prices.success) return { success: false, error: "Ошибка загрузки цен" };
+    const cost = prices.data.achSlot || 200;
+    const spendResult = await spendDSCoins(uid, cost, "Покупка дополнительного слота ачивок");
+    if (!spendResult.success) return spendResult;
+    const userData = await getUserData(uid);
+    if (!userData.success) return { success: false, error: "Ошибка загрузки данных" };
+    const currentSlots = userData.data.achSlots || 1;
+    await updateUserProfile(uid, { achSlots: currentSlots + 1 });
+    return { success: true };
 }
 
 // ============================================================
@@ -1020,7 +1255,7 @@ async function initializeData() {
         await batch.commit();
         console.log('✅ Начальные данные загружены');
     } catch (error) {
-        console.error('❌ Ошибка:', error);
+        console.error('❌ Ошибка инициализации:', error);
     }
 }
 
@@ -1078,7 +1313,29 @@ export {
     initializeData,
     createVoiceOrder,
     getVoiceOrders,
-    updateVoiceOrder
+    updateVoiceOrder,
+    getUserDSCoins,
+    addDSCoins,
+    spendDSCoins,
+    getDSCoinTransactions,
+    createDSCoinOrder,
+    getDSCoinOrders,
+    updateDSCoinOrder,
+    getPlaylists,
+    createPlaylist,
+    updatePlaylist,
+    deletePlaylist,
+    addToPlaylist,
+    removeFromPlaylist,
+    getWallPosts,
+    addWallPost,
+    deleteWallPost,
+    updateWallVisibility,
+    getShopPrices,
+    updateShopPrices,
+    purchaseColorNick,
+    purchasePrefix,
+    purchaseAchSlot
 };
 
 console.log('🔥 Модуль firebase-config.js загружен');

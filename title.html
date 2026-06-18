@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Просмотр - Dream Sound Dubbing</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="data.js"></script>
     <script type="module" src="firebase-config.js"></script>
     <style>
@@ -22,11 +23,7 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        .comment-user {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .comment-user { display: flex; align-items: center; gap: 10px; }
         .comment-avatar {
             width: 36px;
             height: 36px;
@@ -50,9 +47,7 @@
             color: var(--color-accent2);
             text-decoration: underline;
         }
-        .comment-rating {
-            color: var(--color-warning);
-        }
+        .comment-rating { color: var(--color-warning); }
         .comment-text {
             color: var(--text-primary);
             margin-top: 8px;
@@ -69,10 +64,7 @@
             color: var(--color-accent2);
             text-decoration: underline;
         }
-        .comment-time {
-            color: var(--text-muted);
-            font-size: 12px;
-        }
+        .comment-time { color: var(--text-muted); font-size: 12px; }
         .comment-delete {
             background: var(--color-accent);
             color: #fff;
@@ -83,9 +75,7 @@
             font-size: 12px;
             transition: background 0.3s;
         }
-        .comment-delete:hover {
-            background: var(--color-accent2);
-        }
+        .comment-delete:hover { background: var(--color-accent2); }
 
         .comment-form {
             display: flex;
@@ -152,11 +142,7 @@
             margin-top: 5px;
         }
 
-        .no-comments {
-            color: var(--text-muted);
-            text-align: center;
-            padding: 20px;
-        }
+        .no-comments { color: var(--text-muted); text-align: center; padding: 20px; }
         .auth-prompt {
             background: var(--bg-welcome);
             padding: 20px;
@@ -200,12 +186,8 @@
             border: 1px solid var(--color-accent);
             margin-top: 15px;
         }
-        .admin-panel.active {
-            display: block;
-        }
-        .admin-panel .form-group {
-            margin-bottom: 12px;
-        }
+        .admin-panel.active { display: block; }
+        .admin-panel .form-group { margin-bottom: 12px; }
         .admin-panel .form-group label {
             color: var(--text-muted);
             font-size: 13px;
@@ -225,19 +207,13 @@
             box-sizing: border-box;
             font-family: inherit;
         }
-        .admin-panel .form-group textarea {
-            min-height: 60px;
-            resize: vertical;
-        }
+        .admin-panel .form-group textarea { min-height: 60px; resize: vertical; }
         .admin-panel .form-row {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
         }
-        .admin-panel .form-row .form-group {
-            flex: 1;
-            min-width: 140px;
-        }
+        .admin-panel .form-row .form-group { flex: 1; min-width: 140px; }
         .admin-panel .save-btn {
             padding: 10px 30px;
             background: var(--gradient-primary);
@@ -269,9 +245,7 @@
             color: var(--text-primary);
         }
 
-        .episodes-editor {
-            margin-top: 10px;
-        }
+        .episodes-editor { margin-top: 10px; }
         .episode-edit-item {
             display: flex;
             flex-wrap: wrap;
@@ -283,9 +257,7 @@
             margin-bottom: 6px;
             border: 1px solid var(--border-primary);
         }
-        .episode-edit-item:hover {
-            border-color: var(--color-accent);
-        }
+        .episode-edit-item:hover { border-color: var(--color-accent); }
         .episode-edit-item .ep-number {
             width: 50px;
             padding: 6px 8px;
@@ -325,9 +297,7 @@
             font-size: 13px;
             min-width: 80px;
         }
-        .episode-edit-item .ep-status option {
-            background: var(--bg-card);
-        }
+        .episode-edit-item .ep-status option { background: var(--bg-card); }
         .episode-edit-item .remove-ep-btn {
             background: var(--color-danger);
             color: #fff;
@@ -339,10 +309,7 @@
             transition: background 0.3s;
             flex-shrink: 0;
         }
-        .episode-edit-item .remove-ep-btn:hover {
-            background: #e05555;
-        }
-
+        .episode-edit-item .remove-ep-btn:hover { background: #e05555; }
         .add-episode-btn {
             padding: 8px 20px;
             background: var(--color-accent);
@@ -359,7 +326,6 @@
             background: var(--color-accent2);
             transform: translateY(-2px);
         }
-
         .episodes-empty {
             color: var(--text-muted);
             text-align: center;
@@ -389,7 +355,6 @@
             aspect-ratio: 16/9;
             border: 2px solid var(--border-primary);
         }
-
         .player-wrapper.fullscreen {
             position: fixed;
             top: 0;
@@ -403,12 +368,7 @@
             margin: 0;
             background: #000;
         }
-
-        .player-wrapper.fullscreen .player-container {
-            border-radius: 0;
-            border: none;
-        }
-
+        .player-wrapper.fullscreen .player-container { border-radius: 0; border: none; }
         .player-wrapper.fullscreen .player-controls {
             position: absolute;
             bottom: 30px;
@@ -420,7 +380,6 @@
             backdrop-filter: blur(10px);
             z-index: 10;
         }
-
         .player-wrapper.fullscreen .player-controls button {
             background: rgba(255,255,255,0.2);
             border: none;
@@ -431,11 +390,7 @@
             font-size: 14px;
             transition: background 0.3s;
         }
-
-        .player-wrapper.fullscreen .player-controls button:hover {
-            background: rgba(255,255,255,0.4);
-        }
-
+        .player-wrapper.fullscreen .player-controls button:hover { background: rgba(255,255,255,0.4); }
         .player-container {
             width: 100%;
             height: 100%;
@@ -444,21 +399,18 @@
             overflow: hidden;
             border: none;
         }
-
         .player-container iframe {
             width: 100%;
             height: 100%;
             border: none;
             display: block;
         }
-
         .player-controls {
             display: flex;
             justify-content: center;
             gap: 10px;
             padding: 10px 0;
         }
-
         .fullscreen-btn {
             padding: 8px 20px;
             background: var(--gradient-primary);
@@ -473,70 +425,128 @@
             align-items: center;
             gap: 8px;
         }
-
         .fullscreen-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
         }
-
-        .fullscreen-btn .icon {
-            font-size: 18px;
-        }
-
-        /* Скрываем скролл в полноэкранном режиме */
-        body.fullscreen-mode {
-            overflow: hidden !important;
-        }
+        .fullscreen-btn .icon { font-size: 18px; }
+        body.fullscreen-mode { overflow: hidden !important; }
 
         @media (max-width: 768px) {
-            .comment-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .comment-user {
-                flex-wrap: wrap;
-            }
-            .episode-edit-item {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .episode-edit-item .ep-number {
-                width: 100%;
-            }
+            .comment-header { flex-direction: column; align-items: flex-start; }
+            .comment-user { flex-wrap: wrap; }
+            .episode-edit-item { flex-direction: column; align-items: stretch; }
+            .episode-edit-item .ep-number { width: 100%; }
             .episode-edit-item .ep-title,
             .episode-edit-item .ep-url,
-            .episode-edit-item .ep-status {
-                width: 100%;
-            }
-            .player-wrapper.fullscreen .player-controls {
-                bottom: 15px;
-                padding: 6px 14px;
-            }
-            .player-wrapper.fullscreen .player-controls button {
-                font-size: 12px;
-                padding: 6px 12px;
-            }
+            .episode-edit-item .ep-status { width: 100%; }
+            .player-wrapper.fullscreen .player-controls { bottom: 15px; padding: 6px 14px; }
+            .player-wrapper.fullscreen .player-controls button { font-size: 12px; padding: 6px 12px; }
         }
     </style>
 </head>
 <body>
 
+<!-- ========== HEADER ========== -->
 <header class="fixed-header">
     <div class="nav-buttons">
-        <a href="index.html">
-            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo">
-        </a>
-        <a href="index.html" class="nav-icon-btn">🏠Главная</a>
-        <a href="titles.html" class="nav-icon-btn">🎦Тайтлы</a>
-        <a href="sostav.html" class="nav-icon-btn">🎭Состав</a>
+        <button class="burger-btn" onclick="openSidebar()" title="Меню" aria-label="Открыть меню">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="index.html"><img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo"></a>
+        <a href="index.html" class="nav-icon-btn" id="homeLink" style="display:none;">🏠Главная</a>
+        <a href="titles.html" class="nav-icon-btn" id="titlesLink" style="display:none;">🎦Тайтлы</a>
+        <a href="sostav.html" class="nav-icon-btn" id="sostavLink" style="display:none;">🎭Состав</a>
         <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
-        <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
+        <a href="search.html" class="nav-icon-btn" id="searchLink" style="display:none;">🔍Поиск</a>
         <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
-        <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+        <a href="voice-order.html" class="nav-icon-btn" id="voiceOrderLink" style="display:none;">📝Заявка</a>
         <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
         <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
     </div>
 </header>
+
+<!-- ========== SIDEBAR ========== -->
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+<aside id="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="sidebar-logo-img">
+            <span>DSD <span style="color:var(--color-accent2);">Menu</span></span>
+        </div>
+        <button class="sidebar-close-btn" onclick="closeSidebar()"><i class="fas fa-times"></i></button>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Навигация</div>
+        <a href="index.html" class="sidebar-link"><i class="fas fa-home"></i><span>Главная</span></a>
+        <a href="titles.html" class="sidebar-link"><i class="fas fa-film"></i><span>Тайтлы</span></a>
+        <a href="sostav.html" class="sidebar-link"><i class="fas fa-users"></i><span>Состав</span></a>
+        <a href="search.html" class="sidebar-link"><i class="fas fa-search"></i><span>Поиск</span></a>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Личное</div>
+        <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
+        <a href="profile.html#playlists" class="sidebar-link"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
+        <a href="profile.html#shop" class="sidebar-link"><i class="fas fa-coins"></i><span>Магазин DSCoins</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Студия</div>
+        <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
+        <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заявка на озвучку</span></a>
+        <a href="#" class="sidebar-link" onclick="openDSCoinOrder(); return false;"><i class="fas fa-coins"></i><span>Купить DSCoins</span></a>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Администрирование</div>
+        <a href="admin-orders.html" class="sidebar-link" id="sidebarAdminOrders" style="display:none;"><i class="fas fa-clipboard-list"></i><span>Заказы</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+        <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;"><i class="fas fa-coins"></i><span>Управление DSCoins</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="sidebar-socials">
+            <a href="#" target="_blank"><i class="fab fa-vk"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px;letter-spacing:1px;">© Dream Sound Dubbing</div>
+    </div>
+</aside>
+
+<!-- ========== DSCOIN МОДАЛКИ ========== -->
+<div class="modal-overlay" id="m-dscoin-order">
+    <div class="modal-content" style="max-width:440px;">
+        <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
+        <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Покупка DSCoins</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">После оформления заявки напишите менеджеру в Telegram для оплаты.</p>
+        <div class="form-group"><label>Ваш Email *</label><input type="email" id="dscoin-order-email" placeholder="your@email.com"></div>
+        <div class="form-group">
+            <label>Количество DSCoins *</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(100)">100</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(250)">250</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(500)">500</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(1000)">1000</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(2000)">2000</button>
+            </div>
+            <input type="number" id="dscoin-order-amount" placeholder="Введите количество..." min="1">
+        </div>
+        <div style="background:var(--bg-welcome);padding:12px;border-radius:10px;margin:12px 0;text-align:center;">
+            <span style="color:var(--text-muted);">Стоимость: </span>
+            <span id="dscoin-order-price" style="color:var(--color-accent);font-weight:bold;font-size:18px;">0 ₽</span>
+            <div style="font-size:11px;color:var(--text-muted);">1 DSCoin = 1 ₽</div>
+        </div>
+        <button class="submit-btn" style="width:100%;" onclick="submitDSCoinOrder()"><i class="fas fa-paper-plane"></i> Оформить заявку</button>
+        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-dscoin-order')">Отмена</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="m-admin-dscoins">
+    <div class="modal-content" style="max-width:480px;">
+        <button class="modal-close" onclick="closeModal('m-admin-dscoins')">✕</button>
+        <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Управление DSCoins</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">Добавьте монеты пользователю по email.</p>
+        <div class="form-group"><label>Email пользователя *</label><input type="email" id="admin-dscoin-email" placeholder="user@example.com"></div>
+        <div class="form-group"><label>Количество DSCoins *</label><input type="number" id="admin-dscoin-amount" placeholder="100" min="1"></div>
+        <div class="form-group"><label>Причина</label><input type="text" id="admin-dscoin-reason" value="Начисление администратором"></div>
+        <button class="submit-btn" style="width:100%;background:var(--gradient-primary);" onclick="adminAddDSCoins()"><i class="fas fa-plus"></i> Добавить монеты</button>
+        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-admin-dscoins')">Отмена</button>
+    </div>
+</div>
 
 <script>
     function toggleTheme() {
@@ -546,23 +556,57 @@
         html.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
         const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
-        }
+        if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
     }
-
     function loadTheme() {
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
         const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
-        }
+        if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
     }
-
     document.addEventListener('DOMContentLoaded', loadTheme);
+
+    function openSidebar() {
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebar-overlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebar-overlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeSidebar();
+    });
+
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    function openDSCoinOrder() { closeSidebar(); openModal('m-dscoin-order'); }
+    function openAdminDSCoins() { closeSidebar(); openModal('m-admin-dscoins'); }
+
+    function setDSCoinAmount(amount) {
+        document.getElementById('dscoin-order-amount').value = amount;
+        updateDSCoinPrice();
+    }
+    function updateDSCoinPrice() {
+        const amount = parseInt(document.getElementById('dscoin-order-amount').value) || 0;
+        const priceEl = document.getElementById('dscoin-order-price');
+        if (priceEl) priceEl.textContent = amount + ' ₽';
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const amountInput = document.getElementById('dscoin-order-amount');
+        if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
+    });
 </script>
 
+<!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
 <div class="container">
     <div class="header">
         <hr>
@@ -593,8 +637,50 @@
         getAverageRating,
         trackView,
         getUserByEmail,
-        getUserData
+        getUserData,
+        getAllUsers,
+        getUserDSCoins,
+        addDSCoins,
+        createDSCoinOrder
     } from './firebase-config.js';
+
+    window.getUserDSCoins = getUserDSCoins;
+    window.getUserByEmail = getUserByEmail;
+    window.addDSCoins = addDSCoins;
+    window.createDSCoinOrder = createDSCoinOrder;
+    window.setDSCoinAmount = setDSCoinAmount;
+    window.updateDSCoinPrice = updateDSCoinPrice;
+
+    window.submitDSCoinOrder = async function() {
+        const email = document.getElementById('dscoin-order-email').value.trim();
+        const amount = parseInt(document.getElementById('dscoin-order-amount').value);
+        if (!email) { alert('❌ Введите email'); return; }
+        if (!amount || amount < 1) { alert('❌ Введите количество DSCoins'); return; }
+        const result = await createDSCoinOrder({ email, amount, price: amount });
+        if (result.success) {
+            alert('✅ Заявка создана! Напишите менеджеру в Telegram для оплаты.');
+            closeModal('m-dscoin-order');
+            window.open('https://t.me/Bill_Heringtton', '_blank');
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+    window.adminAddDSCoins = async function() {
+        const email = document.getElementById('admin-dscoin-email').value.trim();
+        const amount = parseInt(document.getElementById('admin-dscoin-amount').value);
+        const reason = document.getElementById('admin-dscoin-reason').value.trim() || 'Начисление администратором';
+        if (!email) { alert('❌ Введите email пользователя'); return; }
+        if (!amount || amount < 1) { alert('❌ Введите количество DSCoins'); return; }
+        const userResult = await getUserByEmail(email);
+        if (!userResult.success) { alert('❌ Пользователь не найден'); return; }
+        const result = await addDSCoins(userResult.data.id, amount, reason);
+        if (result.success) {
+            alert('✅ Добавлено ' + amount + ' DSCoins пользователю ' + email);
+            closeModal('m-admin-dscoins');
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
 
     const titleId = new URLSearchParams(window.location.search).get('id');
     let currentUser = null;
@@ -602,6 +688,7 @@
     let currentTitle = null;
     let allComments = [];
     let isFullscreen = false;
+    let allUsers = [];
 
     function updateAuthButton(user) {
         const btn = document.getElementById('authBtn');
@@ -616,23 +703,44 @@
 
     async function updateDubInLink(user) {
         const link = document.getElementById('dubInLink');
+        const sidebarLink = document.getElementById('sidebarDubIn');
         if (!link) return;
         if (user) {
             const role = await getUserRole(user.uid);
-            link.style.display = (role === 'dubber' || role === 'admin') ? 'inline-flex' : 'none';
+            const show = (role === 'dubber' || role === 'admin');
+            link.style.display = show ? 'inline-flex' : 'none';
+            if (sidebarLink) sidebarLink.style.display = show ? 'flex' : 'none';
         } else {
             link.style.display = 'none';
+            if (sidebarLink) sidebarLink.style.display = 'none';
         }
     }
 
-    async function updateAdminLink(user) {
-        const link = document.getElementById('adminLink');
-        if (!link) return;
+    async function updateAdminLinks(user) {
+        const adminLink = document.getElementById('adminLink');
+        const sidebarAdminOrders = document.getElementById('sidebarAdminOrders');
+        const sidebarAdminDSCoins = document.getElementById('sidebarAdminDSCoins');
         if (user) {
             const role = await getUserRole(user.uid);
-            link.style.display = role === 'admin' ? 'inline-flex' : 'none';
+            const isAdminRole = role === 'admin';
+            if (adminLink) adminLink.style.display = isAdminRole ? 'inline-flex' : 'none';
+            if (sidebarAdminOrders) sidebarAdminOrders.style.display = isAdminRole ? 'flex' : 'none';
+            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = isAdminRole ? 'flex' : 'none';
         } else {
-            link.style.display = 'none';
+            if (adminLink) adminLink.style.display = 'none';
+            if (sidebarAdminOrders) sidebarAdminOrders.style.display = 'none';
+            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = 'none';
+        }
+    }
+
+    async function updateSidebarBalance(user) {
+        const balanceEl = document.getElementById('sidebarBalance');
+        if (!balanceEl) return;
+        if (user) {
+            const result = await getUserDSCoins(user.uid);
+            balanceEl.textContent = result.success ? result.coins : '0';
+        } else {
+            balanceEl.textContent = '0';
         }
     }
 
@@ -640,66 +748,152 @@
     window.toggleFullscreen = function() {
         const wrapper = document.getElementById('playerWrapper');
         const body = document.body;
-        
         if (!wrapper) return;
-        
         isFullscreen = !isFullscreen;
-        
-        if (isFullscreen) {
-            wrapper.classList.add('fullscreen');
-            body.classList.add('fullscreen-mode');
-        } else {
-            wrapper.classList.remove('fullscreen');
-            body.classList.remove('fullscreen-mode');
-        }
+        if (isFullscreen) { wrapper.classList.add('fullscreen'); body.classList.add('fullscreen-mode'); } 
+        else { wrapper.classList.remove('fullscreen'); body.classList.remove('fullscreen-mode'); }
     };
-
-    // Закрытие полноэкранного режима по Escape
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && isFullscreen) {
             const wrapper = document.getElementById('playerWrapper');
             const body = document.body;
-            if (wrapper) {
-                wrapper.classList.remove('fullscreen');
-                body.classList.remove('fullscreen-mode');
-                isFullscreen = false;
-            }
+            if (wrapper) { wrapper.classList.remove('fullscreen'); body.classList.remove('fullscreen-mode'); isFullscreen = false; }
         }
     });
 
+    // ===== ЗАГРУЗКА ПОЛЬЗОВАТЕЛЕЙ =====
+    async function loadAllUsers() {
+        const result = await getAllUsers();
+        if (result.success) allUsers = result.users;
+    }
+
+    function findUsersByMention(text) {
+        const mentions = text.match(/@([^\s]+)/g) || [];
+        const results = [];
+        const query = text.toLowerCase();
+        for (const user of allUsers) {
+            const displayName = (user.displayName || '').toLowerCase();
+            const email = (user.email || '').toLowerCase();
+            if (query.includes('@' + displayName) || query.includes('@' + email)) {
+                results.push({ email: user.email, displayName: user.displayName || user.email, uid: user.id });
+            }
+        }
+        return results;
+    }
+
+    window.findUsers = function(input) {
+        const text = input.value;
+        const cursorPos = input.selectionStart;
+        const beforeCursor = text.substring(0, cursorPos);
+        const lastAt = beforeCursor.lastIndexOf('@');
+        if (lastAt !== -1 && !beforeCursor.includes(' ', lastAt)) {
+            const searchTerm = beforeCursor.substring(lastAt + 1);
+            if (searchTerm.length > 0) {
+                const matches = allUsers.filter(user => {
+                    const name = (user.displayName || '').toLowerCase();
+                    const email = (user.email || '').toLowerCase();
+                    return name.includes(searchTerm.toLowerCase()) || email.includes(searchTerm.toLowerCase());
+                });
+                showSuggestions(matches, lastAt, input);
+                return;
+            }
+        }
+        hideSuggestions();
+    };
+
+    function showSuggestions(matches, atIndex, input) {
+        let container = document.getElementById('mentionSuggestions');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'mentionSuggestions';
+            container.style.cssText = `position:absolute;background:var(--bg-modal);border:2px solid var(--color-accent);border-radius:10px;max-height:200px;overflow-y:auto;z-index:1000;min-width:200px;box-shadow:0 8px 25px rgba(0,0,0,0.2);`;
+            input.parentElement.style.position = 'relative';
+            input.parentElement.appendChild(container);
+        }
+        if (matches.length === 0) {
+            container.innerHTML = '<div style="padding:10px;color:var(--text-muted);">Пользователи не найдены</div>';
+            return;
+        }
+        const rect = input.getBoundingClientRect();
+        const wrapperRect = input.parentElement.getBoundingClientRect();
+        container.style.top = (rect.bottom - wrapperRect.top + 5) + 'px';
+        container.style.left = (rect.left - wrapperRect.left) + 'px';
+        container.style.width = Math.min(rect.width, 300) + 'px';
+        container.innerHTML = matches.slice(0, 8).map(user => `
+            <div class="suggestion-item" style="padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border-primary);transition:background 0.2s;"
+                 onmouseover="this.style.background='var(--bg-input)'" onmouseout="this.style.background='transparent'"
+                 onclick="selectMention('${user.email}', '${user.displayName || user.email}', ${atIndex}, document.getElementById('commentText'))">
+                <div style="width:30px;height:30px;border-radius:50%;background:var(--border-primary);display:flex;align-items:center;justify-content:center;color:var(--color-accent);font-size:14px;flex-shrink:0;">${user.displayName ? user.displayName.charAt(0).toUpperCase() : '👤'}</div>
+                <div><div style="font-weight:bold;color:var(--color-accent);">${user.displayName || user.email}</div><div style="font-size:11px;color:var(--text-muted);">${user.email}</div></div>
+            </div>
+        `).join('');
+        container.style.display = 'block';
+    }
+
+    function hideSuggestions() {
+        const container = document.getElementById('mentionSuggestions');
+        if (container) container.style.display = 'none';
+    }
+
+    window.selectMention = function(email, displayName, atIndex, input) {
+        const text = input.value;
+        const before = text.substring(0, atIndex);
+        const after = text.substring(atIndex + text.substring(atIndex).indexOf(' ') + (text.substring(atIndex).includes(' ') ? 1 : 0));
+        const newText = before + '@' + email + ' ' + after;
+        input.value = newText;
+        hideSuggestions();
+        input.focus();
+        input.setSelectionRange(before.length + email.length + 1, before.length + email.length + 1);
+    };
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#mentionSuggestions') && !e.target.closest('#commentText')) hideSuggestions();
+    });
+
+    // ===== КОММЕНТАРИИ =====
     function renderComments(comments) {
         const container = document.getElementById('comments-list');
         if (!container) return;
-        
         if (!comments || comments.length === 0) {
             container.innerHTML = '<div class="no-comments">💬 Пока нет комментариев. Будьте первым!</div>';
             return;
         }
-        
         const user = getCurrentUser();
         container.innerHTML = comments.map(c => {
             const isOwner = user && c.uid === user.uid;
-            
             let textHtml = c.text || '';
             if (c.mentions) {
                 c.mentions.forEach(email => {
+                    const foundUser = allUsers.find(u => u.email === email);
+                    const displayName = foundUser?.displayName || email;
                     textHtml = textHtml.replace(
                         new RegExp(`@${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'),
-                        `<a href="profile.html?email=${encodeURIComponent(email)}" class="mention">@${email}</a>`
+                        `<a href="profile.html?uid=${foundUser?.id || ''}" class="mention">@${displayName}</a>`
                     );
                 });
             }
-            
+            const mentionRegex = /@([^\s]+)/g;
+            let match;
+            while ((match = mentionRegex.exec(textHtml)) !== null) {
+                const mention = match[1];
+                if (!textHtml.includes(`">@${mention}</a>`)) {
+                    const foundUser = allUsers.find(u => (u.displayName || '').toLowerCase() === mention.toLowerCase() || (u.email || '').toLowerCase() === mention.toLowerCase());
+                    if (foundUser) {
+                        textHtml = textHtml.replace(
+                            new RegExp(`@${mention.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'),
+                            `<a href="profile.html?uid=${foundUser.id}" class="mention">@${foundUser.displayName || foundUser.email}</a>`
+                        );
+                    }
+                }
+            }
             textHtml = textHtml.replace(/</g, '&lt;').replace(/>/g, '&gt;');
             textHtml = textHtml.replace(
-                /&lt;a href="profile\.html\?email=([^"]+)" class="mention"&gt;@([^&]+)&lt;\/a&gt;/g,
-                `<a href="profile.html?email=$1" class="mention">@$2</a>`
+                /&lt;a href="profile\.html\?uid=([^"]+)" class="mention"&gt;@([^&]+)&lt;\/a&gt;/g,
+                `<a href="profile.html?uid=$1" class="mention">@$2</a>`
             );
-            
             const avatarHtml = c.photoURL ? 
                 `<a href="profile.html?uid=${c.uid}"><img src="${c.photoURL}" class="comment-avatar" onerror="this.style.display='none'"></a>` : 
                 `<a href="profile.html?uid=${c.uid}"><div style="width:36px;height:36px;border-radius:50%;background:var(--border-primary);display:flex;align-items:center;justify-content:center;color:var(--color-accent);font-size:16px;cursor:pointer;">👤</div></a>`;
-            
             return `
                 <div class="comment-item">
                     <div class="comment-header">
@@ -720,9 +914,7 @@
     async function loadComments() {
         const container = document.getElementById('comments-list');
         if (!container) return;
-        
-        container.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding:10px;">⏳ Загрузка комментариев...</div>';
-        
+        container.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:10px;">⏳ Загрузка комментариев...</div>';
         try {
             const comments = await getComments(titleId);
             allComments = comments;
@@ -737,25 +929,20 @@
         const text = document.getElementById('commentText');
         const rating = document.getElementById('commentRating');
         const button = document.querySelector('.comment-form button');
-        
-        if (!text || !text.value.trim()) {
-            alert('Введите текст комментария');
-            return;
-        }
-        
+        if (!text || !text.value.trim()) { alert('Введите текст комментария'); return; }
         button.disabled = true;
         button.textContent = '⏳ Отправка...';
-        
-        const result = await addComment(titleId, text.value.trim(), parseInt(rating.value));
-        
-        if (result.success) {
-            text.value = '';
-            await loadComments();
-            await updateAverageRating();
-        } else {
-            alert('❌ Ошибка: ' + result.error);
+        const mentions = text.value.match(/@([^\s]+)/g) || [];
+        const mentionedEmails = [];
+        for (const mention of mentions) {
+            const name = mention.substring(1);
+            const foundUser = allUsers.find(u => (u.displayName || '').toLowerCase() === name.toLowerCase() || (u.email || '').toLowerCase() === name.toLowerCase());
+            if (foundUser) mentionedEmails.push(foundUser.email);
+            else if (name.includes('@')) mentionedEmails.push(name);
         }
-        
+        const result = await addComment(titleId, text.value.trim(), parseInt(rating.value), mentionedEmails);
+        if (result.success) { text.value = ''; await loadComments(); await updateAverageRating(); } 
+        else { alert('❌ Ошибка: ' + result.error); }
         button.disabled = false;
         button.textContent = '📤 Отправить';
     };
@@ -763,78 +950,56 @@
     window.handleDeleteComment = async function(commentId) {
         if (!confirm('Удалить комментарий?')) return;
         const result = await deleteComment(commentId);
-        if (result.success) {
-            await loadComments();
-            await updateAverageRating();
-        } else {
-            alert('❌ Ошибка: ' + result.error);
-        }
+        if (result.success) { await loadComments(); await updateAverageRating(); } 
+        else { alert('❌ Ошибка: ' + result.error); }
     };
 
     function renderCommentForm() {
         const container = document.getElementById('comments-container');
         if (!container) return;
-        
         const user = getCurrentUser();
-        
         if (user) {
             container.innerHTML = `
-                <h2 style="color:var(--color-accent); margin-top:30px;">💬 Комментарии</h2>
+                <h2 style="color:var(--color-accent);margin-top:30px;">💬 Комментарии</h2>
                 <div class="comment-form">
-                    <textarea id="commentText" placeholder="Напишите ваш комментарий... (используйте @email для отметки)"></textarea>
+                    <div style="position:relative;width:100%;">
+                        <textarea id="commentText" placeholder="Напишите ваш комментарий... (используйте @имя или @email для отметки)" oninput="findUsers(this)" onblur="setTimeout(hideSuggestions, 300)"></textarea>
+                    </div>
                     <div class="form-actions">
-                        <select id="commentRating">
-                            <option value="5">⭐⭐⭐⭐⭐</option>
-                            <option value="4">⭐⭐⭐⭐</option>
-                            <option value="3">⭐⭐⭐</option>
-                            <option value="2">⭐⭐</option>
-                            <option value="1">⭐</option>
-                        </select>
+                        <select id="commentRating"><option value="5">⭐⭐⭐⭐⭐</option><option value="4">⭐⭐⭐⭐</option><option value="3">⭐⭐⭐</option><option value="2">⭐⭐</option><option value="1">⭐</option></select>
                         <button onclick="handleAddComment()">📤 Отправить</button>
                     </div>
-                    <div class="hint">💡 Используйте <strong style="color:var(--color-accent);">@email</strong> чтобы отметить пользователя</div>
+                    <div class="hint">💡 Используйте <strong style="color:var(--color-accent);">@имя</strong> или <strong style="color:var(--color-accent);">@email</strong> чтобы отметить пользователя</div>
                 </div>
                 <div id="comments-list"></div>
             `;
         } else {
             container.innerHTML = `
-                <h2 style="color:var(--color-accent); margin-top:30px;">💬 Комментарии</h2>
-                <div class="auth-prompt">
-                    <a href="login.html">Войдите</a>, чтобы оставить комментарий
-                </div>
+                <h2 style="color:var(--color-accent);margin-top:30px;">💬 Комментарии</h2>
+                <div class="auth-prompt"><a href="login.html">Войдите</a>, чтобы оставить комментарий</div>
                 <div id="comments-list"></div>
             `;
         }
-        
         loadComments();
     }
 
     async function updateAverageRating() {
         const container = document.getElementById('avgRatingContainer');
         if (!container) return;
-        
         const avg = await getAverageRating(titleId);
-        if (avg > 0) {
-            container.innerHTML = `⭐ ${avg.toFixed(1)} (${allComments.length} оценок)`;
-            container.style.display = 'inline-block';
-        } else {
-            container.style.display = 'none';
-        }
+        if (avg > 0) { container.innerHTML = `⭐ ${avg.toFixed(1)} (${allComments.length} оценок)`; container.style.display = 'inline-block'; } 
+        else { container.style.display = 'none'; }
     }
 
     async function trackViewEpisode(episodeNumber) {
         const user = getCurrentUser();
-        if (user) {
-            await trackView(user.uid, titleId, episodeNumber);
-        }
+        if (user) await trackView(user.uid, titleId, episodeNumber);
     }
 
     window.toggleAdminEdit = function() {
         const panel = document.getElementById('adminEditPanel');
         panel.classList.toggle('active');
-        if (panel.classList.contains('active')) {
-            fillAdminForm();
-        }
+        if (panel.classList.contains('active')) fillAdminForm();
     };
 
     function fillAdminForm() {
@@ -855,14 +1020,10 @@
 
     function renderEpisodeEditor(episodes) {
         const container = document.getElementById('episodesEditor');
-        
         if (!episodes || episodes.length === 0) {
-            container.innerHTML = `
-                <div class="episodes-empty">📭 Список серий пуст. Нажмите "➕ Добавить серию"</div>
-            `;
+            container.innerHTML = `<div class="episodes-empty">📭 Список серий пуст. Нажмите "➕ Добавить серию"</div>`;
             return;
         }
-        
         container.innerHTML = episodes.map((ep, index) => `
             <div class="episode-edit-item">
                 <input type="number" class="ep-number" value="${ep.number}" placeholder="№" data-index="${index}" data-field="number" min="1">
@@ -880,9 +1041,7 @@
 
     window.removeEpisode = function(index) {
         const episodes = getEpisodesFromEditor();
-        if (episodes.length <= 1) {
-            if (!confirm('Удалить последнюю серию?')) return;
-        }
+        if (episodes.length <= 1) { if (!confirm('Удалить последнюю серию?')) return; }
         episodes.splice(index, 1);
         episodes.forEach((ep, i) => ep.number = i + 1);
         renderEpisodeEditor(episodes);
@@ -890,12 +1049,7 @@
 
     window.addEpisode = function() {
         const episodes = getEpisodesFromEditor();
-        episodes.push({ 
-            number: episodes.length + 1, 
-            title: '', 
-            url: '', 
-            status: 'Скоро' 
-        });
+        episodes.push({ number: episodes.length + 1, title: '', url: '', status: 'Скоро' });
         renderEpisodeEditor(episodes);
     };
 
@@ -904,11 +1058,12 @@
         const items = container.querySelectorAll('.episode-edit-item');
         const episodes = [];
         items.forEach(el => {
-            const number = parseInt(el.querySelector('[data-field="number"]').value) || 0;
-            const title = el.querySelector('[data-field="title"]').value || '';
-            const url = el.querySelector('[data-field="url"]').value || '';
-            const status = el.querySelector('[data-field="status"]').value || 'Скоро';
-            episodes.push({ number, title, url, status });
+            episodes.push({
+                number: parseInt(el.querySelector('[data-field="number"]').value) || 0,
+                title: el.querySelector('[data-field="title"]').value || '',
+                url: el.querySelector('[data-field="url"]').value || '',
+                status: el.querySelector('[data-field="status"]').value || 'Скоро'
+            });
         });
         return episodes;
     }
@@ -924,9 +1079,7 @@
                     const numInput = el.querySelector('[data-field="number"]');
                     if (numInput) {
                         const val = parseInt(numInput.value);
-                        if (!val || val < 1) {
-                            numInput.value = index + 1;
-                        }
+                        if (!val || val < 1) numInput.value = index + 1;
                     }
                 });
             }
@@ -937,14 +1090,8 @@
         const saveBtn = document.getElementById('saveEditBtn');
         saveBtn.disabled = true;
         saveBtn.textContent = '⏳ Сохранение...';
-        
         const episodes = getEpisodesFromEditor();
-        episodes.forEach((ep, i) => {
-            if (!ep.number || ep.number < 1) {
-                ep.number = i + 1;
-            }
-        });
-        
+        episodes.forEach((ep, i) => { if (!ep.number || ep.number < 1) ep.number = i + 1; });
         const data = {
             name: document.getElementById('editName').value.trim(),
             nameEn: document.getElementById('editNameEn').value.trim(),
@@ -958,20 +1105,13 @@
             description: document.getElementById('editDescription').value.trim(),
             episodesList: episodes
         };
-        
-        if (data.episodes !== episodes.length) {
-            data.episodes = episodes.length;
-        }
-        
+        if (data.episodes !== episodes.length) data.episodes = episodes.length;
         const result = await updateTitle(titleId, data);
         if (result.success) {
             alert('✅ Тайтл обновлён!');
             document.getElementById('adminEditPanel').classList.remove('active');
             await loadTitle();
-        } else {
-            alert('❌ Ошибка: ' + result.error);
-        }
-        
+        } else { alert('❌ Ошибка: ' + result.error); }
         saveBtn.disabled = false;
         saveBtn.textContent = '💾 Сохранить изменения';
     };
@@ -979,45 +1119,28 @@
     window.playEpisode = function(url, episodeNumber) {
         const container = document.getElementById('playerContainer');
         if (!url) {
-            container.innerHTML = `
-                <div style="display:flex; align-items:center; justify-content:center; height:100%; color:var(--text-muted); background:var(--bg-player);">
-                    <p>Серия ещё не доступна</p>
-                </div>
-            `;
+            container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);background:var(--bg-player);"><p>Серия ещё не доступна</p></div>`;
             return;
         }
-        container.innerHTML = `
-            <iframe id="playerFrame" width="100%" height="100%" src="${url}" frameborder="0" allowfullscreen></iframe>
-        `;
-        if (episodeNumber) {
-            trackViewEpisode(episodeNumber);
-        }
+        container.innerHTML = `<iframe id="playerFrame" width="100%" height="100%" src="${url}" frameborder="0" allowfullscreen></iframe>`;
+        if (episodeNumber) trackViewEpisode(episodeNumber);
     };
 
     async function loadTitle() {
         const content = document.getElementById('title-content');
         content.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
-        
+        await loadAllUsers();
         const result = await getTitleById(titleId);
-        
         if (!result.success || !result.data) {
             const localTitle = window.getTitleById?.(titleId) || window.titlesDatabase?.find(t => t.id === titleId);
-            if (localTitle) {
-                currentTitle = localTitle;
-            } else {
-                content.innerHTML = '<div style="text-align:center; padding:50px; color:var(--text-muted);">❌ Тайтл не найден</div>';
-                return;
-            }
-        } else {
-            currentTitle = result.data;
-        }
-        
+            if (localTitle) currentTitle = localTitle;
+            else { content.innerHTML = '<div style="text-align:center;padding:50px;color:var(--text-muted);">❌ Тайтл не найден</div>'; return; }
+        } else { currentTitle = result.data; }
         const title = currentTitle;
         const roles = window.rolesDatabase?.filter(r => r.titleId === titleId) || [];
-        
         let charactersHtml = '';
         if (roles.length > 0) {
-            charactersHtml = '<h2 style="color:var(--color-accent); margin-top:30px;">🎭 Персонажи и озвучка</h2><div class="characters-grid">';
+            charactersHtml = '<h2 style="color:var(--color-accent);margin-top:30px;">🎭 Персонажи и озвучка</h2><div class="characters-grid">';
             roles.forEach(role => {
                 const voice = window.voicesDatabase?.find(v => v.id === role.voiceId);
                 charactersHtml += `
@@ -1030,12 +1153,11 @@
             });
             charactersHtml += '</div>';
         }
-
         const episodes = title.episodesList || [];
         let episodesHtml = '';
         if (episodes.length > 0) {
             episodesHtml = `
-                <h2 style="color:var(--color-accent); margin-top:30px;">📺 Список серий</h2>
+                <h2 style="color:var(--color-accent);margin-top:30px;">📺 Список серий</h2>
                 <div class="episodes-list">
                     ${episodes.map(ep => `
                         <div class="episode-item" onclick="playEpisode('${ep.url}', ${ep.number})" style="cursor:pointer;">
@@ -1047,15 +1169,10 @@
                 </div>
             `;
         }
-
         const firstEpisode = episodes.find(ep => ep.url) || { url: '', number: 1 };
         const posterImage = title.imageHorizontal || title.imageVertical || title.image || 'https://via.placeholder.com/250/d4e8ff/4a90d9?text=No+Image';
-
         const avgRating = await getAverageRating(titleId);
-        const avgRatingHtml = avgRating > 0 ? 
-            `<span class="avg-rating" id="avgRatingContainer">⭐ ${avgRating.toFixed(1)} (${allComments.length} оценок)</span>` : 
-            `<span class="avg-rating" id="avgRatingContainer" style="display:none;"></span>`;
-
+        const avgRatingHtml = avgRating > 0 ? `<span class="avg-rating" id="avgRatingContainer">⭐ ${avgRating.toFixed(1)} (${allComments.length} оценок)</span>` : `<span class="avg-rating" id="avgRatingContainer" style="display:none;"></span>`;
         let adminHtml = '';
         if (isAdmin) {
             adminHtml = `
@@ -1063,99 +1180,49 @@
                 <div id="adminEditPanel" class="admin-panel">
                     <h3 style="color:var(--color-accent);">✏️ Редактирование тайтла</h3>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Название (рус.)</label>
-                            <input type="text" id="editName">
-                        </div>
-                        <div class="form-group">
-                            <label>Название (англ.)</label>
-                            <input type="text" id="editNameEn">
-                        </div>
+                        <div class="form-group"><label>Название (рус.)</label><input type="text" id="editName"></div>
+                        <div class="form-group"><label>Название (англ.)</label><input type="text" id="editNameEn"></div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Тип</label>
-                            <select id="editType">
-                                <option value="Сериал">Сериал</option>
-                                <option value="Фильм">Фильм</option>
-                                <option value="Короткометражка">Короткометражка</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Год</label>
-                            <input type="number" id="editYear">
-                        </div>
-                        <div class="form-group">
-                            <label>Кол-во серий</label>
-                            <input type="number" id="editEpisodes" min="0">
-                        </div>
-                        <div class="form-group">
-                            <label>Рейтинг</label>
-                            <input type="number" id="editRating" step="0.1" min="0" max="5">
-                        </div>
+                        <div class="form-group"><label>Тип</label><select id="editType"><option value="Сериал">Сериал</option><option value="Фильм">Фильм</option><option value="Короткометражка">Короткометражка</option></select></div>
+                        <div class="form-group"><label>Год</label><input type="number" id="editYear"></div>
+                        <div class="form-group"><label>Кол-во серий</label><input type="number" id="editEpisodes" min="0"></div>
+                        <div class="form-group"><label>Рейтинг</label><input type="number" id="editRating" step="0.1" min="0" max="5"></div>
                     </div>
+                    <div class="form-group"><label>Жанры (через запятую)</label><input type="text" id="editGenres"></div>
+                    <div class="form-group"><label>Вертикальная обложка</label><input type="text" id="editImageVert"></div>
+                    <div class="form-group"><label>Горизонтальная обложка</label><input type="text" id="editImageHoriz"></div>
+                    <div class="form-group"><label>Описание</label><textarea id="editDescription"></textarea></div>
                     <div class="form-group">
-                        <label>Жанры (через запятую)</label>
-                        <input type="text" id="editGenres">
-                    </div>
-                    <div class="form-group">
-                        <label>Вертикальная обложка</label>
-                        <input type="text" id="editImageVert">
-                    </div>
-                    <div class="form-group">
-                        <label>Горизонтальная обложка</label>
-                        <input type="text" id="editImageHoriz">
-                    </div>
-                    <div class="form-group">
-                        <label>Описание</label>
-                        <textarea id="editDescription"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label style="display:flex; justify-content:space-between; align-items:center;">
+                        <label style="display:flex;justify-content:space-between;align-items:center;">
                             <span>📺 Список серий</span>
                             <button type="button" class="add-episode-btn" onclick="addEpisode()">➕ Добавить серию</button>
                         </label>
-                        <div id="episodesEditor" class="episodes-editor">
-                            <div class="episodes-empty">Загрузка...</div>
-                        </div>
+                        <div id="episodesEditor" class="episodes-editor"><div class="episodes-empty">Загрузка...</div></div>
                     </div>
-                    <div style="display:flex; gap:10px; margin-top:20px;">
+                    <div style="display:flex;gap:10px;margin-top:20px;">
                         <button class="save-btn" id="saveEditBtn" onclick="saveAdminEdit()">💾 Сохранить изменения</button>
                         <button class="cancel-btn" onclick="document.getElementById('adminEditPanel').classList.remove('active')">Отмена</button>
                     </div>
                 </div>
             `;
         }
-
-        // Формируем HTML с плеером и кнопкой полноэкранного режима
         const playerHtml = `
             <h2 style="color:var(--color-accent);">▶ Смотреть онлайн</h2>
             <div class="player-wrapper" id="playerWrapper">
                 <div class="player-container" id="playerContainer">
-                    ${firstEpisode.url ? `
-                        <iframe id="playerFrame" width="100%" height="100%" src="${firstEpisode.url}" frameborder="0" allowfullscreen></iframe>
-                    ` : `
-                        <div style="display:flex; align-items:center; justify-content:center; height:100%; color:var(--text-muted); background:var(--bg-player);">
-                            <p>Скоро появится</p>
-                        </div>
-                    `}
+                    ${firstEpisode.url ? `<iframe id="playerFrame" width="100%" height="100%" src="${firstEpisode.url}" frameborder="0" allowfullscreen></iframe>` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);background:var(--bg-player);"><p>Скоро появится</p></div>`}
                 </div>
                 <div class="player-controls">
-                    <button class="fullscreen-btn" onclick="toggleFullscreen()">
-                        <span class="icon">⛶</span> На весь экран
-                    </button>
+                    <button class="fullscreen-btn" onclick="toggleFullscreen()"><span class="icon">⛶</span> На весь экран</button>
                 </div>
             </div>
         `;
-
         content.innerHTML = `
             <div class="anime-header">
                 <img src="${posterImage}" alt="${title.name}" class="anime-poster" onerror="this.src='https://via.placeholder.com/250/d4e8ff/4a90d9?text=${title.name}'">
                 <div class="anime-info">
-                    <h1 class="anime-title">
-                        ${title.name}
-                        ${avgRatingHtml}
-                    </h1>
+                    <h1 class="anime-title">${title.name} ${avgRatingHtml}</h1>
                     <div class="anime-meta">
                         <span class="anime-tag">${title.type || 'Аниме'}</span>
                         <span class="anime-tag">${title.year || '2025'}</span>
@@ -1167,14 +1234,11 @@
                     ${adminHtml}
                 </div>
             </div>
-            
             ${playerHtml}
-            
             ${episodesHtml}
             ${charactersHtml}
             <div id="comments-container"></div>
         `;
-
         renderCommentForm();
         setTimeout(updateAverageRating, 500);
         setTimeout(setupEpisodesAutoSave, 100);
@@ -1184,13 +1248,12 @@
         currentUser = user;
         updateAuthButton(user);
         await updateDubInLink(user);
-        await updateAdminLink(user);
+        await updateAdminLinks(user);
+        await updateSidebarBalance(user);
         if (user) {
             const role = await getUserRole(user.uid);
             isAdmin = role === 'admin';
-        } else {
-            isAdmin = false;
-        }
+        } else { isAdmin = false; }
         await loadTitle();
     });
 
@@ -1199,38 +1262,14 @@
         currentUser = user;
         updateAuthButton(user);
         await updateDubInLink(user);
-        await updateAdminLink(user);
+        await updateAdminLinks(user);
+        await updateSidebarBalance(user);
         if (user) {
             const role = await getUserRole(user.uid);
             isAdmin = role === 'admin';
         }
         await loadTitle();
     });
-</script>
-
-<script>
-    function toggleTheme() {
-        const html = document.documentElement;
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
-        }
-    }
-
-    function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
-        }
-    }
-
-    loadTheme();
 </script>
 
 </body>
