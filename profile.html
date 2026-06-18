@@ -228,6 +228,57 @@
             color: var(--text-primary);
         }
 
+        .admin-coin-section {
+            background: rgba(251, 191, 36, 0.08);
+            border: 1px solid #fbbf24;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 12px;
+        }
+        .admin-coin-section .title {
+            color: #fbbf24;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .admin-coin-section .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .admin-coin-section .row input {
+            flex: 1;
+            min-width: 120px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 2px solid var(--border-primary);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        .admin-coin-section .row input:focus {
+            border-color: #fbbf24;
+            outline: none;
+        }
+        .admin-coin-section .row .btn-coin-add {
+            padding: 8px 24px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .admin-coin-section .row .btn-coin-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+        }
+
         .user-search-result {
             display: flex;
             justify-content: space-between;
@@ -467,6 +518,9 @@
             .profile-stats { justify-content: center; }
             .admin-panel .form-row { flex-direction: column; }
             .playlist-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+            .admin-coin-section .row { flex-direction: column; }
+            .admin-coin-section .row input { width: 100%; }
+            .admin-coin-section .row .btn-coin-add { width: 100%; text-align: center; }
         }
     </style>
 </head>
@@ -1218,6 +1272,7 @@
         }
     };
 
+    // ===== АДМИН: ВЫДАЧА МОНЕТ =====
     window.handleAdminDSCoins = async function() {
         const amountInput = document.getElementById('adminDSCoinsAmount');
         if (!amountInput) return;
@@ -1234,6 +1289,7 @@
         }
     };
 
+    // ===== АДМИН: ПОИСК ПОЛЬЗОВАТЕЛЯ =====
     window.searchUserByEmail = async function() {
         const email = document.getElementById('adminSearchEmail')?.value?.trim();
         const resultsContainer = document.getElementById('adminSearchResults');
@@ -1321,6 +1377,8 @@
             adminPanel = `
                 <div class="admin-panel">
                     <h3>👑 Управление пользователем</h3>
+                    
+                    <!-- Управление ролью -->
                     <div style="margin-bottom:15px;">
                         <p style="color:var(--text-muted);font-size:14px;">Текущая роль: <strong style="color:var(--color-accent);">${roleNames[role] || role}</strong></p>
                         <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
@@ -1332,8 +1390,11 @@
                             <button class="action-btn primary" onclick="handleRoleChange()">💾 Применить роль</button>
                         </div>
                     </div>
+                    
                     <hr style="border-color:var(--border-primary);margin:15px 0;">
-                    <div>
+                    
+                    <!-- Выдача достижений -->
+                    <div style="margin-bottom:15px;">
                         <p style="color:var(--text-muted);font-size:14px;">🏅 Выдать кастомное достижение</p>
                         <div style="display:flex;gap:8px;flex-wrap:wrap;">
                             <input type="text" id="customAchievementName" placeholder="Название" style="flex:1;padding:8px 14px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);min-width:150px;">
@@ -1341,11 +1402,20 @@
                             <button class="action-btn success" onclick="handleCustomAchievement()">🏅 Выдать</button>
                         </div>
                     </div>
-                    <div style="margin-top:15px;">
-                        <p style="color:var(--text-muted);font-size:14px;">💰 Добавить DSCoins</p>
-                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                            <input type="number" id="adminDSCoinsAmount" placeholder="Количество" style="flex:1;padding:8px 14px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);min-width:100px;">
-                            <button class="action-btn coin" onclick="handleAdminDSCoins()"><i class="fas fa-coins"></i> Добавить</button>
+                    
+                    <hr style="border-color:var(--border-primary);margin:15px 0;">
+                    
+                    <!-- ===== ВЫДАЧА DSCOINS ===== -->
+                    <div class="admin-coin-section">
+                        <div class="title"><i class="fas fa-coins"></i> Выдача DSCoins</div>
+                        <div class="row">
+                            <input type="number" id="adminDSCoinsAmount" placeholder="Количество монет..." min="1">
+                            <button class="btn-coin-add" onclick="handleAdminDSCoins()">
+                                <i class="fas fa-plus"></i> Добавить монеты
+                            </button>
+                        </div>
+                        <div style="font-size:11px;color:var(--text-muted);margin-top:6px;">
+                            💡 Монеты будут добавлены на баланс пользователя
                         </div>
                     </div>
                 </div>
