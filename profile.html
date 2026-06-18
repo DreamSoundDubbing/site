@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Профиль - Dream Sound Dubbing</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script type="module" src="firebase-config.js"></script>
     <style>
-        .profile-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+        .profile-container { max-width: 800px; margin: 0 auto; }
         .profile-header {
             display: flex;
             gap: 30px;
@@ -31,21 +29,10 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        .profile-avatar-large:hover {
-            transform: scale(1.05);
-        }
-        .profile-info {
-            flex: 1;
-        }
-        .profile-name {
-            font-size: 28px;
-            color: var(--color-accent);
-            margin: 0;
-        }
-        .profile-email {
-            color: var(--text-muted);
-            font-size: 14px;
-        }
+        .profile-avatar-large:hover { transform: scale(1.05); }
+        .profile-info { flex: 1; }
+        .profile-name { font-size: 28px; color: var(--color-accent); margin: 0; }
+        .profile-email { color: var(--text-muted); font-size: 14px; }
         .profile-role {
             display: inline-block;
             padding: 4px 16px;
@@ -74,22 +61,10 @@
             min-width: 80px;
             transition: background 0.3s ease;
         }
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--color-accent);
-        }
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        .stat-clickable {
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .stat-clickable:hover {
-            background: var(--bg-stat-card-hover);
-        }
+        .stat-number { font-size: 24px; font-weight: bold; color: var(--color-accent); }
+        .stat-label { font-size: 12px; color: var(--text-muted); }
+        .stat-clickable { cursor: pointer; transition: all 0.3s; }
+        .stat-clickable:hover { background: var(--bg-stat-card-hover); }
 
         .profile-actions {
             display: flex;
@@ -118,9 +93,7 @@
             background: var(--color-danger);
             color: #fff;
         }
-        .action-btn.danger:hover {
-            background: #e05555;
-        }
+        .action-btn.danger:hover { background: #e05555; }
         .action-btn.outline {
             background: transparent;
             border: 2px solid var(--color-accent);
@@ -139,13 +112,44 @@
             background: var(--color-success);
             color: #fff;
         }
-        .action-btn.success:hover {
-            background: #388E3C;
+        .action-btn.success:hover { background: #388E3C; }
+        .action-btn.coin {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #fff;
+        }
+        .action-btn.coin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.3);
         }
 
-        .achievements-section {
-            margin-top: 30px;
+        .dscoin-balance {
+            background: var(--bg-welcome);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid var(--color-accent);
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
+        .dscoin-balance .amount {
+            font-size: 36px;
+            font-weight: bold;
+            color: #fbbf24;
+        }
+        .dscoin-balance .label {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .dscoin-balance .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .achievements-section { margin-top: 30px; }
         .achievements-grid {
             display: flex;
             flex-wrap: wrap;
@@ -159,19 +163,16 @@
             border-radius: 12px;
             text-align: center;
             min-width: 100px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        .achievement-icon {
-            font-size: 28px;
+        .achievement-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
         }
-        .achievement-name {
-            font-size: 12px;
-            color: var(--color-accent);
-            margin-top: 4px;
-        }
-        .achievement-desc {
-            font-size: 10px;
-            color: var(--text-muted);
-        }
+        .achievement-icon { font-size: 28px; }
+        .achievement-name { font-size: 12px; color: var(--color-accent); margin-top: 4px; }
+        .achievement-desc { font-size: 10px; color: var(--text-muted); }
 
         .admin-panel {
             margin-top: 30px;
@@ -180,13 +181,8 @@
             border: 1px solid var(--color-accent);
             border-radius: 15px;
         }
-        .admin-panel h3 {
-            color: var(--color-accent);
-            margin-bottom: 15px;
-        }
-        .admin-panel .form-group {
-            margin-bottom: 12px;
-        }
+        .admin-panel h3 { color: var(--color-accent); margin-bottom: 15px; }
+        .admin-panel .form-group { margin-bottom: 12px; }
         .admin-panel .form-group label {
             color: var(--text-muted);
             font-size: 13px;
@@ -214,10 +210,7 @@
             gap: 12px;
             flex-wrap: wrap;
         }
-        .admin-panel .form-row .form-group {
-            flex: 1;
-            min-width: 150px;
-        }
+        .admin-panel .form-row .form-group { flex: 1; min-width: 150px; }
         .admin-panel .search-btn {
             padding: 8px 20px;
             background: var(--color-accent);
@@ -228,9 +221,7 @@
             font-weight: bold;
             transition: all 0.3s;
         }
-        .admin-panel .search-btn:hover {
-            background: var(--color-accent2);
-        }
+        .admin-panel .search-btn:hover { background: var(--color-accent2); }
         .admin-panel .role-select {
             padding: 6px 12px;
             border-radius: 15px;
@@ -259,17 +250,128 @@
             border-radius: 50%;
             object-fit: cover;
         }
-        .user-search-result .user-name {
-            color: var(--color-accent);
-        }
-        .user-search-result .user-email {
-            color: var(--text-muted);
-            font-size: 12px;
-        }
+        .user-search-result .user-name { color: var(--color-accent); }
+        .user-search-result .user-email { color: var(--text-muted); font-size: 12px; }
         .user-search-result .user-current-role {
             font-size: 12px;
             color: var(--text-muted);
             margin: 0 10px;
+        }
+
+        /* Плейлисты */
+        .playlist-section { margin-top: 30px; }
+        .playlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .playlist-card {
+            background: var(--bg-playlist);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+            border: 2px solid var(--border-secondary);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .playlist-card:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+        .playlist-card .cover {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .playlist-card .name { font-size: 15px; font-weight: bold; color: var(--text-primary); }
+        .playlist-card .count { color: var(--text-muted); font-size: 12px; }
+        .playlist-card .pinned {
+            color: var(--color-accent);
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* Стена */
+        .wall-section { margin-top: 30px; }
+        .wall-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .wall-form textarea {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid var(--border-primary);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 15px;
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
+        }
+        .wall-form textarea:focus {
+            border-color: var(--color-accent);
+            outline: none;
+        }
+        .wall-form .actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .wall-post {
+            background: var(--bg-wall-post);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--color-accent);
+        }
+        .wall-post .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .wall-post .user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .wall-post .user .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .wall-post .user .name { font-weight: bold; color: var(--color-accent); }
+        .wall-post .text { color: var(--text-primary); font-size: 15px; line-height: 1.6; }
+        .wall-post .time { color: var(--text-muted); font-size: 11px; }
+        .wall-post .actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .wall-post .actions button {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+            transition: color 0.3s;
+        }
+        .wall-post .actions button:hover { color: var(--color-danger); }
+        .wall-post .visibility-badge {
+            font-size: 10px;
+            padding: 2px 10px;
+            border-radius: 12px;
+            background: var(--bg-welcome);
+            color: var(--text-muted);
         }
 
         .modal-overlay {
@@ -285,9 +387,7 @@
             align-items: center;
             backdrop-filter: blur(5px);
         }
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
         .modal-content {
             background: var(--bg-modal);
             border-radius: 20px;
@@ -299,11 +399,7 @@
             border: 2px solid var(--color-accent);
             position: relative;
         }
-        .modal-content h2 {
-            color: var(--color-accent);
-            text-align: center;
-            margin-bottom: 20px;
-        }
+        .modal-content h2 { color: var(--color-accent); text-align: center; margin-bottom: 20px; }
         .modal-close {
             position: absolute;
             top: 15px;
@@ -314,12 +410,8 @@
             background: none;
             border: none;
         }
-        .modal-close:hover {
-            color: var(--text-primary);
-        }
-        .modal-content .form-group {
-            margin-bottom: 12px;
-        }
+        .modal-close:hover { color: var(--text-primary); }
+        .modal-content .form-group { margin-bottom: 12px; }
         .modal-content .form-group label {
             color: var(--text-muted);
             font-size: 13px;
@@ -337,10 +429,7 @@
             font-size: 14px;
             box-sizing: border-box;
         }
-        .modal-content .form-group textarea {
-            min-height: 60px;
-            resize: vertical;
-        }
+        .modal-content .form-group textarea { min-height: 60px; resize: vertical; }
         .modal-content .submit-btn {
             width: 100%;
             padding: 12px;
@@ -358,16 +447,9 @@
             box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
         }
 
-        .auth-message {
-            text-align: center;
-            padding: 40px 20px;
-        }
-        .auth-message h2 {
-            color: var(--color-accent);
-        }
-        .auth-message p {
-            color: var(--text-muted);
-        }
+        .auth-message { text-align: center; padding: 40px 20px; }
+        .auth-message h2 { color: var(--color-accent); }
+        .auth-message p { color: var(--text-muted); }
         .auth-btn {
             display: inline-block;
             padding: 14px 40px;
@@ -385,37 +467,132 @@
         }
 
         @media (max-width: 768px) {
-            .profile-header {
-                flex-direction: column;
-                text-align: center;
-            }
-            .profile-stats {
-                justify-content: center;
-            }
-            .admin-panel .form-row {
-                flex-direction: column;
-            }
+            .profile-header { flex-direction: column; text-align: center; }
+            .profile-stats { justify-content: center; }
+            .admin-panel .form-row { flex-direction: column; }
+            .playlist-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
         }
     </style>
 </head>
 <body>
 
+<!-- ========== HEADER ========== -->
 <header class="fixed-header">
     <div class="nav-buttons">
-        <a href="index.html">
-            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo">
-        </a>
-        <a href="index.html" class="nav-icon-btn">🏠Главная</a>
-        <a href="titles.html" class="nav-icon-btn">🎦Тайтлы</a>
-        <a href="sostav.html" class="nav-icon-btn">🎭Состав</a>
+        <button class="burger-btn" onclick="openSidebar()" title="Меню" aria-label="Открыть меню">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="index.html"><img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo"></a>
+        <a href="index.html" class="nav-icon-btn" id="homeLink" style="display:none;">🏠Главная</a>
+        <a href="titles.html" class="nav-icon-btn" id="titlesLink" style="display:none;">🎦Тайтлы</a>
+        <a href="sostav.html" class="nav-icon-btn" id="sostavLink" style="display:none;">🎭Состав</a>
         <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
-        <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
+        <a href="search.html" class="nav-icon-btn" id="searchLink" style="display:none;">🔍Поиск</a>
         <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
-        <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+        <a href="voice-order.html" class="nav-icon-btn" id="voiceOrderLink" style="display:none;">📝Заявка</a>
         <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
         <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
     </div>
 </header>
+
+<!-- ========== SIDEBAR ========== -->
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+<aside id="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="sidebar-logo-img">
+            <span>DSD <span style="color:var(--color-accent2);">Menu</span></span>
+        </div>
+        <button class="sidebar-close-btn" onclick="closeSidebar()"><i class="fas fa-times"></i></button>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Навигация</div>
+        <a href="index.html" class="sidebar-link"><i class="fas fa-home"></i><span>Главная</span></a>
+        <a href="titles.html" class="sidebar-link"><i class="fas fa-film"></i><span>Тайтлы</span></a>
+        <a href="sostav.html" class="sidebar-link"><i class="fas fa-users"></i><span>Состав</span></a>
+        <a href="search.html" class="sidebar-link"><i class="fas fa-search"></i><span>Поиск</span></a>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Личное</div>
+        <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
+        <a href="#playlists" class="sidebar-link" onclick="document.getElementById('playlistsSection').scrollIntoView({behavior:'smooth'}); closeSidebar();"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
+        <a href="#shop" class="sidebar-link" onclick="document.getElementById('shopSection').scrollIntoView({behavior:'smooth'}); closeSidebar();"><i class="fas fa-coins"></i><span>Магазин DSCoins</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Студия</div>
+        <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
+        <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заявка на озвучку</span></a>
+        <a href="#" class="sidebar-link" onclick="openDSCoinOrder(); return false;"><i class="fas fa-coins"></i><span>Купить DSCoins</span></a>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Администрирование</div>
+        <a href="admin-orders.html" class="sidebar-link" id="sidebarAdminOrders" style="display:none;"><i class="fas fa-clipboard-list"></i><span>Заказы</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+        <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;"><i class="fas fa-coins"></i><span>Управление DSCoins</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="sidebar-socials">
+            <a href="#" target="_blank"><i class="fab fa-vk"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px;letter-spacing:1px;">© Dream Sound Dubbing</div>
+    </div>
+</aside>
+
+<!-- ========== DSCOIN МОДАЛКИ ========== -->
+<div class="modal-overlay" id="m-dscoin-order">
+    <div class="modal-content" style="max-width:440px;">
+        <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
+        <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Покупка DSCoins</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">После оформления заявки напишите менеджеру в Telegram для оплаты.</p>
+        <div class="form-group"><label>Ваш Email *</label><input type="email" id="dscoin-order-email" placeholder="your@email.com"></div>
+        <div class="form-group">
+            <label>Количество DSCoins *</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(100)">100</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(250)">250</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(500)">500</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(1000)">1000</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(2000)">2000</button>
+            </div>
+            <input type="number" id="dscoin-order-amount" placeholder="Введите количество..." min="1">
+        </div>
+        <div style="background:var(--bg-welcome);padding:12px;border-radius:10px;margin:12px 0;text-align:center;">
+            <span style="color:var(--text-muted);">Стоимость: </span>
+            <span id="dscoin-order-price" style="color:var(--color-accent);font-weight:bold;font-size:18px;">0 ₽</span>
+            <div style="font-size:11px;color:var(--text-muted);">1 DSCoin = 1 ₽</div>
+        </div>
+        <button class="submit-btn" style="width:100%;" onclick="submitDSCoinOrder()"><i class="fas fa-paper-plane"></i> Оформить заявку</button>
+        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-dscoin-order')">Отмена</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="m-admin-dscoins">
+    <div class="modal-content" style="max-width:480px;">
+        <button class="modal-close" onclick="closeModal('m-admin-dscoins')">✕</button>
+        <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Управление DSCoins</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">Добавьте монеты пользователю по email.</p>
+        <div class="form-group"><label>Email пользователя *</label><input type="email" id="admin-dscoin-email" placeholder="user@example.com"></div>
+        <div class="form-group"><label>Количество DSCoins *</label><input type="number" id="admin-dscoin-amount" placeholder="100" min="1"></div>
+        <div class="form-group"><label>Причина</label><input type="text" id="admin-dscoin-reason" value="Начисление администратором"></div>
+        <button class="submit-btn" style="width:100%;background:var(--gradient-primary);" onclick="adminAddDSCoins()"><i class="fas fa-plus"></i> Добавить монеты</button>
+        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-admin-dscoins')">Отмена</button>
+    </div>
+</div>
+
+<!-- ========== МОДАЛКА СОЗДАНИЯ ПЛЕЙЛИСТА ========== -->
+<div class="modal-overlay" id="m-playlist">
+    <div class="modal-content" style="max-width:440px;">
+        <button class="modal-close" onclick="closeModal('m-playlist')">✕</button>
+        <h3 id="playlistModalTitle">📁 Создать плейлист</h3>
+        <input type="hidden" id="editPlaylistId">
+        <div class="form-group"><label>Название *</label><input type="text" id="playlistName" placeholder="Название плейлиста"></div>
+        <div class="form-group"><label>Описание</label><textarea id="playlistDesc" rows="3" placeholder="Краткое описание..."></textarea></div>
+        <div class="form-group"><label>Обложка (URL)</label><input type="text" id="playlistImg" placeholder="https://..."></div>
+        <div style="display:flex;gap:10px;margin-bottom:10px;">
+            <label style="color:var(--text-muted);font-size:13px;"><input type="checkbox" id="playlistPinned"> Закрепить в профиле</label>
+        </div>
+        <button class="submit-btn" onclick="savePlaylist()"><i class="fas fa-save"></i> Сохранить</button>
+        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-playlist')">Отмена</button>
+    </div>
+</div>
 
 <script>
     function toggleTheme() {
@@ -425,23 +602,77 @@
         html.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
         const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
-        }
+        if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
     }
-
     function loadTheme() {
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
         const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
-        }
+        if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
     }
-
     document.addEventListener('DOMContentLoaded', loadTheme);
+
+    function openSidebar() {
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebar-overlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebar-overlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeSidebar();
+    });
+
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    function openDSCoinOrder() { closeSidebar(); openModal('m-dscoin-order'); }
+    function openAdminDSCoins() { closeSidebar(); openModal('m-admin-dscoins'); }
+
+    function setDSCoinAmount(amount) {
+        document.getElementById('dscoin-order-amount').value = amount;
+        updateDSCoinPrice();
+    }
+    function updateDSCoinPrice() {
+        const amount = parseInt(document.getElementById('dscoin-order-amount').value) || 0;
+        const priceEl = document.getElementById('dscoin-order-price');
+        if (priceEl) priceEl.textContent = amount + ' ₽';
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const amountInput = document.getElementById('dscoin-order-amount');
+        if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
+    });
+
+    // Открытие модалки создания плейлиста
+    window.openPlaylistModal = function(editData = null) {
+        if (editData) {
+            document.getElementById('playlistModalTitle').textContent = '✏️ Редактировать плейлист';
+            document.getElementById('editPlaylistId').value = editData.id || '';
+            document.getElementById('playlistName').value = editData.name || '';
+            document.getElementById('playlistDesc').value = editData.description || '';
+            document.getElementById('playlistImg').value = editData.image || '';
+            document.getElementById('playlistPinned').checked = editData.pinned || false;
+        } else {
+            document.getElementById('playlistModalTitle').textContent = '📁 Создать плейлист';
+            document.getElementById('editPlaylistId').value = '';
+            document.getElementById('playlistName').value = '';
+            document.getElementById('playlistDesc').value = '';
+            document.getElementById('playlistImg').value = '';
+            document.getElementById('playlistPinned').checked = false;
+        }
+        openModal('m-playlist');
+    };
 </script>
 
+<!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
 <div class="container">
     <div class="header">
         <h1 class="title">Профиль</h1>
@@ -454,23 +685,112 @@
         </div>
     </div>
     
-    <div id="ordersSection" style="margin-top:30px;">
-        <h3 style="color:var(--color-accent);">📋 Мои заявки на озвучку</h3>
+    <!-- ========== DSCOINS БАЛАНС ========== -->
+    <div class="dscoin-balance" id="dscoinBalanceSection" style="display:none;">
+        <div>
+            <div class="label"><i class="fas fa-coins" style="color:#fbbf24;"></i> Мои DSCoins</div>
+            <div class="amount" id="profileDSCoins">0</div>
+        </div>
+        <div class="actions">
+            <button class="action-btn coin" onclick="openDSCoinOrder()"><i class="fas fa-plus"></i> Купить</button>
+            <button class="action-btn outline" onclick="document.getElementById('shopSection').scrollIntoView({behavior:'smooth'})"><i class="fas fa-store"></i> Магазин</button>
+            <button class="action-btn outline" onclick="showDSCoinHistory()"><i class="fas fa-history"></i> История</button>
+        </div>
+    </div>
+
+    <!-- ========== МАГАЗИН ========== -->
+    <div id="shopSection" style="display:none;background:var(--bg-content);padding:20px;border-radius:15px;border:1px solid var(--border-primary);margin:20px 0;">
+        <h3 style="color:var(--color-accent);margin-bottom:15px;"><i class="fas fa-store"></i> Магазин DSCoins</h3>
+        <div class="shop-grid" id="shopGrid">
+            <div class="shop-item">
+                <div class="icon">🎨</div>
+                <div class="name">Цветной никнейм</div>
+                <div class="price"><i class="fas fa-coins"></i> <span id="priceColorNick">500</span></div>
+                <div class="desc">Измените цвет своего ника в профиле</div>
+                <button class="action-btn primary" onclick="purchaseItem('colorNick')">Купить</button>
+            </div>
+            <div class="shop-item">
+                <div class="icon">🏷️</div>
+                <div class="name">Префикс</div>
+                <div class="price"><i class="fas fa-coins"></i> <span id="pricePrefix">300</span></div>
+                <div class="desc">Добавьте префикс перед ником</div>
+                <button class="action-btn primary" onclick="purchaseItem('prefix')">Купить</button>
+            </div>
+            <div class="shop-item">
+                <div class="icon">📚</div>
+                <div class="name">Слот ачивок</div>
+                <div class="price"><i class="fas fa-coins"></i> <span id="priceAchSlot">200</span></div>
+                <div class="desc">Дополнительный слот для достижений</div>
+                <button class="action-btn primary" onclick="purchaseItem('achSlot')">Купить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ПЛЕЙЛИСТЫ ========== -->
+    <div id="playlistsSection" style="display:none;background:var(--bg-content);padding:20px;border-radius:15px;border:1px solid var(--border-primary);margin:20px 0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:15px;">
+            <h3 style="color:var(--color-accent);"><i class="fas fa-layer-group"></i> Мои плейлисты</h3>
+            <button class="action-btn primary" onclick="openPlaylistModal()"><i class="fas fa-plus"></i> Создать</button>
+        </div>
+        <div id="playlistsContainer">
+            <p style="color:var(--text-muted);font-style:italic;">Загрузка...</p>
+        </div>
+    </div>
+
+    <!-- ========== СТЕНА ========== -->
+    <div id="wallSection" style="display:none;background:var(--bg-content);padding:20px;border-radius:15px;border:1px solid var(--border-primary);margin:20px 0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:15px;">
+            <h3 style="color:var(--color-accent);"><i class="fas fa-stream"></i> Моя стена</h3>
+            <div style="display:flex;gap:10px;">
+                <button class="action-btn outline" onclick="openWallSettings()"><i class="fas fa-cog"></i></button>
+            </div>
+        </div>
+        <div class="wall-form" id="wallForm">
+            <textarea id="wallInput" placeholder="Что у вас нового?..."></textarea>
+            <div class="actions">
+                <button class="action-btn primary" onclick="addWallPost()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <div id="wallContainer">
+            <p style="color:var(--text-muted);font-style:italic;">Загрузка...</p>
+        </div>
+    </div>
+
+    <!-- ========== ЗАЯВКИ ========== -->
+    <div id="ordersSection" style="margin-top:30px;background:var(--bg-content);padding:20px;border-radius:15px;border:1px solid var(--border-primary);">
+        <h3 style="color:var(--color-accent);"><i class="fas fa-clipboard-list"></i> Мои заявки на озвучку</h3>
         <div id="ordersList" style="margin-top:10px;">
             <p style="color:var(--text-muted);">Загрузка...</p>
         </div>
         <br>
-        <a href="voice-order.html" class="action-btn primary" style="display:inline-block; padding:10px 25px; background:var(--gradient-primary); color:#fff; border:none; border-radius:25px; text-decoration:none; font-weight:bold; transition:all 0.3s;">
+        <a href="voice-order.html" class="action-btn primary" style="display:inline-block; padding:10px 25px; text-decoration:none; font-weight:bold;">
             ➕ Создать заявку
         </a>
     </div>
 </div>
 
-<div class="modal-overlay" id="usersModal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeUsersModal()">✕</button>
-        <h2 id="usersModalTitle">Пользователи</h2>
-        <div id="usersModalBody"></div>
+<!-- ========== МОДАЛКА ИСТОРИИ DSCOINS ========== -->
+<div class="modal-overlay" id="m-dscoin-history">
+    <div class="modal-content" style="max-width:480px;">
+        <button class="modal-close" onclick="closeModal('m-dscoin-history')">✕</button>
+        <h3><i class="fas fa-history" style="color:#fbbf24;"></i> История транзакций</h3>
+        <div id="historyList" style="max-height:400px;overflow-y:auto;"></div>
+        <button class="action-btn outline" style="width:100%;margin-top:16px;" onclick="closeModal('m-dscoin-history')">Закрыть</button>
+    </div>
+</div>
+
+<!-- ========== МОДАЛКА НАСТРОЕК СТЕНЫ ========== -->
+<div class="modal-overlay" id="m-wall-settings">
+    <div class="modal-content" style="max-width:420px;">
+        <button class="modal-close" onclick="closeModal('m-wall-settings')">✕</button>
+        <h3><i class="fas fa-cog"></i> Настройки стены</h3>
+        <div style="margin:15px 0;">
+            <label style="display:block;padding:8px 0;color:var(--text-primary);"><input type="radio" name="wallMode" value="all" checked> Все пользователи</label>
+            <label style="display:block;padding:8px 0;color:var(--text-primary);"><input type="radio" name="wallMode" value="friends"> Только подписчики</label>
+            <label style="display:block;padding:8px 0;color:var(--text-primary);"><input type="radio" name="wallMode" value="disabled"> Никто (закрыта)</label>
+        </div>
+        <button class="submit-btn" onclick="saveWallSettings()">Сохранить</button>
+        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-wall-settings')">Отмена</button>
     </div>
 </div>
 
@@ -490,8 +810,44 @@
         logoutUser,
         isAdmin,
         getVoiceOrders,
-        getUserRole  // <-- ДОБАВЛЕН ИМПОРТ
+        getUserDSCoins,
+        addDSCoins,
+        createDSCoinOrder,
+        getDSCoinTransactions,
+        getPlaylists,
+        createPlaylist,
+        updatePlaylist,
+        deletePlaylist,
+        getWallPosts,
+        addWallPost,
+        deleteWallPost,
+        updateWallVisibility,
+        getShopPrices,
+        updateShopPrices,
+        purchaseColorNick,
+        purchasePrefix,
+        purchaseAchSlot
     } from './firebase-config.js';
+
+    // Делаем функции глобальными
+    window.getUserDSCoins = getUserDSCoins;
+    window.getUserByEmail = getUserByEmail;
+    window.addDSCoins = addDSCoins;
+    window.createDSCoinOrder = createDSCoinOrder;
+    window.getDSCoinTransactions = getDSCoinTransactions;
+    window.getPlaylists = getPlaylists;
+    window.createPlaylist = createPlaylist;
+    window.updatePlaylist = updatePlaylist;
+    window.deletePlaylist = deletePlaylist;
+    window.getWallPosts = getWallPosts;
+    window.addWallPost = addWallPost;
+    window.deleteWallPost = deleteWallPost;
+    window.updateWallVisibility = updateWallVisibility;
+    window.getShopPrices = getShopPrices;
+    window.updateShopPrices = updateShopPrices;
+    window.purchaseColorNick = purchaseColorNick;
+    window.purchasePrefix = purchasePrefix;
+    window.purchaseAchSlot = purchaseAchSlot;
 
     let currentUser = null;
     let currentUserData = null;
@@ -499,12 +855,288 @@
     let viewedUserId = null;
     let isAdminUser = false;
     let isOwnProfile = true;
-    let searchResults = [];
+    let allPlaylists = [];
+    let wallPosts = [];
+    let shopPrices = {};
 
     const urlParams = new URLSearchParams(window.location.search);
     const viewedId = urlParams.get('uid');
     const viewedEmail = urlParams.get('email');
 
+    function updateAuthButton(user) {
+        const btn = document.getElementById('authBtn');
+        if (user) {
+            btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
+            btn.href = 'profile.html';
+        } else {
+            btn.textContent = '🔑 Вход';
+            btn.href = 'login.html';
+        }
+    }
+
+    async function updateDubInLink(user) {
+        const link = document.getElementById('dubInLink');
+        const sidebarLink = document.getElementById('sidebarDubIn');
+        if (!link) return;
+        if (user) {
+            const role = await getUserData(user.uid);
+            const isDubber = role.success && (role.data.role === 'dubber' || role.data.role === 'admin');
+            link.style.display = isDubber ? 'inline-flex' : 'none';
+            if (sidebarLink) sidebarLink.style.display = isDubber ? 'flex' : 'none';
+        } else {
+            link.style.display = 'none';
+            if (sidebarLink) sidebarLink.style.display = 'none';
+        }
+    }
+
+    async function updateAdminLinks(user) {
+        const adminLink = document.getElementById('adminLink');
+        const sidebarAdminOrders = document.getElementById('sidebarAdminOrders');
+        const sidebarAdminDSCoins = document.getElementById('sidebarAdminDSCoins');
+        if (user) {
+            const role = await getUserRole(user.uid);
+            const isAdminRole = role === 'admin';
+            if (adminLink) adminLink.style.display = isAdminRole ? 'inline-flex' : 'none';
+            if (sidebarAdminOrders) sidebarAdminOrders.style.display = isAdminRole ? 'flex' : 'none';
+            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = isAdminRole ? 'flex' : 'none';
+        } else {
+            if (adminLink) adminLink.style.display = 'none';
+            if (sidebarAdminOrders) sidebarAdminOrders.style.display = 'none';
+            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = 'none';
+        }
+    }
+
+    async function updateSidebarBalance(user) {
+        const balanceEl = document.getElementById('sidebarBalance');
+        if (!balanceEl) return;
+        if (user) {
+            const result = await getUserDSCoins(user.uid);
+            balanceEl.textContent = result.success ? result.coins : '0';
+        } else {
+            balanceEl.textContent = '0';
+        }
+    }
+
+    // ========== DSCOINS ==========
+    window.showDSCoinHistory = async function() {
+        const user = getCurrentUser();
+        if (!user) { alert('Войдите, чтобы увидеть историю'); return; }
+        const result = await getDSCoinTransactions(user.uid);
+        const list = document.getElementById('historyList');
+        if (!result.success || result.transactions.length === 0) {
+            list.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:20px;">Нет транзакций</p>';
+        } else {
+            list.innerHTML = result.transactions.map(t => {
+                const date = t.timestamp ? new Date(t.timestamp.seconds * 1000).toLocaleDateString() : '';
+                const isIncome = t.amount > 0;
+                return `
+                    <div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid var(--border-secondary);">
+                        <div>
+                            <div style="font-weight:bold;color:${isIncome ? 'var(--color-success)' : 'var(--color-danger)'};">${isIncome ? '+' : ''}${t.amount} DSCoins</div>
+                            <div style="font-size:12px;color:var(--text-muted);">${t.reason || ''}</div>
+                        </div>
+                        <div style="font-size:12px;color:var(--text-muted);">${date}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        openModal('m-dscoin-history');
+    };
+
+    // ========== МАГАЗИН ==========
+    window.purchaseItem = async function(type) {
+        const user = getCurrentUser();
+        if (!user) { alert('Войдите, чтобы совершить покупку'); return; }
+        
+        let result;
+        switch(type) {
+            case 'colorNick':
+                const color = prompt('Введите цвет (HEX):', '#ff6b6b');
+                if (!color) return;
+                result = await purchaseColorNick(user.uid, color);
+                break;
+            case 'prefix':
+                const prefix = prompt('Введите префикс:', '⭐');
+                if (!prefix) return;
+                result = await purchasePrefix(user.uid, prefix);
+                break;
+            case 'achSlot':
+                result = await purchaseAchSlot(user.uid);
+                break;
+        }
+        if (result && result.success) {
+            alert('✅ Покупка успешно совершена!');
+            await loadProfile();
+        } else if (result) {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    async function loadShopPrices() {
+        const result = await getShopPrices();
+        if (result.success) {
+            shopPrices = result.data;
+            document.getElementById('priceColorNick').textContent = shopPrices.colorNick || 500;
+            document.getElementById('pricePrefix').textContent = shopPrices.prefix || 300;
+            document.getElementById('priceAchSlot').textContent = shopPrices.achSlot || 200;
+        }
+    }
+
+    // ========== ПЛЕЙЛИСТЫ ==========
+    window.savePlaylist = async function() {
+        const user = getCurrentUser();
+        if (!user) { alert('Войдите, чтобы создать плейлист'); return; }
+        const id = document.getElementById('editPlaylistId').value;
+        const name = document.getElementById('playlistName').value.trim();
+        const description = document.getElementById('playlistDesc').value.trim();
+        const image = document.getElementById('playlistImg').value.trim();
+        const pinned = document.getElementById('playlistPinned').checked;
+        if (!name) { alert('Введите название плейлиста'); return; }
+        
+        let result;
+        const data = { name, description, image, pinned };
+        if (id) {
+            result = await updatePlaylist(id, data);
+        } else {
+            result = await createPlaylist(user.uid, data);
+        }
+        if (result.success) {
+            alert('✅ Плейлист сохранён!');
+            closeModal('m-playlist');
+            await loadPlaylists();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    window.deletePlaylistItem = async function(id) {
+        if (!confirm('Удалить плейлист?')) return;
+        const result = await deletePlaylist(id);
+        if (result.success) {
+            alert('✅ Плейлист удалён');
+            await loadPlaylists();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    window.editPlaylist = function(id) {
+        const playlist = allPlaylists.find(p => p.id === id);
+        if (playlist) {
+            openPlaylistModal({ id: playlist.id, name: playlist.name, description: playlist.description, image: playlist.image, pinned: playlist.pinned });
+        }
+    };
+
+    async function loadPlaylists() {
+        const user = getCurrentUser();
+        if (!user) { return; }
+        const result = await getPlaylists(user.uid);
+        const container = document.getElementById('playlistsContainer');
+        if (result.success) {
+            allPlaylists = result.playlists;
+            if (allPlaylists.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">У вас пока нет плейлистов</p>';
+            } else {
+                container.innerHTML = `
+                    <div class="playlist-grid">
+                        ${allPlaylists.map(p => `
+                            <div class="playlist-card">
+                                ${p.image ? `<img src="${p.image}" class="cover" onerror="this.style.display='none'">` : `<div class="cover" style="background:var(--bg-welcome);display:flex;align-items:center;justify-content:center;font-size:30px;">📁</div>`}
+                                <div class="name">${p.name}</div>
+                                <div class="count">${p.items?.length || 0} релизов</div>
+                                ${p.pinned ? '<div class="pinned">📌 Закреплён</div>' : ''}
+                                ${isOwnProfile ? `
+                                    <div style="display:flex;gap:5px;margin-top:8px;justify-content:center;">
+                                        <button class="action-btn action-btn-sm outline" onclick="editPlaylist('${p.id}')">✏️</button>
+                                        <button class="action-btn action-btn-sm danger" onclick="deletePlaylistItem('${p.id}')">🗑️</button>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+    }
+
+    // ========== СТЕНА ==========
+    window.addWallPost = async function() {
+        const user = getCurrentUser();
+        if (!user) { alert('Войдите, чтобы оставить запись'); return; }
+        const text = document.getElementById('wallInput').value.trim();
+        if (!text) { alert('Введите текст'); return; }
+        const result = await addWallPost(user.uid, text);
+        if (result.success) {
+            document.getElementById('wallInput').value = '';
+            await loadWall();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    window.deleteWallPost = async function(id) {
+        if (!confirm('Удалить запись?')) return;
+        const result = await deleteWallPost(id);
+        if (result.success) {
+            await loadWall();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    window.openWallSettings = function() {
+        const user = getCurrentUser();
+        if (!user) return;
+        openModal('m-wall-settings');
+    };
+
+    window.saveWallSettings = async function() {
+        const user = getCurrentUser();
+        if (!user) return;
+        const selected = document.querySelector('input[name="wallMode"]:checked');
+        if (!selected) return;
+        const result = await updateWallVisibility(user.uid, selected.value);
+        if (result.success) {
+            alert('✅ Настройки сохранены!');
+            closeModal('m-wall-settings');
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    async function loadWall() {
+        const user = getCurrentUser();
+        if (!user) return;
+        const result = await getWallPosts(user.uid);
+        const container = document.getElementById('wallContainer');
+        if (result.success) {
+            wallPosts = result.posts;
+            if (wallPosts.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Пока нет записей на стене</p>';
+            } else {
+                container.innerHTML = wallPosts.map(post => `
+                    <div class="wall-post">
+                        <div class="header">
+                            <div class="user">
+                                <div class="avatar" style="background:var(--color-accent);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;">${post.userName?.charAt(0) || '?'}</div>
+                                <span class="name">${post.userName || 'Пользователь'}</span>
+                                <span class="visibility-badge">${post.visibility === 'friends' ? '👥 Подписчики' : post.visibility === 'disabled' ? '🔒 Закрыто' : '🌍 Все'}</span>
+                            </div>
+                            <span class="time">${post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleDateString() : ''}</span>
+                        </div>
+                        <div class="text">${post.text}</div>
+                        ${isOwnProfile ? `
+                            <div class="actions">
+                                <button onclick="deleteWallPost('${post.id}')">🗑️ Удалить</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+            }
+        }
+    }
+
+    // ========== ЗАЯВКИ ==========
     async function loadOrders() {
         const container = document.getElementById('ordersList');
         if (!container) return;
@@ -525,190 +1157,30 @@
             'cancelled': '❌ Отменено'
         };
         container.innerHTML = result.orders.map(order => `
-            <div style="background:var(--bg-order-item); border-radius:10px; padding:15px; margin-bottom:10px; border-left:4px solid ${order.status === 'paid' ? 'var(--color-success)' : order.status === 'completed' ? 'var(--color-accent)' : 'var(--color-warning)'};">
-                <div style="display:flex; justify-content:space-between; flex-wrap:wrap;">
+            <div style="background:var(--bg-order-item);border-radius:10px;padding:15px;margin-bottom:10px;border-left:4px solid ${order.status === 'paid' ? 'var(--color-success)' : order.status === 'completed' ? 'var(--color-accent)' : 'var(--color-warning)'};">
+                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;">
                     <strong style="color:var(--color-accent);">${order.title}</strong>
                     <span style="color:var(--text-muted);">${order.type} • ${order.episodes} серий</span>
                 </div>
-                <div style="display:flex; justify-content:space-between; flex-wrap:wrap; margin-top:5px;">
-                    <span style="color:var(--text-muted); font-size:13px;">${order.description || 'Без описания'}</span>
-                    <span style="color:var(--color-warning); font-weight:bold;">${order.price} ₽</span>
+                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;margin-top:5px;">
+                    <span style="color:var(--text-muted);font-size:13px;">${order.description || 'Без описания'}</span>
+                    <span style="color:var(--color-warning);font-weight:bold;">${order.price} ₽</span>
                 </div>
                 <div style="margin-top:5px;">
-                    <span style="color:var(--text-muted); font-size:12px;">${statusMap[order.status] || order.status}</span>
-                    ${order.status === 'paid' ? '<span style="color:var(--color-success); font-size:12px; margin-left:10px;">🎙️ Ждите связи</span>' : ''}
+                    <span style="color:var(--text-muted);font-size:12px;">${statusMap[order.status] || order.status}</span>
+                    ${order.status === 'paid' ? '<span style="color:var(--color-success);font-size:12px;margin-left:10px;">🎙️ Ждите связи</span>' : ''}
                 </div>
             </div>
         `).join('');
     }
 
-    function updateAuthButton(user) {
-        const btn = document.getElementById('authBtn');
-        if (user) {
-            btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
-            btn.href = 'profile.html';
-        } else {
-            btn.textContent = '🔑 Вход';
-            btn.href = 'login.html';
-        }
-    }
-
-    async function updateDubInLink(user) {
-        const link = document.getElementById('dubInLink');
-        if (!link) return;
-        if (user) {
-            const role = await getUserData(user.uid);
-            const isDubber = role.success && (role.data.role === 'dubber' || role.data.role === 'admin');
-            link.style.display = isDubber ? 'inline-flex' : 'none';
-        } else {
-            link.style.display = 'none';
-        }
-    }
-
-    async function updateAdminLink(user) {
-        const link = document.getElementById('adminLink');
-        if (!link) return;
-        if (user) {
-            const role = await getUserRole(user.uid);
-            link.style.display = role === 'admin' ? 'inline-flex' : 'none';
-        } else {
-            link.style.display = 'none';
-        }
-    }
-
-    window.openUsersModal = function(title, users) {
-        document.getElementById('usersModalTitle').textContent = title;
-        const body = document.getElementById('usersModalBody');
-        if (!users || users.length === 0) {
-            body.innerHTML = '<p style="color:var(--text-muted); text-align:center;">Нет пользователей</p>';
-        } else {
-            body.innerHTML = users.map(uid => `
-                <a href="profile.html?uid=${uid}" class="user-search-result" style="text-decoration:none;">
-                    <div class="user-info">
-                        <img src="https://via.placeholder.com/32/d4e8ff/4a90d9?text=?" class="user-avatar-small">
-                        <span class="user-name">${uid}</span>
-                    </div>
-                    <span style="color:var(--text-muted);">→</span>
-                </a>
-            `).join('');
-        }
-        document.getElementById('usersModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    };
-
-    window.closeUsersModal = function() {
-        document.getElementById('usersModal').classList.remove('active');
-        document.body.style.overflow = '';
-    };
-
-    document.getElementById('usersModal').addEventListener('click', function(e) {
-        if (e.target === this) closeUsersModal();
-    });
-
-    window.searchUserByEmail = async function() {
-        const input = document.getElementById('adminSearchEmail');
-        const email = input.value.trim();
-        const resultsContainer = document.getElementById('adminSearchResults');
-        if (!email) {
-            resultsContainer.innerHTML = '<p style="color:var(--text-muted);">Введите email для поиска</p>';
-            return;
-        }
-        resultsContainer.innerHTML = '<p style="color:var(--text-muted);">⏳ Поиск...</p>';
-        const result = await getUserByEmail(email);
-        if (result.success) {
-            const user = result.data;
-            searchResults = [user];
-            const roleNames = { 'admin': 'Администратор', 'dubber': 'Даббер', 'user': 'Пользователь' };
-            resultsContainer.innerHTML = `
-                <div class="user-search-result">
-                    <div class="user-info">
-                        <img src="${user.photoURL || 'https://via.placeholder.com/32/d4e8ff/4a90d9?text=?'}" class="user-avatar-small" onerror="this.src='https://via.placeholder.com/32/d4e8ff/4a90d9?text=?'">
-                        <div>
-                            <div class="user-name">${user.displayName || 'Без имени'}</div>
-                            <div class="user-email">${user.email}</div>
-                        </div>
-                        <span class="user-current-role">Текущая роль: <strong>${roleNames[user.role] || user.role}</strong></span>
-                    </div>
-                    <div>
-                        <select class="role-select" id="roleSelect_${user.id}" onchange="applyRole('${user.id}')">
-                            <option value="user" ${user.role === 'user' ? 'selected' : ''}>Пользователь</option>
-                            <option value="dubber" ${user.role === 'dubber' ? 'selected' : ''}>Даббер</option>
-                            <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Администратор</option>
-                        </select>
-                        <button class="action-btn primary" style="padding:4px 12px; font-size:12px;" onclick="applyRole('${user.id}')">✅ Применить</button>
-                    </div>
-                </div>
-                <div style="margin-top:10px;">
-                    <h4 style="color:var(--text-muted); font-size:14px;">🎯 Выдать достижение</h4>
-                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                        <input type="text" id="customAchName_${user.id}" placeholder="Название" style="flex:1; padding:6px 12px; border-radius:8px; border:2px solid var(--border-primary); background:var(--bg-input); color:var(--text-primary);">
-                        <input type="text" id="customAchIcon_${user.id}" placeholder="Иконка" style="width:60px; padding:6px 12px; border-radius:8px; border:2px solid var(--border-primary); background:var(--bg-input); color:var(--text-primary);">
-                        <button class="action-btn success" style="padding:4px 16px; font-size:12px;" onclick="giveCustomAchievement('${user.id}')">🏅 Выдать</button>
-                    </div>
-                </div>
-            `;
-        } else {
-            resultsContainer.innerHTML = `<p style="color:var(--color-danger);">❌ ${result.error}</p>`;
-        }
-    };
-
-    window.applyRole = async function(userId) {
-        const select = document.getElementById(`roleSelect_${userId}`);
-        if (!select) return;
-        const newRole = select.value;
-        if (!confirm(`Изменить роль пользователя на "${newRole}"?`)) return;
-        const result = await updateUserRole(userId, newRole);
-        if (result.success) {
-            alert('✅ Роль обновлена!');
-            await searchUserByEmail();
-            if (userId === currentUser?.uid) {
-                await loadProfile();
-            }
-        } else {
-            alert('❌ Ошибка: ' + result.error);
-        }
-    };
-
-    window.giveCustomAchievement = async function(userId) {
-        const nameInput = document.getElementById(`customAchName_${userId}`);
-        const iconInput = document.getElementById(`customAchIcon_${userId}`);
-        const name = nameInput?.value?.trim();
-        const icon = iconInput?.value?.trim() || '🏅';
-        if (!name) {
-            alert('Введите название достижения');
-            return;
-        }
-        if (!confirm(`Выдать достижение "${name}" пользователю?`)) return;
-        const achievement = { id: 'custom_' + Date.now(), name: name, icon: icon, description: 'Кастомное достижение' };
-        const result = await addCustomAchievement(userId, achievement);
-        if (result.success) {
-            alert('✅ Достижение выдано!');
-            nameInput.value = '';
-            iconInput.value = '';
-            await searchUserByEmail();
-            if (userId === currentUser?.uid) {
-                await loadProfile();
-            }
-        } else {
-            alert('❌ Ошибка: ' + result.error);
-        }
-    };
-
+    // ========== ПРОФИЛЬ ==========
     window.handleSubscribe = async function() {
-        if (!currentUser) {
-            alert('Войдите, чтобы подписаться');
-            return;
-        }
-        if (currentUser.uid === viewedUserId) {
-            alert('Нельзя подписаться на себя');
-            return;
-        }
+        if (!currentUser) { alert('Войдите, чтобы подписаться'); return; }
+        if (currentUser.uid === viewedUserId) { alert('Нельзя подписаться на себя'); return; }
         const result = await toggleSubscribe(currentUser.uid, viewedUserId);
-        if (result.success) {
-            await loadProfile();
-        } else {
-            alert('Ошибка: ' + result.error);
-        }
+        if (result.success) { await loadProfile(); } 
+        else { alert('Ошибка: ' + result.error); }
     };
 
     window.handleEditProfile = function() {
@@ -727,9 +1199,7 @@
     window.handleLogout = async function() {
         if (!confirm('Вы уверены, что хотите выйти?')) return;
         const result = await logoutUser();
-        if (result.success) {
-            window.location.href = 'index.html';
-        }
+        if (result.success) { window.location.href = 'index.html'; }
     };
 
     async function renderProfile(user, userData, isOwn) {
@@ -763,9 +1233,9 @@
                 <div class="admin-panel">
                     <h3>👑 Управление пользователем</h3>
                     <div style="margin-bottom:15px;">
-                        <p style="color:var(--text-muted); font-size:14px;">Текущая роль: <strong style="color:var(--color-accent);">${roleNames[role] || role}</strong></p>
-                        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                            <select id="adminRoleSelect" style="padding:8px 16px; border-radius:15px; border:2px solid var(--border-primary); background:var(--bg-card); color:var(--text-primary); font-size:14px;">
+                        <p style="color:var(--text-muted);font-size:14px;">Текущая роль: <strong style="color:var(--color-accent);">${roleNames[role] || role}</strong></p>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                            <select id="adminRoleSelect" style="padding:8px 16px;border-radius:15px;border:2px solid var(--border-primary);background:var(--bg-card);color:var(--text-primary);font-size:14px;">
                                 <option value="user" ${role === 'user' ? 'selected' : ''}>👤 Пользователь</option>
                                 <option value="dubber" ${role === 'dubber' ? 'selected' : ''}>🎙️ Даббер</option>
                                 <option value="admin" ${role === 'admin' ? 'selected' : ''}>👑 Администратор</option>
@@ -773,13 +1243,20 @@
                             <button class="action-btn primary" onclick="handleRoleChange()">💾 Применить роль</button>
                         </div>
                     </div>
-                    <hr style="border-color:var(--border-primary); margin:15px 0;">
+                    <hr style="border-color:var(--border-primary);margin:15px 0;">
                     <div>
-                        <p style="color:var(--text-muted); font-size:14px;">🏅 Выдать кастомное достижение</p>
-                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                            <input type="text" id="customAchievementName" placeholder="Название" style="flex:1; padding:8px 14px; border-radius:8px; border:2px solid var(--border-primary); background:var(--bg-input); color:var(--text-primary); min-width:150px;">
-                            <input type="text" id="customAchievementIcon" placeholder="Иконка" style="width:60px; padding:8px 14px; border-radius:8px; border:2px solid var(--border-primary); background:var(--bg-input); color:var(--text-primary);">
+                        <p style="color:var(--text-muted);font-size:14px;">🏅 Выдать кастомное достижение</p>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                            <input type="text" id="customAchievementName" placeholder="Название" style="flex:1;padding:8px 14px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);min-width:150px;">
+                            <input type="text" id="customAchievementIcon" placeholder="Иконка" style="width:60px;padding:8px 14px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);">
                             <button class="action-btn success" onclick="handleCustomAchievement()">🏅 Выдать</button>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px;">
+                        <p style="color:var(--text-muted);font-size:14px;">💰 Добавить DSCoins</p>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                            <input type="number" id="adminDSCoinsAmount" placeholder="Количество" style="flex:1;padding:8px 14px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);min-width:100px;">
+                            <button class="action-btn coin" onclick="handleAdminDSCoins()"><i class="fas fa-coins"></i> Добавить</button>
                         </div>
                     </div>
                 </div>
@@ -791,9 +1268,9 @@
             adminOwnPanel = `
                 <div class="admin-panel">
                     <h3>👑 Админ-панель</h3>
-                    <p style="color:var(--text-muted); font-size:14px; margin-bottom:15px;">Управление пользователями по email</p>
-                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                        <input type="email" id="adminSearchEmail" placeholder="Введите email пользователя" style="flex:1; padding:10px 16px; border-radius:10px; border:2px solid var(--border-primary); background:var(--bg-input); color:var(--text-primary); font-size:14px; min-width:200px;">
+                    <p style="color:var(--text-muted);font-size:14px;margin-bottom:15px;">Управление пользователями по email</p>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <input type="email" id="adminSearchEmail" placeholder="Введите email пользователя" style="flex:1;padding:10px 16px;border-radius:10px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);font-size:14px;min-width:200px;">
                         <button class="search-btn" onclick="searchUserByEmail()">🔍 Найти</button>
                     </div>
                     <div id="adminSearchResults" style="margin-top:15px;">
@@ -831,7 +1308,7 @@
                          class="profile-avatar-large" 
                          onerror="this.src='https://via.placeholder.com/120/d4e8ff/4a90d9?text=?'">
                     <div class="profile-info">
-                        <h1 class="profile-name">${displayName}</h1>
+                        <h1 class="profile-name" id="profileDisplayName">${displayName}</h1>
                         <div class="profile-email">${isOwn ? email : ''}</div>
                         <span class="profile-role ${roleClass[role] || 'role-user'}">${roleNames[role] || 'Пользователь'}</span>
                         <div class="profile-actions">
@@ -867,6 +1344,27 @@
                 ${adminOwnPanel}
             </div>
         `;
+
+        // Показываем дополнительные секции только для своего профиля
+        if (isOwn) {
+            document.getElementById('dscoinBalanceSection').style.display = 'flex';
+            document.getElementById('shopSection').style.display = 'block';
+            document.getElementById('playlistsSection').style.display = 'block';
+            document.getElementById('wallSection').style.display = 'block';
+            
+            // Обновляем баланс
+            const coinsResult = await getUserDSCoins(user.uid);
+            document.getElementById('profileDSCoins').textContent = coinsResult.success ? coinsResult.coins : '0';
+            
+            // Загружаем цены магазина
+            await loadShopPrices();
+            
+            // Загружаем плейлисты
+            await loadPlaylists();
+            
+            // Загружаем стену
+            await loadWall();
+        }
     }
 
     window.handleRoleChange = async function() {
@@ -883,54 +1381,110 @@
     };
 
     window.handleCustomAchievement = async function() {
-        const nameInput = document.getElementById('customAchievementName');
-        const iconInput = document.getElementById('customAchievementIcon');
-        const name = nameInput?.value?.trim();
-        const icon = iconInput?.value?.trim() || '🏅';
-        if (!name) {
-            alert('Введите название достижения');
-            return;
-        }
+        const name = document.getElementById('customAchievementName').value.trim();
+        const icon = document.getElementById('customAchievementIcon').value.trim() || '🏅';
+        if (!name) { alert('Введите название достижения'); return; }
         if (!confirm(`Выдать достижение "${name}" пользователю?`)) return;
-        const achievement = { id: 'custom_' + Date.now(), name: name, icon: icon, description: 'Кастомное достижение' };
+        const achievement = { id: 'custom_' + Date.now(), name, icon, description: 'Кастомное достижение' };
         const result = await addCustomAchievement(viewedUserId, achievement);
         if (result.success) {
             alert('✅ Достижение выдано!');
-            nameInput.value = '';
-            iconInput.value = '';
+            document.getElementById('customAchievementName').value = '';
+            document.getElementById('customAchievementIcon').value = '';
             await loadProfile();
         } else {
             alert('❌ Ошибка: ' + result.error);
         }
     };
 
+    window.handleAdminDSCoins = async function() {
+        const amount = parseInt(document.getElementById('adminDSCoinsAmount').value);
+        if (!amount || amount < 1) { alert('Введите количество DSCoins'); return; }
+        if (!confirm(`Добавить ${amount} DSCoins пользователю?`)) return;
+        const result = await addDSCoins(viewedUserId, amount, 'Начисление администратором');
+        if (result.success) {
+            alert('✅ DSCoins добавлены!');
+            document.getElementById('adminDSCoinsAmount').value = '';
+            await loadProfile();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    window.searchUserByEmail = async function() {
+        const email = document.getElementById('adminSearchEmail').value.trim();
+        const resultsContainer = document.getElementById('adminSearchResults');
+        if (!email) { resultsContainer.innerHTML = '<p style="color:var(--text-muted);">Введите email для поиска</p>'; return; }
+        resultsContainer.innerHTML = '<p style="color:var(--text-muted);">⏳ Поиск...</p>';
+        const result = await getUserByEmail(email);
+        if (result.success) {
+            const user = result.data;
+            const roleNames = { 'admin': 'Администратор', 'dubber': 'Даббер', 'user': 'Пользователь' };
+            resultsContainer.innerHTML = `
+                <div class="user-search-result">
+                    <div class="user-info">
+                        <img src="${user.photoURL || 'https://via.placeholder.com/32/d4e8ff/4a90d9?text=?'}" class="user-avatar-small" onerror="this.src='https://via.placeholder.com/32/d4e8ff/4a90d9?text=?'">
+                        <div>
+                            <div class="user-name">${user.displayName || 'Без имени'}</div>
+                            <div class="user-email">${user.email}</div>
+                        </div>
+                        <span class="user-current-role">Текущая роль: <strong>${roleNames[user.role] || user.role}</strong></span>
+                    </div>
+                    <div>
+                        <a href="profile.html?uid=${user.id}" class="action-btn primary" style="padding:4px 12px;font-size:12px;text-decoration:none;">Перейти</a>
+                    </div>
+                </div>
+            `;
+        } else {
+            resultsContainer.innerHTML = `<p style="color:var(--color-danger);">❌ ${result.error}</p>`;
+        }
+    };
+
+    window.openUsersModal = function(title, users) {
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay active';
+        modal.style.display = 'flex';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width:480px;">
+                <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
+                <h2>${title}</h2>
+                <div id="usersModalBody" style="max-height:400px;overflow-y:auto;">
+                    ${users && users.length > 0 ? users.map(uid => `
+                        <a href="profile.html?uid=${uid}" class="user-search-result" style="text-decoration:none;">
+                            <div class="user-info">
+                                <img src="https://via.placeholder.com/32/d4e8ff/4a90d9?text=?" class="user-avatar-small">
+                                <span class="user-name">${uid}</span>
+                            </div>
+                            <span style="color:var(--text-muted);">→</span>
+                        </a>
+                    `).join('') : '<p style="color:var(--text-muted);text-align:center;">Нет пользователей</p>'}
+                </div>
+                <button class="action-btn outline" style="width:100%;margin-top:16px;" onclick="this.closest('.modal-overlay').remove()">Закрыть</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+        modal.addEventListener('click', function(e) { if (e.target === this) { this.remove(); document.body.style.overflow = ''; } });
+    };
+
     async function loadProfile() {
         const container = document.getElementById('profileContent');
-        container.innerHTML = '<div class="loading" style="text-align:center; padding:40px; color:var(--text-muted);">⏳ Загрузка...</div>';
+        container.innerHTML = '<div class="loading" style="text-align:center;padding:40px;color:var(--text-muted);">⏳ Загрузка...</div>';
         const user = getCurrentUser();
         currentUser = user;
         let targetUid = null;
-        let targetEmail = viewedEmail;
         if (viewedId) {
             targetUid = viewedId;
         } else if (viewedEmail) {
             const result = await getUserByEmail(viewedEmail);
-            if (result.success) {
-                targetUid = result.data.id;
-                viewedUserData = result.data;
-            } else {
-                container.innerHTML = `<p style="color:var(--color-danger); text-align:center;">❌ Пользователь с email "${viewedEmail}" не найден</p>`;
-                return;
-            }
-        } else if (user) {
-            targetUid = user.uid;
-        }
+            if (result.success) { targetUid = result.data.id; viewedUserData = result.data; } 
+            else { container.innerHTML = `<p style="color:var(--color-danger);text-align:center;">❌ Пользователь с email "${viewedEmail}" не найден</p>`; return; }
+        } else if (user) { targetUid = user.uid; }
         if (!targetUid) {
             container.innerHTML = `
                 <div class="auth-message">
                     <h2>🔒 Вы не авторизованы</h2>
                     <p>Войдите или зарегистрируйтесь, чтобы увидеть профиль</p>
-                    <p>Если вы уже вошли в аккаунт, подождите загрузку страницы.</p>
                     <br>
                     <a href="login.html" class="auth-btn">🔑 Войти</a>
                 </div>
@@ -941,18 +1495,13 @@
         isOwnProfile = user && user.uid === targetUid;
         const result = await getUserData(targetUid);
         if (!result.success) {
-            container.innerHTML = `<p style="color:var(--color-danger); text-align:center;">❌ ${result.error}</p>`;
+            container.innerHTML = `<p style="color:var(--color-danger);text-align:center;">❌ ${result.error}</p>`;
             return;
         }
         viewedUserData = result.data;
-        if (isOwnProfile) {
-            currentUserData = result.data;
-        }
-        if (user) {
-            isAdminUser = await isAdmin(user.uid);
-        } else {
-            isAdminUser = false;
-        }
+        if (isOwnProfile) { currentUserData = result.data; }
+        if (user) { isAdminUser = await isAdmin(user.uid); } 
+        else { isAdminUser = false; }
         await renderProfile(user, viewedUserData, isOwnProfile);
         await loadOrders();
     }
@@ -961,7 +1510,8 @@
         currentUser = user;
         updateAuthButton(user);
         await updateDubInLink(user);
-        await updateAdminLink(user);
+        await updateAdminLinks(user);
+        await updateSidebarBalance(user);
         await loadProfile();
     });
 
@@ -970,10 +1520,12 @@
         currentUser = user;
         updateAuthButton(user);
         await updateDubInLink(user);
-        await updateAdminLink(user);
+        await updateAdminLinks(user);
+        await updateSidebarBalance(user);
         await loadProfile();
     });
 </script>
+
 <script>
     function toggleTheme() {
         const html = document.documentElement;
@@ -982,21 +1534,18 @@
         html.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
         const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
-        }
+        if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
     }
 
     function loadTheme() {
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
         const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
-        }
+        if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
     }
 
     loadTheme();
 </script>
+
 </body>
 </html>
