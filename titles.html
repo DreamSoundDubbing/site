@@ -12,28 +12,28 @@
         .filters-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 25px;
-            padding: 15px 20px;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 14px 18px;
             background: var(--bg-filter);
-            border-radius: 15px;
+            border-radius: 12px;
             border: 1px solid var(--border-primary);
             align-items: center;
         }
         .filter-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
         }
         .filter-btn {
-            padding: 6px 16px;
-            border-radius: 25px;
+            padding: 5px 14px;
+            border-radius: 20px;
             border: 2px solid var(--border-primary);
             background: transparent;
             color: var(--text-muted);
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             transition: all 0.3s ease;
             font-family: inherit;
         }
@@ -48,17 +48,31 @@
         }
         .filter-label {
             color: var(--text-muted);
-            font-size: 13px;
-            margin-right: 5px;
+            font-size: 12px;
+            margin-right: 4px;
         }
         .filter-divider {
             color: var(--border-primary);
-            font-size: 20px;
-            margin: 0 5px;
+            font-size: 18px;
+            margin: 0 4px;
+        }
+        .filter-select {
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 2px solid var(--border-primary);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 13px;
+            outline: none;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        .filter-select:focus {
+            border-color: var(--color-accent);
         }
         .titles-count {
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13px;
             margin-left: auto;
         }
         .titles-count span {
@@ -66,24 +80,22 @@
             font-weight: bold;
         }
         .episode-input {
-            width: 60px;
-            padding: 6px 10px;
-            border-radius: 25px;
+            width: 50px;
+            padding: 4px 8px;
+            border-radius: 20px;
             border: 2px solid var(--border-primary);
             background: var(--bg-input);
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 13px;
             text-align: center;
             outline: none;
             transition: all 0.3s ease;
             font-family: inherit;
             appearance: textfield;
-            -webkit-appearance: textfield;
-            -moz-appearance: textfield;
         }
         .episode-input:focus {
             border-color: var(--color-accent);
-            box-shadow: 0 0 15px rgba(74, 144, 217, 0.2);
+            box-shadow: 0 0 15px rgba(60, 80, 180, 0.15);
         }
         .episode-input::-webkit-outer-spin-button,
         .episode-input::-webkit-inner-spin-button {
@@ -96,16 +108,16 @@
         }
         .episode-range-label {
             color: var(--text-muted);
-            font-size: 13px;
+            font-size: 12px;
         }
         .reset-episodes-btn {
-            padding: 6px 14px;
-            border-radius: 25px;
+            padding: 4px 12px;
+            border-radius: 20px;
             border: 2px solid var(--border-primary);
             background: transparent;
             color: var(--text-muted);
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             transition: all 0.3s ease;
             font-family: inherit;
         }
@@ -115,38 +127,38 @@
         }
         .admin-toolbar {
             display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
-            padding: 15px;
+            padding: 12px;
             background: var(--bg-admin-panel);
-            border-radius: 15px;
+            border-radius: 12px;
             border: 1px solid var(--color-accent);
         }
         .admin-toolbar .admin-btn {
-            padding: 8px 20px;
+            padding: 6px 18px;
             background: var(--gradient-primary);
             color: #fff;
             border: none;
-            border-radius: 25px;
+            border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s ease;
-            font-size: 14px;
+            font-size: 13px;
         }
         .admin-toolbar .admin-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+            box-shadow: 0 8px 25px rgba(60, 80, 180, 0.3);
         }
         .title-card-wrapper {
             position: relative;
         }
         .title-card-wrapper .admin-actions {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: 6px;
+            right: 6px;
             display: flex;
-            gap: 5px;
+            gap: 4px;
             opacity: 0;
             transition: opacity 0.3s;
         }
@@ -154,11 +166,11 @@
             opacity: 1;
         }
         .title-card-wrapper .admin-actions button {
-            padding: 4px 10px;
+            padding: 3px 8px;
             border: none;
-            border-radius: 15px;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             transition: all 0.3s;
         }
@@ -194,8 +206,8 @@
         }
         .modal-content {
             background: var(--bg-modal);
-            border-radius: 20px;
-            padding: 30px;
+            border-radius: 16px;
+            padding: 24px;
             max-width: 700px;
             width: 95%;
             max-height: 90vh;
@@ -206,13 +218,13 @@
         .modal-content h2 {
             color: var(--color-accent);
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         .modal-close {
             position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 28px;
+            top: 12px;
+            right: 16px;
+            font-size: 24px;
             color: var(--text-muted);
             cursor: pointer;
             background: none;
@@ -223,20 +235,20 @@
             color: var(--text-primary);
         }
         .modal-content .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         .modal-content .form-group label {
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13px;
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
         .modal-content .form-group input,
         .modal-content .form-group textarea,
         .modal-content .form-group select {
             width: 100%;
-            padding: 10px 14px;
-            border-radius: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
             border: 2px solid var(--border-primary);
             background: var(--bg-input);
             color: var(--text-primary);
@@ -245,7 +257,7 @@
             font-family: inherit;
         }
         .modal-content .form-group textarea {
-            min-height: 80px;
+            min-height: 60px;
             resize: vertical;
         }
         .modal-content .form-group input:focus,
@@ -255,29 +267,29 @@
         }
         .modal-content .form-row {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
         }
         .modal-content .form-row .form-group {
             flex: 1;
-            min-width: 150px;
+            min-width: 140px;
         }
         .modal-content .submit-btn {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: var(--gradient-primary);
             color: #fff;
             border: none;
             border-radius: 50px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 10px;
+            margin-top: 8px;
         }
         .modal-content .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+            box-shadow: 0 8px 25px rgba(60, 80, 180, 0.3);
         }
         .modal-content .submit-btn:disabled {
             opacity: 0.5;
@@ -285,60 +297,60 @@
             transform: none;
         }
         .episodes-editor {
-            margin-top: 10px;
+            margin-top: 8px;
         }
         .episode-edit-item {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
-            padding: 8px 12px;
+            padding: 6px 10px;
             background: var(--bg-input);
-            border-radius: 8px;
-            margin-bottom: 6px;
+            border-radius: 6px;
+            margin-bottom: 5px;
             border: 1px solid var(--border-primary);
         }
         .episode-edit-item:hover {
             border-color: var(--color-accent);
         }
         .episode-edit-item .ep-number {
-            width: 50px;
-            padding: 6px 8px;
-            border-radius: 6px;
+            width: 44px;
+            padding: 4px 6px;
+            border-radius: 4px;
             border: 1px solid var(--border-primary);
             background: var(--bg-card);
             color: var(--text-primary);
-            font-size: 13px;
+            font-size: 12px;
             text-align: center;
         }
         .episode-edit-item .ep-title {
             flex: 2;
-            min-width: 120px;
-            padding: 6px 10px;
-            border-radius: 6px;
+            min-width: 100px;
+            padding: 4px 8px;
+            border-radius: 4px;
             border: 1px solid var(--border-primary);
             background: var(--bg-card);
             color: var(--text-primary);
-            font-size: 13px;
+            font-size: 12px;
         }
         .episode-edit-item .ep-url {
             flex: 3;
-            min-width: 150px;
-            padding: 6px 10px;
-            border-radius: 6px;
+            min-width: 120px;
+            padding: 4px 8px;
+            border-radius: 4px;
             border: 1px solid var(--border-primary);
             background: var(--bg-card);
             color: var(--text-primary);
-            font-size: 13px;
+            font-size: 12px;
         }
         .episode-edit-item .ep-status {
-            padding: 6px 10px;
-            border-radius: 6px;
+            padding: 4px 8px;
+            border-radius: 4px;
             border: 1px solid var(--border-primary);
             background: var(--bg-card);
             color: var(--text-primary);
-            font-size: 13px;
-            min-width: 80px;
+            font-size: 12px;
+            min-width: 70px;
         }
         .episode-edit-item .ep-status option {
             background: var(--bg-card);
@@ -347,10 +359,10 @@
             background: var(--color-danger);
             color: #fff;
             border: none;
-            border-radius: 15px;
-            padding: 4px 12px;
+            border-radius: 12px;
+            padding: 3px 10px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 12px;
             transition: background 0.3s;
             flex-shrink: 0;
         }
@@ -358,16 +370,16 @@
             background: #e05555;
         }
         .add-episode-btn {
-            padding: 8px 20px;
+            padding: 6px 16px;
             background: var(--color-accent);
             color: #fff;
             border: none;
-            border-radius: 20px;
+            border-radius: 16px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             transition: all 0.3s;
-            margin-top: 8px;
+            margin-top: 6px;
         }
         .add-episode-btn:hover {
             background: var(--color-accent2);
@@ -376,14 +388,24 @@
         .episodes-empty {
             color: var(--text-muted);
             text-align: center;
-            padding: 15px;
+            padding: 12px;
             font-style: italic;
         }
+        .status-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status-ongoing { background: #4CAF50; color: #fff; }
+        .status-completed { background: #2196F3; color: #fff; }
+        .status-announced { background: #FF9800; color: #fff; }
         @media (max-width: 768px) {
             .filters-container {
                 flex-direction: column;
                 align-items: stretch;
-                gap: 10px;
+                gap: 8px;
             }
             .filter-group {
                 justify-content: center;
@@ -396,7 +418,7 @@
                 display: none;
             }
             .episode-input {
-                width: 50px;
+                width: 44px;
             }
             .admin-toolbar {
                 justify-content: center;
@@ -419,19 +441,23 @@
         }
         @media (max-width: 480px) {
             .filters-container {
-                padding: 12px;
+                padding: 10px;
             }
             .filter-btn {
-                padding: 5px 12px;
-                font-size: 12px;
+                padding: 4px 10px;
+                font-size: 11px;
+            }
+            .filter-select {
+                font-size: 11px;
+                padding: 4px 10px;
             }
             .episode-input {
-                width: 45px;
-                padding: 5px 8px;
-                font-size: 12px;
+                width: 40px;
+                padding: 3px 6px;
+                font-size: 11px;
             }
             .modal-content {
-                padding: 20px;
+                padding: 16px;
             }
         }
     </style>
@@ -464,7 +490,6 @@
 
 <!-- ========== SIDEBAR ========== -->
 <div id="sidebar-overlay" onclick="closeSidebar()"></div>
-
 <aside id="sidebar">
     <div class="sidebar-header">
         <div class="sidebar-logo">
@@ -522,7 +547,7 @@
         if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
     }
     function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         const btn = document.getElementById('themeToggle');
         if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
@@ -607,10 +632,11 @@
         <div id="adminPanel" style="display:none;" class="admin-toolbar">
             <button class="admin-btn" onclick="openAddModal()">➕ Добавить тайтл</button>
             <button class="admin-btn" onclick="refreshTitles()">🔄 Обновить</button>
-            <span style="color:var(--text-muted); font-size:14px; margin-left:auto;">👑 Режим администратора</span>
+            <span style="color:var(--text-muted); font-size:13px; margin-left:auto;">👑 Режим администратора</span>
         </div>
 
         <div class="filters-container">
+            <!-- Фильтр по типу -->
             <div class="filter-group">
                 <span class="filter-label">📂 Тип:</span>
                 <button class="filter-btn active" data-filter="type" data-value="all">Все</button>
@@ -619,6 +645,48 @@
                 <button class="filter-btn" data-filter="type" data-value="Короткометражка">Короткометражки</button>
             </div>
             <span class="filter-divider">|</span>
+            
+            <!-- Фильтр по рейтингу -->
+            <div class="filter-group">
+                <span class="filter-label">⭐ Рейтинг:</span>
+                <select class="filter-select" id="filterRating" onchange="filterData()">
+                    <option value="all">Все</option>
+                    <option value="4.5">От 4.5</option>
+                    <option value="4">От 4.0</option>
+                    <option value="3.5">От 3.5</option>
+                    <option value="3">От 3.0</option>
+                </select>
+            </div>
+            <span class="filter-divider">|</span>
+            
+            <!-- Фильтр по году -->
+            <div class="filter-group">
+                <span class="filter-label">📅 Год:</span>
+                <select class="filter-select" id="filterYear" onchange="filterData()">
+                    <option value="all">Все</option>
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                </select>
+            </div>
+            <span class="filter-divider">|</span>
+            
+            <!-- Фильтр по статусу -->
+            <div class="filter-group">
+                <span class="filter-label">📌 Статус:</span>
+                <select class="filter-select" id="filterStatus" onchange="filterData()">
+                    <option value="all">Все</option>
+                    <option value="ongoing">Онгоинг</option>
+                    <option value="completed">Завершён</option>
+                    <option value="announced">Анонс</option>
+                </select>
+            </div>
+            <span class="filter-divider">|</span>
+            
+            <!-- Фильтр по количеству серий -->
             <div class="filter-group">
                 <span class="filter-label">📊 Серий:</span>
                 <span class="episode-range-label">от</span>
@@ -627,6 +695,7 @@
                 <input type="number" class="episode-input" id="episodeTo" placeholder="∞" min="0">
                 <button class="reset-episodes-btn" id="resetEpisodes">✕ Сбросить</button>
             </div>
+            
             <div class="titles-count">Найдено: <span id="titlesCount">0</span></div>
         </div>
         
@@ -636,35 +705,99 @@
     </div>
 </div>
 
+<!-- ========== МОДАЛКА РЕДАКТИРОВАНИЯ ========== -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('modalOverlay')">✕</button>
         <h2 id="modalTitle">Добавить тайтл</h2>
         <form id="titleForm" onsubmit="saveTitle(event)">
             <input type="hidden" id="editId" value="">
-            <div class="form-group"><label>ID тайтла (уникальный, латиница) *</label><input type="text" id="titleId" placeholder="например: dandadan" required></div>
-            <div class="form-row">
-                <div class="form-group"><label>Название (рус.) *</label><input type="text" id="titleName" placeholder="Название" required></div>
-                <div class="form-group"><label>Название (англ.)</label><input type="text" id="titleNameEn" placeholder="English name"></div>
+            
+            <div class="form-group">
+                <label>ID тайтла (уникальный, латиница) *</label>
+                <input type="text" id="titleId" placeholder="например: dandadan" required>
             </div>
+            
             <div class="form-row">
-                <div class="form-group"><label>Тип</label><select id="titleType"><option value="Сериал">Сериал</option><option value="Фильм">Фильм</option><option value="Короткометражка">Короткометражка</option></select></div>
-                <div class="form-group"><label>Год</label><input type="number" id="titleYear" placeholder="2024"></div>
-                <div class="form-group"><label>Кол-во серий</label><input type="number" id="titleEpisodes" placeholder="12" min="1"></div>
-                <div class="form-group"><label>Рейтинг</label><input type="number" id="titleRating" placeholder="5" min="0" max="5" step="0.1"></div>
+                <div class="form-group">
+                    <label>Название (рус.) *</label>
+                    <input type="text" id="titleName" placeholder="Название" required>
+                </div>
+                <div class="form-group">
+                    <label>Название (англ.)</label>
+                    <input type="text" id="titleNameEn" placeholder="English name">
+                </div>
             </div>
-            <div class="form-group"><label>Жанры (через запятую)</label><input type="text" id="titleGenres" placeholder="Комедия, Экшен, Романтика"></div>
-            <div class="form-group"><label>Ссылка на вертикальную обложку</label><input type="text" id="titleImageVert" placeholder="images/title_vert.jpg"></div>
-            <div class="form-group"><label>Ссылка на горизонтальную обложку</label><input type="text" id="titleImageHoriz" placeholder="images/title_horiz.jpg"></div>
-            <div class="form-group"><label>Описание</label><textarea id="titleDescription" placeholder="Описание тайтла..."></textarea></div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Тип</label>
+                    <select id="titleType">
+                        <option value="Сериал">Сериал</option>
+                        <option value="Фильм">Фильм</option>
+                        <option value="Короткометражка">Короткометражка</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Год</label>
+                    <input type="number" id="titleYear" placeholder="2024">
+                </div>
+                <div class="form-group">
+                    <label>Кол-во серий</label>
+                    <input type="number" id="titleEpisodes" placeholder="12" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Рейтинг</label>
+                    <input type="number" id="titleRating" placeholder="5" min="0" max="5" step="0.1">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Статус</label>
+                    <select id="titleStatus">
+                        <option value="ongoing">Онгоинг</option>
+                        <option value="completed">Завершён</option>
+                        <option value="announced">Анонс</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Жанры (через запятую)</label>
+                    <input type="text" id="titleGenres" placeholder="Комедия, Экшен, Романтика">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Вертикальная обложка</label>
+                <input type="text" id="titleImageVert" placeholder="images/title_vert.jpg">
+            </div>
+            
+            <div class="form-group">
+                <label>Горизонтальная обложка</label>
+                <input type="text" id="titleImageHoriz" placeholder="images/title_horiz.jpg">
+            </div>
+            
+            <div class="form-group">
+                <label>Обои (фоновое изображение)</label>
+                <input type="text" id="titleWallpaper" placeholder="https://example.com/wallpaper.jpg">
+            </div>
+            
+            <div class="form-group">
+                <label>Описание</label>
+                <textarea id="titleDescription" placeholder="Описание тайтла..."></textarea>
+            </div>
+            
             <div class="form-group">
                 <label style="display:flex; justify-content:space-between; align-items:center;">
                     <span>📺 Список серий</span>
                     <button type="button" class="add-episode-btn" onclick="addEpisode()">➕ Добавить серию</button>
                 </label>
-                <div id="episodesEditor" class="episodes-editor"><div class="episodes-empty">Загрузка...</div></div>
+                <div id="episodesEditor" class="episodes-editor">
+                    <div class="episodes-empty">Загрузка...</div>
+                </div>
                 <small style="color:var(--text-muted); display:block; margin-top:5px;">Номер, название, ссылка на Google Drive и статус серии</small>
             </div>
+            
             <button type="submit" class="submit-btn" id="submitBtn">💾 Сохранить</button>
         </form>
     </div>
@@ -685,6 +818,9 @@
 
     let allTitles = [];
     let currentFilterType = 'all';
+    let currentFilterRating = 'all';
+    let currentFilterYear = 'all';
+    let currentFilterStatus = 'all';
     let currentEpisodeFrom = 0;
     let currentEpisodeTo = Infinity;
     let isAdmin = false;
@@ -792,7 +928,6 @@
         if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
     });
 
-    // Остальные функции для работы с тайтлами (без изменений)
     function renderEpisodesEditor(episodes) {
         const container = document.getElementById('episodesEditor');
         if (!episodes || episodes.length === 0) {
@@ -845,8 +980,29 @@
 
     function getFilteredTitles() {
         let titles = allTitles;
-        if (currentFilterType !== 'all') titles = titles.filter(t => t.type === currentFilterType);
-        titles = titles.filter(t => { const eps = t.episodes || 0; return eps >= currentEpisodeFrom && eps <= currentEpisodeTo; });
+        
+        if (currentFilterType !== 'all') {
+            titles = titles.filter(t => t.type === currentFilterType);
+        }
+        
+        if (currentFilterRating !== 'all') {
+            const minRating = parseFloat(currentFilterRating);
+            titles = titles.filter(t => (t.rating || 0) >= minRating);
+        }
+        
+        if (currentFilterYear !== 'all') {
+            titles = titles.filter(t => t.year === parseInt(currentFilterYear));
+        }
+        
+        if (currentFilterStatus !== 'all') {
+            titles = titles.filter(t => t.status === currentFilterStatus);
+        }
+        
+        titles = titles.filter(t => {
+            const eps = t.episodes || 0;
+            return eps >= currentEpisodeFrom && eps <= currentEpisodeTo;
+        });
+        
         return titles;
     }
 
@@ -854,12 +1010,25 @@
         const container = document.getElementById('titles-container');
         const countEl = document.getElementById('titlesCount');
         const filtered = getFilteredTitles();
+        
         if (filtered.length === 0) {
-            container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);width:100%;"><p style="font-size:24px;">😕</p><p>По выбранным фильтрам ничего не найдено</p><button onclick="resetAllFilters()" style="margin-top:15px;padding:10px 25px;background:var(--gradient-primary);color:#fff;border:none;border-radius:25px;cursor:pointer;">Сбросить фильтры</button></div>`;
+            container.innerHTML = `<div style="text-align:center;padding:30px;color:var(--text-muted);width:100%;">
+                <p style="font-size:24px;">😕</p>
+                <p>По выбранным фильтрам ничего не найдено</p>
+                <button onclick="resetAllFilters()" style="margin-top:12px;padding:8px 20px;background:var(--gradient-primary);color:#fff;border:none;border-radius:20px;cursor:pointer;">Сбросить фильтры</button>
+            </div>`;
             countEl.textContent = '0';
             return;
         }
+        
         countEl.textContent = filtered.length;
+        
+        const statusMap = {
+            'ongoing': '<span class="status-badge status-ongoing">🔄 Онгоинг</span>',
+            'completed': '<span class="status-badge status-completed">✅ Завершён</span>',
+            'announced': '<span class="status-badge status-announced">📢 Анонс</span>'
+        };
+        
         container.innerHTML = filtered.map(title => {
             const image = title.imageVertical || title.imageHorizontal || title.image || 'https://via.placeholder.com/200x280/d4e8ff/4a90d9?text=No+Image';
             let adminButtons = '';
@@ -881,10 +1050,11 @@
                                 <span>${title.type}</span>
                                 <span>${title.episodes} серий</span>
                             </div>
-                            <div style="display:flex;justify-content:space-between;margin-top:5px;">
-                                <span style="color:var(--text-muted);font-size:13px;">${title.year || ''}</span>
+                            <div style="display:flex;justify-content:space-between;margin-top:4px;align-items:center;">
+                                <span style="color:var(--text-muted);font-size:12px;">${title.year || ''}</span>
                                 <span style="color:var(--color-warning);">⭐ ${title.rating}</span>
                             </div>
+                            <div style="margin-top:4px;">${statusMap[title.status] || ''}</div>
                         </div>
                     </a>
                     ${adminButtons}
@@ -893,14 +1063,32 @@
         }).join('');
     }
 
+    function filterData() {
+        const rating = document.getElementById('filterRating');
+        const year = document.getElementById('filterYear');
+        const status = document.getElementById('filterStatus');
+        currentFilterRating = rating ? rating.value : 'all';
+        currentFilterYear = year ? year.value : 'all';
+        currentFilterStatus = status ? status.value : 'all';
+        renderTitles();
+    }
+
+    window.filterData = filterData;
+
     window.resetAllFilters = function() {
         currentFilterType = 'all';
+        currentFilterRating = 'all';
+        currentFilterYear = 'all';
+        currentFilterStatus = 'all';
         currentEpisodeFrom = 0;
         currentEpisodeTo = Infinity;
         document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.filter-btn[data-filter="type"][data-value="all"]').forEach(btn => btn.classList.add('active'));
         document.getElementById('episodeFrom').value = '';
         document.getElementById('episodeTo').value = '';
+        document.getElementById('filterRating').value = 'all';
+        document.getElementById('filterYear').value = 'all';
+        document.getElementById('filterStatus').value = 'all';
         renderTitles();
     };
 
@@ -913,6 +1101,7 @@
                 renderTitles();
             });
         });
+
         const episodeFrom = document.getElementById('episodeFrom');
         const episodeTo = document.getElementById('episodeTo');
         const updateEpisodeFilter = function() {
@@ -959,9 +1148,11 @@
         document.getElementById('titleYear').value = title.year || '';
         document.getElementById('titleEpisodes').value = title.episodes || '';
         document.getElementById('titleRating').value = title.rating || '';
+        document.getElementById('titleStatus').value = title.status || 'ongoing';
         document.getElementById('titleGenres').value = (title.genres || []).join(', ');
         document.getElementById('titleImageVert').value = title.imageVertical || '';
         document.getElementById('titleImageHoriz').value = title.imageHorizontal || '';
+        document.getElementById('titleWallpaper').value = title.wallpaper || '';
         document.getElementById('titleDescription').value = title.description || '';
         renderEpisodesEditor(title.episodesList || []);
         openModal('modalOverlay');
@@ -974,6 +1165,7 @@
         isSaving = true;
         submitBtn.disabled = true;
         submitBtn.textContent = '⏳ Сохранение...';
+        
         const editId = document.getElementById('editId').value;
         const id = document.getElementById('titleId').value.trim();
         const name = document.getElementById('titleName').value.trim();
@@ -982,20 +1174,25 @@
         const year = parseInt(document.getElementById('titleYear').value) || 0;
         const episodes = parseInt(document.getElementById('titleEpisodes').value) || 0;
         const rating = parseFloat(document.getElementById('titleRating').value) || 0;
+        const status = document.getElementById('titleStatus').value;
         const genres = document.getElementById('titleGenres').value.split(',').map(s => s.trim()).filter(Boolean);
         const imageVertical = document.getElementById('titleImageVert').value.trim();
         const imageHorizontal = document.getElementById('titleImageHoriz').value.trim();
+        const wallpaper = document.getElementById('titleWallpaper').value.trim();
         const description = document.getElementById('titleDescription').value.trim();
         const episodesList = getEpisodesFromEditor();
         const finalEpisodes = episodes > 0 ? episodes : episodesList.length;
+        
         if (!id) { alert('❌ Введите ID тайтла'); isSaving = false; submitBtn.disabled = false; submitBtn.textContent = editId ? '💾 Обновить' : '💾 Создать'; return; }
         if (!name) { alert('❌ Введите название тайтла'); isSaving = false; submitBtn.disabled = false; submitBtn.textContent = editId ? '💾 Обновить' : '💾 Создать'; return; }
         if (!editId) {
             const existing = allTitles.find(t => t.id === id);
             if (existing) { alert('❌ Тайтл с таким ID уже существует!'); isSaving = false; submitBtn.disabled = false; submitBtn.textContent = '💾 Создать'; return; }
         }
-        const data = { id, name, nameEn, type, year, episodes: finalEpisodes, rating, genres, imageVertical, imageHorizontal, description, episodesList };
+        
+        const data = { id, name, nameEn, type, year, episodes: finalEpisodes, rating, status, genres, imageVertical, imageHorizontal, wallpaper, description, episodesList };
         let result = editId ? await updateTitle(editId, data) : await addTitle(data);
+        
         if (result.success) {
             alert('✅ Тайтл сохранён!');
             closeModal('modalOverlay');

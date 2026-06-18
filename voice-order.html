@@ -9,24 +9,24 @@
     <script type="module" src="firebase-config.js"></script>
     <style>
         .order-container { max-width: 700px; margin: 0 auto; }
-        .order-form .form-group { margin-bottom: 20px; }
+        .order-form .form-group { margin-bottom: 16px; }
         .order-form .form-group label {
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13px;
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             font-weight: bold;
         }
         .order-form .form-group input,
         .order-form .form-group textarea,
         .order-form .form-group select {
             width: 100%;
-            padding: 12px 16px;
-            border-radius: 10px;
+            padding: 10px 14px;
+            border-radius: 8px;
             border: 2px solid var(--border-primary);
             background: var(--bg-input);
             color: var(--text-primary);
-            font-size: 15px;
+            font-size: 14px;
             box-sizing: border-box;
             font-family: inherit;
         }
@@ -34,31 +34,31 @@
         .order-form .form-group textarea:focus {
             border-color: var(--color-accent);
             outline: none;
-            box-shadow: 0 0 20px rgba(74, 144, 217, 0.2);
+            box-shadow: 0 0 20px rgba(60, 80, 180, 0.15);
         }
-        .order-form .form-group textarea { min-height: 120px; resize: vertical; }
+        .order-form .form-group textarea { min-height: 100px; resize: vertical; }
         .order-form .form-row {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
         }
-        .order-form .form-row .form-group { flex: 1; min-width: 150px; }
+        .order-form .form-row .form-group { flex: 1; min-width: 140px; }
         .submit-btn {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             background: var(--gradient-primary);
             color: #fff;
             border: none;
             border-radius: 50px;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 17px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 10px;
+            margin-top: 8px;
         }
         .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+            box-shadow: 0 8px 25px rgba(60, 80, 180, 0.3);
         }
         .submit-btn:disabled {
             opacity: 0.5;
@@ -68,111 +68,112 @@
         .price-display {
             background: var(--bg-welcome);
             border: 1px solid var(--color-accent);
-            border-radius: 15px;
-            padding: 20px;
+            border-radius: 12px;
+            padding: 16px;
             text-align: center;
-            margin: 20px 0;
+            margin: 16px 0;
         }
-        .price-display .price { font-size: 36px; font-weight: bold; color: var(--color-accent); }
-        .price-display .price-desc { color: var(--text-muted); font-size: 14px; }
-        .price-display .price-label { color: var(--text-muted); font-size: 16px; margin-bottom: 5px; }
+        .price-display .price { font-size: 32px; font-weight: bold; color: var(--color-accent); }
+        .price-display .price-desc { color: var(--text-muted); font-size: 13px; }
+        .price-display .price-label { color: var(--text-muted); font-size: 14px; margin-bottom: 4px; }
         .info-box {
             background: var(--bg-welcome);
             border-radius: 10px;
-            padding: 15px;
+            padding: 14px;
             margin: 10px 0;
             border-left: 4px solid var(--color-accent);
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.6;
         }
         .info-box strong { color: var(--color-accent); }
         .info-box .price-row {
             display: flex;
             justify-content: space-between;
-            padding: 4px 0;
+            padding: 3px 0;
             border-bottom: 1px solid var(--border-secondary);
         }
         .info-box .price-row:last-child { border-bottom: none; }
         .info-box .price-row .amount { color: var(--color-accent); font-weight: bold; }
 
-        .payment-result { text-align: center; padding: 30px; }
-        .payment-result .icon { font-size: 64px; }
+        .payment-result { text-align: center; padding: 24px; }
+        .payment-result .icon { font-size: 56px; }
         .payment-result .success { color: var(--color-success); }
         .payment-result .error { color: var(--color-danger); }
         .payment-result .pending { color: var(--color-warning); }
         .back-btn {
             display: inline-block;
-            padding: 10px 30px;
+            padding: 8px 24px;
             background: var(--bg-input);
             color: var(--text-muted);
             border: 2px solid var(--border-primary);
-            border-radius: 25px;
+            border-radius: 20px;
             text-decoration: none;
             transition: all 0.3s;
-            margin-top: 15px;
+            margin-top: 12px;
+            font-size: 13px;
         }
         .back-btn:hover { border-color: var(--color-accent); color: var(--text-primary); }
         .telegram-btn {
             display: inline-block;
-            padding: 14px 40px;
+            padding: 12px 32px;
             background: var(--bg-telegram-btn);
             color: #fff;
             border: none;
             border-radius: 50px;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 17px;
             cursor: pointer;
             transition: all 0.3s;
-            margin: 15px 0;
+            margin: 12px 0;
             text-decoration: none;
         }
         .telegram-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4);
         }
-        .telegram-btn .icon { font-size: 24px; vertical-align: middle; margin-right: 10px; }
+        .telegram-btn .icon { font-size: 22px; vertical-align: middle; margin-right: 8px; }
 
-        .auth-prompt { text-align: center; padding: 40px; }
+        .auth-prompt { text-align: center; padding: 32px; }
         .auth-prompt h2 { color: var(--color-accent); }
         .auth-prompt p { color: var(--text-muted); }
         .auth-btn {
             display: inline-block;
-            padding: 14px 40px;
+            padding: 12px 32px;
             background: var(--gradient-primary);
             color: #fff;
             text-decoration: none;
             border-radius: 50px;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 17px;
             transition: all 0.3s ease;
         }
         .auth-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+            box-shadow: 0 8px 25px rgba(60, 80, 180, 0.3);
         }
 
         .order-summary {
             background: var(--bg-order-summary);
-            border-radius: 15px;
-            padding: 25px;
-            margin: 20px 0;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
             border: 1px solid var(--border-primary);
         }
         .order-summary .summary-row {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 6px 0;
             border-bottom: 1px solid var(--border-secondary);
         }
         .order-summary .summary-row:last-child { border-bottom: none; }
-        .order-summary .summary-label { color: var(--text-muted); }
-        .order-summary .summary-value { color: var(--text-primary); font-weight: bold; }
-        .order-summary .summary-value.price { color: var(--color-accent); font-size: 20px; }
+        .order-summary .summary-label { color: var(--text-muted); font-size: 13px; }
+        .order-summary .summary-value { color: var(--text-primary); font-weight: bold; font-size: 14px; }
+        .order-summary .summary-value.price { color: var(--color-accent); font-size: 18px; }
 
         @media (max-width: 600px) {
-            .info-box .price-row { flex-direction: column; align-items: center; text-align: center; padding: 8px 0; }
-            .order-summary .summary-row { flex-direction: column; align-items: center; text-align: center; padding: 8px 0; }
+            .info-box .price-row { flex-direction: column; align-items: center; text-align: center; padding: 6px 0; }
+            .order-summary .summary-row { flex-direction: column; align-items: center; text-align: center; padding: 6px 0; }
         }
     </style>
 </head>
@@ -238,7 +239,7 @@
     </div>
 </aside>
 
-<!-- ========== DSCOIN МОДАЛКИ ========== -->
+<!-- ========== МОДАЛКИ ========== -->
 <div class="modal-overlay" id="m-dscoin-order">
     <div class="modal-content" style="max-width:440px;">
         <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
@@ -290,7 +291,7 @@
         if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
     }
     function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         const btn = document.getElementById('themeToggle');
         if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
@@ -346,7 +347,7 @@
     
     <div class="content-box">
         <div class="order-container" id="orderContent">
-            <div class="loading" style="text-align:center;padding:40px;color:var(--text-muted);">⏳ Загрузка...</div>
+            <div class="loading" style="text-align:center;padding:32px;color:var(--text-muted);">⏳ Загрузка...</div>
         </div>
     </div>
 </div>
@@ -526,7 +527,7 @@
                 <div class="price-display" id="priceDisplay">
                     <div class="price-label">💰 Стоимость заказа</div>
                     <div class="price" id="priceAmount">0 ₽</div>
-                    <div style="color:var(--text-muted);font-size:13px;margin-top:5px;" id="priceTypeLabel">Выберите тип и количество</div>
+                    <div style="color:var(--text-muted);font-size:12px;margin-top:4px;" id="priceTypeLabel">Выберите тип и количество</div>
                 </div>
 
                 <button type="submit" class="submit-btn" id="submitBtn">📤 Подать заявку</button>
@@ -639,7 +640,7 @@
                     <div class="summary-row"><span class="summary-label">📌 Статус</span><span class="summary-value" style="color:var(--color-warning);">⏳ Ожидает подтверждения</span></div>
                 </div>
 
-                <p style="color:var(--text-muted);margin:15px 0;">
+                <p style="color:var(--text-muted);margin:12px 0;">
                     Свяжитесь с нашим менеджером для обсуждения деталей и подтверждения заявки:
                 </p>
                 

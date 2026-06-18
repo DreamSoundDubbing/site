@@ -27,7 +27,8 @@ import {
     increment,
     arrayUnion,
     arrayRemove,
-    runTransaction
+    runTransaction,
+    limit
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // ============================================================
@@ -880,6 +881,7 @@ async function addDSCoins(uid, amount, reason) {
         await updateDoc(docRef, {
             dsCoins: increment(amount)
         });
+        // Записываем транзакцию
         await addDoc(collection(db, "dsCoinTransactions"), {
             uid: uid,
             amount: amount,
@@ -905,6 +907,7 @@ async function spendDSCoins(uid, amount, reason) {
         }
         const docRef = doc(db, "users", uid);
         await updateDoc(docRef, { dsCoins: increment(-amount) });
+        // Записываем транзакцию
         await addDoc(collection(db, "dsCoinTransactions"), {
             uid: uid,
             amount: -amount,
@@ -1087,24 +1090,56 @@ async function removeFromPlaylist(playlistId, itemId) {
 }
 
 // ============================================================
-// ========== СТЕНА ПРОФИЛЯ ==========
+// ========== СТЕНА ПРОФИЛЯ (ИСПРАВЛЕННАЯ) ==========
 // ============================================================
 
-async function getWallPosts(uid, limit = 20) {
+async function getWallPosts(uid, limitCount = 20) {
     try {
+        // Проверяем настройки видимости стены
+        const userData = await getUserData(uid);
+        if (!userData.success) {
+            return { success: false, error: "Пользователь не найден" };
+        }
+        
+        const wallVisibility = userData.data.wallVisibility || 'all';
+        const currentUser = getCurrentUser();
+        
+        // Если стена закрыта, только владелец и админ могут видеть
+        if (wallVisibility === 'disabled') {
+            if (currentUser && (currentUser.uid === uid || await isAdmin(currentUser.uid))) {
+                // Владелец или админ видят
+            } else {
+                return { success: true, posts: [], visibility: wallVisibility };
+            }
+        }
+        
+        // Если стена только для подписчиков
+        if (wallVisibility === 'friends') {
+            if (currentUser) {
+                const isSub = await isSubscribed(currentUser.uid, uid);
+                if (!isSub && currentUser.uid !== uid && !await isAdmin(currentUser.uid)) {
+                    return { success: true, posts: [], visibility: wallVisibility };
+                }
+            } else {
+                return { success: true, posts: [], visibility: wallVisibility };
+            }
+        }
+        
+        // Загружаем посты
         const q = query(
             collection(db, "wallPosts"),
             where("userId", "==", uid),
             orderBy("createdAt", "desc"),
-            limit(limit)
+            limit(limitCount)
         );
         const snapshot = await getDocs(q);
         const posts = [];
         snapshot.forEach(doc => {
             posts.push({ id: doc.id, ...doc.data() });
         });
-        return { success: true, posts: posts };
+        return { success: true, posts: posts, visibility: wallVisibility };
     } catch (error) {
+        console.error('Ошибка загрузки стены:', error);
         return { success: false, error: error.message };
     }
 }
@@ -1121,7 +1156,7 @@ async function addWallPost(uid, text, visibility = 'all') {
             userId: uid,
             userName: userName,
             text: text,
-            visibility: wallVisibility, // используем настройки пользователя
+            visibility: wallVisibility,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
         });
@@ -1152,7 +1187,7 @@ async function updateWallVisibility(uid, visibility) {
 }
 
 // ============================================================
-// ========== МАГАЗИН DSCOINS ==========
+// ========== МАГАЗИН DSCOINS (ИСПРАВЛЕННЫЙ) ==========
 // ============================================================
 
 async function getShopPrices() {
@@ -1186,7 +1221,8 @@ async function purchaseColorNick(uid, color) {
     const cost = prices.data.colorNick || 500;
     const spendResult = await spendDSCoins(uid, cost, `Покупка цветного ника: ${color}`);
     if (!spendResult.success) return spendResult;
-    await updateUserProfile(uid, { nickColor: color });
+    const updateResult = await updateUserProfile(uid, { nickColor: color });
+    if (!updateResult.success) return updateResult;
     return { success: true };
 }
 
@@ -1196,7 +1232,8 @@ async function purchasePrefix(uid, prefix) {
     const cost = prices.data.prefix || 300;
     const spendResult = await spendDSCoins(uid, cost, `Покупка префикса: ${prefix}`);
     if (!spendResult.success) return spendResult;
-    await updateUserProfile(uid, { prefix: prefix });
+    const updateResult = await updateUserProfile(uid, { prefix: prefix });
+    if (!updateResult.success) return updateResult;
     return { success: true };
 }
 
@@ -1209,7 +1246,8 @@ async function purchaseAchSlot(uid) {
     const userData = await getUserData(uid);
     if (!userData.success) return { success: false, error: "Ошибка загрузки данных" };
     const currentSlots = userData.data.achSlots || 1;
-    await updateUserProfile(uid, { achSlots: currentSlots + 1 });
+    const updateResult = await updateUserProfile(uid, { achSlots: currentSlots + 1 });
+    if (!updateResult.success) return updateResult;
     return { success: true };
 }
 

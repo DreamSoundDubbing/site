@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +21,50 @@
         }
         .search-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+            box-shadow: 0 8px 25px rgba(60, 80, 180, 0.3);
+        }
+        .auth-input {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 2px solid var(--color-accent);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        .auth-input:focus {
+            border-color: var(--color-accent2);
+            outline: none;
+            box-shadow: 0 0 20px rgba(60, 80, 180, 0.15);
+        }
+        .auth-link {
+            color: var(--color-accent);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .auth-link:hover {
+            color: var(--color-accent2);
+            text-decoration: underline;
+        }
+        .auth-message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 10px;
+            display: none;
+        }
+        .auth-message.error {
+            display: block;
+            background: var(--bg-auth-error);
+            color: var(--color-danger);
+        }
+        .auth-message.success {
+            display: block;
+            background: var(--bg-auth-success);
+            color: var(--color-success);
         }
     </style>
 </head>
@@ -42,7 +85,7 @@
         <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
         <a href="voice-order.html" class="nav-icon-btn" id="voiceOrderLink" style="display:none;">📝Заявка</a>
         <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
-        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">🌙</button>
     </div>
 </header>
 
@@ -87,7 +130,7 @@
     </div>
 </aside>
 
-<!-- ========== DSCOIN МОДАЛКИ ========== -->
+<!-- ========== МОДАЛКИ ========== -->
 <div class="modal-overlay" id="m-dscoin-order">
     <div class="modal-content" style="max-width:440px;">
         <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
@@ -139,7 +182,7 @@
         if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
     }
     function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         const btn = document.getElementById('themeToggle');
         if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
@@ -198,11 +241,11 @@
             <div id="loginForm">
                 <h2 class="title" style="text-align:center;">🔐 Вход</h2>
                 <div style="max-width:400px; margin:0 auto;">
-                    <input type="email" id="loginEmail" placeholder="Email" style="width:100%; padding:14px; margin:10px 0; border-radius:10px; border:2px solid var(--color-accent); background:var(--bg-input); color:var(--text-primary); font-size:16px; box-sizing:border-box;">
-                    <input type="password" id="loginPassword" placeholder="Пароль" style="width:100%; padding:14px; margin:10px 0; border-radius:10px; border:2px solid var(--color-accent); background:var(--bg-input); color:var(--text-primary); font-size:16px; box-sizing:border-box;">
+                    <input type="email" id="loginEmail" placeholder="Email" class="auth-input">
+                    <input type="password" id="loginPassword" placeholder="Пароль" class="auth-input">
                     <button onclick="handleLogin()" class="search-button" style="width:100%; padding:14px; font-size:18px;">Войти</button>
                     <p style="text-align:center; margin-top:15px; color:var(--text-muted);">
-                        Нет аккаунта? <a href="#" onclick="showRegister()" style="color:var(--color-accent);">Зарегистрироваться</a>
+                        Нет аккаунта? <a href="#" onclick="showRegister()" class="auth-link">Зарегистрироваться</a>
                     </p>
                 </div>
             </div>
@@ -210,17 +253,17 @@
             <div id="registerForm" style="display:none;">
                 <h2 class="title" style="text-align:center;">📝 Регистрация</h2>
                 <div style="max-width:400px; margin:0 auto;">
-                    <input type="text" id="registerName" placeholder="Имя" style="width:100%; padding:14px; margin:10px 0; border-radius:10px; border:2px solid var(--color-accent); background:var(--bg-input); color:var(--text-primary); font-size:16px; box-sizing:border-box;">
-                    <input type="email" id="registerEmail" placeholder="Email" style="width:100%; padding:14px; margin:10px 0; border-radius:10px; border:2px solid var(--color-accent); background:var(--bg-input); color:var(--text-primary); font-size:16px; box-sizing:border-box;">
-                    <input type="password" id="registerPassword" placeholder="Пароль (мин. 6 символов)" style="width:100%; padding:14px; margin:10px 0; border-radius:10px; border:2px solid var(--color-accent); background:var(--bg-input); color:var(--text-primary); font-size:16px; box-sizing:border-box;">
+                    <input type="text" id="registerName" placeholder="Имя" class="auth-input">
+                    <input type="email" id="registerEmail" placeholder="Email" class="auth-input">
+                    <input type="password" id="registerPassword" placeholder="Пароль (мин. 6 символов)" class="auth-input">
                     <button onclick="handleRegister()" class="search-button" style="width:100%; padding:14px; font-size:18px;">Зарегистрироваться</button>
                     <p style="text-align:center; margin-top:15px; color:var(--text-muted);">
-                        Уже есть аккаунт? <a href="#" onclick="showLogin()" style="color:var(--color-accent);">Войти</a>
+                        Уже есть аккаунт? <a href="#" onclick="showLogin()" class="auth-link">Войти</a>
                     </p>
                 </div>
             </div>
             
-            <div id="authMessage" style="text-align:center; margin-top:20px; padding:10px; border-radius:10px; display:none;"></div>
+            <div id="authMessage" class="auth-message"></div>
         </div>
     </div>
 </div>
@@ -322,13 +365,17 @@
     window.showRegister = function() {
         document.getElementById('loginForm').style.display = 'none';
         document.getElementById('registerForm').style.display = 'block';
-        document.getElementById('authMessage').style.display = 'none';
+        const msg = document.getElementById('authMessage');
+        msg.className = 'auth-message';
+        msg.style.display = 'none';
     };
     
     window.showLogin = function() {
         document.getElementById('loginForm').style.display = 'block';
         document.getElementById('registerForm').style.display = 'none';
-        document.getElementById('authMessage').style.display = 'none';
+        const msg = document.getElementById('authMessage');
+        msg.className = 'auth-message';
+        msg.style.display = 'none';
     };
 
     window.handleLogin = async function() {
@@ -336,23 +383,17 @@
         const password = document.getElementById('loginPassword').value;
         const msg = document.getElementById('authMessage');
         if (!email || !password) {
-            msg.style.display = 'block';
-            msg.style.background = 'var(--bg-auth-error)';
-            msg.style.color = 'var(--color-danger)';
+            msg.className = 'auth-message error';
             msg.textContent = '❌ Заполните все поля';
             return;
         }
         const result = await loginUser(email, password);
         if (result.success) {
-            msg.style.display = 'block';
-            msg.style.background = 'var(--bg-auth-success)';
-            msg.style.color = 'var(--color-success)';
+            msg.className = 'auth-message success';
             msg.textContent = '✅ Вход выполнен! Перенаправление...';
             setTimeout(() => window.location.href = 'index.html', 1500);
         } else {
-            msg.style.display = 'block';
-            msg.style.background = 'var(--bg-auth-error)';
-            msg.style.color = 'var(--color-danger)';
+            msg.className = 'auth-message error';
             msg.textContent = '❌ ' + result.error;
         }
     };
@@ -363,30 +404,22 @@
         const password = document.getElementById('registerPassword').value;
         const msg = document.getElementById('authMessage');
         if (!name || !email || !password) {
-            msg.style.display = 'block';
-            msg.style.background = 'var(--bg-auth-error)';
-            msg.style.color = 'var(--color-danger)';
+            msg.className = 'auth-message error';
             msg.textContent = '❌ Заполните все поля';
             return;
         }
         if (password.length < 6) {
-            msg.style.display = 'block';
-            msg.style.background = 'var(--bg-auth-error)';
-            msg.style.color = 'var(--color-danger)';
+            msg.className = 'auth-message error';
             msg.textContent = '❌ Пароль должен быть минимум 6 символов';
             return;
         }
         const result = await registerUser(email, password, name);
         if (result.success) {
-            msg.style.display = 'block';
-            msg.style.background = 'var(--bg-auth-success)';
-            msg.style.color = 'var(--color-success)';
+            msg.className = 'auth-message success';
             msg.textContent = '✅ Регистрация успешна! Перенаправление...';
             setTimeout(() => window.location.href = 'index.html', 1500);
         } else {
-            msg.style.display = 'block';
-            msg.style.background = 'var(--bg-auth-error)';
-            msg.style.color = 'var(--color-danger)';
+            msg.className = 'auth-message error';
             msg.textContent = '❌ ' + result.error;
         }
     };

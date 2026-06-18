@@ -70,7 +70,7 @@
     </div>
 </aside>
 
-<!-- ========== DSCOIN МОДАЛКИ ========== -->
+<!-- ========== МОДАЛКИ ========== -->
 <div class="modal-overlay" id="m-dscoin-order">
     <div class="modal-content" style="max-width:440px;">
         <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
@@ -122,7 +122,7 @@
         if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
     }
     function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         const btn = document.getElementById('themeToggle');
         if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }

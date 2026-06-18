@@ -10,15 +10,15 @@
     <style>
         .order-item {
             background: var(--bg-order-item);
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 12px;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
             border: 1px solid var(--border-primary);
             transition: all 0.3s;
         }
         .order-item:hover {
             border-color: var(--color-accent);
-            box-shadow: 0 4px 15px rgba(74, 144, 217, 0.1);
+            box-shadow: 0 4px 15px rgba(60, 80, 180, 0.08);
         }
         .order-header {
             display: flex;
@@ -26,65 +26,67 @@
             flex-wrap: wrap;
             align-items: center;
         }
-        .order-title { font-size: 18px; font-weight: bold; color: var(--color-accent); }
-        .order-price { font-size: 18px; font-weight: bold; color: var(--color-accent); }
+        .order-title { font-size: 16px; font-weight: bold; color: var(--color-accent); }
+        .order-price { font-size: 16px; font-weight: bold; color: var(--color-accent); }
         .order-meta {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
             color: var(--text-muted);
-            font-size: 13px;
-            margin: 8px 0;
+            font-size: 12px;
+            margin: 6px 0;
         }
         .order-actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             align-items: center;
             flex-wrap: wrap;
-            margin-top: 10px;
+            margin-top: 8px;
         }
         .order-actions select {
-            padding: 6px 14px;
-            border-radius: 20px;
+            padding: 4px 12px;
+            border-radius: 16px;
             border: 2px solid var(--border-primary);
             background: var(--bg-card);
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 13px;
         }
         .order-actions select:focus {
             border-color: var(--color-accent);
             outline: none;
         }
         .btn-update {
-            padding: 6px 20px;
+            padding: 4px 16px;
             background: var(--gradient-primary);
             color: #fff;
             border: none;
-            border-radius: 20px;
+            border-radius: 16px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s;
+            font-size: 12px;
         }
         .btn-update:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(74, 144, 217, 0.3);
+            box-shadow: 0 4px 15px rgba(60, 80, 180, 0.3);
         }
         .btn-delete {
-            padding: 6px 20px;
+            padding: 4px 16px;
             background: var(--color-danger);
             color: #fff;
             border: none;
-            border-radius: 20px;
+            border-radius: 16px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s;
+            font-size: 12px;
         }
         .btn-delete:hover { background: #e05555; }
         .status-badge {
             display: inline-block;
-            padding: 3px 14px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: bold;
         }
         .status-pending { background: #fff3cd; color: #856404; }
@@ -94,59 +96,61 @@
         
         .filters {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
-            padding: 15px 20px;
+            margin-bottom: 16px;
+            padding: 12px 16px;
             background: var(--bg-filter-search);
-            border-radius: 12px;
+            border-radius: 10px;
             border: 1px solid var(--border-primary);
             align-items: center;
         }
         .filters select, .filters input {
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 6px 14px;
+            border-radius: 16px;
             border: 2px solid var(--border-primary);
             background: var(--bg-card);
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
             transition: all 0.3s;
         }
         .filters select:focus, .filters input:focus {
             border-color: var(--color-accent);
-            box-shadow: 0 0 15px rgba(74, 144, 217, 0.15);
+            box-shadow: 0 0 15px rgba(60, 80, 180, 0.1);
         }
         .filters .search-group {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             flex: 1;
-            min-width: 200px;
+            min-width: 180px;
         }
-        .filters .search-group input { flex: 1; min-width: 150px; }
+        .filters .search-group input { flex: 1; min-width: 120px; }
         .filters .search-group .btn-search {
-            padding: 8px 20px;
+            padding: 6px 16px;
             background: var(--gradient-primary);
             color: #fff;
             border: none;
-            border-radius: 20px;
+            border-radius: 16px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s;
             white-space: nowrap;
+            font-size: 13px;
         }
         .filters .search-group .btn-search:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(74, 144, 217, 0.3);
+            box-shadow: 0 4px 15px rgba(60, 80, 180, 0.3);
         }
         .filters .search-group .btn-clear {
-            padding: 8px 16px;
+            padding: 6px 14px;
             background: var(--bg-input);
             color: var(--text-muted);
             border: 2px solid var(--border-primary);
-            border-radius: 20px;
+            border-radius: 16px;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 13px;
         }
         .filters .search-group .btn-clear:hover {
             border-color: var(--color-accent);
@@ -155,21 +159,21 @@
         .filter-label {
             color: var(--text-muted);
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
         }
-        .filters .filter-divider { color: var(--border-primary); font-size: 20px; }
+        .filters .filter-divider { color: var(--border-primary); font-size: 16px; }
         .stats-row {
             display: flex;
-            gap: 20px;
+            gap: 16px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         .stat-card {
             flex: 1;
-            min-width: 100px;
-            padding: 15px;
+            min-width: 80px;
+            padding: 12px;
             background: var(--bg-stat-card);
-            border-radius: 12px;
+            border-radius: 10px;
             text-align: center;
             border: 1px solid var(--border-primary);
             cursor: pointer;
@@ -178,22 +182,22 @@
         .stat-card:hover {
             border-color: var(--color-accent);
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(74, 144, 217, 0.1);
+            box-shadow: 0 4px 15px rgba(60, 80, 180, 0.08);
         }
-        .stat-card .number { font-size: 28px; font-weight: bold; color: var(--color-accent); }
-        .stat-card .label { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+        .stat-card .number { font-size: 24px; font-weight: bold; color: var(--color-accent); }
+        .stat-card .label { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
         .stat-card.active {
             border-color: var(--color-accent);
             background: var(--bg-welcome);
         }
-        .access-denied { text-align: center; padding: 60px 20px; }
+        .access-denied { text-align: center; padding: 48px 20px; }
         .access-denied h2 { color: var(--color-danger); }
-        .access-denied p { color: var(--text-muted); margin: 20px 0; }
+        .access-denied p { color: var(--text-muted); margin: 16px 0; }
         .access-denied a { color: var(--color-accent); text-decoration: none; font-weight: bold; }
         .access-denied a:hover { text-decoration: underline; }
-        .no-results { text-align: center; padding: 40px; color: var(--text-muted); }
-        .no-results .icon { font-size: 48px; display: block; margin-bottom: 10px; }
-        .result-count { color: var(--text-muted); font-size: 14px; margin-left: auto; }
+        .no-results { text-align: center; padding: 32px; color: var(--text-muted); }
+        .no-results .icon { font-size: 40px; display: block; margin-bottom: 8px; }
+        .result-count { color: var(--text-muted); font-size: 13px; margin-left: auto; }
         .result-count strong { color: var(--color-accent); }
 
         @media (max-width: 768px) {
@@ -202,10 +206,10 @@
             .filters .search-group input { min-width: 100%; }
             .filters .filter-divider { display: none; }
             .stats-row { justify-content: center; }
-            .stat-card { min-width: 80px; padding: 10px; }
-            .stat-card .number { font-size: 22px; }
-            .order-header { flex-direction: column; align-items: flex-start; gap: 5px; }
-            .order-meta { flex-direction: column; gap: 5px; }
+            .stat-card { min-width: 60px; padding: 8px; }
+            .stat-card .number { font-size: 20px; }
+            .order-header { flex-direction: column; align-items: flex-start; gap: 4px; }
+            .order-meta { flex-direction: column; gap: 4px; }
             .order-actions { flex-direction: column; align-items: stretch; }
         }
     </style>
@@ -272,7 +276,7 @@
     </div>
 </aside>
 
-<!-- ========== DSCOIN МОДАЛКИ ========== -->
+<!-- ========== МОДАЛКИ ========== -->
 <div class="modal-overlay" id="m-dscoin-order">
     <div class="modal-content" style="max-width:440px;">
         <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
@@ -324,7 +328,7 @@
         if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
     }
     function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         const btn = document.getElementById('themeToggle');
         if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
@@ -379,7 +383,7 @@
     </div>
     
     <div class="content-box" id="adminOrdersContent">
-        <div class="loading" style="text-align:center;padding:40px;color:var(--text-muted);">⏳ Проверка доступа...</div>
+        <div class="loading" style="text-align:center;padding:32px;color:var(--text-muted);">⏳ Проверка доступа...</div>
     </div>
 </div>
 
@@ -575,9 +579,9 @@
                         <span>📅 ${order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString() : ''}</span>
                         <span class="status-badge ${statusMap[order.status]?.class || 'status-pending'}">${statusMap[order.status]?.label || order.status}</span>
                     </div>
-                    ${order.description ? `<p style="color:var(--text-muted);font-size:14px;margin:5px 0;">📝 ${order.description}</p>` : ''}
+                    ${order.description ? `<p style="color:var(--text-muted);font-size:13px;margin:4px 0;">📝 ${order.description}</p>` : ''}
                     <div class="order-actions">
-                        <span style="color:var(--text-muted);font-size:13px;">Изменить статус:</span>
+                        <span style="color:var(--text-muted);font-size:12px;">Изменить статус:</span>
                         <select id="statusSelect_${order.id}">
                             <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>⏳ Ожидает оплаты</option>
                             <option value="paid" ${order.status === 'paid' ? 'selected' : ''}>✅ Оплачено</option>
@@ -646,7 +650,7 @@
 
     async function loadOrders() {
         const container = document.getElementById('adminOrdersContent');
-        container.innerHTML = '<div class="loading" style="text-align:center;padding:40px;color:var(--text-muted);">⏳ Загрузка заказов...</div>';
+        container.innerHTML = '<div class="loading" style="text-align:center;padding:32px;color:var(--text-muted);">⏳ Загрузка заказов...</div>';
         const result = await getVoiceOrders();
         if (!result.success) {
             container.innerHTML = `<p style="color:var(--color-danger);">❌ Ошибка: ${result.error}</p>`;

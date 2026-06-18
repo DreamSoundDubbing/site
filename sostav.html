@@ -11,28 +11,28 @@
     <style>
         .admin-toolbar {
             display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
-            padding: 15px;
+            padding: 12px 16px;
             background: var(--bg-admin-panel);
-            border-radius: 15px;
+            border-radius: 12px;
             border: 1px solid var(--color-accent);
         }
         .admin-toolbar .admin-btn {
-            padding: 8px 20px;
+            padding: 6px 18px;
             background: var(--gradient-primary);
             color: #fff;
             border: none;
-            border-radius: 25px;
+            border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s ease;
-            font-size: 14px;
+            font-size: 13px;
         }
         .admin-toolbar .admin-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+            box-shadow: 0 8px 25px rgba(60, 80, 180, 0.3);
         }
         .team-card-wrapper {
             position: relative;
@@ -40,10 +40,10 @@
         }
         .team-card-wrapper .admin-actions {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: 6px;
+            right: 6px;
             display: flex;
-            gap: 5px;
+            gap: 4px;
             opacity: 0;
             transition: opacity 0.3s;
             z-index: 10;
@@ -52,11 +52,11 @@
             opacity: 1;
         }
         .team-card-wrapper .admin-actions button {
-            padding: 4px 10px;
+            padding: 3px 8px;
             border: none;
-            border-radius: 15px;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             transition: all 0.3s;
         }
@@ -77,18 +77,18 @@
         .team-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 25px;
+            gap: 20px;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 16px;
         }
         .team-card {
             background: var(--bg-card);
-            border-radius: 20px;
-            padding: 20px 15px;
-            width: 210px;
+            border-radius: 16px;
+            padding: 16px 12px;
+            width: 190px;
             text-align: center;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(74, 144, 217, 0.12);
+            box-shadow: 0 5px 15px rgba(60, 80, 180, 0.08);
             text-decoration: none;
             color: inherit;
             border: 2px solid var(--border-secondary);
@@ -97,27 +97,27 @@
             align-items: center;
         }
         .team-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
             border-color: var(--color-accent);
-            box-shadow: 0 10px 30px rgba(74, 144, 217, 0.2);
+            box-shadow: 0 10px 30px rgba(60, 80, 180, 0.15);
         }
         .team-card-avatar {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid var(--color-accent);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         .team-card-name {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: var(--color-accent);
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             word-wrap: break-word;
         }
         .team-card-status {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-muted);
             margin-top: 2px;
         }
@@ -139,8 +139,8 @@
         }
         .modal-content {
             background: var(--bg-modal);
-            border-radius: 20px;
-            padding: 30px;
+            border-radius: 16px;
+            padding: 24px;
             max-width: 600px;
             width: 95%;
             max-height: 90vh;
@@ -151,13 +151,13 @@
         .modal-content h2 {
             color: var(--color-accent);
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         .modal-close {
             position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 28px;
+            top: 12px;
+            right: 16px;
+            font-size: 24px;
             color: var(--text-muted);
             cursor: pointer;
             background: none;
@@ -168,20 +168,20 @@
             color: var(--text-primary);
         }
         .modal-content .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         .modal-content .form-group label {
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13px;
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
         .modal-content .form-group input,
         .modal-content .form-group textarea,
         .modal-content .form-group select {
             width: 100%;
-            padding: 10px 14px;
-            border-radius: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
             border: 2px solid var(--border-primary);
             background: var(--bg-input);
             color: var(--text-primary);
@@ -190,7 +190,7 @@
             font-family: inherit;
         }
         .modal-content .form-group textarea {
-            min-height: 80px;
+            min-height: 60px;
             resize: vertical;
         }
         .modal-content .form-group input:focus,
@@ -200,29 +200,29 @@
         }
         .modal-content .form-row {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
         }
         .modal-content .form-row .form-group {
             flex: 1;
-            min-width: 150px;
+            min-width: 130px;
         }
         .modal-content .submit-btn {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: var(--gradient-primary);
             color: #fff;
             border: none;
             border-radius: 50px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 10px;
+            margin-top: 8px;
         }
         .modal-content .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+            box-shadow: 0 8px 25px rgba(60, 80, 180, 0.3);
         }
         .modal-content .submit-btn:disabled {
             opacity: 0.5;
@@ -231,70 +231,70 @@
         }
         .stat-box {
             flex: 1;
-            min-width: 120px;
+            min-width: 100px;
             background: var(--bg-stat);
-            padding: 18px;
-            border-radius: 15px;
+            padding: 14px;
+            border-radius: 12px;
             text-align: center;
             box-shadow: 0 3px 12px rgba(0,0,0,0.05);
         }
         .stat-number {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: bold;
             color: var(--color-accent);
         }
         .stat-label {
-            font-size: 16px;
+            font-size: 14px;
             color: var(--text-muted);
-            margin-top: 5px;
+            margin-top: 4px;
         }
         .socials-editor {
-            margin-top: 10px;
+            margin-top: 8px;
         }
         .social-edit-item {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
-            padding: 8px 12px;
+            padding: 6px 10px;
             background: var(--bg-input);
-            border-radius: 8px;
-            margin-bottom: 6px;
+            border-radius: 6px;
+            margin-bottom: 5px;
             border: 1px solid var(--border-primary);
         }
         .social-edit-item:hover {
             border-color: var(--color-accent);
         }
         .social-edit-item .social-type {
-            padding: 6px 10px;
-            border-radius: 6px;
+            padding: 4px 8px;
+            border-radius: 4px;
             border: 1px solid var(--border-primary);
             background: var(--bg-card);
             color: var(--text-primary);
-            font-size: 13px;
-            min-width: 100px;
+            font-size: 12px;
+            min-width: 90px;
         }
         .social-edit-item .social-type option {
             background: var(--bg-card);
         }
         .social-edit-item .social-value {
             flex: 2;
-            min-width: 150px;
-            padding: 6px 10px;
-            border-radius: 6px;
+            min-width: 120px;
+            padding: 4px 8px;
+            border-radius: 4px;
             border: 1px solid var(--border-primary);
             background: var(--bg-card);
             color: var(--text-primary);
-            font-size: 13px;
+            font-size: 12px;
         }
         .social-edit-item .remove-social-btn {
             background: var(--color-danger);
             color: #fff;
             border: none;
-            border-radius: 15px;
-            padding: 4px 12px;
+            border-radius: 12px;
+            padding: 3px 10px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 12px;
             transition: background 0.3s;
             flex-shrink: 0;
         }
@@ -302,16 +302,16 @@
             background: #e05555;
         }
         .add-social-btn {
-            padding: 8px 20px;
+            padding: 6px 16px;
             background: var(--color-accent);
             color: #fff;
             border: none;
-            border-radius: 20px;
+            border-radius: 16px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             transition: all 0.3s;
-            margin-top: 8px;
+            margin-top: 6px;
         }
         .add-social-btn:hover {
             background: var(--color-accent2);
@@ -320,18 +320,24 @@
         .socials-empty {
             color: var(--text-muted);
             text-align: center;
-            padding: 15px;
+            padding: 12px;
             font-style: italic;
         }
         @media (max-width: 768px) {
             .team-card-wrapper .admin-actions { opacity: 1; }
             .admin-toolbar { justify-content: center; }
-            .team-card { width: 160px; padding: 15px 10px; }
-            .team-card-avatar { width: 80px; height: 80px; }
-            .team-card-name { font-size: 16px; }
+            .team-card { width: 150px; padding: 12px 8px; }
+            .team-card-avatar { width: 70px; height: 70px; }
+            .team-card-name { font-size: 15px; }
             .social-edit-item { flex-direction: column; align-items: stretch; }
             .social-edit-item .social-type,
             .social-edit-item .social-value { width: 100%; }
+        }
+        @media (max-width: 480px) {
+            .team-card { width: 130px; }
+            .team-card-avatar { width: 60px; height: 60px; }
+            .team-card-name { font-size: 13px; }
+            .modal-content { padding: 16px; }
         }
     </style>
 </head>
@@ -397,7 +403,7 @@
     </div>
 </aside>
 
-<!-- ========== DSCOIN МОДАЛКИ ========== -->
+<!-- ========== МОДАЛКИ ========== -->
 <div class="modal-overlay" id="m-dscoin-order">
     <div class="modal-content" style="max-width:440px;">
         <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
@@ -449,7 +455,7 @@
         if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
     }
     function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         const btn = document.getElementById('themeToggle');
         if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
@@ -512,10 +518,10 @@
         <div id="adminPanel" style="display:none;" class="admin-toolbar">
             <button class="admin-btn" onclick="openAddVoiceModal()">➕ Добавить даббера</button>
             <button class="admin-btn" onclick="refreshVoices()">🔄 Обновить</button>
-            <span style="color:var(--text-muted); font-size:14px; margin-left:auto;">👑 Режим администратора</span>
+            <span style="color:var(--text-muted); font-size:13px; margin-left:auto;">👑 Режим администратора</span>
         </div>
 
-        <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap;">
+        <div style="display: flex; gap: 16px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap;">
             <div class="stat-box">
                 <div class="stat-number" id="dubberCount">0</div>
                 <div class="stat-label">Дабберы</div>
@@ -526,20 +532,21 @@
             </div>
         </div>
 
-        <h2 style="color: var(--color-accent); border-left: 5px solid var(--color-accent); padding-left: 15px; margin-top: 30px;">
+        <h2 style="color: var(--color-accent); border-left: 4px solid var(--color-accent); padding-left: 12px; margin-top: 24px; font-size: 20px;">
             🎙️ Дабберы
         </h2>
         <div id="dubberList" class="team-list"></div>
 
-        <hr>
+        <hr style="margin: 24px 0;">
 
-        <h2 style="color: var(--color-accent); border-left: 5px solid var(--color-accent); padding-left: 15px; margin-top: 30px;">
+        <h2 style="color: var(--color-accent); border-left: 4px solid var(--color-accent); padding-left: 12px; margin-top: 24px; font-size: 20px;">
             🔧 Технический персонал
         </h2>
         <div id="techList" class="team-list"></div>
     </div>
 </div>
 
+<!-- ========== МОДАЛКА РЕДАКТИРОВАНИЯ ========== -->
 <div class="modal-overlay" id="voiceModal">
     <div class="modal-content">
         <button class="modal-close" onclick="closeVoiceModal()">✕</button>
@@ -690,6 +697,7 @@
         }
     }
 
+    // ===== СОЦИАЛЬНЫЕ СЕТИ =====
     function renderSocialsEditor(socials) {
         const container = document.getElementById('socialsEditor');
         let socialArray = [];
@@ -783,11 +791,11 @@
                         </div>
                     `;
                 }
-                const avatarUrl = voice.image || 'https://via.placeholder.com/100/d4e8ff/4a90d9?text=?';
+                const avatarUrl = voice.image || 'https://via.placeholder.com/90/d4e8ff/4a90d9?text=?';
                 return `
                     <div class="team-card-wrapper">
                         <a href="voice.html?id=${voice.id}" class="team-card">
-                            <img src="${avatarUrl}" class="team-card-avatar" onerror="this.src='https://via.placeholder.com/100/d4e8ff/4a90d9?text=?'">
+                            <img src="${avatarUrl}" class="team-card-avatar" onerror="this.src='https://via.placeholder.com/90/d4e8ff/4a90d9?text=?'">
                             <div class="team-card-name">${voice.name || 'Без имени'}</div>
                             <div class="team-card-status">${voice.status || 'Даббер'}</div>
                         </a>
@@ -845,6 +853,7 @@
         isSaving = true;
         submitBtn.disabled = true;
         submitBtn.textContent = '⏳ Сохранение...';
+        
         const editId = document.getElementById('editVoiceId').value;
         const id = document.getElementById('voiceId').value.trim();
         const name = document.getElementById('voiceName').value.trim();
@@ -858,7 +867,21 @@
         const socialsArray = getSocialsFromEditor();
         const social = socialsArrayToObject(socialsArray);
         const data = { id, name, nameEn, nameRu, image, roleType, status, joinDate: joinDate || '2026', bio, social };
-        let result = editId ? await updateVoice(editId, data) : await addVoice(data);
+        
+        let result;
+        if (editId) {
+            result = await updateVoice(editId, data);
+        } else {
+            // Проверяем, нет ли уже такого ID
+            const existing = allVoices.find(v => v.id === id);
+            if (existing) {
+                alert('❌ Даббер с таким ID уже существует! Будет обновлён.');
+                result = await updateVoice(id, data);
+            } else {
+                result = await addVoice(data);
+            }
+        }
+        
         if (result.success) {
             alert('✅ Даббер сохранён!');
             closeVoiceModal();

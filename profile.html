@@ -1158,61 +1158,38 @@ async function loadWall() {
         return;
     }
     
-    // Определяем, чей профиль смотрим
     let targetUid = viewedUserId || user.uid;
     
-    const result = await getWallPosts(targetUid);
-    if (result.success) {
+    try {
+        const result = await getWallPosts(targetUid);
+        if (!result.success) {
+            container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки записей</p>';
+            return;
+        }
         const posts = result.posts;
         if (posts.length === 0) {
             container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Пока нет записей на стене</p>';
             return;
         }
-        
-        // Фильтруем посты в зависимости от видимости
-        let filteredPosts = posts;
-        const userData = await getUserData(targetUid);
-        const wallVisibility = userData.success ? (userData.data.wallVisibility || 'all') : 'all';
-        
-        // Если стена закрыта и это не владелец профиля
-        if (wallVisibility === 'disabled' && targetUid !== user.uid) {
-            container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">🔒 Стена закрыта для просмотра</p>';
-            return;
-        }
-        
-        // Если стена только для подписчиков
-        if (wallVisibility === 'friends' && targetUid !== user.uid) {
-            const isSub = await isSubscribed(user.uid, targetUid);
-            if (!isSub) {
-                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">👥 Стена доступна только подписчикам</p>';
-                return;
-            }
-        }
-        
-        container.innerHTML = filteredPosts.map(post => {
-            // Проверяем, может ли пользователь удалить пост
-            const canDelete = user && user.uid === post.userId;
-            
-            return `
-                <div class="wall-post">
-                    <div class="header">
-                        <div class="user">
-                            <div class="avatar" style="background:var(--color-accent);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px;">${post.userName?.charAt(0).toUpperCase() || '?'}</div>
-                            <span class="name">${post.userName || 'Пользователь'}</span>
-                            <span class="visibility-badge">${post.visibility === 'friends' ? '👥 Подписчики' : post.visibility === 'disabled' ? '🔒 Закрыто' : '🌍 Все'}</span>
-                        </div>
-                        <span class="time">${post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleString() : ''}</span>
+        container.innerHTML = posts.map(post => `
+            <div class="wall-post">
+                <div class="header">
+                    <div class="user">
+                        <div class="avatar" style="background:var(--color-accent);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px;">${post.userName?.charAt(0).toUpperCase() || '?'}</div>
+                        <span class="name">${post.userName || 'Пользователь'}</span>
+                        <span class="visibility-badge">${post.visibility === 'friends' ? '👥 Подписчики' : post.visibility === 'disabled' ? '🔒 Закрыто' : '🌍 Все'}</span>
                     </div>
-                    <div class="text">${post.text}</div>
-                    ${canDelete ? `
-                        <div class="actions">
-                            <button onclick="deleteWallPost('${post.id}')">🗑️ Удалить</button>
-                        </div>
-                    ` : ''}
+                    <span class="time">${post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleString() : ''}</span>
                 </div>
-            `;
-        }).join('');
-    } else {
+                <div class="text">${post.text}</div>
+                ${(user && user.uid === post.userId) ? `
+                    <div class="actions">
+                        <button onclick="deleteWallPost('${post.id}')">🗑️ Удалить</button>
+                    </div>
+                ` : ''}
+            </div>
+        `).join('');
+    } catch (e) {
         container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки записей</p>';
     }
 }

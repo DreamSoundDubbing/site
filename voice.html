@@ -26,7 +26,7 @@
             border-radius: 50%;
             object-fit: cover;
             border: 5px solid var(--color-accent);
-            box-shadow: 0 0 20px rgba(74, 144, 217, 0.3);
+            box-shadow: 0 0 20px rgba(60, 80, 180, 0.3);
         }
         .voice-info { flex: 1; min-width: 300px; }
         .voice-name { font-size: 36px; color: var(--color-accent); margin: 0 0 10px 0; }
@@ -100,81 +100,81 @@
 
         .admin-edit-btn {
             display: inline-block;
-            padding: 8px 20px;
+            padding: 6px 18px;
             background: var(--gradient-primary);
             color: #fff;
             border: none;
-            border-radius: 25px;
+            border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s ease;
-            font-size: 14px;
+            font-size: 13px;
             margin-top: 10px;
         }
         .admin-edit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+            box-shadow: 0 8px 25px rgba(60, 80, 180, 0.3);
         }
         .admin-panel {
             display: none;
-            padding: 20px;
+            padding: 16px;
             background: var(--bg-admin-panel);
-            border-radius: 15px;
+            border-radius: 12px;
             border: 1px solid var(--color-accent);
-            margin-top: 15px;
+            margin-top: 12px;
         }
         .admin-panel.active { display: block; }
-        .admin-panel .form-group { margin-bottom: 12px; }
+        .admin-panel .form-group { margin-bottom: 10px; }
         .admin-panel .form-group label {
             color: var(--text-muted);
-            font-size: 13px;
+            font-size: 12px;
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
         .admin-panel .form-group input,
         .admin-panel .form-group textarea,
         .admin-panel .form-group select {
             width: 100%;
-            padding: 8px 12px;
-            border-radius: 8px;
+            padding: 6px 10px;
+            border-radius: 6px;
             border: 2px solid var(--border-primary);
             background: var(--bg-input);
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 13px;
             box-sizing: border-box;
             font-family: inherit;
         }
-        .admin-panel .form-group textarea { min-height: 80px; resize: vertical; }
+        .admin-panel .form-group textarea { min-height: 60px; resize: vertical; }
         .admin-panel .form-row {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
         }
-        .admin-panel .form-row .form-group { flex: 1; min-width: 140px; }
+        .admin-panel .form-row .form-group { flex: 1; min-width: 120px; }
         .admin-panel .save-btn {
-            padding: 10px 30px;
+            padding: 8px 24px;
             background: var(--gradient-primary);
             color: #fff;
             border: none;
-            border-radius: 25px;
+            border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
             transition: all 0.3s ease;
         }
         .admin-panel .save-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+            box-shadow: 0 8px 25px rgba(60, 80, 180, 0.3);
         }
         .admin-panel .cancel-btn {
-            padding: 10px 30px;
+            padding: 8px 24px;
             background: var(--bg-input);
             color: var(--text-muted);
             border: 2px solid var(--border-primary);
-            border-radius: 25px;
+            border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
             transition: all 0.3s ease;
         }
         .admin-panel .cancel-btn:hover {
@@ -182,11 +182,89 @@
             color: var(--text-primary);
         }
 
-        .loading { text-align: center; padding: 50px; color: var(--text-muted); }
-        .not-found { text-align: center; padding: 50px; color: var(--text-muted); }
+        /* ===== РЕДАКТОР СОЦСЕТЕЙ (как в sostav.html) ===== */
+        .socials-editor { margin-top: 8px; }
+        .social-edit-item {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+            padding: 6px 10px;
+            background: var(--bg-input);
+            border-radius: 6px;
+            margin-bottom: 5px;
+            border: 1px solid var(--border-primary);
+        }
+        .social-edit-item:hover { border-color: var(--color-accent); }
+        .social-edit-item .social-type {
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 12px;
+            min-width: 90px;
+        }
+        .social-edit-item .social-type option { background: var(--bg-card); }
+        .social-edit-item .social-value {
+            flex: 2;
+            min-width: 120px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 12px;
+        }
+        .social-edit-item .remove-social-btn {
+            background: var(--color-danger);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 3px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+        .social-edit-item .remove-social-btn:hover { background: #e05555; }
+        .add-social-btn {
+            padding: 6px 16px;
+            background: var(--color-accent);
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-top: 6px;
+        }
+        .add-social-btn:hover {
+            background: var(--color-accent2);
+            transform: translateY(-2px);
+        }
+        .socials-empty {
+            color: var(--text-muted);
+            text-align: center;
+            padding: 12px;
+            font-style: italic;
+        }
+
+        .loading { text-align: center; padding: 40px; color: var(--text-muted); }
+        .not-found { text-align: center; padding: 40px; color: var(--text-muted); }
+
         @media (max-width: 768px) {
             .voice-avatar-large { width: 130px; height: 130px; }
             .voice-name { font-size: 28px; }
+            .social-edit-item { flex-direction: column; align-items: stretch; }
+            .social-edit-item .social-type,
+            .social-edit-item .social-value { width: 100%; }
+        }
+        @media (max-width: 480px) {
+            .voice-profile { padding: 16px; gap: 16px; }
+            .voice-avatar-large { width: 100px; height: 100px; }
+            .voice-name { font-size: 22px; }
         }
     </style>
 </head>
@@ -252,7 +330,7 @@
     </div>
 </aside>
 
-<!-- ========== DSCOIN МОДАЛКИ ========== -->
+<!-- ========== МОДАЛКИ ========== -->
 <div class="modal-overlay" id="m-dscoin-order">
     <div class="modal-content" style="max-width:440px;">
         <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
@@ -304,7 +382,7 @@
         if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
     }
     function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         const btn = document.getElementById('themeToggle');
         if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
@@ -335,13 +413,27 @@
     }
     function openDSCoinOrder() { closeSidebar(); openModal('m-dscoin-order'); }
     function openAdminDSCoins() { closeSidebar(); openModal('m-admin-dscoins'); }
+
+    function setDSCoinAmount(amount) {
+        document.getElementById('dscoin-order-amount').value = amount;
+        updateDSCoinPrice();
+    }
+    function updateDSCoinPrice() {
+        const amount = parseInt(document.getElementById('dscoin-order-amount').value) || 0;
+        const priceEl = document.getElementById('dscoin-order-price');
+        if (priceEl) priceEl.textContent = amount + ' ₽';
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const amountInput = document.getElementById('dscoin-order-amount');
+        if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
+    });
 </script>
 
 <!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
 <div class="container">
     <div class="header">
         <hr>
-        <h1 class="title" style="font-size:32px;">🎙️ Даббер</h1>
+        <h1 class="title" style="font-size:28px;">🎙️ Даббер</h1>
         <hr>
     </div>
     
@@ -421,6 +513,78 @@
         }
     }
 
+    // ===== РЕДАКТОР СОЦСЕТЕЙ (КАК В sostav.html) =====
+    function renderSocialsEditor(socials) {
+        const container = document.getElementById('socialsEditor');
+        let socialArray = [];
+        if (socials && typeof socials === 'object' && !Array.isArray(socials)) {
+            socialArray = Object.entries(socials).map(([type, value]) => ({ type, value }));
+        } else if (Array.isArray(socials)) {
+            socialArray = socials;
+        }
+        if (!socialArray || socialArray.length === 0) {
+            container.innerHTML = `<div class="socials-empty">📭 Нет добавленных соцсетей</div>`;
+            return;
+        }
+        const socialTypes = [
+            { value: 'telegram', label: '📱 Telegram' },
+            { value: 'vk', label: '📘 VK' },
+            { value: 'github', label: '🐙 GitHub' },
+            { value: 'instagram', label: '📸 Instagram' },
+            { value: 'twitter', label: '🐦 Twitter/X' },
+            { value: 'youtube', label: '▶️ YouTube' },
+            { value: 'discord', label: '💬 Discord' },
+            { value: 'website', label: '🌐 Сайт' },
+            { value: 'other', label: '🔗 Другое' }
+        ];
+        container.innerHTML = socialArray.map((social, index) => `
+            <div class="social-edit-item">
+                <select class="social-type" data-index="${index}" data-field="type">
+                    ${socialTypes.map(st => `<option value="${st.value}" ${social.type === st.value ? 'selected' : ''}>${st.label}</option>`).join('')}
+                </select>
+                <input type="text" class="social-value" value="${social.value || ''}" placeholder="Имя пользователя или ссылка" data-index="${index}" data-field="value">
+                <button class="remove-social-btn" onclick="removeSocial(${index})" title="Удалить соцсеть">✕</button>
+            </div>
+        `).join('');
+    }
+
+    window.addSocial = function() {
+        const socials = getSocialsFromEditor();
+        socials.push({ type: 'telegram', value: '' });
+        renderSocialsEditor(socials);
+    };
+
+    window.removeSocial = function(index) {
+        const socials = getSocialsFromEditor();
+        socials.splice(index, 1);
+        renderSocialsEditor(socials);
+    };
+
+    function getSocialsFromEditor() {
+        const container = document.getElementById('socialsEditor');
+        const items = container.querySelectorAll('.social-edit-item');
+        const socials = [];
+        items.forEach(el => {
+            const type = el.querySelector('[data-field="type"]').value || 'other';
+            const value = el.querySelector('[data-field="value"]').value || '';
+            if (value.trim()) {
+                socials.push({ type, value: value.trim() });
+            }
+        });
+        return socials;
+    }
+
+    function socialsArrayToObject(socialsArray) {
+        const obj = {};
+        socialsArray.forEach(s => {
+            if (s.value && s.value.trim()) {
+                obj[s.type] = s.value.trim();
+            }
+        });
+        return obj;
+    }
+
+    // ===== АДМИН-РЕДАКТИРОВАНИЕ =====
     window.toggleAdminEdit = function() {
         const panel = document.getElementById('adminEditPanel');
         panel.classList.toggle('active');
@@ -438,23 +602,17 @@
         document.getElementById('editStatus').value = v.status || '';
         document.getElementById('editJoinDate').value = v.joinDate || '';
         document.getElementById('editBio').value = v.bio || '';
-        document.getElementById('editSocial').value = JSON.stringify(v.social || {}, null, 2);
+        renderSocialsEditor(v.social || {});
     }
 
     window.saveAdminEdit = async function() {
         const saveBtn = document.getElementById('saveEditBtn');
         saveBtn.disabled = true;
         saveBtn.textContent = '⏳ Сохранение...';
-        let social = {};
-        try {
-            const raw = document.getElementById('editSocial').value.trim();
-            if (raw) social = JSON.parse(raw);
-        } catch (e) {
-            alert('❌ Ошибка в формате JSON соцсетей. Проверьте синтаксис.');
-            saveBtn.disabled = false;
-            saveBtn.textContent = '💾 Сохранить';
-            return;
-        }
+        
+        const socialsArray = getSocialsFromEditor();
+        const social = socialsArrayToObject(socialsArray);
+        
         const data = {
             name: document.getElementById('editName').value.trim(),
             nameEn: document.getElementById('editNameEn').value.trim(),
@@ -466,6 +624,7 @@
             bio: document.getElementById('editBio').value.trim(),
             social: social
         };
+        
         const result = await updateVoice(voiceId, data);
         if (result.success) {
             alert('✅ Профиль даббера обновлён!');
@@ -489,7 +648,18 @@
         if (!result.success || !result.data) {
             const localVoice = window.voicesDatabase?.find(v => v.id === voiceId);
             if (localVoice) {
-                const createResult = await addVoice({ id: localVoice.id, name: localVoice.name, nameEn: localVoice.nameEn || '', nameRu: localVoice.nameRu || '', image: localVoice.image || '', roleType: localVoice.roleType || 'dubber', status: localVoice.status || 'Даббер', joinDate: localVoice.joinDate || '2026', bio: localVoice.bio || '', social: localVoice.social || {} });
+                const createResult = await addVoice({ 
+                    id: localVoice.id, 
+                    name: localVoice.name, 
+                    nameEn: localVoice.nameEn || '', 
+                    nameRu: localVoice.nameRu || '', 
+                    image: localVoice.image || '', 
+                    roleType: localVoice.roleType || 'dubber', 
+                    status: localVoice.status || 'Даббер', 
+                    joinDate: localVoice.joinDate || '2026', 
+                    bio: localVoice.bio || '', 
+                    social: localVoice.social || {} 
+                });
                 if (createResult.success) { await loadVoice(); return; }
                 else { container.innerHTML = `<div class="not-found">❌ Ошибка создания даббера: ${createResult.error}</div>`; return; }
             } else {
@@ -498,9 +668,11 @@
             }
         }
         currentVoice = result.data;
+        
         const titles = window.titlesDatabase?.filter(t => window.rolesDatabase?.some(r => r.titleId === t.id && r.voiceId === voiceId)) || [];
         const roles = window.rolesDatabase?.filter(r => r.voiceId === voiceId) || [];
         const stats = { totalTitles: titles.length, totalRoles: roles.length, mainRoles: roles.filter(r => r.type === 'main').length };
+        
         let socialHtml = '';
         const voice = currentVoice;
         if (voice.social) {
@@ -508,6 +680,7 @@
             if (voice.social.vk) socialHtml += `<a href="https://vk.com/${voice.social.vk}" target="_blank" class="social-link">📘 VK</a>`;
             if (voice.social.github) socialHtml += `<a href="https://github.com/${voice.social.github}" target="_blank" class="social-link">🐙 GitHub</a>`;
         }
+        
         let titlesHtml = '';
         if (titles.length > 0) {
             titlesHtml = '<h2 class="title">Участие в проектах</h2>';
@@ -526,6 +699,7 @@
                 `;
             });
         }
+        
         let adminHtml = '';
         if (isAdmin) {
             adminHtml = `
@@ -544,14 +718,24 @@
                         <div class="form-group"><label>Год присоединения</label><input type="text" id="editJoinDate"></div>
                     </div>
                     <div class="form-group"><label>Биография</label><textarea id="editBio"></textarea></div>
-                    <div class="form-group"><label>Соцсети (JSON)</label><textarea id="editSocial" style="min-height:60px;"></textarea><small style="color:var(--text-muted);">Формат: {"telegram":"username","vk":"id","github":"username"}</small></div>
-                    <div style="display:flex;gap:10px;margin-top:15px;">
+                    <div class="form-group">
+                        <label style="display:flex;justify-content:space-between;align-items:center;">
+                            <span>🔗 Социальные сети</span>
+                            <button type="button" class="add-social-btn" onclick="addSocial()">➕ Добавить соцсеть</button>
+                        </label>
+                        <div id="socialsEditor" class="socials-editor">
+                            <div class="socials-empty">Нет добавленных соцсетей</div>
+                        </div>
+                        <small style="color:var(--text-muted);display:block;margin-top:5px;">Выберите тип соцсети и введите имя пользователя или ссылку</small>
+                    </div>
+                    <div style="display:flex;gap:10px;margin-top:16px;">
                         <button class="save-btn" id="saveEditBtn" onclick="saveAdminEdit()">💾 Сохранить изменения</button>
                         <button class="cancel-btn" onclick="document.getElementById('adminEditPanel').classList.remove('active')">Отмена</button>
                     </div>
                 </div>
             `;
         }
+        
         container.innerHTML = `
             <div class="voice-profile">
                 <img src="${voice.image || 'https://via.placeholder.com/200/d4e8ff/4a90d9?text=?'}" class="voice-avatar-large" onerror="this.src='https://via.placeholder.com/200/d4e8ff/4a90d9?text=?'">

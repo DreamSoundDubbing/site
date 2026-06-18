@@ -11,10 +11,10 @@
     <style>
         .search-input {
             flex: 1;
-            padding: 14px 22px;
+            padding: 12px 20px;
             border: 2px solid var(--color-accent);
             border-radius: 50px;
-            font-size: 16px;
+            font-size: 15px;
             outline: none;
             background: var(--bg-input);
             color: var(--text-primary);
@@ -25,11 +25,11 @@
         .search-input::placeholder { color: var(--text-muted); }
         .search-input:focus {
             border-color: var(--color-accent2);
-            box-shadow: 0 0 20px rgba(74, 144, 217, 0.2);
+            box-shadow: 0 0 20px rgba(60, 80, 180, 0.15);
             background: var(--bg-card);
         }
         .search-button {
-            padding: 14px 30px;
+            padding: 12px 24px;
             background: var(--gradient-primary);
             color: white;
             border: none;
@@ -37,51 +37,51 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 16px;
+            font-size: 15px;
             white-space: nowrap;
         }
         .search-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+            box-shadow: 0 8px 25px rgba(60, 80, 180, 0.3);
         }
         .search-form {
             display: flex;
             width: 100%;
             max-width: 500px;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
         }
         .search-form-wrapper {
             display: flex;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             width: 100%;
         }
         .search-results-title {
             color: var(--color-accent);
-            font-size: 24px;
-            margin-bottom: 10px;
+            font-size: 22px;
+            margin-bottom: 8px;
         }
         .search-stats {
             color: var(--text-muted);
-            font-size: 16px;
-            margin-bottom: 20px;
+            font-size: 14px;
+            margin-bottom: 16px;
         }
         .search-section-title {
             color: var(--color-accent);
-            font-size: 20px;
-            margin: 25px 0 15px 0;
-            padding-bottom: 8px;
+            font-size: 18px;
+            margin: 20px 0 12px 0;
+            padding-bottom: 6px;
             border-bottom: 2px solid var(--border-primary);
         }
         .result-item {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 12px 18px;
+            gap: 14px;
+            padding: 10px 16px;
             background: var(--bg-input);
-            margin-bottom: 10px;
-            border-radius: 12px;
+            margin-bottom: 8px;
+            border-radius: 10px;
             text-decoration: none;
             color: inherit;
             transition: all 0.3s ease;
@@ -90,14 +90,14 @@
         .result-item:hover {
             background: var(--bg-material-hover);
             border-color: var(--color-accent);
-            transform: translateX(5px);
-            box-shadow: 0 5px 20px rgba(74, 144, 217, 0.1);
+            transform: translateX(4px);
+            box-shadow: 0 5px 20px rgba(60, 80, 180, 0.08);
         }
         .result-image {
-            width: 55px;
-            height: 55px;
+            width: 48px;
+            height: 48px;
             object-fit: cover;
-            border-radius: 10px;
+            border-radius: 8px;
             border: 2px solid var(--border-primary);
             flex-shrink: 0;
         }
@@ -111,22 +111,22 @@
         }
         .result-info { flex: 1; }
         .result-name {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: var(--color-accent);
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
         .result-type {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-muted);
         }
         .result-type-badge {
             display: inline-block;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-size: 11px;
+            padding: 1px 10px;
+            border-radius: 16px;
+            font-size: 10px;
             font-weight: bold;
-            margin-top: 3px;
+            margin-top: 2px;
         }
         .badge-title {
             background: var(--gradient-primary);
@@ -143,31 +143,31 @@
         }
         .no-results {
             text-align: center;
-            padding: 50px 20px;
+            padding: 40px 20px;
             color: var(--text-muted);
-            font-size: 18px;
+            font-size: 16px;
         }
-        .no-results-icon { font-size: 48px; display: block; margin-bottom: 15px; }
+        .no-results-icon { font-size: 40px; display: block; margin-bottom: 12px; }
         .loading-text {
             color: var(--text-muted);
             text-align: center;
-            padding: 30px;
+            padding: 24px;
         }
         .search-tabs {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
         }
         .search-tab {
-            padding: 8px 24px;
-            border-radius: 25px;
+            padding: 6px 20px;
+            border-radius: 20px;
             border: 2px solid var(--border-primary);
             background: transparent;
             color: var(--text-muted);
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             transition: all 0.3s ease;
             font-family: inherit;
@@ -182,14 +182,14 @@
             color: #fff;
         }
         @media (max-width: 600px) {
-            .search-form { flex-direction: column; gap: 10px; max-width: 100%; }
-            .search-input { border-radius: 30px; padding: 16px 20px; font-size: 16px; }
-            .search-button { width: 100%; padding: 16px; font-size: 17px; border-radius: 30px; justify-content: center; }
-            .result-item { padding: 14px 16px; gap: 12px; }
-            .result-image { width: 48px; height: 48px; }
-            .result-name { font-size: 16px; }
-            .search-tabs { gap: 6px; }
-            .search-tab { padding: 6px 16px; font-size: 12px; }
+            .search-form { flex-direction: column; gap: 8px; max-width: 100%; }
+            .search-input { border-radius: 30px; padding: 14px 18px; font-size: 15px; }
+            .search-button { width: 100%; padding: 14px; font-size: 16px; border-radius: 30px; justify-content: center; }
+            .result-item { padding: 12px 14px; gap: 10px; }
+            .result-image { width: 40px; height: 40px; }
+            .result-name { font-size: 14px; }
+            .search-tabs { gap: 4px; }
+            .search-tab { padding: 4px 14px; font-size: 11px; }
         }
     </style>
 </head>
@@ -255,7 +255,7 @@
     </div>
 </aside>
 
-<!-- ========== DSCOIN МОДАЛКИ ========== -->
+<!-- ========== МОДАЛКИ ========== -->
 <div class="modal-overlay" id="m-dscoin-order">
     <div class="modal-content" style="max-width:440px;">
         <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
@@ -307,7 +307,7 @@
         if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
     }
     function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         const btn = document.getElementById('themeToggle');
         if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
@@ -525,7 +525,7 @@
                 const image = t.imageVertical || t.imageHorizontal || t.image;
                 html += `
                     <a href="title.html?id=${t.id}" class="result-item">
-                        <img src="${image}" class="result-image" onerror="this.src='https://via.placeholder.com/55/d4e8ff/4a90d9?text=?'">
+                        <img src="${image}" class="result-image" onerror="this.src='https://via.placeholder.com/48/d4e8ff/4a90d9?text=?'">
                         <div class="result-info">
                             <div class="result-name">${t.name}</div>
                             <div class="result-type">${t.type || 'Аниме'} • ${t.episodes || '?'} серий <span class="result-type-badge badge-title">⭐ ${t.rating || '4.5'}</span></div>
@@ -539,7 +539,7 @@
             results.voices.forEach(v => {
                 html += `
                     <a href="voice.html?id=${v.id}" class="result-item">
-                        <img src="${v.image}" class="result-image result-image-voice" onerror="this.src='https://via.placeholder.com/55/d4e8ff/4a90d9?text=?'">
+                        <img src="${v.image}" class="result-image result-image-voice" onerror="this.src='https://via.placeholder.com/48/d4e8ff/4a90d9?text=?'">
                         <div class="result-info">
                             <div class="result-name">${v.name}</div>
                             <div class="result-type">${v.status || 'Даббер'} <span class="result-type-badge badge-voice">${v.roleType === 'tech' ? '🔧 Тех. персонал' : v.roleType === 'both' ? '🎙️+🔧' : '🎙️ Даббер'}</span></div>
@@ -552,10 +552,10 @@
             html += `<div class="search-section-title">👤 Пользователи (${results.users.length})</div>`;
             results.users.forEach(u => {
                 const roleNames = { 'admin': '👑 Администратор', 'dubber': '🎙️ Даббер', 'user': '👤 Пользователь' };
-                const avatarUrl = u.photoURL || 'https://via.placeholder.com/55/d4e8ff/4a90d9?text=?';
+                const avatarUrl = u.photoURL || 'https://via.placeholder.com/48/d4e8ff/4a90d9?text=?';
                 html += `
                     <a href="profile.html?uid=${u.id}" class="result-item">
-                        <img src="${avatarUrl}" class="result-image result-image-user" onerror="this.src='https://via.placeholder.com/55/d4e8ff/4a90d9?text=?'">
+                        <img src="${avatarUrl}" class="result-image result-image-user" onerror="this.src='https://via.placeholder.com/48/d4e8ff/4a90d9?text=?'">
                         <div class="result-info">
                             <div class="result-name">${u.displayName || 'Без имени'}</div>
                             <div class="result-type">${u.email || 'Email не указан'} <span class="result-type-badge badge-user">${roleNames[u.role] || '👤 Пользователь'}</span></div>
