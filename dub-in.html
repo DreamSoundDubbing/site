@@ -213,6 +213,103 @@
         .access-denied a:hover {
             text-decoration: underline;
         }
+
+        /* ===== АДМИН-ПАНЕЛЬ ===== */
+        .admin-toolbar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            padding: 15px;
+            background: var(--bg-admin-panel);
+            border-radius: 15px;
+            border: 1px solid var(--color-accent);
+            align-items: center;
+        }
+        .admin-toolbar .admin-btn {
+            padding: 8px 20px;
+            background: var(--gradient-primary);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        .admin-toolbar .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+        .admin-toolbar .admin-status {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-left: auto;
+        }
+
+        /* ===== МОДАЛКА ДОБАВЛЕНИЯ ТАЙТЛА ===== */
+        .add-title-form .form-group {
+            margin-bottom: 15px;
+        }
+        .add-title-form .form-group label {
+            color: var(--text-muted);
+            font-size: 14px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .add-title-form .form-group input,
+        .add-title-form .form-group textarea,
+        .add-title-form .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 2px solid var(--border-primary);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 14px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .add-title-form .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .add-title-form .form-group input:focus,
+        .add-title-form .form-group textarea:focus {
+            border-color: var(--color-accent);
+            outline: none;
+        }
+        .add-title-form .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .add-title-form .form-row .form-group {
+            flex: 1;
+            min-width: 150px;
+        }
+        .add-title-form .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--gradient-primary);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        .add-title-form .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+        .add-title-form .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
     </style>
 </head>
 <body>
@@ -267,12 +364,20 @@
     </div>
     
     <div class="content-box">
+        <!-- Админ-панель -->
+        <div id="adminPanel" style="display:none;" class="admin-toolbar">
+            <button class="admin-btn" onclick="openAddTitleModal()">➕ Добавить тайтл</button>
+            <button class="admin-btn" onclick="refreshTitles()">🔄 Обновить</button>
+            <span class="admin-status">👑 Режим администратора</span>
+        </div>
+
         <div id="dubContent">
             <div class="loading-spinner">⏳ Проверка доступа...</div>
         </div>
     </div>
 </div>
 
+<!-- Модалка для материалов -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal-content" id="modalContent">
         <button class="modal-close" onclick="closeModal()">✕</button>
@@ -282,11 +387,87 @@
     </div>
 </div>
 
+<!-- Модалка для добавления тайтла -->
+<div class="modal-overlay" id="addTitleModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeAddTitleModal()">✕</button>
+        <h2 id="addTitleModalTitle">➕ Добавить тайтл</h2>
+        <form class="add-title-form" id="addTitleForm" onsubmit="saveNewTitle(event)">
+            <div class="form-group">
+                <label>ID тайтла (уникальный, латиница)</label>
+                <input type="text" id="newTitleId" placeholder="например: dandadan" required>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Название (рус.)</label>
+                    <input type="text" id="newTitleName" placeholder="Название" required>
+                </div>
+                <div class="form-group">
+                    <label>Название (англ.)</label>
+                    <input type="text" id="newTitleNameEn" placeholder="English name">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Тип</label>
+                    <select id="newTitleType">
+                        <option value="Сериал">Сериал</option>
+                        <option value="Фильм">Фильм</option>
+                        <option value="Короткометражка">Короткометражка</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Год</label>
+                    <input type="number" id="newTitleYear" placeholder="2024">
+                </div>
+                <div class="form-group">
+                    <label>Кол-во серий</label>
+                    <input type="number" id="newTitleEpisodes" placeholder="12" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Рейтинг</label>
+                    <input type="number" id="newTitleRating" placeholder="5" min="0" max="5" step="0.1">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Жанры (через запятую)</label>
+                <input type="text" id="newTitleGenres" placeholder="Комедия, Экшен, Романтика">
+            </div>
+            
+            <div class="form-group">
+                <label>Ссылка на вертикальную обложку</label>
+                <input type="text" id="newTitleImageVert" placeholder="images/title_vert.jpg">
+            </div>
+            
+            <div class="form-group">
+                <label>Ссылка на горизонтальную обложку</label>
+                <input type="text" id="newTitleImageHoriz" placeholder="images/title_horiz.jpg">
+            </div>
+            
+            <div class="form-group">
+                <label>Описание</label>
+                <textarea id="newTitleDescription" placeholder="Описание тайтла..."></textarea>
+            </div>
+            
+            <button type="submit" class="submit-btn" id="addTitleSubmitBtn">💾 Создать тайтл</button>
+        </form>
+    </div>
+</div>
+
+<div class="container" style="text-align: center;">
+    <hr>
+    <p style="color:var(--text-muted);">© 2026 Dream Sound Dubbing</p>
+</div>
+
 <script type="module">
     import { 
         getCurrentUser, 
         onAuthStateChangedListener,
         getTitles,
+        addTitle,
         getDubMaterials,
         addDubMaterial,
         removeDubMaterial,
@@ -296,6 +477,7 @@
     let currentUser = null;
     let currentUserRole = 'user';
     let currentTitleId = null;
+    let allTitles = [];
 
     function updateAuthButton(user) {
         const btn = document.getElementById('authBtn');
@@ -330,6 +512,85 @@
         }
     }
 
+    // ===== ОТКРЫТИЕ/ЗАКРЫТИЕ МОДАЛКИ ДОБАВЛЕНИЯ ТАЙТЛА =====
+    window.openAddTitleModal = function() {
+        document.getElementById('addTitleModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+        document.getElementById('addTitleForm').reset();
+        document.getElementById('addTitleSubmitBtn').disabled = false;
+        document.getElementById('addTitleSubmitBtn').textContent = '💾 Создать тайтл';
+    };
+
+    window.closeAddTitleModal = function() {
+        document.getElementById('addTitleModal').classList.remove('active');
+        document.body.style.overflow = '';
+    };
+
+    document.getElementById('addTitleModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeAddTitleModal();
+        }
+    });
+
+    // ===== СОХРАНЕНИЕ НОВОГО ТАЙТЛА =====
+    window.saveNewTitle = async function(event) {
+        event.preventDefault();
+        const submitBtn = document.getElementById('addTitleSubmitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Сохранение...';
+
+        const id = document.getElementById('newTitleId').value.trim();
+        const name = document.getElementById('newTitleName').value.trim();
+        const nameEn = document.getElementById('newTitleNameEn').value.trim();
+        const type = document.getElementById('newTitleType').value;
+        const year = parseInt(document.getElementById('newTitleYear').value) || 0;
+        const episodes = parseInt(document.getElementById('newTitleEpisodes').value) || 0;
+        const rating = parseFloat(document.getElementById('newTitleRating').value) || 0;
+        const genres = document.getElementById('newTitleGenres').value.split(',').map(s => s.trim()).filter(Boolean);
+        const imageVertical = document.getElementById('newTitleImageVert').value.trim();
+        const imageHorizontal = document.getElementById('newTitleImageHoriz').value.trim();
+        const description = document.getElementById('newTitleDescription').value.trim();
+
+        if (!id || !name) {
+            alert('❌ Заполните ID и название тайтла');
+            submitBtn.disabled = false;
+            submitBtn.textContent = '💾 Создать тайтл';
+            return;
+        }
+
+        const data = {
+            id: id,
+            name: name,
+            nameEn: nameEn,
+            type: type,
+            year: year,
+            episodes: episodes || 1,
+            rating: rating,
+            genres: genres,
+            imageVertical: imageVertical,
+            imageHorizontal: imageHorizontal,
+            description: description,
+            episodesList: []
+        };
+
+        const result = await addTitle(data);
+        if (result.success) {
+            alert('✅ Тайтл успешно создан!');
+            closeAddTitleModal();
+            await loadTitles();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+            submitBtn.disabled = false;
+            submitBtn.textContent = '💾 Создать тайтл';
+        }
+    };
+
+    // ===== ОБНОВЛЕНИЕ СПИСКА ТАЙТЛОВ =====
+    window.refreshTitles = async function() {
+        await loadTitles();
+    };
+
+    // ===== ОТКРЫТИЕ МОДАЛКИ С МАТЕРИАЛАМИ =====
     window.openModal = function(titleId, titleName) {
         currentTitleId = titleId;
         const overlay = document.getElementById('modalOverlay');
@@ -352,6 +613,7 @@
         }
     });
 
+    // ===== ЗАГРУЗКА МАТЕРИАЛОВ =====
     async function loadMaterials(titleId, titleName) {
         const body = document.getElementById('modalBody');
         const isAdminUser = currentUserRole === 'admin';
@@ -461,6 +723,7 @@
         body.innerHTML = html;
     }
 
+    // ===== ДОБАВЛЕНИЕ МАТЕРИАЛА =====
     window.addMaterial = async function(titleId, type) {
         const inputId = type + 'Input';
         const input = document.getElementById(inputId);
@@ -480,6 +743,7 @@
         }
     };
 
+    // ===== УДАЛЕНИЕ МАТЕРИАЛА =====
     window.deleteMaterial = async function(titleId, type, index) {
         if (!confirm('Удалить этот материал?')) return;
         const result = await removeDubMaterial(titleId, type, index);
@@ -491,6 +755,7 @@
         }
     };
 
+    // ===== ЗАГРУЗКА ТАЙТЛОВ =====
     async function loadTitles() {
         const container = document.getElementById('dubContent');
         const titlesResult = await getTitles();
@@ -498,13 +763,14 @@
             container.innerHTML = `<p style="color:var(--color-danger);">❌ Ошибка загрузки: ${titlesResult.error}</p>`;
             return;
         }
-        if (titlesResult.titles.length === 0) {
-            container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:40px;">Пока нет тайтлов</p>';
+        allTitles = titlesResult.titles;
+        if (allTitles.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:40px;">Пока нет тайтлов. Создайте первый!</p>';
             return;
         }
         container.innerHTML = `
             <div class="dub-grid">
-                ${titlesResult.titles.map(title => {
+                ${allTitles.map(title => {
                     const image = title.imageVertical || title.imageHorizontal || title.image;
                     return `
                         <div class="dub-card" onclick="openModal('${title.id}','${title.name}')">
@@ -520,6 +786,7 @@
         `;
     }
 
+    // ===== ПРОВЕРКА ДОСТУПА =====
     async function checkAccess() {
         const container = document.getElementById('dubContent');
         const user = getCurrentUser();
@@ -553,13 +820,22 @@
         return true;
     }
 
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
     async function initPage() {
         const user = getCurrentUser();
         updateAuthButton(user);
         await updateDubInLink(user);
         await updateAdminLink(user);
+        
         const hasAccess = await checkAccess();
         if (hasAccess) {
+            // Показываем админ-панель только для админов
+            const adminPanel = document.getElementById('adminPanel');
+            if (currentUserRole === 'admin') {
+                adminPanel.style.display = 'flex';
+            } else {
+                adminPanel.style.display = 'none';
+            }
             await loadTitles();
         }
     }
@@ -574,6 +850,7 @@
 
     document.addEventListener('DOMContentLoaded', initPage);
 </script>
+
 <script>
     function toggleTheme() {
         const html = document.documentElement;
@@ -598,5 +875,6 @@
 
     loadTheme();
 </script>
+
 </body>
 </html>
