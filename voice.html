@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Даббер - Dream Sound Dubbing</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="data.js"></script>
     <script type="module" src="firebase-config.js"></script>
     <style>
@@ -27,15 +28,8 @@
             border: 5px solid var(--color-accent);
             box-shadow: 0 0 20px rgba(74, 144, 217, 0.3);
         }
-        .voice-info {
-            flex: 1;
-            min-width: 300px;
-        }
-        .voice-name {
-            font-size: 36px;
-            color: var(--color-accent);
-            margin: 0 0 10px 0;
-        }
+        .voice-info { flex: 1; min-width: 300px; }
+        .voice-name { font-size: 36px; color: var(--color-accent); margin: 0 0 10px 0; }
         .voice-status {
             display: inline-block;
             background: var(--gradient-primary);
@@ -85,10 +79,7 @@
             font-size: 19px;
             transition: all 0.3s;
         }
-        .social-link:hover {
-            background: var(--color-accent2);
-            transform: translateY(-2px);
-        }
+        .social-link:hover { background: var(--color-accent2); transform: translateY(-2px); }
         .stats-grid {
             display: flex;
             gap: 15px;
@@ -104,15 +95,8 @@
             text-align: center;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .stat-number {
-            font-size: 28px;
-            font-weight: bold;
-            color: var(--color-accent);
-        }
-        .stat-label {
-            font-size: 14px;
-            color: var(--text-muted);
-        }
+        .stat-number { font-size: 28px; font-weight: bold; color: var(--color-accent); }
+        .stat-label { font-size: 14px; color: var(--text-muted); }
 
         .admin-edit-btn {
             display: inline-block;
@@ -139,12 +123,8 @@
             border: 1px solid var(--color-accent);
             margin-top: 15px;
         }
-        .admin-panel.active {
-            display: block;
-        }
-        .admin-panel .form-group {
-            margin-bottom: 12px;
-        }
+        .admin-panel.active { display: block; }
+        .admin-panel .form-group { margin-bottom: 12px; }
         .admin-panel .form-group label {
             color: var(--text-muted);
             font-size: 13px;
@@ -164,19 +144,13 @@
             box-sizing: border-box;
             font-family: inherit;
         }
-        .admin-panel .form-group textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
+        .admin-panel .form-group textarea { min-height: 80px; resize: vertical; }
         .admin-panel .form-row {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
         }
-        .admin-panel .form-row .form-group {
-            flex: 1;
-            min-width: 140px;
-        }
+        .admin-panel .form-row .form-group { flex: 1; min-width: 140px; }
         .admin-panel .save-btn {
             padding: 10px 30px;
             background: var(--gradient-primary);
@@ -208,45 +182,116 @@
             color: var(--text-primary);
         }
 
-        .loading {
-            text-align: center;
-            padding: 50px;
-            color: var(--text-muted);
-        }
-        .not-found {
-            text-align: center;
-            padding: 50px;
-            color: var(--text-muted);
-        }
+        .loading { text-align: center; padding: 50px; color: var(--text-muted); }
+        .not-found { text-align: center; padding: 50px; color: var(--text-muted); }
         @media (max-width: 768px) {
-            .voice-avatar-large {
-                width: 130px;
-                height: 130px;
-            }
-            .voice-name {
-                font-size: 28px;
-            }
+            .voice-avatar-large { width: 130px; height: 130px; }
+            .voice-name { font-size: 28px; }
         }
     </style>
 </head>
 <body>
 
+<!-- ========== HEADER ========== -->
 <header class="fixed-header">
     <div class="nav-buttons">
-        <a href="index.html">
-            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo">
-        </a>
-        <a href="index.html" class="nav-icon-btn">🏠Главная</a>
-        <a href="titles.html" class="nav-icon-btn">🎦Тайтлы</a>
-        <a href="sostav.html" class="nav-icon-btn">🎭Состав</a>
+        <button class="burger-btn" onclick="openSidebar()" title="Меню" aria-label="Открыть меню">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="index.html"><img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo"></a>
+        <a href="index.html" class="nav-icon-btn" id="homeLink" style="display:none;">🏠Главная</a>
+        <a href="titles.html" class="nav-icon-btn" id="titlesLink" style="display:none;">🎦Тайтлы</a>
+        <a href="sostav.html" class="nav-icon-btn" id="sostavLink" style="display:none;">🎭Состав</a>
         <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
-        <a href="search.html" class="nav-icon-btn">🔍Поиск</a>
+        <a href="search.html" class="nav-icon-btn" id="searchLink" style="display:none;">🔍Поиск</a>
         <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
-        <a href="voice-order.html" class="nav-icon-btn">📝Заявка</a>
+        <a href="voice-order.html" class="nav-icon-btn" id="voiceOrderLink" style="display:none;">📝Заявка</a>
         <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
         <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
     </div>
 </header>
+
+<!-- ========== SIDEBAR ========== -->
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+<aside id="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="sidebar-logo-img">
+            <span>DSD <span style="color:var(--color-accent2);">Menu</span></span>
+        </div>
+        <button class="sidebar-close-btn" onclick="closeSidebar()"><i class="fas fa-times"></i></button>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Навигация</div>
+        <a href="index.html" class="sidebar-link"><i class="fas fa-home"></i><span>Главная</span></a>
+        <a href="titles.html" class="sidebar-link"><i class="fas fa-film"></i><span>Тайтлы</span></a>
+        <a href="sostav.html" class="sidebar-link"><i class="fas fa-users"></i><span>Состав</span></a>
+        <a href="search.html" class="sidebar-link"><i class="fas fa-search"></i><span>Поиск</span></a>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Личное</div>
+        <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
+        <a href="profile.html#playlists" class="sidebar-link"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
+        <a href="profile.html#shop" class="sidebar-link"><i class="fas fa-coins"></i><span>Магазин DSCoins</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Студия</div>
+        <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
+        <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заявка на озвучку</span></a>
+        <a href="#" class="sidebar-link" onclick="openDSCoinOrder(); return false;"><i class="fas fa-coins"></i><span>Купить DSCoins</span></a>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Администрирование</div>
+        <a href="admin-orders.html" class="sidebar-link" id="sidebarAdminOrders" style="display:none;"><i class="fas fa-clipboard-list"></i><span>Заказы</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+        <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;"><i class="fas fa-coins"></i><span>Управление DSCoins</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="sidebar-socials">
+            <a href="#" target="_blank"><i class="fab fa-vk"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px;letter-spacing:1px;">© Dream Sound Dubbing</div>
+    </div>
+</aside>
+
+<!-- ========== DSCOIN МОДАЛКИ ========== -->
+<div class="modal-overlay" id="m-dscoin-order">
+    <div class="modal-content" style="max-width:440px;">
+        <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
+        <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Покупка DSCoins</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">После оформления заявки напишите менеджеру в Telegram для оплаты.</p>
+        <div class="form-group"><label>Ваш Email *</label><input type="email" id="dscoin-order-email" placeholder="your@email.com"></div>
+        <div class="form-group">
+            <label>Количество DSCoins *</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(100)">100</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(250)">250</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(500)">500</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(1000)">1000</button>
+                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(2000)">2000</button>
+            </div>
+            <input type="number" id="dscoin-order-amount" placeholder="Введите количество..." min="1">
+        </div>
+        <div style="background:var(--bg-welcome);padding:12px;border-radius:10px;margin:12px 0;text-align:center;">
+            <span style="color:var(--text-muted);">Стоимость: </span>
+            <span id="dscoin-order-price" style="color:var(--color-accent);font-weight:bold;font-size:18px;">0 ₽</span>
+            <div style="font-size:11px;color:var(--text-muted);">1 DSCoin = 1 ₽</div>
+        </div>
+        <button class="submit-btn" style="width:100%;" onclick="submitDSCoinOrder()"><i class="fas fa-paper-plane"></i> Оформить заявку</button>
+        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-dscoin-order')">Отмена</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="m-admin-dscoins">
+    <div class="modal-content" style="max-width:480px;">
+        <button class="modal-close" onclick="closeModal('m-admin-dscoins')">✕</button>
+        <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Управление DSCoins</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">Добавьте монеты пользователю по email.</p>
+        <div class="form-group"><label>Email пользователя *</label><input type="email" id="admin-dscoin-email" placeholder="user@example.com"></div>
+        <div class="form-group"><label>Количество DSCoins *</label><input type="number" id="admin-dscoin-amount" placeholder="100" min="1"></div>
+        <div class="form-group"><label>Причина</label><input type="text" id="admin-dscoin-reason" value="Начисление администратором"></div>
+        <button class="submit-btn" style="width:100%;background:var(--gradient-primary);" onclick="adminAddDSCoins()"><i class="fas fa-plus"></i> Добавить монеты</button>
+        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-admin-dscoins')">Отмена</button>
+    </div>
+</div>
 
 <script>
     function toggleTheme() {
@@ -256,23 +301,43 @@
         html.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
         const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
-        }
+        if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
     }
-
     function loadTheme() {
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
         const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
-        }
+        if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
     }
-
     document.addEventListener('DOMContentLoaded', loadTheme);
+
+    function openSidebar() {
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebar-overlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebar-overlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeSidebar();
+    });
+
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    function openDSCoinOrder() { closeSidebar(); openModal('m-dscoin-order'); }
+    function openAdminDSCoins() { closeSidebar(); openModal('m-admin-dscoins'); }
 </script>
 
+<!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
 <div class="container">
     <div class="header">
         <hr>
@@ -291,14 +356,12 @@
 </div>
 
 <script type="module">
-    import { 
-        getCurrentUser, 
-        onAuthStateChangedListener,
-        getUserRole,
-        getVoiceById,
-        updateVoice,
-        addVoice
-    } from './firebase-config.js';
+    import { getCurrentUser, onAuthStateChangedListener, getUserRole, getVoiceById, updateVoice, addVoice, getUserDSCoins, getUserByEmail, addDSCoins, createDSCoinOrder } from './firebase-config.js';
+
+    window.getUserDSCoins = getUserDSCoins;
+    window.getUserByEmail = getUserByEmail;
+    window.addDSCoins = addDSCoins;
+    window.createDSCoinOrder = createDSCoinOrder;
 
     const voiceId = new URLSearchParams(window.location.search).get('id');
     let isAdmin = false;
@@ -317,32 +380,51 @@
 
     async function updateDubInLink(user) {
         const link = document.getElementById('dubInLink');
+        const sidebarLink = document.getElementById('sidebarDubIn');
         if (!link) return;
         if (user) {
             const role = await getUserRole(user.uid);
-            link.style.display = (role === 'dubber' || role === 'admin') ? 'inline-flex' : 'none';
+            const show = (role === 'dubber' || role === 'admin');
+            link.style.display = show ? 'inline-flex' : 'none';
+            if (sidebarLink) sidebarLink.style.display = show ? 'flex' : 'none';
         } else {
             link.style.display = 'none';
+            if (sidebarLink) sidebarLink.style.display = 'none';
         }
     }
 
-    async function updateAdminLink(user) {
-        const link = document.getElementById('adminLink');
-        if (!link) return;
+    async function updateAdminLinks(user) {
+        const adminLink = document.getElementById('adminLink');
+        const sidebarAdminOrders = document.getElementById('sidebarAdminOrders');
+        const sidebarAdminDSCoins = document.getElementById('sidebarAdminDSCoins');
         if (user) {
             const role = await getUserRole(user.uid);
-            link.style.display = role === 'admin' ? 'inline-flex' : 'none';
+            const isAdminRole = role === 'admin';
+            if (adminLink) adminLink.style.display = isAdminRole ? 'inline-flex' : 'none';
+            if (sidebarAdminOrders) sidebarAdminOrders.style.display = isAdminRole ? 'flex' : 'none';
+            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = isAdminRole ? 'flex' : 'none';
         } else {
-            link.style.display = 'none';
+            if (adminLink) adminLink.style.display = 'none';
+            if (sidebarAdminOrders) sidebarAdminOrders.style.display = 'none';
+            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = 'none';
+        }
+    }
+
+    async function updateSidebarBalance(user) {
+        const balanceEl = document.getElementById('sidebarBalance');
+        if (!balanceEl) return;
+        if (user) {
+            const result = await getUserDSCoins(user.uid);
+            balanceEl.textContent = result.success ? result.coins : '0';
+        } else {
+            balanceEl.textContent = '0';
         }
     }
 
     window.toggleAdminEdit = function() {
         const panel = document.getElementById('adminEditPanel');
         panel.classList.toggle('active');
-        if (panel.classList.contains('active')) {
-            fillAdminForm();
-        }
+        if (panel.classList.contains('active')) fillAdminForm();
     };
 
     function fillAdminForm() {
@@ -363,20 +445,16 @@
         const saveBtn = document.getElementById('saveEditBtn');
         saveBtn.disabled = true;
         saveBtn.textContent = '⏳ Сохранение...';
-        
         let social = {};
         try {
             const raw = document.getElementById('editSocial').value.trim();
-            if (raw) {
-                social = JSON.parse(raw);
-            }
+            if (raw) social = JSON.parse(raw);
         } catch (e) {
             alert('❌ Ошибка в формате JSON соцсетей. Проверьте синтаксис.');
             saveBtn.disabled = false;
             saveBtn.textContent = '💾 Сохранить';
             return;
         }
-        
         const data = {
             name: document.getElementById('editName').value.trim(),
             nameEn: document.getElementById('editNameEn').value.trim(),
@@ -388,7 +466,6 @@
             bio: document.getElementById('editBio').value.trim(),
             social: social
         };
-        
         const result = await updateVoice(voiceId, data);
         if (result.success) {
             alert('✅ Профиль даббера обновлён!');
@@ -397,77 +474,33 @@
         } else {
             alert('❌ Ошибка: ' + result.error);
         }
-        
         saveBtn.disabled = false;
         saveBtn.textContent = '💾 Сохранить изменения';
     };
 
-    // Функция для создания даббера из локальных данных
-    async function createVoiceFromLocal(localVoice) {
-        const data = {
-            id: localVoice.id,
-            name: localVoice.name || 'Без имени',
-            nameEn: localVoice.nameEn || '',
-            nameRu: localVoice.nameRu || '',
-            image: localVoice.image || '',
-            roleType: localVoice.roleType || 'dubber',
-            status: localVoice.status || 'Даббер',
-            joinDate: localVoice.joinDate || '2026',
-            bio: localVoice.bio || '',
-            social: localVoice.social || {}
-        };
-        const result = await addVoice(data);
-        return result;
-    }
-
     async function loadVoice() {
         const container = document.getElementById('voice-content');
         container.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
-        
         if (!voiceId) {
             container.innerHTML = '<div class="not-found">❌ ID даббера не указан</div>';
             return;
         }
-        
-        // Пробуем получить из Firestore
         const result = await getVoiceById(voiceId);
-        
         if (!result.success || !result.data) {
-            // Если не найден в Firestore, ищем в data.js
             const localVoice = window.voicesDatabase?.find(v => v.id === voiceId);
             if (localVoice) {
-                console.log('📝 Даббер найден в data.js, создаём в Firestore...');
-                const createResult = await createVoiceFromLocal(localVoice);
-                if (createResult.success) {
-                    console.log('✅ Даббер создан в Firestore');
-                    // Перезагружаем
-                    await loadVoice();
-                    return;
-                } else {
-                    console.error('❌ Ошибка создания даббера:', createResult.error);
-                    container.innerHTML = `<div class="not-found">❌ Ошибка создания даббера: ${createResult.error}</div>`;
-                    return;
-                }
+                const createResult = await addVoice({ id: localVoice.id, name: localVoice.name, nameEn: localVoice.nameEn || '', nameRu: localVoice.nameRu || '', image: localVoice.image || '', roleType: localVoice.roleType || 'dubber', status: localVoice.status || 'Даббер', joinDate: localVoice.joinDate || '2026', bio: localVoice.bio || '', social: localVoice.social || {} });
+                if (createResult.success) { await loadVoice(); return; }
+                else { container.innerHTML = `<div class="not-found">❌ Ошибка создания даббера: ${createResult.error}</div>`; return; }
             } else {
                 container.innerHTML = '<div class="not-found">❌ Даббер не найден</div>';
                 return;
             }
         }
-        
         currentVoice = result.data;
-        
-        // Получаем тайтлы и роли
-        const titles = window.titlesDatabase?.filter(t => 
-            window.rolesDatabase?.some(r => r.titleId === t.id && r.voiceId === voiceId)
-        ) || [];
-        
+        const titles = window.titlesDatabase?.filter(t => window.rolesDatabase?.some(r => r.titleId === t.id && r.voiceId === voiceId)) || [];
         const roles = window.rolesDatabase?.filter(r => r.voiceId === voiceId) || [];
-        const stats = {
-            totalTitles: titles.length,
-            totalRoles: roles.length,
-            mainRoles: roles.filter(r => r.type === 'main').length
-        };
-        
+        const stats = { totalTitles: titles.length, totalRoles: roles.length, mainRoles: roles.filter(r => r.type === 'main').length };
         let socialHtml = '';
         const voice = currentVoice;
         if (voice.social) {
@@ -475,14 +508,13 @@
             if (voice.social.vk) socialHtml += `<a href="https://vk.com/${voice.social.vk}" target="_blank" class="social-link">📘 VK</a>`;
             if (voice.social.github) socialHtml += `<a href="https://github.com/${voice.social.github}" target="_blank" class="social-link">🐙 GitHub</a>`;
         }
-        
         let titlesHtml = '';
         if (titles.length > 0) {
             titlesHtml = '<h2 class="title">Участие в проектах</h2>';
             titles.forEach(title => {
                 const titleRoles = roles.filter(r => r.titleId === title.id);
                 titlesHtml += `
-                    <a href="title.html?id=${title.id}" style="display:flex; align-items:center; gap:15px; padding:12px; background:var(--bg-input); border-radius:10px; margin-bottom:10px; text-decoration:none; color:inherit; transition:all 0.3s; border:1px solid transparent;">
+                    <a href="title.html?id=${title.id}" style="display:flex;align-items:center;gap:15px;padding:12px;background:var(--bg-input);border-radius:10px;margin-bottom:10px;text-decoration:none;color:inherit;transition:all 0.3s;border:1px solid transparent;">
                         <img src="${title.imageVertical || title.imageHorizontal || title.image}" style="width:60px;height:80px;object-fit:cover;border-radius:8px;" onerror="this.src='https://via.placeholder.com/60x80/d4e8ff/4a90d9?text=?'">
                         <div>
                             <div style="font-weight:bold;color:var(--color-accent);">${title.name}</div>
@@ -494,7 +526,6 @@
                 `;
             });
         }
-
         let adminHtml = '';
         if (isAdmin) {
             adminHtml = `
@@ -502,58 +533,25 @@
                 <div id="adminEditPanel" class="admin-panel">
                     <h3 style="color:var(--color-accent);">✏️ Редактирование профиля</h3>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Имя</label>
-                            <input type="text" id="editName">
-                        </div>
-                        <div class="form-group">
-                            <label>Имя (англ.)</label>
-                            <input type="text" id="editNameEn">
-                        </div>
-                        <div class="form-group">
-                            <label>Имя (рус.)</label>
-                            <input type="text" id="editNameRu">
-                        </div>
+                        <div class="form-group"><label>Имя</label><input type="text" id="editName"></div>
+                        <div class="form-group"><label>Имя (англ.)</label><input type="text" id="editNameEn"></div>
+                        <div class="form-group"><label>Имя (рус.)</label><input type="text" id="editNameRu"></div>
                     </div>
-                    <div class="form-group">
-                        <label>Ссылка на аватарку</label>
-                        <input type="text" id="editImage">
-                    </div>
+                    <div class="form-group"><label>Ссылка на аватарку</label><input type="text" id="editImage"></div>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Тип роли</label>
-                            <select id="editRoleType">
-                                <option value="dubber">Даббер</option>
-                                <option value="tech">Тех. персонал</option>
-                                <option value="both">И даббер, и тех.</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Статус</label>
-                            <input type="text" id="editStatus">
-                        </div>
-                        <div class="form-group">
-                            <label>Год присоединения</label>
-                            <input type="text" id="editJoinDate">
-                        </div>
+                        <div class="form-group"><label>Тип роли</label><select id="editRoleType"><option value="dubber">Даббер</option><option value="tech">Тех. персонал</option><option value="both">И даббер, и тех.</option></select></div>
+                        <div class="form-group"><label>Статус</label><input type="text" id="editStatus"></div>
+                        <div class="form-group"><label>Год присоединения</label><input type="text" id="editJoinDate"></div>
                     </div>
-                    <div class="form-group">
-                        <label>Биография</label>
-                        <textarea id="editBio"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Соцсети (JSON)</label>
-                        <textarea id="editSocial" style="min-height:60px;"></textarea>
-                        <small style="color:var(--text-muted);">Формат: {"telegram":"username","vk":"id","github":"username"}</small>
-                    </div>
-                    <div style="display:flex; gap:10px; margin-top:15px;">
+                    <div class="form-group"><label>Биография</label><textarea id="editBio"></textarea></div>
+                    <div class="form-group"><label>Соцсети (JSON)</label><textarea id="editSocial" style="min-height:60px;"></textarea><small style="color:var(--text-muted);">Формат: {"telegram":"username","vk":"id","github":"username"}</small></div>
+                    <div style="display:flex;gap:10px;margin-top:15px;">
                         <button class="save-btn" id="saveEditBtn" onclick="saveAdminEdit()">💾 Сохранить изменения</button>
                         <button class="cancel-btn" onclick="document.getElementById('adminEditPanel').classList.remove('active')">Отмена</button>
                     </div>
                 </div>
             `;
         }
-
         container.innerHTML = `
             <div class="voice-profile">
                 <img src="${voice.image || 'https://via.placeholder.com/200/d4e8ff/4a90d9?text=?'}" class="voice-avatar-large" onerror="this.src='https://via.placeholder.com/200/d4e8ff/4a90d9?text=?'">
@@ -570,13 +568,11 @@
                     ${adminHtml}
                 </div>
             </div>
-            
             <div class="stats-grid">
                 <div class="stat-box"><div class="stat-number">${stats.totalTitles}</div><div class="text">Проектов</div></div>
                 <div class="stat-box"><div class="stat-number">${stats.totalRoles}</div><div class="text">Всего ролей</div></div>
                 <div class="stat-box"><div class="stat-number">${stats.mainRoles}</div><div class="text">Главных ролей</div></div>
             </div>
-            
             ${titlesHtml}
         `;
     }
@@ -584,13 +580,12 @@
     onAuthStateChangedListener(async (user) => {
         updateAuthButton(user);
         await updateDubInLink(user);
-        await updateAdminLink(user);
+        await updateAdminLinks(user);
+        await updateSidebarBalance(user);
         if (user) {
             const role = await getUserRole(user.uid);
             isAdmin = role === 'admin';
-        } else {
-            isAdmin = false;
-        }
+        } else { isAdmin = false; }
         await loadVoice();
     });
 
@@ -598,7 +593,8 @@
         const user = getCurrentUser();
         updateAuthButton(user);
         await updateDubInLink(user);
-        await updateAdminLink(user);
+        await updateAdminLinks(user);
+        await updateSidebarBalance(user);
         if (user) {
             const role = await getUserRole(user.uid);
             isAdmin = role === 'admin';
