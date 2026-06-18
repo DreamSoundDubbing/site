@@ -368,14 +368,18 @@ async function addCustomAchievement(uid, achievement) {
 // ========== КОММЕНТАРИИ (с отметками) ==========
 // ============================================================
 
-async function addComment(titleId, text, rating) {
+async function addComment(titleId, text, rating, mentionedEmails = []) {
     const user = getCurrentUser();
     if (!user) {
         return { success: false, error: "Необходимо авторизоваться" };
     }
     try {
+        // Поиск упоминаний @email
         const mentions = text.match(/@([^\s]+)/g) || [];
-        const mentionedEmails = mentions.map(m => m.substring(1));
+        const mentionedEmailsFromText = mentions.map(m => m.substring(1));
+        
+        // Объединяем с переданными email
+        const allMentions = [...new Set([...mentionedEmailsFromText, ...mentionedEmails])];
         
         const userData = await getUserData(user.uid);
         const displayName = userData.success ? userData.data.displayName : (user.displayName || "Аноним");
@@ -388,7 +392,7 @@ async function addComment(titleId, text, rating) {
             photoURL: photoURL,
             text: text,
             rating: rating || 5,
-            mentions: mentionedEmails,
+            mentions: allMentions,
             time: serverTimestamp()
         });
         
@@ -751,10 +755,11 @@ async function createVoiceOrder(orderData) {
     }
     
     try {
-        const userRole = await getUserRole(user.uid);
-        if (userRole !== 'admin' && userRole !== 'dubber') {
-            return { success: false, error: "Недостаточно прав" };
-        }
+        // УБИРАЕМ ПРОВЕРКУ НА РОЛЬ - теперь любой авторизованный пользователь может создать заявку
+        // const userRole = await getUserRole(user.uid);
+        // if (userRole !== 'admin' && userRole !== 'dubber') {
+        //     return { success: false, error: "Недостаточно прав" };
+        // }
         
         const docRef = await addDoc(collection(db, "voiceOrders"), {
             ...orderData,
@@ -806,6 +811,91 @@ async function updateVoiceOrder(orderId, data) {
             updatedAt: serverTimestamp()
         });
         return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// ============================================================
+// ========== ОПЛАТА ЧЕРЕЗ ЮMONEY ==========
+// ============================================================
+
+async function createPayment(orderId, amount, description) {
+    try {
+        const response = await fetch('https://api.yoomoney.ru/v2/payments', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Bearer ' + YOOMONEY_ACCESS_TOKEN
+            },
+            body: new URLSearchParams({
+                'amount': amount.toString(),
+                'currency': 'RUB',
+                'payment_method_data[type]': 'bank_card',
+                'confirmation[type]': 'redirect',
+                'confirmation[return_url]': window.location.origin + '/profile.html?payment=success',
+                'description': description,
+                'metadata[order_id]': orderId
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'pending' || data.status === 'waiting_for_capture') {
+            await updateVoiceOrder(orderId, {
+                paymentId: data.id,
+                paymentStatus: data.status,
+                paymentAmount: amount
+            });
+            
+            return { 
+                success: true, 
+                paymentId: data.id,
+                confirmationUrl: data.confirmation?.confirmation_url || null,
+                status: data.status
+            };
+        } else {
+            return { success: false, error: 'Ошибка создания платежа: ' + JSON.stringify(data) };
+        }
+    } catch (error) {
+        console.error('Ошибка создания платежа:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+async function checkPaymentStatus(paymentId) {
+    try {
+        const response = await fetch('https://api.yoomoney.ru/v2/payments/' + paymentId, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + YOOMONEY_ACCESS_TOKEN
+            }
+        });
+        
+        const data = await response.json();
+        
+        return { success: true, status: data.status, data: data };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// ============================================================
+// ========== АЧИВКИ ЗА ОПЛАТУ ==========
+// ============================================================
+
+async function grantPaymentAchievement(userId, orderId, achievementName, achievementIcon = '💎') {
+    try {
+        const achievement = {
+            id: 'payment_' + Date.now(),
+            name: achievementName || '💎 Платный заказ',
+            icon: achievementIcon,
+            description: 'Оплаченная заявка на озвучку #' + orderId,
+            type: 'payment'
+        };
+        
+        const result = await addCustomAchievement(userId, achievement);
+        return result;
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -914,7 +1004,6 @@ export {
     addDubMaterial,
     removeDubMaterial,
     initializeData,
-    // ДОБАВЛЕНЫ ЭКСПОРТЫ ДЛЯ ЗАЯВОК
     createVoiceOrder,
     getVoiceOrders,
     updateVoiceOrder
