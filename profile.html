@@ -121,6 +121,7 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(251, 191, 36, 0.3);
         }
+        .action-btn-sm { padding: 4px 14px; font-size: 12px; }
 
         .dscoin-balance {
             background: var(--bg-welcome);
@@ -139,10 +140,7 @@
             font-weight: bold;
             color: #fbbf24;
         }
-        .dscoin-balance .label {
-            color: var(--text-muted);
-            font-size: 14px;
-        }
+        .dscoin-balance .label { color: var(--text-muted); font-size: 14px; }
         .dscoin-balance .actions {
             display: flex;
             gap: 10px;
@@ -258,7 +256,6 @@
             margin: 0 10px;
         }
 
-        /* Плейлисты */
         .playlist-section { margin-top: 30px; }
         .playlist-grid {
             display: grid;
@@ -295,7 +292,6 @@
             font-weight: bold;
         }
 
-        /* Стена */
         .wall-section { margin-top: 30px; }
         .wall-form {
             display: flex;
@@ -514,8 +510,8 @@
         <div class="sidebar-divider"></div>
         <div class="sidebar-section-label">Личное</div>
         <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
-        <a href="#playlists" class="sidebar-link" onclick="document.getElementById('playlistsSection').scrollIntoView({behavior:'smooth'}); closeSidebar();"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
-        <a href="#shop" class="sidebar-link" onclick="document.getElementById('shopSection').scrollIntoView({behavior:'smooth'}); closeSidebar();"><i class="fas fa-coins"></i><span>Магазин DSCoins</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
+        <a href="#playlists" class="sidebar-link" onclick="document.getElementById('playlistsSection')?.scrollIntoView({behavior:'smooth'}); closeSidebar();"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
+        <a href="#shop" class="sidebar-link" onclick="document.getElementById('shopSection')?.scrollIntoView({behavior:'smooth'}); closeSidebar();"><i class="fas fa-coins"></i><span>Магазин DSCoins</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
         <div class="sidebar-divider"></div>
         <div class="sidebar-section-label">Студия</div>
         <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
@@ -528,15 +524,15 @@
     </nav>
     <div class="sidebar-footer">
         <div class="sidebar-socials">
-            <a href="#" target="_blank"><i class="fab fa-vk"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-telegram-plane"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-vk"></i></a>
+            <a href="#"><i class="fab fa-telegram-plane"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
         </div>
         <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px;letter-spacing:1px;">© Dream Sound Dubbing</div>
     </div>
 </aside>
 
-<!-- ========== DSCOIN МОДАЛКИ ========== -->
+<!-- ========== МОДАЛКИ ========== -->
 <div class="modal-overlay" id="m-dscoin-order">
     <div class="modal-content" style="max-width:440px;">
         <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
@@ -577,7 +573,6 @@
     </div>
 </div>
 
-<!-- ========== МОДАЛКА СОЗДАНИЯ ПЛЕЙЛИСТА ========== -->
 <div class="modal-overlay" id="m-playlist">
     <div class="modal-content" style="max-width:440px;">
         <button class="modal-close" onclick="closeModal('m-playlist')">✕</button>
@@ -594,7 +589,31 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="m-dscoin-history">
+    <div class="modal-content" style="max-width:480px;">
+        <button class="modal-close" onclick="closeModal('m-dscoin-history')">✕</button>
+        <h3><i class="fas fa-history" style="color:#fbbf24;"></i> История транзакций</h3>
+        <div id="historyList" style="max-height:400px;overflow-y:auto;"></div>
+        <button class="action-btn outline" style="width:100%;margin-top:16px;" onclick="closeModal('m-dscoin-history')">Закрыть</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="m-wall-settings">
+    <div class="modal-content" style="max-width:420px;">
+        <button class="modal-close" onclick="closeModal('m-wall-settings')">✕</button>
+        <h3><i class="fas fa-cog"></i> Настройки стены</h3>
+        <div style="margin:15px 0;">
+            <label style="display:block;padding:8px 0;color:var(--text-primary);"><input type="radio" name="wallMode" value="all" checked> Все пользователи</label>
+            <label style="display:block;padding:8px 0;color:var(--text-primary);"><input type="radio" name="wallMode" value="friends"> Только подписчики</label>
+            <label style="display:block;padding:8px 0;color:var(--text-primary);"><input type="radio" name="wallMode" value="disabled"> Никто (закрыта)</label>
+        </div>
+        <button class="submit-btn" onclick="saveWallSettings()">Сохранить</button>
+        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-wall-settings')">Отмена</button>
+    </div>
+</div>
+
 <script>
+    // ========== УПРАВЛЕНИЕ ТЕМОЙ ==========
     function toggleTheme() {
         const html = document.documentElement;
         const currentTheme = html.getAttribute('data-theme');
@@ -612,6 +631,7 @@
     }
     document.addEventListener('DOMContentLoaded', loadTheme);
 
+    // ========== SIDEBAR ==========
     function openSidebar() {
         document.getElementById('sidebar').classList.add('open');
         document.getElementById('sidebar-overlay').classList.add('active');
@@ -626,13 +646,14 @@
         if (e.key === 'Escape') closeSidebar();
     });
 
+    // ========== МОДАЛКИ ==========
     function openModal(id) {
-        document.getElementById(id).classList.add('active');
-        document.body.style.overflow = 'hidden';
+        const el = document.getElementById(id);
+        if (el) { el.classList.add('active'); document.body.style.overflow = 'hidden'; }
     }
     function closeModal(id) {
-        document.getElementById(id).classList.remove('active');
-        document.body.style.overflow = '';
+        const el = document.getElementById(id);
+        if (el) { el.classList.remove('active'); document.body.style.overflow = ''; }
     }
     function openDSCoinOrder() { closeSidebar(); openModal('m-dscoin-order'); }
     function openAdminDSCoins() { closeSidebar(); openModal('m-admin-dscoins'); }
@@ -651,8 +672,7 @@
         if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
     });
 
-    // Открытие модалки создания плейлиста
-    window.openPlaylistModal = function(editData = null) {
+    function openPlaylistModal(editData = null) {
         if (editData) {
             document.getElementById('playlistModalTitle').textContent = '✏️ Редактировать плейлист';
             document.getElementById('editPlaylistId').value = editData.id || '';
@@ -669,7 +689,7 @@
             document.getElementById('playlistPinned').checked = false;
         }
         openModal('m-playlist');
-    };
+    }
 </script>
 
 <!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
@@ -681,7 +701,7 @@
     
     <div class="content-box">
         <div id="profileContent">
-            <div class="loading" style="text-align:center; padding:40px; color:var(--text-muted);">⏳ Загрузка...</div>
+            <div class="loading" style="text-align:center;padding:40px;color:var(--text-muted);">⏳ Загрузка...</div>
         </div>
     </div>
     
@@ -693,7 +713,7 @@
         </div>
         <div class="actions">
             <button class="action-btn coin" onclick="openDSCoinOrder()"><i class="fas fa-plus"></i> Купить</button>
-            <button class="action-btn outline" onclick="document.getElementById('shopSection').scrollIntoView({behavior:'smooth'})"><i class="fas fa-store"></i> Магазин</button>
+            <button class="action-btn outline" onclick="document.getElementById('shopSection')?.scrollIntoView({behavior:'smooth'})"><i class="fas fa-store"></i> Магазин</button>
             <button class="action-btn outline" onclick="showDSCoinHistory()"><i class="fas fa-history"></i> История</button>
         </div>
     </div>
@@ -701,26 +721,26 @@
     <!-- ========== МАГАЗИН ========== -->
     <div id="shopSection" style="display:none;background:var(--bg-content);padding:20px;border-radius:15px;border:1px solid var(--border-primary);margin:20px 0;">
         <h3 style="color:var(--color-accent);margin-bottom:15px;"><i class="fas fa-store"></i> Магазин DSCoins</h3>
-        <div class="shop-grid" id="shopGrid">
-            <div class="shop-item">
-                <div class="icon">🎨</div>
-                <div class="name">Цветной никнейм</div>
-                <div class="price"><i class="fas fa-coins"></i> <span id="priceColorNick">500</span></div>
-                <div class="desc">Измените цвет своего ника в профиле</div>
+        <div class="shop-grid" id="shopGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:15px;">
+            <div class="shop-item" style="background:var(--bg-shop-item);border-radius:12px;padding:16px;text-align:center;border:2px solid var(--border-secondary);transition:all 0.3s;">
+                <div style="font-size:36px;margin-bottom:8px;">🎨</div>
+                <div style="font-weight:bold;color:var(--text-primary);">Цветной никнейм</div>
+                <div style="color:#fbbf24;font-weight:bold;font-size:16px;margin:6px 0;"><i class="fas fa-coins"></i> <span id="priceColorNick">500</span></div>
+                <div style="color:var(--text-muted);font-size:12px;margin-bottom:10px;">Измените цвет своего ника в профиле</div>
                 <button class="action-btn primary" onclick="purchaseItem('colorNick')">Купить</button>
             </div>
-            <div class="shop-item">
-                <div class="icon">🏷️</div>
-                <div class="name">Префикс</div>
-                <div class="price"><i class="fas fa-coins"></i> <span id="pricePrefix">300</span></div>
-                <div class="desc">Добавьте префикс перед ником</div>
+            <div class="shop-item" style="background:var(--bg-shop-item);border-radius:12px;padding:16px;text-align:center;border:2px solid var(--border-secondary);transition:all 0.3s;">
+                <div style="font-size:36px;margin-bottom:8px;">🏷️</div>
+                <div style="font-weight:bold;color:var(--text-primary);">Префикс</div>
+                <div style="color:#fbbf24;font-weight:bold;font-size:16px;margin:6px 0;"><i class="fas fa-coins"></i> <span id="pricePrefix">300</span></div>
+                <div style="color:var(--text-muted);font-size:12px;margin-bottom:10px;">Добавьте префикс перед ником</div>
                 <button class="action-btn primary" onclick="purchaseItem('prefix')">Купить</button>
             </div>
-            <div class="shop-item">
-                <div class="icon">📚</div>
-                <div class="name">Слот ачивок</div>
-                <div class="price"><i class="fas fa-coins"></i> <span id="priceAchSlot">200</span></div>
-                <div class="desc">Дополнительный слот для достижений</div>
+            <div class="shop-item" style="background:var(--bg-shop-item);border-radius:12px;padding:16px;text-align:center;border:2px solid var(--border-secondary);transition:all 0.3s;">
+                <div style="font-size:36px;margin-bottom:8px;">📚</div>
+                <div style="font-weight:bold;color:var(--text-primary);">Слот ачивок</div>
+                <div style="color:#fbbf24;font-weight:bold;font-size:16px;margin:6px 0;"><i class="fas fa-coins"></i> <span id="priceAchSlot">200</span></div>
+                <div style="color:var(--text-muted);font-size:12px;margin-bottom:10px;">Дополнительный слот для достижений</div>
                 <button class="action-btn primary" onclick="purchaseItem('achSlot')">Купить</button>
             </div>
         </div>
@@ -741,9 +761,7 @@
     <div id="wallSection" style="display:none;background:var(--bg-content);padding:20px;border-radius:15px;border:1px solid var(--border-primary);margin:20px 0;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:15px;">
             <h3 style="color:var(--color-accent);"><i class="fas fa-stream"></i> Моя стена</h3>
-            <div style="display:flex;gap:10px;">
-                <button class="action-btn outline" onclick="openWallSettings()"><i class="fas fa-cog"></i></button>
-            </div>
+            <button class="action-btn outline" onclick="openModal('m-wall-settings')"><i class="fas fa-cog"></i></button>
         </div>
         <div class="wall-form" id="wallForm">
             <textarea id="wallInput" placeholder="Что у вас нового?..."></textarea>
@@ -763,34 +781,9 @@
             <p style="color:var(--text-muted);">Загрузка...</p>
         </div>
         <br>
-        <a href="voice-order.html" class="action-btn primary" style="display:inline-block; padding:10px 25px; text-decoration:none; font-weight:bold;">
+        <a href="voice-order.html" class="action-btn primary" style="display:inline-block;padding:10px 25px;text-decoration:none;font-weight:bold;">
             ➕ Создать заявку
         </a>
-    </div>
-</div>
-
-<!-- ========== МОДАЛКА ИСТОРИИ DSCOINS ========== -->
-<div class="modal-overlay" id="m-dscoin-history">
-    <div class="modal-content" style="max-width:480px;">
-        <button class="modal-close" onclick="closeModal('m-dscoin-history')">✕</button>
-        <h3><i class="fas fa-history" style="color:#fbbf24;"></i> История транзакций</h3>
-        <div id="historyList" style="max-height:400px;overflow-y:auto;"></div>
-        <button class="action-btn outline" style="width:100%;margin-top:16px;" onclick="closeModal('m-dscoin-history')">Закрыть</button>
-    </div>
-</div>
-
-<!-- ========== МОДАЛКА НАСТРОЕК СТЕНЫ ========== -->
-<div class="modal-overlay" id="m-wall-settings">
-    <div class="modal-content" style="max-width:420px;">
-        <button class="modal-close" onclick="closeModal('m-wall-settings')">✕</button>
-        <h3><i class="fas fa-cog"></i> Настройки стены</h3>
-        <div style="margin:15px 0;">
-            <label style="display:block;padding:8px 0;color:var(--text-primary);"><input type="radio" name="wallMode" value="all" checked> Все пользователи</label>
-            <label style="display:block;padding:8px 0;color:var(--text-primary);"><input type="radio" name="wallMode" value="friends"> Только подписчики</label>
-            <label style="display:block;padding:8px 0;color:var(--text-primary);"><input type="radio" name="wallMode" value="disabled"> Никто (закрыта)</label>
-        </div>
-        <button class="submit-btn" onclick="saveWallSettings()">Сохранить</button>
-        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-wall-settings')">Отмена</button>
     </div>
 </div>
 
@@ -805,7 +798,6 @@
         getAllUsers,
         toggleSubscribe,
         isSubscribed,
-        getSubscribersCount,
         addCustomAchievement,
         logoutUser,
         isAdmin,
@@ -823,10 +815,10 @@
         deleteWallPost,
         updateWallVisibility,
         getShopPrices,
-        updateShopPrices,
         purchaseColorNick,
         purchasePrefix,
-        purchaseAchSlot
+        purchaseAchSlot,
+        getUserRole
     } from './firebase-config.js';
 
     // Делаем функции глобальными
@@ -844,10 +836,10 @@
     window.deleteWallPost = deleteWallPost;
     window.updateWallVisibility = updateWallVisibility;
     window.getShopPrices = getShopPrices;
-    window.updateShopPrices = updateShopPrices;
     window.purchaseColorNick = purchaseColorNick;
     window.purchasePrefix = purchasePrefix;
     window.purchaseAchSlot = purchaseAchSlot;
+    window.getUserRole = getUserRole;
 
     let currentUser = null;
     let currentUserData = null;
@@ -856,8 +848,6 @@
     let isAdminUser = false;
     let isOwnProfile = true;
     let allPlaylists = [];
-    let wallPosts = [];
-    let shopPrices = {};
 
     const urlParams = new URLSearchParams(window.location.search);
     const viewedId = urlParams.get('uid');
@@ -879,10 +869,10 @@
         const sidebarLink = document.getElementById('sidebarDubIn');
         if (!link) return;
         if (user) {
-            const role = await getUserData(user.uid);
-            const isDubber = role.success && (role.data.role === 'dubber' || role.data.role === 'admin');
-            link.style.display = isDubber ? 'inline-flex' : 'none';
-            if (sidebarLink) sidebarLink.style.display = isDubber ? 'flex' : 'none';
+            const role = await getUserRole(user.uid);
+            const show = (role === 'dubber' || role === 'admin');
+            link.style.display = show ? 'inline-flex' : 'none';
+            if (sidebarLink) sidebarLink.style.display = show ? 'flex' : 'none';
         } else {
             link.style.display = 'none';
             if (sidebarLink) sidebarLink.style.display = 'none';
@@ -975,10 +965,10 @@
     async function loadShopPrices() {
         const result = await getShopPrices();
         if (result.success) {
-            shopPrices = result.data;
-            document.getElementById('priceColorNick').textContent = shopPrices.colorNick || 500;
-            document.getElementById('pricePrefix').textContent = shopPrices.prefix || 300;
-            document.getElementById('priceAchSlot').textContent = shopPrices.achSlot || 200;
+            const prices = result.data;
+            document.getElementById('priceColorNick').textContent = prices.colorNick || 500;
+            document.getElementById('pricePrefix').textContent = prices.prefix || 300;
+            document.getElementById('priceAchSlot').textContent = prices.achSlot || 200;
         }
     }
 
@@ -1029,7 +1019,7 @@
 
     async function loadPlaylists() {
         const user = getCurrentUser();
-        if (!user) { return; }
+        if (!user) return;
         const result = await getPlaylists(user.uid);
         const container = document.getElementById('playlistsContainer');
         if (result.success) {
@@ -1084,12 +1074,6 @@
         }
     };
 
-    window.openWallSettings = function() {
-        const user = getCurrentUser();
-        if (!user) return;
-        openModal('m-wall-settings');
-    };
-
     window.saveWallSettings = async function() {
         const user = getCurrentUser();
         if (!user) return;
@@ -1110,11 +1094,11 @@
         const result = await getWallPosts(user.uid);
         const container = document.getElementById('wallContainer');
         if (result.success) {
-            wallPosts = result.posts;
-            if (wallPosts.length === 0) {
+            const posts = result.posts;
+            if (posts.length === 0) {
                 container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Пока нет записей на стене</p>';
             } else {
-                container.innerHTML = wallPosts.map(post => `
+                container.innerHTML = posts.map(post => `
                     <div class="wall-post">
                         <div class="header">
                             <div class="user">
@@ -1200,6 +1184,111 @@
         if (!confirm('Вы уверены, что хотите выйти?')) return;
         const result = await logoutUser();
         if (result.success) { window.location.href = 'index.html'; }
+    };
+
+    window.handleRoleChange = async function() {
+        const select = document.getElementById('adminRoleSelect');
+        const newRole = select.value;
+        if (!confirm(`Изменить роль пользователя на "${newRole}"?`)) return;
+        const result = await updateUserRole(viewedUserId, newRole);
+        if (result.success) {
+            alert('✅ Роль обновлена!');
+            await loadProfile();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    window.handleCustomAchievement = async function() {
+        const name = document.getElementById('customAchievementName')?.value?.trim();
+        const icon = document.getElementById('customAchievementIcon')?.value?.trim() || '🏅';
+        if (!name) { alert('Введите название достижения'); return; }
+        if (!confirm(`Выдать достижение "${name}" пользователю?`)) return;
+        const achievement = { id: 'custom_' + Date.now(), name, icon, description: 'Кастомное достижение' };
+        const result = await addCustomAchievement(viewedUserId, achievement);
+        if (result.success) {
+            alert('✅ Достижение выдано!');
+            const nameInput = document.getElementById('customAchievementName');
+            const iconInput = document.getElementById('customAchievementIcon');
+            if (nameInput) nameInput.value = '';
+            if (iconInput) iconInput.value = '';
+            await loadProfile();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    window.handleAdminDSCoins = async function() {
+        const amountInput = document.getElementById('adminDSCoinsAmount');
+        if (!amountInput) return;
+        const amount = parseInt(amountInput.value);
+        if (!amount || amount < 1) { alert('Введите количество DSCoins'); return; }
+        if (!confirm(`Добавить ${amount} DSCoins пользователю?`)) return;
+        const result = await addDSCoins(viewedUserId, amount, 'Начисление администратором');
+        if (result.success) {
+            alert('✅ DSCoins добавлены!');
+            amountInput.value = '';
+            await loadProfile();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    window.searchUserByEmail = async function() {
+        const email = document.getElementById('adminSearchEmail')?.value?.trim();
+        const resultsContainer = document.getElementById('adminSearchResults');
+        if (!resultsContainer) return;
+        if (!email) { resultsContainer.innerHTML = '<p style="color:var(--text-muted);">Введите email для поиска</p>'; return; }
+        resultsContainer.innerHTML = '<p style="color:var(--text-muted);">⏳ Поиск...</p>';
+        const result = await getUserByEmail(email);
+        if (result.success) {
+            const user = result.data;
+            const roleNames = { 'admin': 'Администратор', 'dubber': 'Даббер', 'user': 'Пользователь' };
+            resultsContainer.innerHTML = `
+                <div class="user-search-result">
+                    <div class="user-info">
+                        <img src="${user.photoURL || 'https://via.placeholder.com/32/d4e8ff/4a90d9?text=?'}" class="user-avatar-small" onerror="this.src='https://via.placeholder.com/32/d4e8ff/4a90d9?text=?'">
+                        <div>
+                            <div class="user-name">${user.displayName || 'Без имени'}</div>
+                            <div class="user-email">${user.email}</div>
+                        </div>
+                        <span class="user-current-role">Текущая роль: <strong>${roleNames[user.role] || user.role}</strong></span>
+                    </div>
+                    <div>
+                        <a href="profile.html?uid=${user.id}" class="action-btn primary" style="padding:4px 12px;font-size:12px;text-decoration:none;">Перейти</a>
+                    </div>
+                </div>
+            `;
+        } else {
+            resultsContainer.innerHTML = `<p style="color:var(--color-danger);">❌ ${result.error}</p>`;
+        }
+    };
+
+    window.openUsersModal = function(title, users) {
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay active';
+        modal.style.display = 'flex';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width:480px;">
+                <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
+                <h2>${title}</h2>
+                <div id="usersModalBody" style="max-height:400px;overflow-y:auto;">
+                    ${users && users.length > 0 ? users.map(uid => `
+                        <a href="profile.html?uid=${uid}" class="user-search-result" style="text-decoration:none;">
+                            <div class="user-info">
+                                <img src="https://via.placeholder.com/32/d4e8ff/4a90d9?text=?" class="user-avatar-small">
+                                <span class="user-name">${uid}</span>
+                            </div>
+                            <span style="color:var(--text-muted);">→</span>
+                        </a>
+                    `).join('') : '<p style="color:var(--text-muted);text-align:center;">Нет пользователей</p>'}
+                </div>
+                <button class="action-btn outline" style="width:100%;margin-top:16px;" onclick="this.closest('.modal-overlay').remove()">Закрыть</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+        modal.addEventListener('click', function(e) { if (e.target === this) { this.remove(); document.body.style.overflow = ''; } });
     };
 
     async function renderProfile(user, userData, isOwn) {
@@ -1321,21 +1410,13 @@
                 </div>
 
                 <div class="profile-stats">
-                    <div class="stat-item">
-                        <div class="stat-number">${viewsCount}</div>
-                        <div class="stat-label">Просмотров</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">${commentsCount}</div>
-                        <div class="stat-label">Комментариев</div>
-                    </div>
+                    <div class="stat-item"><div class="stat-number">${viewsCount}</div><div class="stat-label">Просмотров</div></div>
+                    <div class="stat-item"><div class="stat-number">${commentsCount}</div><div class="stat-label">Комментариев</div></div>
                     <div class="stat-item stat-clickable" onclick="openUsersModal('Подписчики', ${JSON.stringify(subscribers)})">
-                        <div class="stat-number">${subscribersCount}</div>
-                        <div class="stat-label">Подписчиков</div>
+                        <div class="stat-number">${subscribersCount}</div><div class="stat-label">Подписчиков</div>
                     </div>
                     <div class="stat-item stat-clickable" onclick="openUsersModal('Подписки', ${JSON.stringify(subscriptions)})">
-                        <div class="stat-number">${subscriptionsCount}</div>
-                        <div class="stat-label">Подписок</div>
+                        <div class="stat-number">${subscriptionsCount}</div><div class="stat-label">Подписок</div>
                     </div>
                 </div>
 
@@ -1367,119 +1448,29 @@
         }
     }
 
-    window.handleRoleChange = async function() {
-        const select = document.getElementById('adminRoleSelect');
-        const newRole = select.value;
-        if (!confirm(`Изменить роль пользователя на "${newRole}"?`)) return;
-        const result = await updateUserRole(viewedUserId, newRole);
-        if (result.success) {
-            alert('✅ Роль обновлена!');
-            await loadProfile();
-        } else {
-            alert('❌ Ошибка: ' + result.error);
-        }
-    };
-
-    window.handleCustomAchievement = async function() {
-        const name = document.getElementById('customAchievementName').value.trim();
-        const icon = document.getElementById('customAchievementIcon').value.trim() || '🏅';
-        if (!name) { alert('Введите название достижения'); return; }
-        if (!confirm(`Выдать достижение "${name}" пользователю?`)) return;
-        const achievement = { id: 'custom_' + Date.now(), name, icon, description: 'Кастомное достижение' };
-        const result = await addCustomAchievement(viewedUserId, achievement);
-        if (result.success) {
-            alert('✅ Достижение выдано!');
-            document.getElementById('customAchievementName').value = '';
-            document.getElementById('customAchievementIcon').value = '';
-            await loadProfile();
-        } else {
-            alert('❌ Ошибка: ' + result.error);
-        }
-    };
-
-    window.handleAdminDSCoins = async function() {
-        const amount = parseInt(document.getElementById('adminDSCoinsAmount').value);
-        if (!amount || amount < 1) { alert('Введите количество DSCoins'); return; }
-        if (!confirm(`Добавить ${amount} DSCoins пользователю?`)) return;
-        const result = await addDSCoins(viewedUserId, amount, 'Начисление администратором');
-        if (result.success) {
-            alert('✅ DSCoins добавлены!');
-            document.getElementById('adminDSCoinsAmount').value = '';
-            await loadProfile();
-        } else {
-            alert('❌ Ошибка: ' + result.error);
-        }
-    };
-
-    window.searchUserByEmail = async function() {
-        const email = document.getElementById('adminSearchEmail').value.trim();
-        const resultsContainer = document.getElementById('adminSearchResults');
-        if (!email) { resultsContainer.innerHTML = '<p style="color:var(--text-muted);">Введите email для поиска</p>'; return; }
-        resultsContainer.innerHTML = '<p style="color:var(--text-muted);">⏳ Поиск...</p>';
-        const result = await getUserByEmail(email);
-        if (result.success) {
-            const user = result.data;
-            const roleNames = { 'admin': 'Администратор', 'dubber': 'Даббер', 'user': 'Пользователь' };
-            resultsContainer.innerHTML = `
-                <div class="user-search-result">
-                    <div class="user-info">
-                        <img src="${user.photoURL || 'https://via.placeholder.com/32/d4e8ff/4a90d9?text=?'}" class="user-avatar-small" onerror="this.src='https://via.placeholder.com/32/d4e8ff/4a90d9?text=?'">
-                        <div>
-                            <div class="user-name">${user.displayName || 'Без имени'}</div>
-                            <div class="user-email">${user.email}</div>
-                        </div>
-                        <span class="user-current-role">Текущая роль: <strong>${roleNames[user.role] || user.role}</strong></span>
-                    </div>
-                    <div>
-                        <a href="profile.html?uid=${user.id}" class="action-btn primary" style="padding:4px 12px;font-size:12px;text-decoration:none;">Перейти</a>
-                    </div>
-                </div>
-            `;
-        } else {
-            resultsContainer.innerHTML = `<p style="color:var(--color-danger);">❌ ${result.error}</p>`;
-        }
-    };
-
-    window.openUsersModal = function(title, users) {
-        const modal = document.createElement('div');
-        modal.className = 'modal-overlay active';
-        modal.style.display = 'flex';
-        modal.innerHTML = `
-            <div class="modal-content" style="max-width:480px;">
-                <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
-                <h2>${title}</h2>
-                <div id="usersModalBody" style="max-height:400px;overflow-y:auto;">
-                    ${users && users.length > 0 ? users.map(uid => `
-                        <a href="profile.html?uid=${uid}" class="user-search-result" style="text-decoration:none;">
-                            <div class="user-info">
-                                <img src="https://via.placeholder.com/32/d4e8ff/4a90d9?text=?" class="user-avatar-small">
-                                <span class="user-name">${uid}</span>
-                            </div>
-                            <span style="color:var(--text-muted);">→</span>
-                        </a>
-                    `).join('') : '<p style="color:var(--text-muted);text-align:center;">Нет пользователей</p>'}
-                </div>
-                <button class="action-btn outline" style="width:100%;margin-top:16px;" onclick="this.closest('.modal-overlay').remove()">Закрыть</button>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        document.body.style.overflow = 'hidden';
-        modal.addEventListener('click', function(e) { if (e.target === this) { this.remove(); document.body.style.overflow = ''; } });
-    };
-
     async function loadProfile() {
         const container = document.getElementById('profileContent');
         container.innerHTML = '<div class="loading" style="text-align:center;padding:40px;color:var(--text-muted);">⏳ Загрузка...</div>';
+        
         const user = getCurrentUser();
         currentUser = user;
+        
         let targetUid = null;
         if (viewedId) {
             targetUid = viewedId;
         } else if (viewedEmail) {
             const result = await getUserByEmail(viewedEmail);
-            if (result.success) { targetUid = result.data.id; viewedUserData = result.data; } 
-            else { container.innerHTML = `<p style="color:var(--color-danger);text-align:center;">❌ Пользователь с email "${viewedEmail}" не найден</p>`; return; }
-        } else if (user) { targetUid = user.uid; }
+            if (result.success) { 
+                targetUid = result.data.id; 
+                viewedUserData = result.data; 
+            } else {
+                container.innerHTML = `<p style="color:var(--color-danger);text-align:center;">❌ Пользователь с email "${viewedEmail}" не найден</p>`;
+                return;
+            }
+        } else if (user) {
+            targetUid = user.uid;
+        }
+        
         if (!targetUid) {
             container.innerHTML = `
                 <div class="auth-message">
@@ -1491,21 +1482,30 @@
             `;
             return;
         }
+        
         viewedUserId = targetUid;
         isOwnProfile = user && user.uid === targetUid;
+        
         const result = await getUserData(targetUid);
         if (!result.success) {
             container.innerHTML = `<p style="color:var(--color-danger);text-align:center;">❌ ${result.error}</p>`;
             return;
         }
+        
         viewedUserData = result.data;
         if (isOwnProfile) { currentUserData = result.data; }
-        if (user) { isAdminUser = await isAdmin(user.uid); } 
-        else { isAdminUser = false; }
+        
+        if (user) { 
+            isAdminUser = await isAdmin(user.uid); 
+        } else { 
+            isAdminUser = false; 
+        }
+        
         await renderProfile(user, viewedUserData, isOwnProfile);
         await loadOrders();
     }
 
+    // ========== ИНИЦИАЛИЗАЦИЯ ==========
     onAuthStateChangedListener(async (user) => {
         currentUser = user;
         updateAuthButton(user);
@@ -1515,36 +1515,18 @@
         await loadProfile();
     });
 
+    // Загружаем профиль сразу, если пользователь уже авторизован
     document.addEventListener('DOMContentLoaded', async () => {
         const user = getCurrentUser();
-        currentUser = user;
-        updateAuthButton(user);
-        await updateDubInLink(user);
-        await updateAdminLinks(user);
-        await updateSidebarBalance(user);
+        if (user) {
+            currentUser = user;
+            updateAuthButton(user);
+            await updateDubInLink(user);
+            await updateAdminLinks(user);
+            await updateSidebarBalance(user);
+        }
         await loadProfile();
     });
-</script>
-
-<script>
-    function toggleTheme() {
-        const html = document.documentElement;
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        const btn = document.getElementById('themeToggle');
-        if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
-    }
-
-    function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        const btn = document.getElementById('themeToggle');
-        if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
-    }
-
-    loadTheme();
 </script>
 
 </body>
