@@ -755,12 +755,7 @@ async function createVoiceOrder(orderData) {
     }
     
     try {
-        // УБИРАЕМ ПРОВЕРКУ НА РОЛЬ - теперь любой авторизованный пользователь может создать заявку
-        // const userRole = await getUserRole(user.uid);
-        // if (userRole !== 'admin' && userRole !== 'dubber') {
-        //     return { success: false, error: "Недостаточно прав" };
-        // }
-        
+        // Убедитесь, что используете правильную коллекцию
         const docRef = await addDoc(collection(db, "voiceOrders"), {
             ...orderData,
             userId: user.uid,
@@ -773,6 +768,7 @@ async function createVoiceOrder(orderData) {
         
         return { success: true, id: docRef.id };
     } catch (error) {
+        console.error('Ошибка создания заявки:', error);
         return { success: false, error: error.message };
     }
 }
