@@ -587,17 +587,21 @@ async function getVoiceById(voiceId) {
 
 async function addVoice(voiceData) {
     try {
-        // Проверяем, существует ли уже такой ID
-        const docRef = doc(db, "voices", voiceData.id || voiceData.name);
+        const docId = voiceData.id || voiceData.name;
+        if (!docId) {
+            return { success: false, error: "ID даббера не указан" };
+        }
+        
+        const docRef = doc(db, "voices", docId);
         const docSnap = await getDoc(docRef);
         
+        // Если документ существует, обновляем его
         if (docSnap.exists()) {
-            // Если существует, обновляем
             await updateDoc(docRef, {
                 ...voiceData,
                 updatedAt: serverTimestamp()
             });
-            return { success: true, id: docRef.id, updated: true };
+            return { success: true, id: docId, updated: true };
         }
         
         // Если не существует, создаём
@@ -606,8 +610,9 @@ async function addVoice(voiceData) {
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
         });
-        return { success: true, id: docRef.id, created: true };
+        return { success: true, id: docId, created: true };
     } catch (error) {
+        console.error('Ошибка создания даббера:', error);
         return { success: false, error: error.message };
     }
 }
@@ -619,7 +624,7 @@ async function updateVoice(voiceId, data) {
         
         // Проверяем, существует ли документ
         if (!docSnap.exists()) {
-            // Если документ не существует, создаём его
+            // Если документ не существует, создаём его с переданными данными
             await setDoc(docRef, {
                 ...data,
                 id: voiceId,
@@ -636,6 +641,7 @@ async function updateVoice(voiceId, data) {
         });
         return { success: true, updated: true };
     } catch (error) {
+        console.error('Ошибка обновления даббера:', error);
         return { success: false, error: error.message };
     }
 }

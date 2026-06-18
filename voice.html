@@ -296,7 +296,8 @@
         onAuthStateChangedListener,
         getUserRole,
         getVoiceById,
-        updateVoice
+        updateVoice,
+        addVoice
     } from './firebase-config.js';
 
     const voiceId = new URLSearchParams(window.location.search).get('id');
@@ -401,29 +402,74 @@
         saveBtn.textContent = '💾 Сохранить изменения';
     };
 
+    // Функция для создания даббера из локальных данных
+    async function createVoiceFromLocal(localVoice) {
+        const data = {
+            id: localVoice.id,
+            name: localVoice.name || 'Без имени',
+            nameEn: localVoice.nameEn || '',
+            nameRu: localVoice.nameRu || '',
+            image: localVoice.image || '',
+            roleType: localVoice.roleType || 'dubber',
+            status: localVoice.status || 'Даббер',
+            joinDate: localVoice.joinDate || '2026',
+            bio: localVoice.bio || '',
+            social: localVoice.social || {}
+        };
+        const result = await addVoice(data);
+        return result;
+    }
+
     async function loadVoice() {
         const container = document.getElementById('voice-content');
         container.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
         
+        if (!voiceId) {
+            container.innerHTML = '<div class="not-found">❌ ID даббера не указан</div>';
+            return;
+        }
+        
+        // Пробуем получить из Firestore
         const result = await getVoiceById(voiceId);
         
         if (!result.success || !result.data) {
-            const localVoice = window.getVoiceById?.(voiceId);
+            // Если не найден в Firestore, ищем в data.js
+            const localVoice = window.voicesDatabase?.find(v => v.id === voiceId);
             if (localVoice) {
-                currentVoice = localVoice;
+                console.log('📝 Даббер найден в data.js, создаём в Firestore...');
+                const createResult = await createVoiceFromLocal(localVoice);
+                if (createResult.success) {
+                    console.log('✅ Даббер создан в Firestore');
+                    // Перезагружаем
+                    await loadVoice();
+                    return;
+                } else {
+                    console.error('❌ Ошибка создания даббера:', createResult.error);
+                    container.innerHTML = `<div class="not-found">❌ Ошибка создания даббера: ${createResult.error}</div>`;
+                    return;
+                }
             } else {
                 container.innerHTML = '<div class="not-found">❌ Даббер не найден</div>';
                 return;
             }
-        } else {
-            currentVoice = result.data;
         }
         
-        const voice = currentVoice;
-        const titles = window.getTitlesByVoiceId?.(voiceId) || [];
-        const stats = window.getVoiceStats?.(voiceId) || { totalTitles: titles.length, totalRoles: 0, mainRoles: 0 };
+        currentVoice = result.data;
+        
+        // Получаем тайтлы и роли
+        const titles = window.titlesDatabase?.filter(t => 
+            window.rolesDatabase?.some(r => r.titleId === t.id && r.voiceId === voiceId)
+        ) || [];
+        
+        const roles = window.rolesDatabase?.filter(r => r.voiceId === voiceId) || [];
+        const stats = {
+            totalTitles: titles.length,
+            totalRoles: roles.length,
+            mainRoles: roles.filter(r => r.type === 'main').length
+        };
         
         let socialHtml = '';
+        const voice = currentVoice;
         if (voice.social) {
             if (voice.social.telegram) socialHtml += `<a href="https://t.me/${voice.social.telegram}" target="_blank" class="social-link">📱 Telegram</a>`;
             if (voice.social.vk) socialHtml += `<a href="https://vk.com/${voice.social.vk}" target="_blank" class="social-link">📘 VK</a>`;
@@ -434,14 +480,14 @@
         if (titles.length > 0) {
             titlesHtml = '<h2 class="title">Участие в проектах</h2>';
             titles.forEach(title => {
-                const roles = title.roles || [];
+                const titleRoles = roles.filter(r => r.titleId === title.id);
                 titlesHtml += `
-                    <a href="title.html?id=${title.id}" class="title-card-voice">
-                        <img src="${title.image}" class="title-card-voice-image" onerror="this.src='https://via.placeholder.com/80/d4e8ff/4a90d9?text=?'">
+                    <a href="title.html?id=${title.id}" style="display:flex; align-items:center; gap:15px; padding:12px; background:var(--bg-input); border-radius:10px; margin-bottom:10px; text-decoration:none; color:inherit; transition:all 0.3s; border:1px solid transparent;">
+                        <img src="${title.imageVertical || title.imageHorizontal || title.image}" style="width:60px;height:80px;object-fit:cover;border-radius:8px;" onerror="this.src='https://via.placeholder.com/60x80/d4e8ff/4a90d9?text=?'">
                         <div>
-                            <div class="title-card-voice-name">${title.name}</div>
-                            <div class="roles-list">
-                                ${roles.map(r => `<span class="role-badge ${r.type}">${r.character}</span>`).join('')}
+                            <div style="font-weight:bold;color:var(--color-accent);">${title.name}</div>
+                            <div style="font-size:13px;color:var(--text-muted);">
+                                ${titleRoles.map(r => `<span style="display:inline-block;background:var(--border-primary);padding:2px 10px;border-radius:12px;margin:2px;font-size:11px;">${r.character} ${r.type === 'main' ? '⭐' : ''}</span>`).join('')}
                             </div>
                         </div>
                     </a>
@@ -560,29 +606,6 @@
         await loadVoice();
     });
 </script>
-<script>
-    function toggleTheme() {
-        const html = document.documentElement;
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
-        }
-    }
 
-    function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
-        }
-    }
-
-    loadTheme();
-</script>
 </body>
 </html>
