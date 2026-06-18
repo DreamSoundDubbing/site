@@ -523,12 +523,32 @@ async function getTitleById(titleId) {
 
 async function addTitle(titleData) {
     try {
-        const docRef = await addDoc(collection(db, "titles"), {
+        const docId = titleData.id || titleData.name;
+        if (!docId) {
+            return { success: false, error: "ID тайтла не указан" };
+        }
+        
+        const docRef = doc(db, "titles", docId);
+        const docSnap = await getDoc(docRef);
+        
+        // Если документ существует, обновляем его (чтобы избежать дублирования)
+        if (docSnap.exists()) {
+            await updateDoc(docRef, {
+                ...titleData,
+                updatedAt: serverTimestamp()
+            });
+            return { success: true, id: docId, updated: true };
+        }
+        
+        // Если не существует, создаём
+        await setDoc(docRef, {
             ...titleData,
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
         });
-        return { success: true, id: docRef.id };
+        return { success: true, id: docId, created: true };
     } catch (error) {
+        console.error('Ошибка создания тайтла:', error);
         return { success: false, error: error.message };
     }
 }
@@ -536,26 +556,47 @@ async function addTitle(titleData) {
 async function updateTitle(titleId, data) {
     try {
         const docRef = doc(db, "titles", titleId);
+        const docSnap = await getDoc(docRef);
+        
+        // Проверяем, существует ли документ
+        if (!docSnap.exists()) {
+            // Если документ не существует, создаём его
+            await setDoc(docRef, {
+                ...data,
+                id: titleId,
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp()
+            });
+            return { success: true, created: true };
+        }
+        
+        // Если существует, обновляем
         await updateDoc(docRef, {
             ...data,
             updatedAt: serverTimestamp()
         });
-        return { success: true };
+        return { success: true, updated: true };
     } catch (error) {
+        console.error('Ошибка обновления тайтла:', error);
         return { success: false, error: error.message };
     }
 }
 
 async function deleteTitle(titleId) {
     try {
-        await deleteDoc(doc(db, "titles", titleId));
+        const docRef = doc(db, "titles", titleId);
+        const docSnap = await getDoc(docRef);
+        
+        if (!docSnap.exists()) {
+            return { success: false, error: "Тайтл не найден" };
+        }
+        
+        await deleteDoc(docRef);
         return { success: true };
     } catch (error) {
         return { success: false, error: error.message };
     }
 }
-
-// ---- ДАББЕРЫ ----
 
 // ---- ДАББЕРЫ ----
 
@@ -595,7 +636,7 @@ async function addVoice(voiceData) {
         const docRef = doc(db, "voices", docId);
         const docSnap = await getDoc(docRef);
         
-        // Если документ существует, обновляем его
+        // Если документ существует, обновляем его (чтобы избежать дублирования)
         if (docSnap.exists()) {
             await updateDoc(docRef, {
                 ...voiceData,
@@ -624,7 +665,7 @@ async function updateVoice(voiceId, data) {
         
         // Проверяем, существует ли документ
         if (!docSnap.exists()) {
-            // Если документ не существует, создаём его с переданными данными
+            // Если документ не существует, создаём его
             await setDoc(docRef, {
                 ...data,
                 id: voiceId,

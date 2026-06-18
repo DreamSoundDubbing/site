@@ -545,6 +545,7 @@
 
     let allVoices = [];
     let isAdmin = false;
+    let isSaving = false;
 
     function updateAuthButton(user) {
         const btn = document.getElementById('authBtn');
@@ -701,17 +702,19 @@
     }
 
     window.openAddVoiceModal = function() {
+        if (isSaving) return;
         document.getElementById('voiceModalTitle').textContent = '➕ Добавить даббера';
         document.getElementById('voiceSubmitBtn').textContent = '💾 Создать';
         document.getElementById('editVoiceId').value = '';
-        document.getElementById('voiceForm').reset();
         document.getElementById('voiceId').disabled = false;
+        document.getElementById('voiceForm').reset();
         renderSocialsEditor([]);
         document.getElementById('voiceModal').classList.add('active');
         document.body.style.overflow = 'hidden';
     };
 
     window.openEditVoiceModal = function(voiceId) {
+        if (isSaving) return;
         const voice = allVoices.find(v => v.id === voiceId);
         if (!voice) return;
         document.getElementById('voiceModalTitle').textContent = '✏️ Редактировать: ' + voice.name;
@@ -733,6 +736,7 @@
     };
 
     window.closeVoiceModal = function() {
+        if (isSaving) return;
         document.getElementById('voiceModal').classList.remove('active');
         document.body.style.overflow = '';
         document.getElementById('voiceId').disabled = false;
@@ -740,7 +744,10 @@
 
     window.saveVoice = async function(event) {
         event.preventDefault();
+        if (isSaving) return;
+        
         const submitBtn = document.getElementById('voiceSubmitBtn');
+        isSaving = true;
         submitBtn.disabled = true;
         submitBtn.textContent = '⏳ Сохранение...';
         
@@ -756,14 +763,29 @@
         const bio = document.getElementById('voiceBio').value.trim();
         const socialsArray = getSocialsFromEditor();
         const social = socialsArrayToObject(socialsArray);
-        const data = { id, name, nameEn, nameRu, image, roleType, status, joinDate: joinDate || '2026', bio, social };
+        
+        const data = { 
+            id: id,
+            name: name, 
+            nameEn: nameEn, 
+            nameRu: nameRu, 
+            image: image, 
+            roleType: roleType, 
+            status: status, 
+            joinDate: joinDate || '2026', 
+            bio: bio, 
+            social: social 
+        };
         
         let result;
         if (editId) {
+            // Если есть editId, обновляем существующий документ
             result = await updateVoice(editId, data);
         } else {
+            // Иначе создаём новый
             result = await addVoice(data);
         }
+        
         if (result.success) {
             alert('✅ Даббер сохранён!');
             closeVoiceModal();
@@ -771,8 +793,10 @@
         } else {
             alert('❌ Ошибка: ' + result.error);
         }
+        
+        isSaving = false;
         submitBtn.disabled = false;
-        submitBtn.textContent = '💾 Сохранить';
+        submitBtn.textContent = editId ? '💾 Обновить' : '💾 Создать';
     };
 
     window.handleDeleteVoice = async function(voiceId) {

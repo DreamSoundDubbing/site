@@ -623,6 +623,7 @@
     let currentEpisodeFrom = 0;
     let currentEpisodeTo = Infinity;
     let isAdmin = false;
+    let isSaving = false;
 
     function updateAuthButton(user) {
         const btn = document.getElementById('authBtn');
@@ -833,6 +834,7 @@
     }
 
     window.openAddModal = function() {
+        if (isSaving) return;
         document.getElementById('modalTitle').textContent = '➕ Добавить тайтл';
         document.getElementById('submitBtn').textContent = '💾 Создать';
         document.getElementById('editId').value = '';
@@ -844,8 +846,12 @@
     };
 
     window.openEditModal = function(titleId) {
+        if (isSaving) return;
         const title = allTitles.find(t => t.id === titleId);
-        if (!title) return;
+        if (!title) {
+            alert('❌ Тайтл не найден');
+            return;
+        }
         document.getElementById('modalTitle').textContent = '✏️ Редактировать: ' + title.name;
         document.getElementById('submitBtn').textContent = '💾 Обновить';
         document.getElementById('editId').value = title.id;
@@ -867,6 +873,7 @@
     };
 
     window.closeModal = function() {
+        if (isSaving) return;
         document.getElementById('modalOverlay').classList.remove('active');
         document.body.style.overflow = '';
         document.getElementById('titleId').disabled = false;
@@ -874,7 +881,10 @@
 
     window.saveTitle = async function(event) {
         event.preventDefault();
+        if (isSaving) return;
+        
         const submitBtn = document.getElementById('submitBtn');
+        isSaving = true;
         submitBtn.disabled = true;
         submitBtn.textContent = '⏳ Сохранение...';
         
@@ -883,9 +893,9 @@
         const name = document.getElementById('titleName').value.trim();
         const nameEn = document.getElementById('titleNameEn').value.trim();
         const type = document.getElementById('titleType').value;
-        const year = parseInt(document.getElementById('titleYear').value);
-        const episodes = parseInt(document.getElementById('titleEpisodes').value);
-        const rating = parseFloat(document.getElementById('titleRating').value);
+        const year = parseInt(document.getElementById('titleYear').value) || 0;
+        const episodes = parseInt(document.getElementById('titleEpisodes').value) || 0;
+        const rating = parseFloat(document.getElementById('titleRating').value) || 0;
         const genres = document.getElementById('titleGenres').value.split(',').map(s => s.trim()).filter(Boolean);
         const imageVertical = document.getElementById('titleImageVert').value.trim();
         const imageHorizontal = document.getElementById('titleImageHoriz').value.trim();
@@ -893,12 +903,44 @@
         const episodesList = getEpisodesFromEditor();
         const finalEpisodes = episodes > 0 ? episodes : episodesList.length;
         
-        const data = { id, name, nameEn, type, year, episodes: finalEpisodes, rating, genres, imageVertical, imageHorizontal, description, episodesList };
+        // Проверяем обязательные поля
+        if (!id) {
+            alert('❌ Введите ID тайтла');
+            isSaving = false;
+            submitBtn.disabled = false;
+            submitBtn.textContent = editId ? '💾 Обновить' : '💾 Создать';
+            return;
+        }
+        
+        if (!name) {
+            alert('❌ Введите название тайтла');
+            isSaving = false;
+            submitBtn.disabled = false;
+            submitBtn.textContent = editId ? '💾 Обновить' : '💾 Создать';
+            return;
+        }
+        
+        const data = { 
+            id, 
+            name, 
+            nameEn, 
+            type, 
+            year, 
+            episodes: finalEpisodes, 
+            rating, 
+            genres, 
+            imageVertical, 
+            imageHorizontal, 
+            description, 
+            episodesList 
+        };
         
         let result;
         if (editId) {
+            // Обновляем существующий тайтл
             result = await updateTitle(editId, data);
         } else {
+            // Создаём новый тайтл
             result = await addTitle(data);
         }
         
@@ -910,8 +952,9 @@
             alert('❌ Ошибка: ' + result.error);
         }
         
+        isSaving = false;
         submitBtn.disabled = false;
-        submitBtn.textContent = '💾 Сохранить';
+        submitBtn.textContent = editId ? '💾 Обновить' : '💾 Создать';
     };
 
     window.handleDelete = async function(titleId) {
