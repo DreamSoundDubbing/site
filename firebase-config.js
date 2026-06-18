@@ -557,6 +557,8 @@ async function deleteTitle(titleId) {
 
 // ---- ДАББЕРЫ ----
 
+// ---- ДАББЕРЫ ----
+
 async function getVoices() {
     try {
         const snapshot = await getDocs(collection(db, "voices"));
@@ -585,11 +587,26 @@ async function getVoiceById(voiceId) {
 
 async function addVoice(voiceData) {
     try {
-        const docRef = await addDoc(collection(db, "voices"), {
+        // Проверяем, существует ли уже такой ID
+        const docRef = doc(db, "voices", voiceData.id || voiceData.name);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            // Если существует, обновляем
+            await updateDoc(docRef, {
+                ...voiceData,
+                updatedAt: serverTimestamp()
+            });
+            return { success: true, id: docRef.id, updated: true };
+        }
+        
+        // Если не существует, создаём
+        await setDoc(docRef, {
             ...voiceData,
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
         });
-        return { success: true, id: docRef.id };
+        return { success: true, id: docRef.id, created: true };
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -598,11 +615,26 @@ async function addVoice(voiceData) {
 async function updateVoice(voiceId, data) {
     try {
         const docRef = doc(db, "voices", voiceId);
+        const docSnap = await getDoc(docRef);
+        
+        // Проверяем, существует ли документ
+        if (!docSnap.exists()) {
+            // Если документ не существует, создаём его
+            await setDoc(docRef, {
+                ...data,
+                id: voiceId,
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp()
+            });
+            return { success: true, created: true };
+        }
+        
+        // Если существует, обновляем
         await updateDoc(docRef, {
             ...data,
             updatedAt: serverTimestamp()
         });
-        return { success: true };
+        return { success: true, updated: true };
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -610,7 +642,14 @@ async function updateVoice(voiceId, data) {
 
 async function deleteVoice(voiceId) {
     try {
-        await deleteDoc(doc(db, "voices", voiceId));
+        const docRef = doc(db, "voices", voiceId);
+        const docSnap = await getDoc(docRef);
+        
+        if (!docSnap.exists()) {
+            return { success: false, error: "Даббер не найден" };
+        }
+        
+        await deleteDoc(docRef);
         return { success: true };
     } catch (error) {
         return { success: false, error: error.message };
