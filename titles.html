@@ -528,13 +528,13 @@
             <input type="hidden" id="editId" value="">
             
             <div class="form-group">
-                <label>ID тайтла (уникальный, латиница)</label>
+                <label>ID тайтла (уникальный, латиница) *</label>
                 <input type="text" id="titleId" placeholder="например: dandadan" required>
             </div>
             
             <div class="form-row">
                 <div class="form-group">
-                    <label>Название (рус.)</label>
+                    <label>Название (рус.) *</label>
                     <input type="text" id="titleName" placeholder="Название" required>
                 </div>
                 <div class="form-group">
@@ -903,7 +903,6 @@
         const episodesList = getEpisodesFromEditor();
         const finalEpisodes = episodes > 0 ? episodes : episodesList.length;
         
-        // Проверяем обязательные поля
         if (!id) {
             alert('❌ Введите ID тайтла');
             isSaving = false;
@@ -918,6 +917,18 @@
             submitBtn.disabled = false;
             submitBtn.textContent = editId ? '💾 Обновить' : '💾 Создать';
             return;
+        }
+        
+        // Проверяем, не занят ли ID при создании
+        if (!editId) {
+            const existing = allTitles.find(t => t.id === id);
+            if (existing) {
+                alert('❌ Тайтл с таким ID уже существует!');
+                isSaving = false;
+                submitBtn.disabled = false;
+                submitBtn.textContent = '💾 Создать';
+                return;
+            }
         }
         
         const data = { 
@@ -937,10 +948,8 @@
         
         let result;
         if (editId) {
-            // Обновляем существующий тайтл
             result = await updateTitle(editId, data);
         } else {
-            // Создаём новый тайтл
             result = await addTitle(data);
         }
         
