@@ -531,18 +531,15 @@ async function addTitle(titleData) {
         const docRef = doc(db, "titles", docId);
         const docSnap = await getDoc(docRef);
         
-        // Если документ существует, обновляем его (чтобы избежать дублирования)
+        // Если документ уже существует, возвращаем ошибку
         if (docSnap.exists()) {
-            await updateDoc(docRef, {
-                ...titleData,
-                updatedAt: serverTimestamp()
-            });
-            return { success: true, id: docId, updated: true };
+            return { success: false, error: "Тайтл с таким ID уже существует" };
         }
         
-        // Если не существует, создаём
+        // Создаём новый документ
         await setDoc(docRef, {
             ...titleData,
+            id: docId,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
         });
@@ -558,21 +555,15 @@ async function updateTitle(titleId, data) {
         const docRef = doc(db, "titles", titleId);
         const docSnap = await getDoc(docRef);
         
-        // Проверяем, существует ли документ
+        // Если документ не существует, возвращаем ошибку
         if (!docSnap.exists()) {
-            // Если документ не существует, создаём его
-            await setDoc(docRef, {
-                ...data,
-                id: titleId,
-                createdAt: serverTimestamp(),
-                updatedAt: serverTimestamp()
-            });
-            return { success: true, created: true };
+            return { success: false, error: "Тайтл не найден для обновления" };
         }
         
-        // Если существует, обновляем
+        // Обновляем существующий документ
         await updateDoc(docRef, {
             ...data,
+            id: titleId, // сохраняем ID
             updatedAt: serverTimestamp()
         });
         return { success: true, updated: true };
@@ -597,7 +588,6 @@ async function deleteTitle(titleId) {
         return { success: false, error: error.message };
     }
 }
-
 // ---- ДАББЕРЫ ----
 
 async function getVoices() {
