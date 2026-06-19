@@ -210,7 +210,7 @@
         <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
         <a href="voice-order.html" class="nav-icon-btn" id="voiceOrderLink" style="display:none;">📝Заявка</a>
         <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
-        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">🌙</button>
     </div>
 </header>
 
@@ -373,6 +373,7 @@
         <div class="search-tabs">
             <button class="search-tab active" data-tab="all" onclick="handleSearch('all')">📋 Все</button>
             <button class="search-tab" data-tab="titles" onclick="handleSearch('titles')">🎬 Тайтлы</button>
+            <button class="search-tab" data-tab="voices" onclick="handleSearch('voices')">🎙️ Дабберы</button>
             <button class="search-tab" data-tab="users" onclick="handleSearch('users')">👤 Пользователи</button>
         </div>
 
@@ -388,7 +389,18 @@
 </div>
 
 <script type="module">
-    import { getCurrentUser, onAuthStateChangedListener, getUserRole, getAllUsers, getUserDSCoins, getUserByEmail, addDSCoins, createDSCoinOrder } from './firebase-config.js';
+    import { 
+        getCurrentUser, 
+        onAuthStateChangedListener, 
+        getUserRole, 
+        getAllUsers, 
+        getUserDSCoins, 
+        getUserByEmail, 
+        addDSCoins, 
+        createDSCoinOrder,
+        getTitles,
+        getVoices
+    } from './firebase-config.js';
 
     window.getUserDSCoins = getUserDSCoins;
     window.getUserByEmail = getUserByEmail;
@@ -429,6 +441,8 @@
 
     let currentUser = null;
     let allUsers = [];
+    let allTitles = [];
+    let allVoices = [];
 
     function updateAuthButton(user) {
         const btn = document.getElementById('authBtn');
@@ -484,17 +498,86 @@
         }
     }
 
-    async function loadAllUsers() {
-        const result = await getAllUsers();
-        if (result.success) allUsers = result.users;
-        else console.error('Ошибка загрузки пользователей:', result.error);
+    // ===== ЗАГРУЗКА ДАННЫХ ДЛЯ ПОИСКА =====
+    async function loadAllData() {
+        try {
+            // Загружаем тайтлы
+            const titlesResult = await getTitles();
+            if (titlesResult.success) {
+                allTitles = titlesResult.titles;
+            } else {
+                // Если Firebase не ответил, используем локальные данные
+                allTitles = window.titlesDatabase || [];
+            }
+
+            // Загружаем дабберов
+            const voicesResult = await getVoices();
+            if (voicesResult.success) {
+                allVoices = voicesResult.voices;
+            } else {
+                allVoices = window.voicesDatabase || [];
+            }
+
+            // Загружаем пользователей
+            const usersResult = await getAllUsers();
+            if (usersResult.success) {
+                allUsers = usersResult.users;
+            } else {
+                allUsers = [];
+            }
+
+            console.log('📦 Данные загружены для поиска:', {
+                titles: allTitles.length,
+                voices: allVoices.length,
+                users: allUsers.length
+            });
+        } catch (error) {
+            console.error('Ошибка загрузки данных для поиска:', error);
+            // Пробуем использовать локальные данные
+            allTitles = window.titlesDatabase || [];
+            allVoices = window.voicesDatabase || [];
+        }
+    }
+
+    // ===== ПОИСК =====
+    function searchTitles(query) {
+        if (!query || query.trim() === '') return [];
+        const q = query.trim().toLowerCase();
+        return allTitles.filter(title => {
+            const searchable = [
+                title.name || '',
+                title.nameEn || '',
+                title.description || '',
+                ...(title.genres || [])
+            ].join(' ').toLowerCase();
+            return searchable.includes(q);
+        });
+    }
+
+    function searchVoices(query) {
+        if (!query || query.trim() === '') return [];
+        const q = query.trim().toLowerCase();
+        return allVoices.filter(voice => {
+            const searchable = [
+                voice.name || '',
+                voice.nameEn || '',
+                voice.nameRu || '',
+                voice.bio || '',
+                voice.status || ''
+            ].join(' ').toLowerCase();
+            return searchable.includes(q);
+        });
     }
 
     function searchUsers(query) {
         if (!query || query.trim() === '') return [];
         const q = query.trim().toLowerCase();
         return allUsers.filter(user => {
-            const searchable = [user.displayName || '', user.email || '', user.uid || ''].join(' ').toLowerCase();
+            const searchable = [
+                user.displayName || '',
+                user.email || '',
+                user.uid || ''
+            ].join(' ').toLowerCase();
             return searchable.includes(q);
         });
     }
@@ -505,24 +588,33 @@
             container.innerHTML = '<div class="loading-text">🔍 Введите поисковый запрос</div>';
             return;
         }
+        
         const q = query.trim();
         let results = { titles: [], voices: [], users: [] };
+        
         if (tab === 'all' || tab === 'titles') {
-            const titleResults = window.searchDatabase?.(q) || { titles: [], voices: [] };
-            results.titles = titleResults.titles || [];
-            results.voices = titleResults.voices || [];
+            results.titles = searchTitles(q);
         }
-        if (tab === 'all' || tab === 'users') results.users = searchUsers(q);
+        if (tab === 'all' || tab === 'voices') {
+            results.voices = searchVoices(q);
+        }
+        if (tab === 'all' || tab === 'users') {
+            results.users = searchUsers(q);
+        }
+        
         const total = results.titles.length + results.voices.length + results.users.length;
+        
         let html = `
             <div class="search-results-title">Результаты поиска</div>
             <div class="search-stats">По запросу: <strong style="color:var(--color-accent);">"${q}"</strong> — найдено <strong style="color:var(--color-accent);">${total}</strong> результатов</div>
             <hr style="border-color:var(--border-primary);">
         `;
+        
+        // Тайтлы
         if (results.titles.length > 0 && (tab === 'all' || tab === 'titles')) {
             html += `<div class="search-section-title">🎬 Тайтлы (${results.titles.length})</div>`;
             results.titles.forEach(t => {
-                const image = t.imageVertical || t.imageHorizontal || t.image;
+                const image = t.imageVertical || t.imageHorizontal || t.image || 'https://via.placeholder.com/48/d4e8ff/4a90d9?text=?';
                 html += `
                     <a href="title.html?id=${t.id}" class="result-item">
                         <img src="${image}" class="result-image" onerror="this.src='https://via.placeholder.com/48/d4e8ff/4a90d9?text=?'">
@@ -534,20 +626,27 @@
                 `;
             });
         }
-        if (results.voices.length > 0 && (tab === 'all' || tab === 'titles')) {
-            html += `<div class="search-section-title">🎭 Дабберы (${results.voices.length})</div>`;
+        
+        // Дабберы
+        if (results.voices.length > 0 && (tab === 'all' || tab === 'voices')) {
+            html += `<div class="search-section-title">🎙️ Дабберы (${results.voices.length})</div>`;
             results.voices.forEach(v => {
+                const image = v.image || 'https://via.placeholder.com/48/d4e8ff/4a90d9?text=?';
+                const roleLabel = v.roleType === 'tech' ? '🔧 Тех. персонал' : 
+                                 v.roleType === 'both' ? '🎙️+🔧' : '🎙️ Даббер';
                 html += `
                     <a href="voice.html?id=${v.id}" class="result-item">
-                        <img src="${v.image}" class="result-image result-image-voice" onerror="this.src='https://via.placeholder.com/48/d4e8ff/4a90d9?text=?'">
+                        <img src="${image}" class="result-image result-image-voice" onerror="this.src='https://via.placeholder.com/48/d4e8ff/4a90d9?text=?'">
                         <div class="result-info">
                             <div class="result-name">${v.name}</div>
-                            <div class="result-type">${v.status || 'Даббер'} <span class="result-type-badge badge-voice">${v.roleType === 'tech' ? '🔧 Тех. персонал' : v.roleType === 'both' ? '🎙️+🔧' : '🎙️ Даббер'}</span></div>
+                            <div class="result-type">${v.status || 'Даббер'} <span class="result-type-badge badge-voice">${roleLabel}</span></div>
                         </div>
                     </a>
                 `;
             });
         }
+        
+        // Пользователи
         if (results.users.length > 0 && (tab === 'all' || tab === 'users')) {
             html += `<div class="search-section-title">👤 Пользователи (${results.users.length})</div>`;
             results.users.forEach(u => {
@@ -564,6 +663,7 @@
                 `;
             });
         }
+        
         if (results.titles.length === 0 && results.voices.length === 0 && results.users.length === 0) {
             html += `
                 <div class="no-results">
@@ -600,7 +700,10 @@
         await updateDubInLink(user);
         await updateAdminLinks(user);
         await updateSidebarBalance(user);
-        await loadAllUsers();
+        
+        // Загружаем все данные для поиска
+        await loadAllData();
+        
         const input = document.getElementById('searchInput');
         if (input) input.value = savedQuery;
         document.querySelectorAll('.search-tab').forEach(btn => {
@@ -615,6 +718,7 @@
         await updateDubInLink(user);
         await updateAdminLinks(user);
         await updateSidebarBalance(user);
+        await loadAllData();
     });
 </script>
 

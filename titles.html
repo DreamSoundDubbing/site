@@ -79,8 +79,8 @@
             color: var(--color-accent);
             font-weight: bold;
         }
-        .episode-input {
-            width: 50px;
+        .episode-input, .year-input {
+            width: 60px;
             padding: 4px 8px;
             border-radius: 20px;
             border: 2px solid var(--border-primary);
@@ -93,24 +93,27 @@
             font-family: inherit;
             appearance: textfield;
         }
-        .episode-input:focus {
+        .episode-input:focus, .year-input:focus {
             border-color: var(--color-accent);
             box-shadow: 0 0 15px rgba(60, 80, 180, 0.15);
         }
         .episode-input::-webkit-outer-spin-button,
-        .episode-input::-webkit-inner-spin-button {
+        .episode-input::-webkit-inner-spin-button,
+        .year-input::-webkit-outer-spin-button,
+        .year-input::-webkit-inner-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
-        .episode-input[type="number"] {
+        .episode-input[type="number"],
+        .year-input[type="number"] {
             -moz-appearance: textfield;
             appearance: textfield;
         }
-        .episode-range-label {
+        .episode-range-label, .year-range-label {
             color: var(--text-muted);
             font-size: 12px;
         }
-        .reset-episodes-btn {
+        .reset-episodes-btn, .reset-years-btn {
             padding: 4px 12px;
             border-radius: 20px;
             border: 2px solid var(--border-primary);
@@ -121,7 +124,7 @@
             transition: all 0.3s ease;
             font-family: inherit;
         }
-        .reset-episodes-btn:hover {
+        .reset-episodes-btn:hover, .reset-years-btn:hover {
             border-color: var(--color-accent);
             color: var(--text-primary);
         }
@@ -152,6 +155,20 @@
         }
         .title-card-wrapper {
             position: relative;
+            width: 200px;
+            background: var(--bg-dub-card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s ease;
+            border: 2px solid var(--border-secondary);
+            text-decoration: none;
+            color: inherit;
+        }
+        .title-card-wrapper:hover {
+            transform: translateY(-6px);
+            border-color: var(--color-accent);
+            box-shadow: var(--shadow-hover);
         }
         .title-card-wrapper .admin-actions {
             position: absolute;
@@ -161,6 +178,7 @@
             gap: 4px;
             opacity: 0;
             transition: opacity 0.3s;
+            z-index: 10;
         }
         .title-card-wrapper:hover .admin-actions {
             opacity: 1;
@@ -187,6 +205,36 @@
         }
         .title-card-wrapper .admin-actions .delete-btn:hover {
             background: #e05555;
+        }
+        .title-card-image {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            display: block;
+        }
+        .title-card-info {
+            padding: 10px;
+            text-align: center;
+        }
+        .title-card-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--color-accent);
+            margin-bottom: 4px;
+        }
+        .title-card-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+        .titles-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 16px;
         }
         .modal-overlay {
             display: none;
@@ -401,6 +449,7 @@
         .status-ongoing { background: #4CAF50; color: #fff; }
         .status-completed { background: #2196F3; color: #fff; }
         .status-announced { background: #FF9800; color: #fff; }
+        
         @media (max-width: 768px) {
             .filters-container {
                 flex-direction: column;
@@ -417,14 +466,20 @@
             .filter-divider {
                 display: none;
             }
-            .episode-input {
-                width: 44px;
+            .episode-input, .year-input {
+                width: 50px;
             }
             .admin-toolbar {
                 justify-content: center;
             }
             .title-card-wrapper .admin-actions {
                 opacity: 1;
+            }
+            .title-card-wrapper {
+                width: 160px;
+            }
+            .title-card-image {
+                height: 200px;
             }
             .episode-edit-item {
                 flex-direction: column;
@@ -451,10 +506,19 @@
                 font-size: 11px;
                 padding: 4px 10px;
             }
-            .episode-input {
+            .episode-input, .year-input {
                 width: 40px;
                 padding: 3px 6px;
                 font-size: 11px;
+            }
+            .title-card-wrapper {
+                width: 140px;
+            }
+            .title-card-image {
+                height: 170px;
+            }
+            .title-card-name {
+                font-size: 14px;
             }
             .modal-content {
                 padding: 16px;
@@ -484,7 +548,7 @@
         <a href="voice-order.html" class="nav-icon-btn" id="voiceOrderLink" style="display:none;">📝Заявка</a>
         <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
         
-        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">🌙</button>
     </div>
 </header>
 
@@ -659,18 +723,14 @@
             </div>
             <span class="filter-divider">|</span>
             
-            <!-- Фильтр по году -->
+            <!-- Фильтр по году (от-до) -->
             <div class="filter-group">
                 <span class="filter-label">📅 Год:</span>
-                <select class="filter-select" id="filterYear" onchange="filterData()">
-                    <option value="all">Все</option>
-                    <option value="2026">2026</option>
-                    <option value="2025">2025</option>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                    <option value="2021">2021</option>
-                </select>
+                <span class="year-range-label">от</span>
+                <input type="number" class="year-input" id="yearFrom" placeholder="2000" min="1900" max="2100">
+                <span class="year-range-label">до</span>
+                <input type="number" class="year-input" id="yearTo" placeholder="2026" min="1900" max="2100">
+                <button class="reset-years-btn" id="resetYears">✕ Сбросить</button>
             </div>
             <span class="filter-divider">|</span>
             
@@ -819,8 +879,9 @@
     let allTitles = [];
     let currentFilterType = 'all';
     let currentFilterRating = 'all';
-    let currentFilterYear = 'all';
     let currentFilterStatus = 'all';
+    let currentYearFrom = 0;
+    let currentYearTo = Infinity;
     let currentEpisodeFrom = 0;
     let currentEpisodeTo = Infinity;
     let isAdmin = false;
@@ -990,9 +1051,11 @@
             titles = titles.filter(t => (t.rating || 0) >= minRating);
         }
         
-        if (currentFilterYear !== 'all') {
-            titles = titles.filter(t => t.year === parseInt(currentFilterYear));
-        }
+        // Фильтр по году (от-до)
+        titles = titles.filter(t => {
+            const year = t.year || 0;
+            return year >= currentYearFrom && year <= currentYearTo;
+        });
         
         if (currentFilterStatus !== 'all') {
             titles = titles.filter(t => t.status === currentFilterStatus);
@@ -1042,7 +1105,7 @@
             }
             return `
                 <div class="title-card-wrapper">
-                    <a href="title.html?id=${title.id}" class="title-card">
+                    <a href="title.html?id=${title.id}" class="title-card" style="text-decoration:none;color:inherit;display:block;">
                         <img src="${image}" alt="${title.name}" class="title-card-image" onerror="this.src='https://via.placeholder.com/200x280/d4e8ff/4a90d9?text=${encodeURIComponent(title.name)}'">
                         <div class="title-card-info">
                             <div class="title-card-name">${title.name}</div>
@@ -1050,8 +1113,8 @@
                                 <span>${title.type}</span>
                                 <span>${title.episodes} серий</span>
                             </div>
-                            <div style="display:flex;justify-content:space-between;margin-top:4px;align-items:center;">
-                                <span style="color:var(--text-muted);font-size:12px;">${title.year || ''}</span>
+                            <div style="display:flex;justify-content:space-between;margin-top:4px;align-items:center;font-size:12px;">
+                                <span style="color:var(--text-muted);">${title.year || ''}</span>
                                 <span style="color:var(--color-warning);">⭐ ${title.rating}</span>
                             </div>
                             <div style="margin-top:4px;">${statusMap[title.status] || ''}</div>
@@ -1065,10 +1128,8 @@
 
     function filterData() {
         const rating = document.getElementById('filterRating');
-        const year = document.getElementById('filterYear');
         const status = document.getElementById('filterStatus');
         currentFilterRating = rating ? rating.value : 'all';
-        currentFilterYear = year ? year.value : 'all';
         currentFilterStatus = status ? status.value : 'all';
         renderTitles();
     }
@@ -1078,16 +1139,18 @@
     window.resetAllFilters = function() {
         currentFilterType = 'all';
         currentFilterRating = 'all';
-        currentFilterYear = 'all';
         currentFilterStatus = 'all';
+        currentYearFrom = 0;
+        currentYearTo = Infinity;
         currentEpisodeFrom = 0;
         currentEpisodeTo = Infinity;
         document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.filter-btn[data-filter="type"][data-value="all"]').forEach(btn => btn.classList.add('active'));
         document.getElementById('episodeFrom').value = '';
         document.getElementById('episodeTo').value = '';
+        document.getElementById('yearFrom').value = '';
+        document.getElementById('yearTo').value = '';
         document.getElementById('filterRating').value = 'all';
-        document.getElementById('filterYear').value = 'all';
         document.getElementById('filterStatus').value = 'all';
         renderTitles();
     };
@@ -1118,6 +1181,26 @@
             episodeTo.value = '';
             currentEpisodeFrom = 0;
             currentEpisodeTo = Infinity;
+            renderTitles();
+        });
+
+        // Фильтр по году (от-до)
+        const yearFrom = document.getElementById('yearFrom');
+        const yearTo = document.getElementById('yearTo');
+        const updateYearFilter = function() {
+            const from = parseInt(yearFrom.value);
+            const to = parseInt(yearTo.value);
+            currentYearFrom = isNaN(from) ? 0 : from;
+            currentYearTo = isNaN(to) ? Infinity : to;
+            renderTitles();
+        };
+        yearFrom.addEventListener('input', updateYearFilter);
+        yearTo.addEventListener('input', updateYearFilter);
+        document.getElementById('resetYears').addEventListener('click', function() {
+            yearFrom.value = '';
+            yearTo.value = '';
+            currentYearFrom = 0;
+            currentYearTo = Infinity;
             renderTitles();
         });
     }
