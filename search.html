@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -141,6 +141,10 @@
             background: var(--color-accent2);
             color: #fff;
         }
+        .badge-user-admin {
+            background: var(--color-accent);
+            color: #fff;
+        }
         .no-results {
             text-align: center;
             padding: 40px 20px;
@@ -180,6 +184,11 @@
             background: var(--gradient-primary);
             border-color: var(--color-accent);
             color: #fff;
+        }
+        .email-hidden {
+            color: var(--text-muted);
+            font-size: 11px;
+            opacity: 0.6;
         }
         @media (max-width: 600px) {
             .search-form { flex-direction: column; gap: 8px; max-width: 100%; }
@@ -399,7 +408,8 @@
         addDSCoins, 
         createDSCoinOrder,
         getTitles,
-        getVoices
+        getVoices,
+        isAdmin
     } from './firebase-config.js';
 
     window.getUserDSCoins = getUserDSCoins;
@@ -443,6 +453,7 @@
     let allUsers = [];
     let allTitles = [];
     let allVoices = [];
+    let isAdminUser = false;
 
     function updateAuthButton(user) {
         const btn = document.getElementById('authBtn');
@@ -506,7 +517,6 @@
             if (titlesResult.success) {
                 allTitles = titlesResult.titles;
             } else {
-                // Если Firebase не ответил, используем локальные данные
                 allTitles = window.titlesDatabase || [];
             }
 
@@ -526,14 +536,19 @@
                 allUsers = [];
             }
 
+            // Проверяем, админ ли текущий пользователь
+            if (currentUser) {
+                isAdminUser = await isAdmin(currentUser.uid);
+            }
+
             console.log('📦 Данные загружены для поиска:', {
                 titles: allTitles.length,
                 voices: allVoices.length,
-                users: allUsers.length
+                users: allUsers.length,
+                isAdmin: isAdminUser
             });
         } catch (error) {
             console.error('Ошибка загрузки данных для поиска:', error);
-            // Пробуем использовать локальные данные
             allTitles = window.titlesDatabase || [];
             allVoices = window.voicesDatabase || [];
         }
@@ -652,12 +667,40 @@
             results.users.forEach(u => {
                 const roleNames = { 'admin': '👑 Администратор', 'dubber': '🎙️ Даббер', 'user': '👤 Пользователь' };
                 const avatarUrl = u.photoURL || 'https://via.placeholder.com/48/d4e8ff/4a90d9?text=?';
+                
+                // ===== ЕСЛИ АДМИН — ПОКАЗЫВАЕМ ПОЧТУ, ИНАЧЕ СКРЫВАЕМ =====
+                let emailDisplay = '';
+                if (isAdminUser) {
+                    emailDisplay = u.email || 'Email не указан';
+                } else {
+                    // Скрываем почту — показываем только первую букву и звездочки
+                    const email = u.email || '';
+                    if (email) {
+                        const parts = email.split('@');
+                        const name = parts[0] || '';
+                        const domain = parts[1] || '';
+                        if (name.length > 2) {
+                            const hiddenName = name.charAt(0) + '***' + name.charAt(name.length - 1);
+                            emailDisplay = hiddenName + '@' + domain;
+                        } else {
+                            emailDisplay = '***@' + domain;
+                        }
+                    } else {
+                        emailDisplay = 'Email скрыт';
+                    }
+                }
+                
+                const roleBadge = u.role === 'admin' ? 'badge-user-admin' : 'badge-user';
+                
                 html += `
                     <a href="profile.html?uid=${u.id}" class="result-item">
                         <img src="${avatarUrl}" class="result-image result-image-user" onerror="this.src='https://via.placeholder.com/48/d4e8ff/4a90d9?text=?'">
                         <div class="result-info">
                             <div class="result-name">${u.displayName || 'Без имени'}</div>
-                            <div class="result-type">${u.email || 'Email не указан'} <span class="result-type-badge badge-user">${roleNames[u.role] || '👤 Пользователь'}</span></div>
+                            <div class="result-type">
+                                ${isAdminUser ? emailDisplay : `<span class="email-hidden">🔒 ${emailDisplay}</span>`}
+                                <span class="result-type-badge ${roleBadge}">${roleNames[u.role] || '👤 Пользователь'}</span>
+                            </div>
                         </div>
                     </a>
                 `;
@@ -701,6 +744,10 @@
         await updateAdminLinks(user);
         await updateSidebarBalance(user);
         
+        if (user) {
+            isAdminUser = await isAdmin(user.uid);
+        }
+        
         // Загружаем все данные для поиска
         await loadAllData();
         
@@ -718,6 +765,13 @@
         await updateDubInLink(user);
         await updateAdminLinks(user);
         await updateSidebarBalance(user);
+        
+        if (user) {
+            isAdminUser = await isAdmin(user.uid);
+        } else {
+            isAdminUser = false;
+        }
+        
         await loadAllData();
     });
 </script>
