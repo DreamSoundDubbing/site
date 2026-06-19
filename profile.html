@@ -353,7 +353,26 @@
             font-weight: bold;
         }
 
-        .wall-section { margin-top: 30px; }
+        /* ===== СТЕНА (для всех пользователей) ===== */
+        .wall-section {
+            margin-top: 30px;
+            background: var(--bg-content);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid var(--border-primary);
+        }
+        .wall-section .wall-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .wall-section .wall-header h3 {
+            color: var(--color-accent);
+            margin: 0;
+        }
         .wall-form {
             display: flex;
             gap: 10px;
@@ -429,6 +448,29 @@
             border-radius: 12px;
             background: var(--bg-welcome);
             color: var(--text-muted);
+        }
+        .wall-post .visibility-badge.private {
+            background: rgba(255, 107, 107, 0.15);
+            color: var(--color-danger);
+        }
+        .wall-post .visibility-badge.friends {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+        }
+        .wall-post .visibility-badge.public {
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--color-success);
+        }
+
+        .wall-access-denied {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--text-muted);
+        }
+        .wall-access-denied .icon {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 12px;
         }
 
         .modal-overlay {
@@ -550,6 +592,8 @@
             .admin-coin-section .row { flex-direction: column; }
             .admin-coin-section .row input { width: 100%; }
             .admin-coin-section .row .btn-coin-add { width: 100%; text-align: center; }
+            .wall-form { flex-direction: column; }
+            .wall-form .actions { justify-content: flex-end; }
         }
     </style>
 </head>
@@ -840,18 +884,26 @@
         </div>
     </div>
 
-    <!-- ========== СТЕНА ========== -->
-    <div id="wallSection" style="display:none;background:var(--bg-content);padding:20px;border-radius:15px;border:1px solid var(--border-primary);margin:20px 0;">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:15px;">
-            <h3 style="color:var(--color-accent);"><i class="fas fa-stream"></i> Моя стена</h3>
-            <button class="action-btn outline" onclick="openModal('m-wall-settings')"><i class="fas fa-cog"></i></button>
-        </div>
-        <div class="wall-form" id="wallForm">
-            <textarea id="wallInput" placeholder="Что у вас нового?..."></textarea>
-            <div class="actions">
-                <button class="action-btn primary" onclick="addWallPost()"><i class="fas fa-paper-plane"></i></button>
+    <!-- ========== СТЕНА (ДЛЯ ВСЕХ ПОЛЬЗОВАТЕЛЕЙ) ========== -->
+    <div id="wallSection" class="wall-section" style="display:none;">
+        <div class="wall-header">
+            <h3><i class="fas fa-stream"></i> Стена</h3>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <span id="wallVisibilityBadge" style="font-size:11px;color:var(--text-muted);padding:2px 12px;border-radius:12px;background:var(--bg-welcome);"></span>
+                <button class="action-btn outline action-btn-sm" id="wallSettingsBtn" onclick="openModal('m-wall-settings')" style="display:none;"><i class="fas fa-cog"></i></button>
             </div>
         </div>
+        
+        <!-- Форма добавления (только для владельца) -->
+        <div id="wallFormContainer" style="display:none;">
+            <div class="wall-form">
+                <textarea id="wallInput" placeholder="Что у вас нового?..."></textarea>
+                <div class="actions">
+                    <button class="action-btn primary" onclick="addWallPost()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+        
         <div id="wallContainer">
             <p style="color:var(--text-muted);font-style:italic;">Загрузка...</p>
         </div>
@@ -1042,9 +1094,7 @@
         }
         if (result && result.success) {
             alert('✅ Покупка успешно совершена!');
-            // Обновляем данные пользователя
             await loadProfile();
-            // Обновляем баланс в сайдбаре
             await updateSidebarBalance(user);
         } else if (result) {
             alert('❌ Ошибка: ' + result.error);
@@ -1138,7 +1188,7 @@
         }
     }
 
-    // ========== СТЕНА ==========
+    // ========== СТЕНА (ДЛЯ ВСЕХ ПОЛЬЗОВАТЕЛЕЙ) ==========
     window.addWallPost = async function() {
         const user = getCurrentUser();
         if (!user) { alert('Войдите, чтобы оставить запись'); return; }
@@ -1193,6 +1243,19 @@
         }
         
         let targetUid = viewedUserId || user.uid;
+        const isOwner = user.uid === targetUid;
+        
+        // Показываем форму добавления только для владельца
+        const formContainer = document.getElementById('wallFormContainer');
+        if (formContainer) {
+            formContainer.style.display = isOwner ? 'block' : 'none';
+        }
+        
+        // Показываем кнопку настроек только для владельца
+        const settingsBtn = document.getElementById('wallSettingsBtn');
+        if (settingsBtn) {
+            settingsBtn.style.display = isOwner ? 'inline-flex' : 'none';
+        }
         
         try {
             const result = await getWallPosts(targetUid);
@@ -1200,30 +1263,53 @@
                 container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки записей</p>';
                 return;
             }
+            
+            // Проверяем видимость стены
+            const visibility = result.visibility || 'all';
+            const visibilityBadge = document.getElementById('wallVisibilityBadge');
+            if (visibilityBadge) {
+                const labels = {
+                    'all': '🌍 Доступна всем',
+                    'friends': '👥 Только подписчикам',
+                    'disabled': '🔒 Закрыта'
+                };
+                visibilityBadge.textContent = labels[visibility] || '🌍 Доступна всем';
+                visibilityBadge.className = `visibility-badge ${visibility === 'disabled' ? 'private' : visibility === 'friends' ? 'friends' : 'public'}`;
+            }
+            
             const posts = result.posts;
             if (posts.length === 0) {
                 container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Пока нет записей на стене</p>';
                 return;
             }
-            container.innerHTML = posts.map(post => `
-                <div class="wall-post">
-                    <div class="header">
-                        <div class="user">
-                            <div class="avatar" style="background:var(--color-accent);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px;">${post.userName?.charAt(0).toUpperCase() || '?'}</div>
-                            <span class="name">${post.userName || 'Пользователь'}</span>
-                            <span class="visibility-badge">${post.visibility === 'friends' ? '👥 Подписчики' : post.visibility === 'disabled' ? '🔒 Закрыто' : '🌍 Все'}</span>
+            
+            container.innerHTML = posts.map(post => {
+                const isOwnPost = user && user.uid === post.userId;
+                const visibilityLabel = post.visibility === 'friends' ? '👥 Подписчики' : 
+                                       post.visibility === 'disabled' ? '🔒 Закрыто' : '🌍 Все';
+                const visClass = post.visibility === 'disabled' ? 'private' : 
+                                post.visibility === 'friends' ? 'friends' : 'public';
+                return `
+                    <div class="wall-post">
+                        <div class="header">
+                            <div class="user">
+                                <div class="avatar" style="background:var(--color-accent);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px;">${post.userName?.charAt(0).toUpperCase() || '?'}</div>
+                                <span class="name">${post.userName || 'Пользователь'}</span>
+                                <span class="visibility-badge ${visClass}">${visibilityLabel}</span>
+                            </div>
+                            <span class="time">${post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleString() : ''}</span>
                         </div>
-                        <span class="time">${post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleString() : ''}</span>
+                        <div class="text">${post.text}</div>
+                        ${isOwnPost ? `
+                            <div class="actions">
+                                <button onclick="deleteWallPost('${post.id}')">🗑️ Удалить</button>
+                            </div>
+                        ` : ''}
                     </div>
-                    <div class="text">${post.text}</div>
-                    ${(user && user.uid === post.userId) ? `
-                        <div class="actions">
-                            <button onclick="deleteWallPost('${post.id}')">🗑️ Удалить</button>
-                        </div>
-                    ` : ''}
-                </div>
-            `).join('');
+                `;
+            }).join('');
         } catch (e) {
+            console.error('Ошибка загрузки стены:', e);
             container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки записей</p>';
         }
     }
@@ -1413,7 +1499,6 @@
         const subscriptions = userData.subscriptions || [];
         const achievements = userData.achievements || [];
         
-        // ===== ПОЛУЧАЕМ ЦВЕТ И ПРЕФИКС =====
         const nickColor = userData.nickColor || null;
         const prefix = userData.prefix || null;
 
@@ -1430,7 +1515,6 @@
             `;
         }
 
-        // ===== ФОРМИРУЕМ ИМЯ С ПРЕФИКСОМ И ЦВЕТОМ =====
         let nameHtml = displayName;
         if (prefix) {
             nameHtml = `<span class="prefix">${prefix}</span> ${displayName}`;
@@ -1443,7 +1527,6 @@
                 <div class="admin-panel">
                     <h3>👑 Управление пользователем</h3>
                     
-                    <!-- Отображение текущих настроек -->
                     <div style="margin-bottom:15px;padding:10px;background:var(--bg-welcome);border-radius:8px;">
                         <p style="color:var(--text-muted);font-size:13px;">
                             <strong>Цвет ника:</strong> ${nickColor ? `<span style="color:${nickColor};font-weight:bold;">${nickColor}</span>` : 'Не установлен'}
@@ -1452,7 +1535,6 @@
                         </p>
                     </div>
                     
-                    <!-- Управление ролью -->
                     <div style="margin-bottom:15px;">
                         <p style="color:var(--text-muted);font-size:14px;">Текущая роль: <strong style="color:var(--color-accent);">${roleNames[role] || role}</strong></p>
                         <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
@@ -1467,7 +1549,6 @@
                     
                     <hr style="border-color:var(--border-primary);margin:15px 0;">
                     
-                    <!-- Выдача достижений -->
                     <div style="margin-bottom:15px;">
                         <p style="color:var(--text-muted);font-size:14px;">🏅 Выдать кастомное достижение</p>
                         <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -1479,7 +1560,6 @@
                     
                     <hr style="border-color:var(--border-primary);margin:15px 0;">
                     
-                    <!-- ===== ВЫДАЧА DSCOINS ===== -->
                     <div class="admin-coin-section">
                         <div class="title"><i class="fas fa-coins"></i> Выдача DSCoins</div>
                         <div class="row">
@@ -1570,25 +1650,31 @@
             </div>
         `;
 
+        // ===== ПОКАЗЫВАЕМ СТЕНУ ДЛЯ ВСЕХ =====
+        const wallSection = document.getElementById('wallSection');
+        if (wallSection) {
+            wallSection.style.display = 'block';
+        }
+        
+        // Загружаем стену
+        await loadWall();
+        
         // Показываем дополнительные секции только для своего профиля
         if (isOwn) {
             document.getElementById('dscoinBalanceSection').style.display = 'flex';
             document.getElementById('shopSection').style.display = 'block';
             document.getElementById('playlistsSection').style.display = 'block';
-            document.getElementById('wallSection').style.display = 'block';
             
-            // Обновляем баланс
             const coinsResult = await getUserDSCoins(user.uid);
             document.getElementById('profileDSCoins').textContent = coinsResult.success ? coinsResult.coins : '0';
             
-            // Загружаем цены магазина
             await loadShopPrices();
-            
-            // Загружаем плейлисты
             await loadPlaylists();
-            
-            // Загружаем стену
-            await loadWall();
+        } else {
+            // Скрываем секции, которые не должны видеть другие пользователи
+            document.getElementById('dscoinBalanceSection').style.display = 'none';
+            document.getElementById('shopSection').style.display = 'none';
+            document.getElementById('playlistsSection').style.display = 'none';
         }
     }
 
@@ -1659,7 +1745,6 @@
         await loadProfile();
     });
 
-    // Загружаем профиль сразу, если пользователь уже авторизован
     document.addEventListener('DOMContentLoaded', async () => {
         const user = getCurrentUser();
         if (user) {
