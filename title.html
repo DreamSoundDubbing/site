@@ -1050,158 +1050,172 @@
     });
 
     // ===== КОММЕНТАРИИ =====
-    function renderComments(comments) {
-        const container = document.getElementById('comments-list');
-        if (!container) return;
-        if (!comments || comments.length === 0) {
-            container.innerHTML = '<div class="no-comments">💬 Пока нет комментариев. Будьте первым!</div>';
-            return;
+function renderComments(comments) {
+    const container = document.getElementById('comments-list');
+    if (!container) return;
+    if (!comments || comments.length === 0) {
+        container.innerHTML = '<div class="no-comments">💬 Пока нет комментариев. Будьте первым!</div>';
+        return;
+    }
+    const user = getCurrentUser();
+    container.innerHTML = comments.map(c => {
+        const isOwner = user && c.uid === user.uid;
+        let textHtml = c.text || '';
+        
+        // ===== ПОЛУЧАЕМ ДАННЫЕ ПОЛЬЗОВАТЕЛЯ ДЛЯ ПРЕФИКСА И ЦВЕТА =====
+        const commentUser = allUsers.find(u => u.id === c.uid);
+        const prefix = commentUser?.prefix || '';
+        const nickColor = commentUser?.nickColor || null;
+        const displayName = c.name || 'Аноним';
+        
+        // Формируем имя с префиксом и цветом
+        let nameHtml = displayName;
+        if (prefix) {
+            nameHtml = `<span style="font-size:12px;opacity:0.7;margin-right:3px;">${prefix}</span> ${displayName}`;
         }
-        const user = getCurrentUser();
-        container.innerHTML = comments.map(c => {
-            const isOwner = user && c.uid === user.uid;
-            let textHtml = c.text || '';
-            if (c.mentions) {
-                c.mentions.forEach(email => {
-                    const foundUser = allUsers.find(u => u.email === email);
-                    const displayName = foundUser?.displayName || email;
+        const nameStyle = nickColor ? `color: ${nickColor};` : '';
+        
+        if (c.mentions) {
+            c.mentions.forEach(email => {
+                const foundUser = allUsers.find(u => u.email === email);
+                const displayName = foundUser?.displayName || email;
+                textHtml = textHtml.replace(
+                    new RegExp(`@${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'),
+                    `<a href="profile.html?uid=${foundUser?.id || ''}" class="mention">@${displayName}</a>`
+                );
+            });
+        }
+        const mentionRegex = /@([^\s]+)/g;
+        let match;
+        while ((match = mentionRegex.exec(textHtml)) !== null) {
+            const mention = match[1];
+            if (!textHtml.includes(`">@${mention}</a>`)) {
+                const foundUser = allUsers.find(u => (u.displayName || '').toLowerCase() === mention.toLowerCase() || (u.email || '').toLowerCase() === mention.toLowerCase());
+                if (foundUser) {
                     textHtml = textHtml.replace(
-                        new RegExp(`@${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'),
-                        `<a href="profile.html?uid=${foundUser?.id || ''}" class="mention">@${displayName}</a>`
+                        new RegExp(`@${mention.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'),
+                        `<a href="profile.html?uid=${foundUser.id}" class="mention">@${foundUser.displayName || foundUser.email}</a>`
                     );
-                });
-            }
-            const mentionRegex = /@([^\s]+)/g;
-            let match;
-            while ((match = mentionRegex.exec(textHtml)) !== null) {
-                const mention = match[1];
-                if (!textHtml.includes(`">@${mention}</a>`)) {
-                    const foundUser = allUsers.find(u => (u.displayName || '').toLowerCase() === mention.toLowerCase() || (u.email || '').toLowerCase() === mention.toLowerCase());
-                    if (foundUser) {
-                        textHtml = textHtml.replace(
-                            new RegExp(`@${mention.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'),
-                            `<a href="profile.html?uid=${foundUser.id}" class="mention">@${foundUser.displayName || foundUser.email}</a>`
-                        );
-                    }
                 }
             }
-            textHtml = textHtml.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            textHtml = textHtml.replace(
-                /&lt;a href="profile\.html\?uid=([^"]+)" class="mention"&gt;@([^&]+)&lt;\/a&gt;/g,
-                `<a href="profile.html?uid=$1" class="mention">@$2</a>`
-            );
-            const avatarHtml = c.photoURL ? 
-                `<a href="profile.html?uid=${c.uid}"><img src="${c.photoURL}" class="comment-avatar" onerror="this.style.display='none'"></a>` : 
-                `<a href="profile.html?uid=${c.uid}"><div style="width:36px;height:36px;border-radius:50%;background:var(--border-primary);display:flex;align-items:center;justify-content:center;color:var(--color-accent);font-size:16px;cursor:pointer;">👤</div></a>`;
-            return `
-                <div class="comment-item">
-                    <div class="comment-header">
-                        <div class="comment-user">
-                            ${avatarHtml}
-                            <a href="profile.html?uid=${c.uid}" class="comment-name">${c.name || 'Аноним'}</a>
-                            <span class="comment-rating">${'⭐'.repeat(Math.min(c.rating || 5, 5))}</span>
-                        </div>
-                        ${isOwner ? `<button class="comment-delete" onclick="handleDeleteComment('${c.id}')">🗑️</button>` : ''}
+        }
+        textHtml = textHtml.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        textHtml = textHtml.replace(
+            /&lt;a href="profile\.html\?uid=([^"]+)" class="mention"&gt;@([^&]+)&lt;\/a&gt;/g,
+            `<a href="profile.html?uid=$1" class="mention">@$2</a>`
+        );
+        const avatarHtml = c.photoURL ? 
+            `<a href="profile.html?uid=${c.uid}"><img src="${c.photoURL}" class="comment-avatar" onerror="this.style.display='none'"></a>` : 
+            `<a href="profile.html?uid=${c.uid}"><div style="width:36px;height:36px;border-radius:50%;background:var(--border-primary);display:flex;align-items:center;justify-content:center;color:var(--color-accent);font-size:16px;cursor:pointer;">👤</div></a>`;
+        return `
+            <div class="comment-item">
+                <div class="comment-header">
+                    <div class="comment-user">
+                        ${avatarHtml}
+                        <a href="profile.html?uid=${c.uid}" class="comment-name" style="${nameStyle}">${nameHtml}</a>
+                        <span class="comment-rating">${'⭐'.repeat(Math.min(c.rating || 5, 5))}</span>
                     </div>
-                    <div class="comment-text">${textHtml}</div>
-                    <div class="comment-time">${c.time ? new Date(c.time.seconds * 1000).toLocaleString() : 'Только что'}</div>
+                    ${isOwner ? `<button class="comment-delete" onclick="handleDeleteComment('${c.id}')">🗑️</button>` : ''}
                 </div>
-            `;
-        }).join('');
+                <div class="comment-text">${textHtml}</div>
+                <div class="comment-time">${c.time ? new Date(c.time.seconds * 1000).toLocaleString() : 'Только что'}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+async function loadComments() {
+    const container = document.getElementById('comments-list');
+    if (!container) return;
+    container.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:10px;">⏳ Загрузка комментариев...</div>';
+    try {
+        const comments = await getComments(titleId);
+        allComments = comments;
+        renderComments(comments);
+    } catch (error) {
+        console.error('Ошибка загрузки комментариев:', error);
+        container.innerHTML = `<div class="no-comments" style="color:var(--color-danger);">❌ Ошибка загрузки комментариев: ${error.message}</div>`;
     }
+}
 
-    async function loadComments() {
-        const container = document.getElementById('comments-list');
-        if (!container) return;
-        container.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:10px;">⏳ Загрузка комментариев...</div>';
-        try {
-            const comments = await getComments(titleId);
-            allComments = comments;
-            renderComments(comments);
-        } catch (error) {
-            console.error('Ошибка загрузки комментариев:', error);
-            container.innerHTML = `<div class="no-comments" style="color:var(--color-danger);">❌ Ошибка загрузки комментариев: ${error.message}</div>`;
-        }
+window.handleAddComment = async function() {
+    const text = document.getElementById('commentText');
+    const rating = document.getElementById('commentRating');
+    const button = document.querySelector('.comment-form button');
+    if (!text || !text.value.trim()) { alert('Введите текст комментария'); return; }
+    button.disabled = true;
+    button.textContent = '⏳ Отправка...';
+    const mentions = text.value.match(/@([^\s]+)/g) || [];
+    const mentionedEmails = [];
+    for (const mention of mentions) {
+        const name = mention.substring(1);
+        const foundUser = allUsers.find(u => (u.displayName || '').toLowerCase() === name.toLowerCase() || (u.email || '').toLowerCase() === name.toLowerCase());
+        if (foundUser) mentionedEmails.push(foundUser.email);
+        else if (name.includes('@')) mentionedEmails.push(name);
     }
+    const result = await addComment(titleId, text.value.trim(), parseInt(rating.value), mentionedEmails);
+    if (result.success) { 
+        text.value = ''; 
+        await loadComments(); 
+        await updateAverageRating(); 
+    } else { 
+        alert('❌ Ошибка: ' + result.error); 
+    }
+    button.disabled = false;
+    button.textContent = '📤 Отправить';
+};
 
-    window.handleAddComment = async function() {
-        const text = document.getElementById('commentText');
-        const rating = document.getElementById('commentRating');
-        const button = document.querySelector('.comment-form button');
-        if (!text || !text.value.trim()) { alert('Введите текст комментария'); return; }
-        button.disabled = true;
-        button.textContent = '⏳ Отправка...';
-        const mentions = text.value.match(/@([^\s]+)/g) || [];
-        const mentionedEmails = [];
-        for (const mention of mentions) {
-            const name = mention.substring(1);
-            const foundUser = allUsers.find(u => (u.displayName || '').toLowerCase() === name.toLowerCase() || (u.email || '').toLowerCase() === name.toLowerCase());
-            if (foundUser) mentionedEmails.push(foundUser.email);
-            else if (name.includes('@')) mentionedEmails.push(name);
-        }
-        const result = await addComment(titleId, text.value.trim(), parseInt(rating.value), mentionedEmails);
-        if (result.success) { 
-            text.value = ''; 
-            await loadComments(); 
-            await updateAverageRating(); 
-        } else { 
-            alert('❌ Ошибка: ' + result.error); 
-        }
-        button.disabled = false;
-        button.textContent = '📤 Отправить';
-    };
+window.handleDeleteComment = async function(commentId) {
+    if (!confirm('Удалить комментарий?')) return;
+    const result = await deleteComment(commentId);
+    if (result.success) { 
+        await loadComments(); 
+        await updateAverageRating(); 
+    } else { 
+        alert('❌ Ошибка: ' + result.error); 
+    }
+};
 
-    window.handleDeleteComment = async function(commentId) {
-        if (!confirm('Удалить комментарий?')) return;
-        const result = await deleteComment(commentId);
-        if (result.success) { 
-            await loadComments(); 
-            await updateAverageRating(); 
-        } else { 
-            alert('❌ Ошибка: ' + result.error); 
-        }
-    };
-
-    function renderCommentForm() {
-        const container = document.getElementById('comments-container');
-        if (!container) return;
-        const user = getCurrentUser();
-        if (user) {
-            container.innerHTML = `
-                <h2 style="color:var(--color-accent);margin-top:24px;">💬 Комментарии</h2>
-                <div class="comment-form">
-                    <div style="position:relative;width:100%;">
-                        <textarea id="commentText" placeholder="Напишите ваш комментарий... (используйте @имя или @email для отметки)" oninput="findUsers(this)" onblur="setTimeout(hideSuggestions, 300)"></textarea>
-                    </div>
-                    <div class="form-actions">
-                        <select id="commentRating"><option value="5">⭐⭐⭐⭐⭐</option><option value="4">⭐⭐⭐⭐</option><option value="3">⭐⭐⭐</option><option value="2">⭐⭐</option><option value="1">⭐</option></select>
-                        <button onclick="handleAddComment()">📤 Отправить</button>
-                    </div>
-                    <div class="hint">💡 Используйте <strong style="color:var(--color-accent);">@имя</strong> или <strong style="color:var(--color-accent);">@email</strong> чтобы отметить пользователя</div>
+function renderCommentForm() {
+    const container = document.getElementById('comments-container');
+    if (!container) return;
+    const user = getCurrentUser();
+    if (user) {
+        container.innerHTML = `
+            <h2 style="color:var(--color-accent);margin-top:24px;">💬 Комментарии</h2>
+            <div class="comment-form">
+                <div style="position:relative;width:100%;">
+                    <textarea id="commentText" placeholder="Напишите ваш комментарий... (используйте @имя или @email для отметки)" oninput="findUsers(this)" onblur="setTimeout(hideSuggestions, 300)"></textarea>
                 </div>
-                <div id="comments-list"></div>
-            `;
-        } else {
-            container.innerHTML = `
-                <h2 style="color:var(--color-accent);margin-top:24px;">💬 Комментарии</h2>
-                <div class="auth-prompt"><a href="login.html">Войдите</a>, чтобы оставить комментарий</div>
-                <div id="comments-list"></div>
-            `;
-        }
-        loadComments();
+                <div class="form-actions">
+                    <select id="commentRating"><option value="5">⭐⭐⭐⭐⭐</option><option value="4">⭐⭐⭐⭐</option><option value="3">⭐⭐⭐</option><option value="2">⭐⭐</option><option value="1">⭐</option></select>
+                    <button onclick="handleAddComment()">📤 Отправить</button>
+                </div>
+                <div class="hint">💡 Используйте <strong style="color:var(--color-accent);">@имя</strong> или <strong style="color:var(--color-accent);">@email</strong> чтобы отметить пользователя</div>
+            </div>
+            <div id="comments-list"></div>
+        `;
+    } else {
+        container.innerHTML = `
+            <h2 style="color:var(--color-accent);margin-top:24px;">💬 Комментарии</h2>
+            <div class="auth-prompt"><a href="login.html">Войдите</a>, чтобы оставить комментарий</div>
+            <div id="comments-list"></div>
+        `;
     }
+    loadComments();
+}
 
-    async function updateAverageRating() {
-        const container = document.getElementById('avgRatingContainer');
-        if (!container) return;
-        const avg = await getAverageRating(titleId);
-        if (avg > 0) { 
-            container.innerHTML = `⭐ ${avg.toFixed(1)} (${allComments.length} оценок)`; 
-            container.style.display = 'inline-block'; 
-        } else { 
-            container.style.display = 'none'; 
-        }
+async function updateAverageRating() {
+    const container = document.getElementById('avgRatingContainer');
+    if (!container) return;
+    const avg = await getAverageRating(titleId);
+    if (avg > 0) { 
+        container.innerHTML = `⭐ ${avg.toFixed(1)} (${allComments.length} оценок)`; 
+        container.style.display = 'inline-block'; 
+    } else { 
+        container.style.display = 'none'; 
     }
+}
 
     async function trackViewEpisode(episodeNumber) {
         const user = getCurrentUser();
