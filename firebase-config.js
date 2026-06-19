@@ -410,15 +410,21 @@ async function addComment(titleId, text, rating, mentionedEmails = []) {
 
 async function getComments(titleId) {
     try {
+        // Без orderBy, чтобы не требовать индекс — сортируем на клиенте
         const q = query(
             collection(db, "comments"),
-            where("titleId", "==", titleId),
-            orderBy("time", "desc")
+            where("titleId", "==", titleId)
         );
         const querySnapshot = await getDocs(q);
         const comments = [];
         querySnapshot.forEach((doc) => {
             comments.push({ id: doc.id, ...doc.data() });
+        });
+        // Сортируем по времени (сначала новые)
+        comments.sort((a, b) => {
+            const timeA = a.time?.seconds || 0;
+            const timeB = b.time?.seconds || 0;
+            return timeB - timeA;
         });
         return comments;
     } catch (error) {
@@ -426,7 +432,6 @@ async function getComments(titleId) {
         return [];
     }
 }
-
 async function deleteComment(commentId) {
     const user = getCurrentUser();
     if (!user) return { success: false, error: "Не авторизован" };
