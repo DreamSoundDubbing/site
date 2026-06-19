@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +31,17 @@
         }
         .profile-avatar-large:hover { transform: scale(1.05); }
         .profile-info { flex: 1; }
-        .profile-name { font-size: 28px; color: var(--color-accent); margin: 0; }
+        .profile-name {
+            font-size: 28px;
+            color: var(--color-accent);
+            margin: 0;
+            transition: color 0.3s;
+        }
+        .profile-name .prefix {
+            font-size: 20px;
+            margin-right: 4px;
+            opacity: 0.8;
+        }
         .profile-email { color: var(--text-muted); font-size: 14px; }
         .profile-role {
             display: inline-block;
@@ -513,6 +523,25 @@
             box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
         }
 
+        .shop-item {
+            background: var(--bg-shop-item);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            border: 2px solid var(--border-secondary);
+            transition: all 0.3s;
+        }
+        .shop-item:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
         @media (max-width: 768px) {
             .profile-header { flex-direction: column; text-align: center; }
             .profile-stats { justify-content: center; }
@@ -541,7 +570,7 @@
         <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
         <a href="voice-order.html" class="nav-icon-btn" id="voiceOrderLink" style="display:none;">📝Заявка</a>
         <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
-        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">🌙</button>
     </div>
 </header>
 
@@ -678,7 +707,7 @@
         if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
     }
     function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         const btn = document.getElementById('themeToggle');
         if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
@@ -775,22 +804,22 @@
     <!-- ========== МАГАЗИН ========== -->
     <div id="shopSection" style="display:none;background:var(--bg-content);padding:20px;border-radius:15px;border:1px solid var(--border-primary);margin:20px 0;">
         <h3 style="color:var(--color-accent);margin-bottom:15px;"><i class="fas fa-store"></i> Магазин DSCoins</h3>
-        <div class="shop-grid" id="shopGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:15px;">
-            <div class="shop-item" style="background:var(--bg-shop-item);border-radius:12px;padding:16px;text-align:center;border:2px solid var(--border-secondary);transition:all 0.3s;">
+        <div class="shop-grid" id="shopGrid">
+            <div class="shop-item">
                 <div style="font-size:36px;margin-bottom:8px;">🎨</div>
                 <div style="font-weight:bold;color:var(--text-primary);">Цветной никнейм</div>
                 <div style="color:#fbbf24;font-weight:bold;font-size:16px;margin:6px 0;"><i class="fas fa-coins"></i> <span id="priceColorNick">500</span></div>
                 <div style="color:var(--text-muted);font-size:12px;margin-bottom:10px;">Измените цвет своего ника в профиле</div>
                 <button class="action-btn primary" onclick="purchaseItem('colorNick')">Купить</button>
             </div>
-            <div class="shop-item" style="background:var(--bg-shop-item);border-radius:12px;padding:16px;text-align:center;border:2px solid var(--border-secondary);transition:all 0.3s;">
+            <div class="shop-item">
                 <div style="font-size:36px;margin-bottom:8px;">🏷️</div>
                 <div style="font-weight:bold;color:var(--text-primary);">Префикс</div>
                 <div style="color:#fbbf24;font-weight:bold;font-size:16px;margin:6px 0;"><i class="fas fa-coins"></i> <span id="pricePrefix">300</span></div>
                 <div style="color:var(--text-muted);font-size:12px;margin-bottom:10px;">Добавьте префикс перед ником</div>
                 <button class="action-btn primary" onclick="purchaseItem('prefix')">Купить</button>
             </div>
-            <div class="shop-item" style="background:var(--bg-shop-item);border-radius:12px;padding:16px;text-align:center;border:2px solid var(--border-secondary);transition:all 0.3s;">
+            <div class="shop-item">
                 <div style="font-size:36px;margin-bottom:8px;">📚</div>
                 <div style="font-weight:bold;color:var(--text-primary);">Слот ачивок</div>
                 <div style="color:#fbbf24;font-weight:bold;font-size:16px;margin:6px 0;"><i class="fas fa-coins"></i> <span id="priceAchSlot">200</span></div>
@@ -1007,10 +1036,16 @@
             case 'achSlot':
                 result = await purchaseAchSlot(user.uid);
                 break;
+            default:
+                alert('❌ Неизвестный товар');
+                return;
         }
         if (result && result.success) {
             alert('✅ Покупка успешно совершена!');
+            // Обновляем данные пользователя
             await loadProfile();
+            // Обновляем баланс в сайдбаре
+            await updateSidebarBalance(user);
         } else if (result) {
             alert('❌ Ошибка: ' + result.error);
         }
@@ -1104,95 +1139,95 @@
     }
 
     // ========== СТЕНА ==========
-window.addWallPost = async function() {
-    const user = getCurrentUser();
-    if (!user) { alert('Войдите, чтобы оставить запись'); return; }
-    const text = document.getElementById('wallInput').value.trim();
-    if (!text) { alert('Введите текст'); return; }
-    
-    // Получаем настройки видимости стены
-    const userData = await getUserData(user.uid);
-    const visibility = userData.success ? (userData.data.wallVisibility || 'all') : 'all';
-    
-    const result = await addWallPost(user.uid, text, visibility);
-    if (result.success) {
-        document.getElementById('wallInput').value = '';
-        await loadWall();
-    } else {
-        alert('❌ Ошибка: ' + result.error);
-    }
-};
+    window.addWallPost = async function() {
+        const user = getCurrentUser();
+        if (!user) { alert('Войдите, чтобы оставить запись'); return; }
+        const text = document.getElementById('wallInput').value.trim();
+        if (!text) { alert('Введите текст'); return; }
+        
+        const userData = await getUserData(user.uid);
+        const visibility = userData.success ? (userData.data.wallVisibility || 'all') : 'all';
+        
+        const result = await addWallPost(user.uid, text, visibility);
+        if (result.success) {
+            document.getElementById('wallInput').value = '';
+            await loadWall();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
 
-window.deleteWallPost = async function(id) {
-    if (!confirm('Удалить запись?')) return;
-    const result = await deleteWallPost(id);
-    if (result.success) {
-        await loadWall();
-    } else {
-        alert('❌ Ошибка: ' + result.error);
-    }
-};
+    window.deleteWallPost = async function(id) {
+        if (!confirm('Удалить запись?')) return;
+        const result = await deleteWallPost(id);
+        if (result.success) {
+            await loadWall();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
 
-window.saveWallSettings = async function() {
-    const user = getCurrentUser();
-    if (!user) return;
-    const selected = document.querySelector('input[name="wallMode"]:checked');
-    if (!selected) return;
-    const result = await updateWallVisibility(user.uid, selected.value);
-    if (result.success) {
-        alert('✅ Настройки сохранены!');
-        closeModal('m-wall-settings');
-        await loadWall();
-    } else {
-        alert('❌ Ошибка: ' + result.error);
-    }
-};
+    window.saveWallSettings = async function() {
+        const user = getCurrentUser();
+        if (!user) return;
+        const selected = document.querySelector('input[name="wallMode"]:checked');
+        if (!selected) return;
+        const result = await updateWallVisibility(user.uid, selected.value);
+        if (result.success) {
+            alert('✅ Настройки сохранены!');
+            closeModal('m-wall-settings');
+            await loadWall();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
 
-async function loadWall() {
-    const container = document.getElementById('wallContainer');
-    if (!container) return;
-    
-    const user = getCurrentUser();
-    if (!user) {
-        container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Войдите, чтобы видеть стену</p>';
-        return;
-    }
-    
-    let targetUid = viewedUserId || user.uid;
-    
-    try {
-        const result = await getWallPosts(targetUid);
-        if (!result.success) {
-            container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки записей</p>';
+    async function loadWall() {
+        const container = document.getElementById('wallContainer');
+        if (!container) return;
+        
+        const user = getCurrentUser();
+        if (!user) {
+            container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Войдите, чтобы видеть стену</p>';
             return;
         }
-        const posts = result.posts;
-        if (posts.length === 0) {
-            container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Пока нет записей на стене</p>';
-            return;
-        }
-        container.innerHTML = posts.map(post => `
-            <div class="wall-post">
-                <div class="header">
-                    <div class="user">
-                        <div class="avatar" style="background:var(--color-accent);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px;">${post.userName?.charAt(0).toUpperCase() || '?'}</div>
-                        <span class="name">${post.userName || 'Пользователь'}</span>
-                        <span class="visibility-badge">${post.visibility === 'friends' ? '👥 Подписчики' : post.visibility === 'disabled' ? '🔒 Закрыто' : '🌍 Все'}</span>
+        
+        let targetUid = viewedUserId || user.uid;
+        
+        try {
+            const result = await getWallPosts(targetUid);
+            if (!result.success) {
+                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки записей</p>';
+                return;
+            }
+            const posts = result.posts;
+            if (posts.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Пока нет записей на стене</p>';
+                return;
+            }
+            container.innerHTML = posts.map(post => `
+                <div class="wall-post">
+                    <div class="header">
+                        <div class="user">
+                            <div class="avatar" style="background:var(--color-accent);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px;">${post.userName?.charAt(0).toUpperCase() || '?'}</div>
+                            <span class="name">${post.userName || 'Пользователь'}</span>
+                            <span class="visibility-badge">${post.visibility === 'friends' ? '👥 Подписчики' : post.visibility === 'disabled' ? '🔒 Закрыто' : '🌍 Все'}</span>
+                        </div>
+                        <span class="time">${post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleString() : ''}</span>
                     </div>
-                    <span class="time">${post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleString() : ''}</span>
+                    <div class="text">${post.text}</div>
+                    ${(user && user.uid === post.userId) ? `
+                        <div class="actions">
+                            <button onclick="deleteWallPost('${post.id}')">🗑️ Удалить</button>
+                        </div>
+                    ` : ''}
                 </div>
-                <div class="text">${post.text}</div>
-                ${(user && user.uid === post.userId) ? `
-                    <div class="actions">
-                        <button onclick="deleteWallPost('${post.id}')">🗑️ Удалить</button>
-                    </div>
-                ` : ''}
-            </div>
-        `).join('');
-    } catch (e) {
-        container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки записей</p>';
+            `).join('');
+        } catch (e) {
+            container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки записей</p>';
+        }
     }
-}
+
     // ========== ЗАЯВКИ ==========
     async function loadOrders() {
         const container = document.getElementById('ordersList');
@@ -1377,6 +1412,10 @@ async function loadWall() {
         const subscribers = userData.subscribers || [];
         const subscriptions = userData.subscriptions || [];
         const achievements = userData.achievements || [];
+        
+        // ===== ПОЛУЧАЕМ ЦВЕТ И ПРЕФИКС =====
+        const nickColor = userData.nickColor || null;
+        const prefix = userData.prefix || null;
 
         const roleNames = { 'admin': '👑 Администратор', 'dubber': '🎙️ Даббер', 'user': '👤 Пользователь' };
         const roleClass = { 'admin': 'role-admin', 'dubber': 'role-dubber', 'user': 'role-user' };
@@ -1391,11 +1430,27 @@ async function loadWall() {
             `;
         }
 
+        // ===== ФОРМИРУЕМ ИМЯ С ПРЕФИКСОМ И ЦВЕТОМ =====
+        let nameHtml = displayName;
+        if (prefix) {
+            nameHtml = `<span class="prefix">${prefix}</span> ${displayName}`;
+        }
+        const nameStyle = nickColor ? `color: ${nickColor};` : '';
+
         let adminPanel = '';
         if (isAdminUser && !isOwn) {
             adminPanel = `
                 <div class="admin-panel">
                     <h3>👑 Управление пользователем</h3>
+                    
+                    <!-- Отображение текущих настроек -->
+                    <div style="margin-bottom:15px;padding:10px;background:var(--bg-welcome);border-radius:8px;">
+                        <p style="color:var(--text-muted);font-size:13px;">
+                            <strong>Цвет ника:</strong> ${nickColor ? `<span style="color:${nickColor};font-weight:bold;">${nickColor}</span>` : 'Не установлен'}
+                            &nbsp;|&nbsp;
+                            <strong>Префикс:</strong> ${prefix ? `<span style="font-weight:bold;">${prefix}</span>` : 'Не установлен'}
+                        </p>
+                    </div>
                     
                     <!-- Управление ролью -->
                     <div style="margin-bottom:15px;">
@@ -1486,7 +1541,7 @@ async function loadWall() {
                          class="profile-avatar-large" 
                          onerror="this.src='https://via.placeholder.com/120/d4e8ff/4a90d9?text=?'">
                     <div class="profile-info">
-                        <h1 class="profile-name" id="profileDisplayName">${displayName}</h1>
+                        <h1 class="profile-name" id="profileDisplayName" style="${nameStyle}">${nameHtml}</h1>
                         <div class="profile-email">${isOwn ? email : ''}</div>
                         <span class="profile-role ${roleClass[role] || 'role-user'}">${roleNames[role] || 'Пользователь'}</span>
                         <div class="profile-actions">
