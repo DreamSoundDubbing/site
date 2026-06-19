@@ -43,100 +43,45 @@
             z-index: 2;
         }
         
-        /* ===== КОНТЕЙНЕР ДЛЯ ОБЛОЖКИ (АДАПТИВНЫЙ) ===== */
-        /* ===== КОНТЕЙНЕР ДЛЯ ОБЛОЖКИ (СОХРАНЯЕТ ПРОПОРЦИИ) ===== */
-/* ===== КОНТЕЙНЕР ДЛЯ ОБЛОЖКИ (АДАПТИВНЫЙ ПОД КАРТИНКУ) ===== */
-.poster-wrapper {
-    flex-shrink: 0;
-    width: 250px;
-    max-width: 250px;
-    min-width: 120px;
-    border-radius: 12px;
-    overflow: hidden;
-    background: var(--bg-card);
-    border: 2px solid var(--border-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    aspect-ratio: auto;
-    /* Высота будет автоматически подстраиваться под картинку */
-}
-.poster-wrapper .anime-poster {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-height: 400px;
-    object-fit: cover;
-    background: var(--bg-card);
-}
-.poster-wrapper .poster-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 300px;
-    color: var(--text-muted);
-    font-size: 14px;
-    text-align: center;
-    padding: 20px;
-    background: var(--bg-card);
-}
-.poster-wrapper .poster-placeholder .icon {
-    font-size: 48px;
-    margin-bottom: 10px;
-}
-/* Картинка с object-fit: cover — заполняет контейнер, но не искажается */
-.poster-wrapper .anime-poster.cover {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-    max-height: 400px;
-}
-/* Картинка с object-fit: contain — видна целиком */
-.poster-wrapper .anime-poster.contain {
-    object-fit: contain;
-    width: 100%;
-    height: auto;
-    max-height: 400px;
-}
-
-@media (max-width: 768px) {
-    .poster-wrapper {
-        width: 160px;
-        max-width: 160px;
-        min-width: 80px;
-    }
-    .poster-wrapper .anime-poster {
-        max-height: 240px;
-    }
-    .poster-wrapper .poster-placeholder {
-        min-height: 200px;
-        font-size: 12px;
-    }
-    .poster-wrapper .poster-placeholder .icon {
-        font-size: 32px;
-    }
-}
-@media (max-width: 480px) {
-    .poster-wrapper {
-        width: 120px;
-        max-width: 120px;
-        min-width: 60px;
-    }
-    .poster-wrapper .anime-poster {
-        max-height: 180px;
-    }
-    .poster-wrapper .poster-placeholder {
-        min-height: 150px;
-        font-size: 10px;
-        padding: 10px;
-    }
-    .poster-wrapper .poster-placeholder .icon {
-        font-size: 24px;
-    }
-}
+        /* ===== КОНТЕЙНЕР ДЛЯ ОБЛОЖКИ (ПРОСТОЙ И РАБОЧИЙ) ===== */
+        .poster-wrapper {
+            flex-shrink: 0;
+            width: 250px;
+            max-width: 250px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg-card);
+            border: 2px solid var(--border-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .poster-wrapper img {
+            display: block;
+            width: 100%;
+            height: auto;
+            min-height: 100px;
+            max-height: 400px;
+            object-fit: contain;
+            background: var(--bg-card);
+        }
+        .poster-wrapper .poster-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 300px;
+            color: var(--text-muted);
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+            background: var(--bg-card);
+        }
+        .poster-wrapper .poster-placeholder .icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
 
         .anime-info {
             flex: 1;
@@ -180,7 +125,7 @@
         .status-completed { background: #2196F3; color: #fff; }
         .status-announced { background: #FF9800; color: #fff; }
 
-        /* ===== КОММЕНТАРИИ (ИСПРАВЛЕНЫ) ===== */
+        /* ===== КОММЕНТАРИИ ===== */
         #comments-container {
             margin-top: 30px;
         }
@@ -691,6 +636,10 @@
         }
 
         @media (max-width: 768px) {
+            .poster-wrapper { width: 160px; max-width: 160px; }
+            .poster-wrapper img { max-height: 240px; }
+            .poster-wrapper .poster-placeholder { min-height: 200px; font-size: 12px; }
+            .poster-wrapper .poster-placeholder .icon { font-size: 32px; }
             .anime-title { font-size: 24px; }
             .comment-header { flex-direction: column; align-items: flex-start; }
             .comment-user { flex-wrap: wrap; }
@@ -703,6 +652,10 @@
             .player-wrapper.fullscreen .player-controls button { font-size: 12px; padding: 6px 12px; }
         }
         @media (max-width: 480px) {
+            .poster-wrapper { width: 120px; max-width: 120px; }
+            .poster-wrapper img { max-height: 180px; }
+            .poster-wrapper .poster-placeholder { min-height: 150px; font-size: 10px; padding: 10px; }
+            .poster-wrapper .poster-placeholder .icon { font-size: 24px; }
             .anime-title { font-size: 20px; }
             .anime-header { padding: 16px; gap: 16px; }
         }
@@ -904,8 +857,7 @@
         getAllUsers,
         getUserDSCoins,
         addDSCoins,
-        createDSCoinOrder,
-        db
+        createDSCoinOrder
     } from './firebase-config.js';
 
     window.getUserDSCoins = getUserDSCoins;
@@ -1100,7 +1052,7 @@
         if (!e.target.closest('#mentionSuggestions') && !e.target.closest('#commentText')) hideSuggestions();
     });
 
-    // ===== КОММЕНТАРИИ (ИСПРАВЛЕНЫ) =====
+    // ===== КОММЕНТАРИИ =====
     function renderComments(comments) {
         const container = document.getElementById('comments-list');
         if (!container) return;
@@ -1469,7 +1421,7 @@
 
         const firstEpisode = episodes.find(ep => ep.url) || { url: '', number: 1 };
         
-        // ОБЛОЖКА - используем горизонтальную, вертикальную или дефолт
+        // ОБЛОЖКА
         const posterImage = getValidImageUrl(
             title.imageHorizontal || title.imageVertical || title.image,
             null
@@ -1542,29 +1494,25 @@
 
         const headerWallpaperStyle = wallpaperUrl ? `background-image: url('${wallpaperUrl}'); background-size: cover; background-position: center;` : '';
 
-        // Формируем HTML для обложки с адаптивным контейнером
-// ===== ОБЛОЖКА С ПРАВИЛЬНЫМИ ПРОПОРЦИЯМИ =====
-let posterHtml = '';
-if (posterImage) {
-    // Используем contain, чтобы картинка была видна целиком
-    posterHtml = `
-        <div class="poster-wrapper">
-            <img src="${posterImage}" 
-                 alt="${title.name}" 
-                 class="anime-poster contain"
-                 onerror="this.style.display='none'; this.parentElement.innerHTML = \`<div class="poster-placeholder"><span class="icon">🖼️</span>Обложка<br>не найдена</div>\`;">
-        </div>
-    `;
-} else {
-    posterHtml = `
-        <div class="poster-wrapper">
-            <div class="poster-placeholder">
-                <span class="icon">🖼️</span>
-                Обложка<br>не найдена
-            </div>
-        </div>
-    `;
-}
+        // ===== ОБЛОЖКА (ПРОСТОЙ РАБОЧИЙ ВАРИАНТ) =====
+        let posterHtml = '';
+        if (posterImage) {
+            posterHtml = `
+                <div class="poster-wrapper">
+                    <img src="${posterImage}" alt="${title.name}" 
+                         onerror="this.style.display='none'; this.parentElement.innerHTML = \`<div class="poster-placeholder"><span class="icon">🖼️</span>Обложка<br>не найдена</div>\`;">
+                </div>
+            `;
+        } else {
+            posterHtml = `
+                <div class="poster-wrapper">
+                    <div class="poster-placeholder">
+                        <span class="icon">🖼️</span>
+                        Обложка<br>не найдена
+                    </div>
+                </div>
+            `;
+        }
 
         content.innerHTML = `
             <div class="anime-header ${wallpaperUrl ? 'has-wallpaper' : ''}" style="${headerWallpaperStyle}">

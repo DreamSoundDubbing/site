@@ -410,7 +410,7 @@ async function addComment(titleId, text, rating, mentionedEmails = []) {
 
 async function getComments(titleId) {
     try {
-        // Без orderBy, чтобы не требовать индекс — сортируем на клиенте
+        // Без orderBy, чтобы не требовать индекс
         const q = query(
             collection(db, "comments"),
             where("titleId", "==", titleId)
@@ -420,7 +420,7 @@ async function getComments(titleId) {
         querySnapshot.forEach((doc) => {
             comments.push({ id: doc.id, ...doc.data() });
         });
-        // Сортируем по времени (сначала новые)
+        // Сортируем вручную на клиенте (новые сверху)
         comments.sort((a, b) => {
             const timeA = a.time?.seconds || 0;
             const timeB = b.time?.seconds || 0;
