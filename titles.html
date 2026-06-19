@@ -153,6 +153,7 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(60, 80, 180, 0.3);
         }
+                /* ===== КАРТОЧКА ТАЙТЛА (УМЕНЬШЕН ТОЛЬКО title-card-info) ===== */
         .title-card-wrapper {
             position: relative;
             width: 200px;
@@ -212,23 +213,59 @@
             object-fit: cover;
             display: block;
         }
+        
+        /* ===== УМЕНЬШЕННЫЙ title-card-info ===== */
         .title-card-info {
-            padding: 10px;
+            padding: 6px;
             text-align: center;
         }
         .title-card-name {
-            font-size: 16px;
+            font-size: 13px;
             font-weight: bold;
             color: var(--color-accent);
-            margin-bottom: 4px;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .title-card-meta {
-            font-size: 12px;
+            font-size: 10px;
             color: var(--text-muted);
             display: flex;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
+            flex-wrap: wrap;
         }
+        .title-card-meta span {
+            font-size: 10px;
+        }
+        .title-card-year-rating {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+            margin-top: 2px;
+        }
+        .title-card-year-rating .year {
+            color: var(--text-muted);
+        }
+        .title-card-year-rating .rating {
+            color: var(--color-warning);
+        }
+        .title-card-status {
+            margin-top: 2px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-size: 9px;
+            font-weight: bold;
+        }
+        .status-ongoing { background: #4CAF50; color: #fff; }
+        .status-completed { background: #2196F3; color: #fff; }
+        .status-announced { background: #FF9800; color: #fff; }
+
         .titles-grid {
             display: flex;
             flex-wrap: wrap;
