@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +9,7 @@
     <script src="data.js"></script>
     <script type="module" src="firebase-config.js"></script>
     <style>
-        /* Стили для страницы тайтла */
+        /* ===== СТИЛИ СТРАНИЦЫ ТАЙТЛА ===== */
         .anime-header {
             display: flex;
             gap: 30px;
@@ -35,7 +35,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.65);
+            background: rgba(0,0,0,0.7);
             z-index: 1;
         }
         .anime-header.has-wallpaper > * {
@@ -52,6 +52,14 @@
             object-fit: contain;
             display: block;
             flex-shrink: 0;
+            background: var(--bg-card);
+            border: 2px solid var(--border-primary);
+        }
+        .anime-poster[src=""], .anime-poster:not([src]) {
+            display: none;
+        }
+        .anime-poster.error {
+            display: none;
         }
         .anime-info {
             flex: 1;
@@ -95,7 +103,7 @@
         .status-completed { background: #2196F3; color: #fff; }
         .status-announced { background: #FF9800; color: #fff; }
 
-        /* Комментарии */
+        /* ===== КОММЕНТАРИИ ===== */
         .comment-item {
             background: var(--bg-comment);
             border-left: 4px solid var(--color-accent);
@@ -247,7 +255,7 @@
             text-decoration: underline;
         }
 
-        /* Админ-панель */
+        /* ===== АДМИН-ПАНЕЛЬ ===== */
         .admin-edit-btn {
             display: inline-block;
             padding: 6px 18px;
@@ -333,7 +341,7 @@
             color: var(--text-primary);
         }
 
-        /* Редактор серий */
+        /* ===== РЕДАКТОР СЕРИЙ ===== */
         .episodes-editor { margin-top: 8px; }
         .episode-edit-item {
             display: flex;
@@ -521,7 +529,7 @@
         .fullscreen-btn .icon { font-size: 16px; }
         body.fullscreen-mode { overflow: hidden !important; }
 
-        /* Персонажи */
+        /* ===== ПЕРСОНАЖИ ===== */
         .characters-grid {
             display: flex;
             flex-wrap: wrap;
@@ -551,7 +559,7 @@
             color: var(--color-accent);
         }
 
-        /* Эпизоды */
+        /* ===== ЭПИЗОДЫ ===== */
         .episodes-list {
             display: flex;
             flex-direction: column;
@@ -635,7 +643,7 @@
         <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
         <a href="voice-order.html" class="nav-icon-btn" id="voiceOrderLink" style="display:none;">📝Заявка</a>
         <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
-        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">🌙</button>
     </div>
 </header>
 
@@ -780,7 +788,7 @@
 </script>
 
 <!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
-<div class="container">
+<div class="container" id="mainContainer">
     <div class="header">
         <hr>
         <h1 class="title" style="font-size:28px;">🎬 Просмотр</h1>
@@ -1080,7 +1088,7 @@
             renderComments(comments);
         } catch (error) {
             console.error('Ошибка загрузки комментариев:', error);
-            container.innerHTML = `<div class="no-comments" style="color:var(--color-danger);">❌ Ошибка загрузки комментариев</div>`;
+            container.innerHTML = `<div class="no-comments" style="color:var(--color-danger);">❌ Ошибка загрузки комментариев: ${error.message}</div>`;
         }
     }
 
@@ -1100,8 +1108,13 @@
             else if (name.includes('@')) mentionedEmails.push(name);
         }
         const result = await addComment(titleId, text.value.trim(), parseInt(rating.value), mentionedEmails);
-        if (result.success) { text.value = ''; await loadComments(); await updateAverageRating(); } 
-        else { alert('❌ Ошибка: ' + result.error); }
+        if (result.success) { 
+            text.value = ''; 
+            await loadComments(); 
+            await updateAverageRating(); 
+        } else { 
+            alert('❌ Ошибка: ' + result.error); 
+        }
         button.disabled = false;
         button.textContent = '📤 Отправить';
     };
@@ -1109,8 +1122,12 @@
     window.handleDeleteComment = async function(commentId) {
         if (!confirm('Удалить комментарий?')) return;
         const result = await deleteComment(commentId);
-        if (result.success) { await loadComments(); await updateAverageRating(); } 
-        else { alert('❌ Ошибка: ' + result.error); }
+        if (result.success) { 
+            await loadComments(); 
+            await updateAverageRating(); 
+        } else { 
+            alert('❌ Ошибка: ' + result.error); 
+        }
     };
 
     function renderCommentForm() {
@@ -1146,8 +1163,12 @@
         const container = document.getElementById('avgRatingContainer');
         if (!container) return;
         const avg = await getAverageRating(titleId);
-        if (avg > 0) { container.innerHTML = `⭐ ${avg.toFixed(1)} (${allComments.length} оценок)`; container.style.display = 'inline-block'; } 
-        else { container.style.display = 'none'; }
+        if (avg > 0) { 
+            container.innerHTML = `⭐ ${avg.toFixed(1)} (${allComments.length} оценок)`; 
+            container.style.display = 'inline-block'; 
+        } else { 
+            container.style.display = 'none'; 
+        }
     }
 
     async function trackViewEpisode(episodeNumber) {
@@ -1287,16 +1308,34 @@
         if (episodeNumber) trackViewEpisode(episodeNumber);
     };
 
+    // Функция для проверки и загрузки изображения с fallback
+    function getValidImageUrl(url, fallback) {
+        if (!url || url === '' || url === 'undefined' || url === 'null') {
+            return fallback;
+        }
+        return url;
+    }
+
     async function loadTitle() {
         const content = document.getElementById('title-content');
         content.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
         await loadAllUsers();
+        
+        // Пробуем получить тайтл из Firebase
         const result = await getTitleById(titleId);
         if (!result.success || !result.data) {
+            // Если не найден в Firebase, ищем в локальной базе
             const localTitle = window.getTitleById?.(titleId) || window.titlesDatabase?.find(t => t.id === titleId);
-            if (localTitle) currentTitle = localTitle;
-            else { content.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);">❌ Тайтл не найден</div>'; return; }
-        } else { currentTitle = result.data; }
+            if (localTitle) {
+                currentTitle = localTitle;
+            } else {
+                content.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);">❌ Тайтл не найден</div>';
+                return;
+            }
+        } else {
+            currentTitle = result.data;
+        }
+        
         const title = currentTitle;
 
         const statusMap = {
@@ -1305,7 +1344,17 @@
             'announced': '<span class="status-badge status-announced">📢 Анонс</span>'
         };
 
-        const roles = window.rolesDatabase?.filter(r => r.titleId === titleId) || [];
+        // Загружаем роли из Firebase или локальной базы
+        let roles = [];
+        try {
+            const rolesResult = await import('./firebase-config.js').then(m => m.getRolesByTitleId(titleId));
+            if (rolesResult && rolesResult.success) {
+                roles = rolesResult.roles;
+            }
+        } catch (e) {
+            roles = window.rolesDatabase?.filter(r => r.titleId === titleId) || [];
+        }
+        
         let charactersHtml = '';
         if (roles.length > 0) {
             charactersHtml = '<h2 style="color:var(--color-accent);margin-top:24px;">🎭 Персонажи и озвучка</h2><div class="characters-grid">';
@@ -1340,8 +1389,29 @@
         }
 
         const firstEpisode = episodes.find(ep => ep.url) || { url: '', number: 1 };
-        const posterImage = title.imageHorizontal || title.imageVertical || title.image || 'https://via.placeholder.com/250/d4e8ff/4a90d9?text=No+Image';
-        const wallpaperStyle = title.wallpaper ? `background-image: url('${title.wallpaper}'); background-size: cover; background-position: center;` : '';
+        
+        // ПРАВИЛЬНАЯ ЗАГРУЗКА ОБЛОЖКИ С FALLBACK
+        const posterImage = getValidImageUrl(
+            title.imageHorizontal || title.imageVertical || title.image,
+            'https://via.placeholder.com/250x350/1a1030/6a5aaa?text=' + encodeURIComponent(title.name || 'No Image')
+        );
+        
+        // ОБОИ — теперь на весь фон страницы
+        const wallpaperUrl = getValidImageUrl(title.wallpaper, '');
+        const wallpaperStyle = wallpaperUrl ? `background-image: url('${wallpaperUrl}'); background-size: cover; background-position: center; background-attachment: fixed;` : '';
+        
+        // Если есть обои — применяем к body
+        if (wallpaperUrl) {
+            document.body.style.backgroundImage = `url('${wallpaperUrl}')`;
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundPosition = 'center';
+            document.body.style.backgroundAttachment = 'fixed';
+        } else {
+            document.body.style.backgroundImage = '';
+            document.body.style.backgroundSize = '';
+            document.body.style.backgroundPosition = '';
+            document.body.style.backgroundAttachment = '';
+        }
 
         const avgRating = await getAverageRating(titleId);
         const avgRatingHtml = avgRating > 0 ? `<span class="avg-rating" id="avgRatingContainer">⭐ ${avgRating.toFixed(1)} (${allComments.length} оценок)</span>` : `<span class="avg-rating" id="avgRatingContainer" style="display:none;"></span>`;
@@ -1394,11 +1464,13 @@
             </div>
         `;
 
-        const wallpaperClass = title.wallpaper ? 'has-wallpaper' : '';
+        // Показываем обои в хедере как подложку, но не перекрываем весь контент
+        const headerWallpaperStyle = wallpaperUrl ? `background-image: url('${wallpaperUrl}'); background-size: cover; background-position: center;` : '';
 
         content.innerHTML = `
-            <div class="anime-header ${wallpaperClass}" style="${wallpaperStyle}">
-                <img src="${posterImage}" alt="${title.name}" class="anime-poster" onerror="this.src='https://via.placeholder.com/250/d4e8ff/4a90d9?text=${title.name}'">
+            <div class="anime-header ${wallpaperUrl ? 'has-wallpaper' : ''}" style="${headerWallpaperStyle}">
+                <img src="${posterImage}" alt="${title.name}" class="anime-poster" 
+                     onerror="this.classList.add('error'); this.style.display='none'; this.parentElement.innerHTML += '<div style=\\'display:flex;align-items:center;justify-content:center;width:250px;height:350px;background:var(--bg-card);border-radius:12px;border:2px solid var(--border-primary);color:var(--text-muted);font-size:14px;text-align:center;padding:10px;\\'>🖼️<br>Обложка<br>не найдена</div>';">
                 <div class="anime-info">
                     <h1 class="anime-title">${title.name} ${avgRatingHtml}</h1>
                     <div class="anime-meta">
@@ -1424,6 +1496,7 @@
         setTimeout(setupEpisodesAutoSave, 100);
     }
 
+    // Подписка на изменения авторизации
     onAuthStateChangedListener(async (user) => {
         currentUser = user;
         updateAuthButton(user);
@@ -1433,10 +1506,13 @@
         if (user) {
             const role = await getUserRole(user.uid);
             isAdmin = role === 'admin';
-        } else { isAdmin = false; }
+        } else { 
+            isAdmin = false; 
+        }
         await loadTitle();
     });
 
+    // Загрузка при загрузке страницы
     document.addEventListener('DOMContentLoaded', async () => {
         const user = getCurrentUser();
         currentUser = user;
@@ -1449,6 +1525,14 @@
             isAdmin = role === 'admin';
         }
         await loadTitle();
+    });
+
+    // Очищаем фон при выходе со страницы
+    window.addEventListener('beforeunload', function() {
+        document.body.style.backgroundImage = '';
+        document.body.style.backgroundSize = '';
+        document.body.style.backgroundPosition = '';
+        document.body.style.backgroundAttachment = '';
     });
 </script>
 
