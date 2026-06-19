@@ -44,44 +44,41 @@
         }
         
         /* ===== КОНТЕЙНЕР ДЛЯ ОБЛОЖКИ (ПРОСТОЙ И РАБОЧИЙ) ===== */
-        .poster-wrapper {
-            flex-shrink: 0;
-            width: 250px;
-            max-width: 250px;
-            border-radius: 12px;
-            overflow: hidden;
-            background: var(--bg-card);
-            border: 2px solid var(--border-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .poster-wrapper img {
-            display: block;
-            width: 100%;
-            height: auto;
-            min-height: 100px;
-            max-height: 400px;
-            object-fit: contain;
-            background: var(--bg-card);
-        }
-        .poster-wrapper .poster-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            min-height: 300px;
-            color: var(--text-muted);
-            font-size: 14px;
-            text-align: center;
-            padding: 20px;
-            background: var(--bg-card);
-        }
-        .poster-wrapper .poster-placeholder .icon {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
+        /* ===== КОНТЕЙНЕР ОБЛОЖКИ ===== */
+.poster-wrapper {
+    flex-shrink: 0;
+    width: 250px;
+    max-width: 250px;
+    min-width: 120px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg-card);
+    border: 2px solid var(--border-primary);
+    /* ВАЖНО: НЕТ height, только width */
+}
+.poster-wrapper img {
+    display: block;
+    width: 100%;
+    height: auto;  /* ВАЖНО: auto, чтобы высота считалась от ширины */
+    background: var(--bg-card);
+}
+.poster-wrapper .poster-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 300px;
+    color: var(--text-muted);
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+    background: var(--bg-card);
+}
+.poster-wrapper .poster-placeholder .icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
 
         .anime-info {
             flex: 1;
@@ -1495,24 +1492,23 @@
         const headerWallpaperStyle = wallpaperUrl ? `background-image: url('${wallpaperUrl}'); background-size: cover; background-position: center;` : '';
 
         // ===== ОБЛОЖКА (ПРОСТОЙ РАБОЧИЙ ВАРИАНТ) =====
-        let posterHtml = '';
-        if (posterImage) {
-            posterHtml = `
-                <div class="poster-wrapper">
-                    <img src="${posterImage}" alt="${title.name}" 
-                         onerror="this.style.display='none'; this.parentElement.innerHTML = \`<div class="poster-placeholder"><span class="icon">🖼️</span>Обложка<br>не найдена</div>\`;">
-                </div>
-            `;
-        } else {
-            posterHtml = `
-                <div class="poster-wrapper">
-                    <div class="poster-placeholder">
-                        <span class="icon">🖼️</span>
-                        Обложка<br>не найдена
-                    </div>
-                </div>
-            `;
-        }
+let posterHtml = '';
+if (posterImage) {
+    posterHtml = `
+        <div class="poster-wrapper">
+            <img src="${posterImage}" alt="${title.name}">
+        </div>
+    `;
+} else {
+    posterHtml = `
+        <div class="poster-wrapper">
+            <div class="poster-placeholder">
+                <span class="icon">🖼️</span>
+                Обложка<br>не найдена
+            </div>
+        </div>
+    `;
+}
 
         content.innerHTML = `
             <div class="anime-header ${wallpaperUrl ? 'has-wallpaper' : ''}" style="${headerWallpaperStyle}">
