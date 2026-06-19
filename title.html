@@ -45,10 +45,12 @@
         
         /* ===== КОНТЕЙНЕР ДЛЯ ОБЛОЖКИ (АДАПТИВНЫЙ) ===== */
         /* ===== КОНТЕЙНЕР ДЛЯ ОБЛОЖКИ (СОХРАНЯЕТ ПРОПОРЦИИ) ===== */
+/* ===== КОНТЕЙНЕР ДЛЯ ОБЛОЖКИ (АДАПТИВНЫЙ ПОД КАРТИНКУ) ===== */
 .poster-wrapper {
     flex-shrink: 0;
     width: 250px;
-    max-height: 400px;
+    max-width: 250px;
+    min-width: 120px;
     border-radius: 12px;
     overflow: hidden;
     background: var(--bg-card);
@@ -57,13 +59,15 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    aspect-ratio: auto;
+    /* Высота будет автоматически подстраиваться под картинку */
 }
 .poster-wrapper .anime-poster {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
     display: block;
+    width: 100%;
+    height: auto;
     max-height: 400px;
+    object-fit: cover;
     background: var(--bg-card);
 }
 .poster-wrapper .poster-placeholder {
@@ -72,7 +76,6 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 100%;
     min-height: 300px;
     color: var(--text-muted);
     font-size: 14px;
@@ -84,24 +87,26 @@
     font-size: 48px;
     margin-bottom: 10px;
 }
-/* Если обложка вертикальная — она растягивается по высоте */
-.poster-wrapper .anime-poster.vertical {
-    object-fit: cover;
-    height: 100%;
-    width: auto;
-    max-width: 100%;
-}
-/* Если обложка горизонтальная — она растягивается по ширине */
-.poster-wrapper .anime-poster.horizontal {
+/* Картинка с object-fit: cover — заполняет контейнер, но не искажается */
+.poster-wrapper .anime-poster.cover {
     object-fit: cover;
     width: 100%;
-    height: auto;
-    max-height: 100%;
+    height: 100%;
+    max-height: 400px;
 }
+/* Картинка с object-fit: contain — видна целиком */
+.poster-wrapper .anime-poster.contain {
+    object-fit: contain;
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+}
+
 @media (max-width: 768px) {
     .poster-wrapper {
         width: 160px;
-        max-height: 240px;
+        max-width: 160px;
+        min-width: 80px;
     }
     .poster-wrapper .anime-poster {
         max-height: 240px;
@@ -117,7 +122,8 @@
 @media (max-width: 480px) {
     .poster-wrapper {
         width: 120px;
-        max-height: 180px;
+        max-width: 120px;
+        min-width: 60px;
     }
     .poster-wrapper .anime-poster {
         max-height: 180px;
@@ -1537,19 +1543,15 @@
         const headerWallpaperStyle = wallpaperUrl ? `background-image: url('${wallpaperUrl}'); background-size: cover; background-position: center;` : '';
 
         // Формируем HTML для обложки с адаптивным контейнером
+// ===== ОБЛОЖКА С ПРАВИЛЬНЫМИ ПРОПОРЦИЯМИ =====
 let posterHtml = '';
 if (posterImage) {
-    // Определяем ориентацию изображения (вертикальная или горизонтальная)
-    const img = new Image();
-    img.src = posterImage;
-    let orientationClass = '';
-    img.onload = function() {
-        // Это асинхронно, поэтому лучше использовать CSS object-fit: contain
-    };
-    // Просто используем object-fit: contain — он сам подстроится
+    // Используем contain, чтобы картинка была видна целиком
     posterHtml = `
         <div class="poster-wrapper">
-            <img src="${posterImage}" alt="${title.name}" class="anime-poster" 
+            <img src="${posterImage}" 
+                 alt="${title.name}" 
+                 class="anime-poster contain"
                  onerror="this.style.display='none'; this.parentElement.innerHTML = \`<div class="poster-placeholder"><span class="icon">🖼️</span>Обложка<br>не найдена</div>\`;">
         </div>
     `;
