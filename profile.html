@@ -353,7 +353,7 @@
             font-weight: bold;
         }
 
-        /* ===== СТЕНА (для всех пользователей) ===== */
+        /* ===== СТЕНА ===== */
         .wall-section {
             margin-top: 30px;
             background: var(--bg-content);
@@ -473,6 +473,7 @@
             margin-bottom: 12px;
         }
 
+        /* ===== МОДАЛКА РЕДАКТИРОВАНИЯ ПРОФИЛЯ ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -493,7 +494,7 @@
             padding: 30px;
             max-width: 500px;
             width: 95%;
-            max-height: 80vh;
+            max-height: 90vh;
             overflow-y: auto;
             border: 2px solid var(--color-accent);
             position: relative;
@@ -545,6 +546,52 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
         }
+        .modal-content .cancel-btn {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            color: var(--text-muted);
+            border: 2px solid var(--border-primary);
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+        .modal-content .cancel-btn:hover {
+            border-color: var(--color-accent);
+            color: var(--text-primary);
+        }
+
+        /* ===== ВЫБОР ЦВЕТА ===== */
+        .color-picker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .color-picker-grid .color-option {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: 3px solid var(--border-primary);
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 0;
+            min-height: 36px;
+        }
+        .color-picker-grid .color-option:hover {
+            transform: scale(1.15);
+            border-color: var(--color-accent);
+        }
+        .color-picker-grid .color-option.selected {
+            border-color: #fff;
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+        .color-picker-grid .color-option.custom-color {
+            background: linear-gradient(135deg, #ff6b6b, #fbbf24, #4CAF50, #2196F3, #9b59b6);
+            border-style: dashed;
+        }
 
         .auth-message { text-align: center; padding: 40px 20px; }
         .auth-message h2 { color: var(--color-accent); }
@@ -594,6 +641,8 @@
             .admin-coin-section .row .btn-coin-add { width: 100%; text-align: center; }
             .wall-form { flex-direction: column; }
             .wall-form .actions { justify-content: flex-end; }
+            .color-picker-grid { grid-template-columns: repeat(auto-fill, minmax(30px, 1fr)); }
+            .color-picker-grid .color-option { min-height: 30px; }
         }
     </style>
 </head>
@@ -660,6 +709,7 @@
 </aside>
 
 <!-- ========== МОДАЛКИ ========== -->
+<!-- Модалка покупки DSCoins -->
 <div class="modal-overlay" id="m-dscoin-order">
     <div class="modal-content" style="max-width:440px;">
         <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
@@ -683,10 +733,11 @@
             <div style="font-size:11px;color:var(--text-muted);">1 DSCoin = 1 ₽</div>
         </div>
         <button class="submit-btn" style="width:100%;" onclick="submitDSCoinOrder()"><i class="fas fa-paper-plane"></i> Оформить заявку</button>
-        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-dscoin-order')">Отмена</button>
+        <button class="cancel-btn" onclick="closeModal('m-dscoin-order')">Отмена</button>
     </div>
 </div>
 
+<!-- Модалка управления DSCoins (админ) -->
 <div class="modal-overlay" id="m-admin-dscoins">
     <div class="modal-content" style="max-width:480px;">
         <button class="modal-close" onclick="closeModal('m-admin-dscoins')">✕</button>
@@ -696,10 +747,11 @@
         <div class="form-group"><label>Количество DSCoins *</label><input type="number" id="admin-dscoin-amount" placeholder="100" min="1"></div>
         <div class="form-group"><label>Причина</label><input type="text" id="admin-dscoin-reason" value="Начисление администратором"></div>
         <button class="submit-btn" style="width:100%;background:var(--gradient-primary);" onclick="adminAddDSCoins()"><i class="fas fa-plus"></i> Добавить монеты</button>
-        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-admin-dscoins')">Отмена</button>
+        <button class="cancel-btn" onclick="closeModal('m-admin-dscoins')">Отмена</button>
     </div>
 </div>
 
+<!-- Модалка плейлиста -->
 <div class="modal-overlay" id="m-playlist">
     <div class="modal-content" style="max-width:440px;">
         <button class="modal-close" onclick="closeModal('m-playlist')">✕</button>
@@ -712,19 +764,21 @@
             <label style="color:var(--text-muted);font-size:13px;"><input type="checkbox" id="playlistPinned"> Закрепить в профиле</label>
         </div>
         <button class="submit-btn" onclick="savePlaylist()"><i class="fas fa-save"></i> Сохранить</button>
-        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-playlist')">Отмена</button>
+        <button class="cancel-btn" onclick="closeModal('m-playlist')">Отмена</button>
     </div>
 </div>
 
+<!-- Модалка истории транзакций -->
 <div class="modal-overlay" id="m-dscoin-history">
     <div class="modal-content" style="max-width:480px;">
         <button class="modal-close" onclick="closeModal('m-dscoin-history')">✕</button>
         <h3><i class="fas fa-history" style="color:#fbbf24;"></i> История транзакций</h3>
         <div id="historyList" style="max-height:400px;overflow-y:auto;"></div>
-        <button class="action-btn outline" style="width:100%;margin-top:16px;" onclick="closeModal('m-dscoin-history')">Закрыть</button>
+        <button class="cancel-btn" onclick="closeModal('m-dscoin-history')">Закрыть</button>
     </div>
 </div>
 
+<!-- Модалка настроек стены -->
 <div class="modal-overlay" id="m-wall-settings">
     <div class="modal-content" style="max-width:420px;">
         <button class="modal-close" onclick="closeModal('m-wall-settings')">✕</button>
@@ -735,7 +789,58 @@
             <label style="display:block;padding:8px 0;color:var(--text-primary);"><input type="radio" name="wallMode" value="disabled"> Никто (закрыта)</label>
         </div>
         <button class="submit-btn" onclick="saveWallSettings()">Сохранить</button>
-        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-wall-settings')">Отмена</button>
+        <button class="cancel-btn" onclick="closeModal('m-wall-settings')">Отмена</button>
+    </div>
+</div>
+
+<!-- ===== МОДАЛКА РЕДАКТИРОВАНИЯ ПРОФИЛЯ ===== -->
+<div class="modal-overlay" id="m-edit-profile">
+    <div class="modal-content" style="max-width:500px;">
+        <button class="modal-close" onclick="closeModal('m-edit-profile')">✕</button>
+        <h2><i class="fas fa-user-edit"></i> Редактировать профиль</h2>
+        <div class="form-group">
+            <label>Имя пользователя</label>
+            <input type="text" id="editProfileName" placeholder="Введите имя">
+        </div>
+        <div class="form-group">
+            <label>Ссылка на аватарку</label>
+            <input type="text" id="editProfileAvatar" placeholder="https://example.com/avatar.jpg">
+        </div>
+        <div class="form-group">
+            <label>Префикс (можно купить в магазине)</label>
+            <input type="text" id="editProfilePrefix" placeholder="⭐" disabled style="opacity:0.6;cursor:not-allowed;">
+            <small style="color:var(--text-muted);">Префикс можно приобрести в магазине DSCoins</small>
+        </div>
+        <div class="form-group">
+            <label>Цвет ника (можно купить в магазине)</label>
+            <div style="display:flex;gap:10px;align-items:center;">
+                <input type="color" id="editProfileColor" value="#6a5aaa" disabled style="width:50px;height:40px;padding:2px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);cursor:not-allowed;opacity:0.6;">
+                <span style="color:var(--text-muted);font-size:12px;">Цвет можно приобрести в магазине DSCoins</span>
+            </div>
+        </div>
+        <button class="submit-btn" onclick="saveProfileEdit()"><i class="fas fa-save"></i> Сохранить</button>
+        <button class="cancel-btn" onclick="closeModal('m-edit-profile')">Отмена</button>
+    </div>
+</div>
+
+<!-- ===== МОДАЛКА ВЫБОРА ЦВЕТА ПРИ ПОКУПКЕ ===== -->
+<div class="modal-overlay" id="m-color-picker">
+    <div class="modal-content" style="max-width:420px;">
+        <button class="modal-close" onclick="closeModal('m-color-picker')">✕</button>
+        <h3><i class="fas fa-palette"></i> Выберите цвет для ника</h3>
+        <p style="color:var(--text-muted);font-size:13px;text-align:center;margin-bottom:16px;">Выберите цвет или введите свой HEX-код</p>
+        <div class="color-picker-grid" id="colorPickerGrid">
+            <!-- Цвета будут добавлены через JS -->
+        </div>
+        <div class="form-group" style="margin-top:12px;">
+            <label>Свой цвет (HEX)</label>
+            <div style="display:flex;gap:10px;align-items:center;">
+                <input type="color" id="customColorPicker" value="#6a5aaa" style="width:50px;height:40px;padding:2px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);">
+                <input type="text" id="customColorInput" placeholder="#6a5aaa" style="flex:1;">
+            </div>
+        </div>
+        <button class="submit-btn" onclick="confirmColorPurchase()"><i class="fas fa-check"></i> Купить за <span id="colorPriceDisplay">500</span> DSCoins</button>
+        <button class="cancel-btn" onclick="closeModal('m-color-picker')">Отмена</button>
     </div>
 </div>
 
@@ -817,6 +922,170 @@
         }
         openModal('m-playlist');
     }
+
+    // ===== ОТКРЫТИЕ МОДАЛКИ РЕДАКТИРОВАНИЯ =====
+    function openEditProfileModal() {
+        const userData = currentUserData || viewedUserData;
+        if (!userData) return;
+        document.getElementById('editProfileName').value = userData.displayName || '';
+        document.getElementById('editProfileAvatar').value = userData.photoURL || '';
+        document.getElementById('editProfilePrefix').value = userData.prefix || '';
+        document.getElementById('editProfileColor').value = userData.nickColor || '#6a5aaa';
+        openModal('m-edit-profile');
+    }
+
+    // ===== СОХРАНЕНИЕ РЕДАКТИРОВАНИЯ =====
+    async function saveProfileEdit() {
+        const user = getCurrentUser();
+        if (!user) { alert('❌ Войдите, чтобы редактировать профиль'); return; }
+        
+        const name = document.getElementById('editProfileName').value.trim();
+        const avatar = document.getElementById('editProfileAvatar').value.trim();
+        
+        if (!name) { alert('❌ Введите имя'); return; }
+        
+        const data = {};
+        if (name) data.displayName = name;
+        if (avatar) data.photoURL = avatar;
+        
+        const result = await updateUserProfile(user.uid, data);
+        if (result.success) {
+            alert('✅ Профиль обновлён!');
+            closeModal('m-edit-profile');
+            await loadProfile();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    }
+
+    // ===== ВЫБОР ЦВЕТА ПРИ ПОКУПКЕ =====
+    let selectedColor = '#6a5aaa';
+    let colorPrice = 500;
+
+    const presetColors = [
+        '#ff6b6b', '#ff9f43', '#fbbf24', '#4CAF50', '#2ecc71',
+        '#2196F3', '#3498db', '#5b6abf', '#6a5aaa', '#9b59b6',
+        '#e84393', '#fd79a8', '#00b894', '#00cec9', '#0984e3',
+        '#6c5ce7', '#fd79a8', '#e17055', '#d63031', '#fdcb6e'
+    ];
+
+    function initColorPicker() {
+        const grid = document.getElementById('colorPickerGrid');
+        if (!grid) return;
+        
+        grid.innerHTML = presetColors.map(color => `
+            <button class="color-option ${color === selectedColor ? 'selected' : ''}" 
+                    style="background:${color};" 
+                    onclick="selectColor('${color}')"></button>
+        `).join('');
+        
+        // Добавляем кастомный цвет
+        grid.innerHTML += `
+            <button class="color-option custom-color" onclick="selectCustomColor()" title="Выбрать свой цвет"></button>
+        `;
+        
+        // Синхронизируем input'ы
+        const colorInput = document.getElementById('customColorInput');
+        const colorPicker = document.getElementById('customColorPicker');
+        if (colorInput && colorPicker) {
+            colorInput.value = selectedColor;
+            colorPicker.value = selectedColor;
+            colorInput.addEventListener('input', function() {
+                const val = this.value.trim();
+                if (/^#[0-9a-f]{6}$/i.test(val)) {
+                    selectedColor = val;
+                    colorPicker.value = val;
+                    document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+                }
+            });
+            colorPicker.addEventListener('input', function() {
+                selectedColor = this.value;
+                document.getElementById('customColorInput').value = this.value;
+                document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+            });
+        }
+    }
+
+    function selectColor(color) {
+        selectedColor = color;
+        document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+        document.querySelectorAll('.color-option').forEach(el => {
+            if (el.style.background === color || el.style.background === `rgb(${hexToRgb(color)})`) {
+                el.classList.add('selected');
+            }
+        });
+        document.getElementById('customColorInput').value = color;
+        document.getElementById('customColorPicker').value = color;
+    }
+
+    function selectCustomColor() {
+        document.getElementById('customColorPicker').click();
+    }
+
+    function hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '106, 90, 170';
+    }
+
+    function openColorPickerModal() {
+        selectedColor = document.getElementById('editProfileColor')?.value || '#6a5aaa';
+        const priceEl = document.getElementById('colorPriceDisplay');
+        if (priceEl) priceEl.textContent = colorPrice;
+        initColorPicker();
+        openModal('m-color-picker');
+    }
+
+    async function confirmColorPurchase() {
+        const user = getCurrentUser();
+        if (!user) { alert('❌ Войдите, чтобы совершить покупку'); return; }
+        
+        const result = await purchaseColorNick(user.uid, selectedColor);
+        if (result && result.success) {
+            alert('✅ Цвет успешно куплен!');
+            closeModal('m-color-picker');
+            await loadProfile();
+            await updateSidebarBalance(user);
+        } else if (result) {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    }
+
+    // Обновляем purchaseItem для использования модалки
+    window.purchaseItem = async function(type) {
+        const user = getCurrentUser();
+        if (!user) { alert('Войдите, чтобы совершить покупку'); return; }
+        
+        if (type === 'colorNick') {
+            // Открываем модалку выбора цвета
+            const prices = await getShopPrices();
+            colorPrice = prices.success ? (prices.data.colorNick || 500) : 500;
+            document.getElementById('colorPriceDisplay').textContent = colorPrice;
+            openColorPickerModal();
+            return;
+        }
+        
+        let result;
+        switch(type) {
+            case 'prefix':
+                const prefix = prompt('Введите префикс (макс 3 символа):', '⭐');
+                if (!prefix || prefix.length > 3) { alert('Префикс должен быть не более 3 символов'); return; }
+                result = await purchasePrefix(user.uid, prefix);
+                break;
+            case 'achSlot':
+                result = await purchaseAchSlot(user.uid);
+                break;
+            default:
+                alert('❌ Неизвестный товар');
+                return;
+        }
+        if (result && result.success) {
+            alert('✅ Покупка успешно совершена!');
+            await loadProfile();
+            await updateSidebarBalance(user);
+        } else if (result) {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
 </script>
 
 <!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
@@ -860,7 +1129,7 @@
                 <div style="font-size:36px;margin-bottom:8px;">🏷️</div>
                 <div style="font-weight:bold;color:var(--text-primary);">Префикс</div>
                 <div style="color:#fbbf24;font-weight:bold;font-size:16px;margin:6px 0;"><i class="fas fa-coins"></i> <span id="pricePrefix">300</span></div>
-                <div style="color:var(--text-muted);font-size:12px;margin-bottom:10px;">Добавьте префикс перед ником</div>
+                <div style="color:var(--text-muted);font-size:12px;margin-bottom:10px;">Добавьте префикс перед ником (до 3 символов)</div>
                 <button class="action-btn primary" onclick="purchaseItem('prefix')">Купить</button>
             </div>
             <div class="shop-item">
@@ -884,7 +1153,7 @@
         </div>
     </div>
 
-    <!-- ========== СТЕНА (ДЛЯ ВСЕХ ПОЛЬЗОВАТЕЛЕЙ) ========== -->
+    <!-- ========== СТЕНА ========== -->
     <div id="wallSection" class="wall-section" style="display:none;">
         <div class="wall-header">
             <h3><i class="fas fa-stream"></i> Стена</h3>
@@ -894,7 +1163,6 @@
             </div>
         </div>
         
-        <!-- Форма добавления (только для владельца) -->
         <div id="wallFormContainer" style="display:none;">
             <div class="wall-form">
                 <textarea id="wallInput" placeholder="Что у вас нового?..."></textarea>
@@ -975,6 +1243,13 @@
     window.purchasePrefix = purchasePrefix;
     window.purchaseAchSlot = purchaseAchSlot;
     window.getUserRole = getUserRole;
+    window.openEditProfileModal = openEditProfileModal;
+    window.saveProfileEdit = saveProfileEdit;
+    window.openColorPickerModal = openColorPickerModal;
+    window.confirmColorPurchase = confirmColorPurchase;
+    window.selectColor = selectColor;
+    window.selectCustomColor = selectCustomColor;
+    window.initColorPicker = initColorPicker;
 
     let currentUser = null;
     let currentUserData = null;
@@ -1068,39 +1343,6 @@
         openModal('m-dscoin-history');
     };
 
-    // ========== МАГАЗИН ==========
-    window.purchaseItem = async function(type) {
-        const user = getCurrentUser();
-        if (!user) { alert('Войдите, чтобы совершить покупку'); return; }
-        
-        let result;
-        switch(type) {
-            case 'colorNick':
-                const color = prompt('Введите цвет (HEX):', '#ff6b6b');
-                if (!color) return;
-                result = await purchaseColorNick(user.uid, color);
-                break;
-            case 'prefix':
-                const prefix = prompt('Введите префикс:', '⭐');
-                if (!prefix) return;
-                result = await purchasePrefix(user.uid, prefix);
-                break;
-            case 'achSlot':
-                result = await purchaseAchSlot(user.uid);
-                break;
-            default:
-                alert('❌ Неизвестный товар');
-                return;
-        }
-        if (result && result.success) {
-            alert('✅ Покупка успешно совершена!');
-            await loadProfile();
-            await updateSidebarBalance(user);
-        } else if (result) {
-            alert('❌ Ошибка: ' + result.error);
-        }
-    };
-
     async function loadShopPrices() {
         const result = await getShopPrices();
         if (result.success) {
@@ -1188,7 +1430,7 @@
         }
     }
 
-    // ========== СТЕНА (ДЛЯ ВСЕХ ПОЛЬЗОВАТЕЛЕЙ) ==========
+    // ========== СТЕНА ==========
     window.addWallPost = async function() {
         const user = getCurrentUser();
         if (!user) { alert('Войдите, чтобы оставить запись'); return; }
@@ -1245,13 +1487,11 @@
         let targetUid = viewedUserId || user.uid;
         const isOwner = user.uid === targetUid;
         
-        // Показываем форму добавления только для владельца
         const formContainer = document.getElementById('wallFormContainer');
         if (formContainer) {
             formContainer.style.display = isOwner ? 'block' : 'none';
         }
         
-        // Показываем кнопку настроек только для владельца
         const settingsBtn = document.getElementById('wallSettingsBtn');
         if (settingsBtn) {
             settingsBtn.style.display = isOwner ? 'inline-flex' : 'none';
@@ -1264,7 +1504,6 @@
                 return;
             }
             
-            // Проверяем видимость стены
             const visibility = result.visibility || 'all';
             const visibilityBadge = document.getElementById('wallVisibilityBadge');
             if (visibilityBadge) {
@@ -1361,19 +1600,6 @@
         else { alert('Ошибка: ' + result.error); }
     };
 
-    window.handleEditProfile = function() {
-        const name = prompt('Новое имя:', currentUserData?.displayName || '');
-        if (name && name.trim()) {
-            updateUserProfile(currentUser.uid, { displayName: name.trim() });
-            setTimeout(loadProfile, 500);
-        }
-        const avatar = prompt('Ссылка на аватарку:', currentUserData?.photoURL || '');
-        if (avatar !== null) {
-            updateUserProfile(currentUser.uid, { photoURL: avatar.trim() });
-            setTimeout(loadProfile, 500);
-        }
-    };
-
     window.handleLogout = async function() {
         if (!confirm('Вы уверены, что хотите выйти?')) return;
         const result = await logoutUser();
@@ -1412,7 +1638,6 @@
         }
     };
 
-    // ===== АДМИН: ВЫДАЧА МОНЕТ =====
     window.handleAdminDSCoins = async function() {
         const amountInput = document.getElementById('adminDSCoinsAmount');
         if (!amountInput) return;
@@ -1429,7 +1654,6 @@
         }
     };
 
-    // ===== АДМИН: ПОИСК ПОЛЬЗОВАТЕЛЯ =====
     window.searchUserByEmail = async function() {
         const email = document.getElementById('adminSearchEmail')?.value?.trim();
         const resultsContainer = document.getElementById('adminSearchResults');
@@ -1626,7 +1850,7 @@
                         <span class="profile-role ${roleClass[role] || 'role-user'}">${roleNames[role] || 'Пользователь'}</span>
                         <div class="profile-actions">
                             ${isOwn ? `
-                                <button class="action-btn primary" onclick="handleEditProfile()">✏️ Редактировать</button>
+                                <button class="action-btn primary" onclick="openEditProfileModal()">✏️ Редактировать</button>
                                 <button class="action-btn danger" onclick="handleLogout()">🚪 Выйти</button>
                             ` : subscribeButton}
                         </div>
@@ -1656,10 +1880,8 @@
             wallSection.style.display = 'block';
         }
         
-        // Загружаем стену
         await loadWall();
         
-        // Показываем дополнительные секции только для своего профиля
         if (isOwn) {
             document.getElementById('dscoinBalanceSection').style.display = 'flex';
             document.getElementById('shopSection').style.display = 'block';
@@ -1671,7 +1893,6 @@
             await loadShopPrices();
             await loadPlaylists();
         } else {
-            // Скрываем секции, которые не должны видеть другие пользователи
             document.getElementById('dscoinBalanceSection').style.display = 'none';
             document.getElementById('shopSection').style.display = 'none';
             document.getElementById('playlistsSection').style.display = 'none';
