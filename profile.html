@@ -230,13 +230,6 @@
             transition: all 0.3s;
         }
         .admin-panel .search-btn:hover { background: var(--color-accent2); }
-        .admin-panel .role-select {
-            padding: 6px 12px;
-            border-radius: 15px;
-            border: 1px solid var(--border-primary);
-            background: var(--bg-card);
-            color: var(--text-primary);
-        }
 
         .admin-coin-section {
             background: rgba(251, 191, 36, 0.08);
@@ -789,38 +782,22 @@
             <input type="text" id="editProfileAvatar" placeholder="https://example.com/avatar.jpg">
         </div>
         <div class="form-group">
-            <label>Префикс (можно купить в магазине)</label>
-            <input type="text" id="editProfilePrefix" placeholder="⭐" disabled style="opacity:0.6;cursor:not-allowed;">
-            <small style="color:var(--text-muted);">Префикс можно приобрести в магазине DSCoins</small>
+            <label>Префикс</label>
+            <div style="display:flex;gap:10px;align-items:center;">
+                <input type="text" id="editProfilePrefix" placeholder="⭐" maxlength="3" style="flex:1;">
+                <span style="color:var(--text-muted);font-size:12px;">(до 3 символов)</span>
+            </div>
+            <small style="color:var(--text-muted);">Стоимость: <strong style="color:#fbbf24;" id="editPrefixPrice">300</strong> DSCoins</small>
         </div>
         <div class="form-group">
-            <label>Цвет ника (можно купить в магазине)</label>
+            <label>Цвет ника</label>
             <div style="display:flex;gap:10px;align-items:center;">
-                <input type="color" id="editProfileColor" value="#6a5aaa" disabled style="width:50px;height:40px;padding:2px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);cursor:not-allowed;opacity:0.6;">
-                <span style="color:var(--text-muted);font-size:12px;">Цвет можно приобрести в магазине DSCoins</span>
+                <input type="color" id="editProfileColor" value="#6a5aaa" style="width:50px;height:40px;padding:2px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);">
+                <span style="color:var(--text-muted);font-size:12px;">Стоимость: <strong style="color:#fbbf24;" id="editColorPrice">500</strong> DSCoins</span>
             </div>
         </div>
-        <button class="submit-btn" onclick="saveProfileEdit()"><i class="fas fa-save"></i> Сохранить</button>
+        <button class="submit-btn" onclick="saveProfileEdit()"><i class="fas fa-save"></i> Сохранить изменения</button>
         <button class="cancel-btn" onclick="closeModal('m-edit-profile')">Отмена</button>
-    </div>
-</div>
-
-<!-- ===== МОДАЛКА ВЫБОРА ЦВЕТА ПРИ ПОКУПКЕ ===== -->
-<div class="modal-overlay" id="m-color-picker">
-    <div class="modal-content" style="max-width:420px;">
-        <button class="modal-close" onclick="closeModal('m-color-picker')">✕</button>
-        <h3><i class="fas fa-palette"></i> Выберите цвет для ника</h3>
-        <p style="color:var(--text-muted);font-size:13px;text-align:center;margin-bottom:16px;">Выберите цвет или введите свой HEX-код</p>
-        <div class="color-picker-grid" id="colorPickerGrid"></div>
-        <div class="form-group" style="margin-top:12px;">
-            <label>Свой цвет (HEX)</label>
-            <div style="display:flex;gap:10px;align-items:center;">
-                <input type="color" id="customColorPicker" value="#6a5aaa" style="width:50px;height:40px;padding:2px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);">
-                <input type="text" id="customColorInput" placeholder="#6a5aaa" style="flex:1;">
-            </div>
-        </div>
-        <button class="submit-btn" onclick="confirmColorPurchase()"><i class="fas fa-check"></i> Купить за <span id="colorPriceDisplay">500</span> DSCoins</button>
-        <button class="cancel-btn" onclick="closeModal('m-color-picker')">Отмена</button>
     </div>
 </div>
 
@@ -930,7 +907,7 @@
         </div>
     </div>
 
-    <!-- ========== МАГАЗИН ========== -->
+    <!-- ========== МАГАЗИН (УБРАНЫ СЛОТЫ АЧИВОК) ========== -->
     <div id="shopSection" style="display:none;background:var(--bg-content);padding:20px;border-radius:15px;border:1px solid var(--border-primary);margin:20px 0;">
         <h3 style="color:var(--color-accent);margin-bottom:15px;"><i class="fas fa-store"></i> Магазин DSCoins</h3>
         <div class="shop-grid" id="shopGrid">
@@ -939,21 +916,14 @@
                 <div style="font-weight:bold;color:var(--text-primary);">Цветной никнейм</div>
                 <div style="color:#fbbf24;font-weight:bold;font-size:16px;margin:6px 0;"><i class="fas fa-coins"></i> <span id="priceColorNick">500</span></div>
                 <div style="color:var(--text-muted);font-size:12px;margin-bottom:10px;">Измените цвет своего ника в профиле</div>
-                <button class="action-btn primary" onclick="purchaseItem('colorNick')">Купить</button>
+                <button class="action-btn primary" onclick="openEditProfileModal()">Изменить</button>
             </div>
             <div class="shop-item">
                 <div style="font-size:36px;margin-bottom:8px;">🏷️</div>
                 <div style="font-weight:bold;color:var(--text-primary);">Префикс</div>
                 <div style="color:#fbbf24;font-weight:bold;font-size:16px;margin:6px 0;"><i class="fas fa-coins"></i> <span id="pricePrefix">300</span></div>
                 <div style="color:var(--text-muted);font-size:12px;margin-bottom:10px;">Добавьте префикс перед ником (до 3 символов)</div>
-                <button class="action-btn primary" onclick="purchaseItem('prefix')">Купить</button>
-            </div>
-            <div class="shop-item">
-                <div style="font-size:36px;margin-bottom:8px;">📚</div>
-                <div style="font-weight:bold;color:var(--text-primary);">Слот ачивок</div>
-                <div style="color:#fbbf24;font-weight:bold;font-size:16px;margin:6px 0;"><i class="fas fa-coins"></i> <span id="priceAchSlot">200</span></div>
-                <div style="color:var(--text-muted);font-size:12px;margin-bottom:10px;">Дополнительный слот для достижений</div>
-                <button class="action-btn primary" onclick="purchaseItem('achSlot')">Купить</button>
+                <button class="action-btn primary" onclick="openEditProfileModal()">Изменить</button>
             </div>
         </div>
     </div>
@@ -1035,7 +1005,8 @@
         purchaseColorNick,
         purchasePrefix,
         purchaseAchSlot,
-        getUserRole
+        getUserRole,
+        spendDSCoins
     } from './firebase-config.js';
 
     // ===== ДЕЛАЕМ ВСЁ ГЛОБАЛЬНЫМ =====
@@ -1063,6 +1034,7 @@
     window.getCurrentUser = getCurrentUser;
     window.toggleSubscribe = toggleSubscribe;
     window.isSubscribed = isSubscribed;
+    window.spendDSCoins = spendDSCoins;
 
     let currentUser = null;
     let currentUserData = null;
@@ -1071,8 +1043,8 @@
     let isAdminUser = false;
     let isOwnProfile = true;
     let allPlaylists = [];
-    let selectedColor = '#6a5aaa';
     let colorPrice = 500;
+    let prefixPrice = 300;
 
     const urlParams = new URLSearchParams(window.location.search);
     const viewedId = urlParams.get('uid');
@@ -1090,156 +1062,99 @@
         document.getElementById('editProfileAvatar').value = currentUserData.photoURL || '';
         document.getElementById('editProfilePrefix').value = currentUserData.prefix || '';
         document.getElementById('editProfileColor').value = currentUserData.nickColor || '#6a5aaa';
+        
+        // Устанавливаем цены
+        const colorPriceEl = document.getElementById('editColorPrice');
+        const prefixPriceEl = document.getElementById('editPrefixPrice');
+        if (colorPriceEl) colorPriceEl.textContent = colorPrice;
+        if (prefixPriceEl) prefixPriceEl.textContent = prefixPrice;
+        
         openModal('m-edit-profile');
     };
 
-    // ===== СОХРАНЕНИЕ РЕДАКТИРОВАНИЯ =====
+    // ===== СОХРАНЕНИЕ РЕДАКТИРОВАНИЯ С АВТОСПИСАНИЕМ МОНЕТ =====
     window.saveProfileEdit = async function() {
         const user = getCurrentUser();
         if (!user) { alert('❌ Войдите, чтобы редактировать профиль'); return; }
         
         const name = document.getElementById('editProfileName').value.trim();
         const avatar = document.getElementById('editProfileAvatar').value.trim();
+        const newPrefix = document.getElementById('editProfilePrefix').value.trim();
+        const newColor = document.getElementById('editProfileColor').value;
         
         if (!name) { alert('❌ Введите имя'); return; }
         
-        const data = {};
-        if (name) data.displayName = name;
-        if (avatar) data.photoURL = avatar;
-        
-        const result = await updateUserProfile(user.uid, data);
-        if (result.success) {
-            alert('✅ Профиль обновлён!');
-            closeModal('m-edit-profile');
-            await loadProfile();
-        } else {
-            alert('❌ Ошибка: ' + result.error);
+        // Проверяем, изменился ли префикс
+        let prefixChanged = false;
+        let prefixCost = 0;
+        if (newPrefix !== (currentUserData.prefix || '')) {
+            if (newPrefix.length > 3) { alert('❌ Префикс должен быть не более 3 символов'); return; }
+            prefixChanged = true;
+            prefixCost = prefixPrice;
         }
-    };
-
-    // ===== ВЫБОР ЦВЕТА =====
-    function hexToRgb(hex) {
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '106, 90, 170';
-    }
-
-    window.selectColor = function(color) {
-        selectedColor = color;
-        document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
-        document.querySelectorAll('.color-option').forEach(el => {
-            const bg = el.style.background || '';
-            if (bg === color || bg === `rgb(${hexToRgb(color)})`) {
-                el.classList.add('selected');
+        
+        // Проверяем, изменился ли цвет
+        let colorChanged = false;
+        let colorCost = 0;
+        if (newColor !== (currentUserData.nickColor || '#6a5aaa')) {
+            colorChanged = true;
+            colorCost = colorPrice;
+        }
+        
+        // Если ничего не изменилось
+        if (!prefixChanged && !colorChanged) {
+            // Сохраняем только имя и аватар
+            const data = {};
+            if (name) data.displayName = name;
+            if (avatar) data.photoURL = avatar;
+            const result = await updateUserProfile(user.uid, data);
+            if (result.success) {
+                alert('✅ Профиль обновлён!');
+                closeModal('m-edit-profile');
+                await loadProfile();
+            } else {
+                alert('❌ Ошибка: ' + result.error);
             }
-        });
-        const input = document.getElementById('customColorInput');
-        const picker = document.getElementById('customColorPicker');
-        if (input) input.value = color;
-        if (picker) picker.value = color;
-    };
-
-    window.selectCustomColor = function() {
-        document.getElementById('customColorPicker')?.click();
-    };
-
-    window.initColorPicker = function() {
-        const grid = document.getElementById('colorPickerGrid');
-        if (!grid) return;
-        
-        const presetColors = [
-            '#ff6b6b', '#ff9f43', '#fbbf24', '#4CAF50', '#2ecc71',
-            '#2196F3', '#3498db', '#5b6abf', '#6a5aaa', '#9b59b6',
-            '#e84393', '#fd79a8', '#00b894', '#00cec9', '#0984e3',
-            '#6c5ce7', '#fd79a8', '#e17055', '#d63031', '#fdcb6e'
-        ];
-        
-        grid.innerHTML = presetColors.map(color => `
-            <button class="color-option ${color === selectedColor ? 'selected' : ''}" 
-                    style="background:${color};" 
-                    onclick="selectColor('${color}')"></button>
-        `).join('');
-        
-        grid.innerHTML += `
-            <button class="color-option custom-color" onclick="document.getElementById('customColorPicker')?.click()" title="Выбрать свой цвет"></button>
-        `;
-        
-        const colorInput = document.getElementById('customColorInput');
-        const colorPicker = document.getElementById('customColorPicker');
-        if (colorInput && colorPicker) {
-            colorInput.value = selectedColor;
-            colorPicker.value = selectedColor;
-            colorInput.oninput = function() {
-                const val = this.value.trim();
-                if (/^#[0-9a-f]{6}$/i.test(val)) {
-                    selectedColor = val;
-                    colorPicker.value = val;
-                    document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
-                }
-            };
-            colorPicker.oninput = function() {
-                selectedColor = this.value;
-                document.getElementById('customColorInput').value = this.value;
-                document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
-            };
-        }
-    };
-
-    window.openColorPickerModal = function() {
-        const user = getCurrentUser();
-        if (!user) { alert('❌ Войдите, чтобы совершить покупку'); return; }
-        selectedColor = document.getElementById('editProfileColor')?.value || '#6a5aaa';
-        const priceEl = document.getElementById('colorPriceDisplay');
-        if (priceEl) priceEl.textContent = colorPrice;
-        setTimeout(initColorPicker, 100);
-        openModal('m-color-picker');
-    };
-
-    window.confirmColorPurchase = async function() {
-        const user = getCurrentUser();
-        if (!user) { alert('❌ Войдите, чтобы совершить покупку'); return; }
-        const result = await purchaseColorNick(user.uid, selectedColor);
-        if (result && result.success) {
-            alert('✅ Цвет успешно куплен!');
-            closeModal('m-color-picker');
-            await loadProfile();
-            await updateSidebarBalance(user);
-        } else if (result) {
-            alert('❌ Ошибка: ' + result.error);
-        }
-    };
-
-    // ===== ПОКУПКА =====
-    window.purchaseItem = async function(type) {
-        const user = getCurrentUser();
-        if (!user) { alert('❌ Войдите, чтобы совершить покупку'); return; }
-        
-        if (type === 'colorNick') {
-            const prices = await getShopPrices();
-            colorPrice = prices.success ? (prices.data.colorNick || 500) : 500;
-            document.getElementById('colorPriceDisplay').textContent = colorPrice;
-            openColorPickerModal();
             return;
         }
         
-        let result;
-        switch(type) {
-            case 'prefix':
-                const prefix = prompt('Введите префикс (макс 3 символа):', '⭐');
-                if (!prefix || prefix.length > 3) { alert('❌ Префикс должен быть не более 3 символов'); return; }
-                result = await purchasePrefix(user.uid, prefix);
-                break;
-            case 'achSlot':
-                result = await purchaseAchSlot(user.uid);
-                break;
-            default:
-                alert('❌ Неизвестный товар');
-                return;
+        // Проверяем баланс
+        const coinsResult = await getUserDSCoins(user.uid);
+        if (!coinsResult.success) { alert('❌ Ошибка проверки баланса'); return; }
+        const totalCost = prefixCost + colorCost;
+        if (coinsResult.coins < totalCost) {
+            alert(`❌ Недостаточно DSCoins! Нужно: ${totalCost}, у вас: ${coinsResult.coins}`);
+            return;
         }
-        if (result && result.success) {
-            alert('✅ Покупка успешно совершена!');
+        
+        // Подтверждение
+        let msg = `Будет списано ${totalCost} DSCoins за:\n`;
+        if (prefixChanged) msg += `- Префикс "${newPrefix}" (${prefixCost} DSCoins)\n`;
+        if (colorChanged) msg += `- Цвет ${newColor} (${colorCost} DSCoins)\n`;
+        if (!confirm(msg + '\nПродолжить?')) return;
+        
+        // Списываем монеты
+        const spendResult = await spendDSCoins(user.uid, totalCost, `Изменение профиля: префикс=${newPrefix}, цвет=${newColor}`);
+        if (!spendResult.success) {
+            alert('❌ Ошибка списания монет: ' + spendResult.error);
+            return;
+        }
+        
+        // Обновляем профиль
+        const data = {};
+        if (name) data.displayName = name;
+        if (avatar) data.photoURL = avatar;
+        if (prefixChanged && newPrefix) data.prefix = newPrefix;
+        else if (prefixChanged && !newPrefix) data.prefix = null;
+        if (colorChanged) data.nickColor = newColor;
+        
+        const result = await updateUserProfile(user.uid, data);
+        if (result.success) {
+            alert('✅ Профиль обновлён! Списано ' + totalCost + ' DSCoins');
+            closeModal('m-edit-profile');
             await loadProfile();
             await updateSidebarBalance(user);
-        } else if (result) {
+        } else {
             alert('❌ Ошибка: ' + result.error);
         }
     };
@@ -1533,9 +1448,12 @@
         const result = await getShopPrices();
         if (result.success) {
             const prices = result.data;
-            document.getElementById('priceColorNick').textContent = prices.colorNick || 500;
-            document.getElementById('pricePrefix').textContent = prices.prefix || 300;
-            document.getElementById('priceAchSlot').textContent = prices.achSlot || 200;
+            colorPrice = prices.colorNick || 500;
+            prefixPrice = prices.prefix || 300;
+            document.getElementById('priceColorNick').textContent = colorPrice;
+            document.getElementById('pricePrefix').textContent = prefixPrice;
+            document.getElementById('editColorPrice').textContent = colorPrice;
+            document.getElementById('editPrefixPrice').textContent = prefixPrice;
         }
     }
 
