@@ -854,7 +854,8 @@
         getAllUsers,
         getUserDSCoins,
         addDSCoins,
-        createDSCoinOrder
+        createDSCoinOrder,
+        updateTitleRating
     } from './firebase-config.js';
 
     window.getUserDSCoins = getUserDSCoins;
@@ -1209,6 +1210,10 @@ async function updateAverageRating() {
     const container = document.getElementById('avgRatingContainer');
     if (!container) return;
     const avg = await getAverageRating(titleId);
+    
+    // Обновляем рейтинг в Firebase
+    await updateTitleRating(titleId);
+    
     if (avg > 0) { 
         container.innerHTML = `⭐ ${avg.toFixed(1)} (${allComments.length} оценок)`; 
         container.style.display = 'inline-block'; 

@@ -1334,13 +1334,18 @@
 
     window.refreshTitles = async function() { await loadTitlesFromFirestore(); };
 
-    async function loadTitlesFromFirestore() {
-        const container = document.getElementById('titles-container');
-        container.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
-        const result = await getTitles();
-        if (result.success) { allTitles = result.titles; renderTitles(); } 
-        else { container.innerHTML = `<p style="color:var(--color-danger);text-align:center;">❌ Ошибка загрузки: ${result.error}</p>`; }
+    // В функции loadTitlesFromFirestore после загрузки
+async function loadTitlesFromFirestore() {
+    const container = document.getElementById('titles-container');
+    container.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
+    const result = await getTitles();
+    if (result.success) { 
+        allTitles = result.titles; 
+        renderTitles(); 
+    } else { 
+        container.innerHTML = `<p style="color:var(--color-danger);text-align:center;">❌ Ошибка загрузки: ${result.error}</p>`; 
     }
+}
 
     async function checkAdmin(user) {
         if (user) {

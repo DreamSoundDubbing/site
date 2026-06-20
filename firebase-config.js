@@ -1306,6 +1306,28 @@ async function initializeData() {
         console.error('❌ Ошибка инициализации:', error);
     }
 }
+// ============================================================
+// ========== ОБНОВЛЕНИЕ РЕЙТИНГА ТАЙТЛА ==========
+// ============================================================
+
+async function updateTitleRating(titleId) {
+    try {
+        // Получаем средний рейтинг из комментариев
+        const avgRating = await getAverageRating(titleId);
+        
+        // Обновляем рейтинг в документе тайтла
+        const docRef = doc(db, "titles", titleId);
+        await updateDoc(docRef, {
+            rating: avgRating,
+            updatedAt: serverTimestamp()
+        });
+        
+        return { success: true, rating: avgRating };
+    } catch (error) {
+        console.error('Ошибка обновления рейтинга тайтла:', error);
+        return { success: false, error: error.message };
+    }
+}
 
 // ============================================================
 // ========== ЭКСПОРТ ==========
@@ -1383,7 +1405,7 @@ export {
     updateShopPrices,
     purchaseColorNick,
     purchasePrefix,
-    purchaseAchSlot
+    updateTitleRating
 };
 
 console.log('🔥 Модуль firebase-config.js загружен');
