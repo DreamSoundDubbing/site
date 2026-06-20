@@ -784,8 +784,8 @@
         <div class="form-group">
             <label>Префикс</label>
             <div style="display:flex;gap:10px;align-items:center;">
-                <input type="text" id="editProfilePrefix" placeholder="⭐" maxlength="3" style="flex:1;">
-                <span style="color:var(--text-muted);font-size:12px;">(до 3 символов)</span>
+                <input type="text" id="editProfilePrefix" placeholder="⭐" style="flex:1;">
+                <span style="color:var(--text-muted);font-size:12px;">(любая длина)</span>
             </div>
             <small style="color:var(--text-muted);">Стоимость: <strong style="color:#fbbf24;" id="editPrefixPrice">300</strong> DSCoins</small>
         </div>
@@ -907,7 +907,7 @@
         </div>
     </div>
 
-    <!-- ========== МАГАЗИН (УБРАНЫ СЛОТЫ АЧИВОК) ========== -->
+    <!-- ========== МАГАЗИН ========== -->
     <div id="shopSection" style="display:none;background:var(--bg-content);padding:20px;border-radius:15px;border:1px solid var(--border-primary);margin:20px 0;">
         <h3 style="color:var(--color-accent);margin-bottom:15px;"><i class="fas fa-store"></i> Магазин DSCoins</h3>
         <div class="shop-grid" id="shopGrid">
@@ -922,7 +922,7 @@
                 <div style="font-size:36px;margin-bottom:8px;">🏷️</div>
                 <div style="font-weight:bold;color:var(--text-primary);">Префикс</div>
                 <div style="color:#fbbf24;font-weight:bold;font-size:16px;margin:6px 0;"><i class="fas fa-coins"></i> <span id="pricePrefix">300</span></div>
-                <div style="color:var(--text-muted);font-size:12px;margin-bottom:10px;">Добавьте префикс перед ником (до 3 символов)</div>
+                <div style="color:var(--text-muted);font-size:12px;margin-bottom:10px;">Добавьте префикс перед ником (любой длины)</div>
                 <button class="action-btn primary" onclick="openEditProfileModal()">Изменить</button>
             </div>
         </div>
@@ -1063,7 +1063,6 @@
         document.getElementById('editProfilePrefix').value = currentUserData.prefix || '';
         document.getElementById('editProfileColor').value = currentUserData.nickColor || '#6a5aaa';
         
-        // Устанавливаем цены
         const colorPriceEl = document.getElementById('editColorPrice');
         const prefixPriceEl = document.getElementById('editPrefixPrice');
         if (colorPriceEl) colorPriceEl.textContent = colorPrice;
@@ -1072,7 +1071,7 @@
         openModal('m-edit-profile');
     };
 
-    // ===== СОХРАНЕНИЕ РЕДАКТИРОВАНИЯ С АВТОСПИСАНИЕМ МОНЕТ =====
+    // ===== СОХРАНЕНИЕ РЕДАКТИРОВАНИЯ (БЕЗ ОГРАНИЧЕНИЯ ПРЕФИКСА) =====
     window.saveProfileEdit = async function() {
         const user = getCurrentUser();
         if (!user) { alert('❌ Войдите, чтобы редактировать профиль'); return; }
@@ -1084,11 +1083,11 @@
         
         if (!name) { alert('❌ Введите имя'); return; }
         
-        // Проверяем, изменился ли префикс
+        // Проверяем, изменился ли префикс (БЕЗ ОГРАНИЧЕНИЯ ПО ДЛИНЕ)
         let prefixChanged = false;
         let prefixCost = 0;
         if (newPrefix !== (currentUserData.prefix || '')) {
-            if (newPrefix.length > 3) { alert('❌ Префикс должен быть не более 3 символов'); return; }
+            // ОГРАНИЧЕНИЕ ПО ДЛИНЕ УБРАНО — можно любой длины
             prefixChanged = true;
             prefixCost = prefixPrice;
         }
@@ -1103,7 +1102,6 @@
         
         // Если ничего не изменилось
         if (!prefixChanged && !colorChanged) {
-            // Сохраняем только имя и аватар
             const data = {};
             if (name) data.displayName = name;
             if (avatar) data.photoURL = avatar;
@@ -1144,8 +1142,7 @@
         const data = {};
         if (name) data.displayName = name;
         if (avatar) data.photoURL = avatar;
-        if (prefixChanged && newPrefix) data.prefix = newPrefix;
-        else if (prefixChanged && !newPrefix) data.prefix = null;
+        if (prefixChanged) data.prefix = newPrefix || null;
         if (colorChanged) data.nickColor = newColor;
         
         const result = await updateUserProfile(user.uid, data);
