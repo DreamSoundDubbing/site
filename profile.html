@@ -462,18 +462,6 @@
             color: var(--color-success);
         }
 
-        .wall-access-denied {
-            text-align: center;
-            padding: 30px 20px;
-            color: var(--text-muted);
-        }
-        .wall-access-denied .icon {
-            font-size: 48px;
-            display: block;
-            margin-bottom: 12px;
-        }
-
-        /* ===== МОДАЛКА РЕДАКТИРОВАНИЯ ПРОФИЛЯ ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -563,7 +551,6 @@
             color: var(--text-primary);
         }
 
-        /* ===== ВЫБОР ЦВЕТА ===== */
         .color-picker-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
@@ -709,7 +696,6 @@
 </aside>
 
 <!-- ========== МОДАЛКИ ========== -->
-<!-- Модалка покупки DSCoins -->
 <div class="modal-overlay" id="m-dscoin-order">
     <div class="modal-content" style="max-width:440px;">
         <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
@@ -737,7 +723,6 @@
     </div>
 </div>
 
-<!-- Модалка управления DSCoins (админ) -->
 <div class="modal-overlay" id="m-admin-dscoins">
     <div class="modal-content" style="max-width:480px;">
         <button class="modal-close" onclick="closeModal('m-admin-dscoins')">✕</button>
@@ -751,7 +736,6 @@
     </div>
 </div>
 
-<!-- Модалка плейлиста -->
 <div class="modal-overlay" id="m-playlist">
     <div class="modal-content" style="max-width:440px;">
         <button class="modal-close" onclick="closeModal('m-playlist')">✕</button>
@@ -768,7 +752,6 @@
     </div>
 </div>
 
-<!-- Модалка истории транзакций -->
 <div class="modal-overlay" id="m-dscoin-history">
     <div class="modal-content" style="max-width:480px;">
         <button class="modal-close" onclick="closeModal('m-dscoin-history')">✕</button>
@@ -778,7 +761,6 @@
     </div>
 </div>
 
-<!-- Модалка настроек стены -->
 <div class="modal-overlay" id="m-wall-settings">
     <div class="modal-content" style="max-width:420px;">
         <button class="modal-close" onclick="closeModal('m-wall-settings')">✕</button>
@@ -829,9 +811,7 @@
         <button class="modal-close" onclick="closeModal('m-color-picker')">✕</button>
         <h3><i class="fas fa-palette"></i> Выберите цвет для ника</h3>
         <p style="color:var(--text-muted);font-size:13px;text-align:center;margin-bottom:16px;">Выберите цвет или введите свой HEX-код</p>
-        <div class="color-picker-grid" id="colorPickerGrid">
-            <!-- Цвета будут добавлены через JS -->
-        </div>
+        <div class="color-picker-grid" id="colorPickerGrid"></div>
         <div class="form-group" style="margin-top:12px;">
             <label>Свой цвет (HEX)</label>
             <div style="display:flex;gap:10px;align-items:center;">
@@ -922,170 +902,6 @@
         }
         openModal('m-playlist');
     }
-
-    // ===== ОТКРЫТИЕ МОДАЛКИ РЕДАКТИРОВАНИЯ =====
-    function openEditProfileModal() {
-        const userData = currentUserData || viewedUserData;
-        if (!userData) return;
-        document.getElementById('editProfileName').value = userData.displayName || '';
-        document.getElementById('editProfileAvatar').value = userData.photoURL || '';
-        document.getElementById('editProfilePrefix').value = userData.prefix || '';
-        document.getElementById('editProfileColor').value = userData.nickColor || '#6a5aaa';
-        openModal('m-edit-profile');
-    }
-
-    // ===== СОХРАНЕНИЕ РЕДАКТИРОВАНИЯ =====
-    async function saveProfileEdit() {
-        const user = getCurrentUser();
-        if (!user) { alert('❌ Войдите, чтобы редактировать профиль'); return; }
-        
-        const name = document.getElementById('editProfileName').value.trim();
-        const avatar = document.getElementById('editProfileAvatar').value.trim();
-        
-        if (!name) { alert('❌ Введите имя'); return; }
-        
-        const data = {};
-        if (name) data.displayName = name;
-        if (avatar) data.photoURL = avatar;
-        
-        const result = await updateUserProfile(user.uid, data);
-        if (result.success) {
-            alert('✅ Профиль обновлён!');
-            closeModal('m-edit-profile');
-            await loadProfile();
-        } else {
-            alert('❌ Ошибка: ' + result.error);
-        }
-    }
-
-    // ===== ВЫБОР ЦВЕТА ПРИ ПОКУПКЕ =====
-    let selectedColor = '#6a5aaa';
-    let colorPrice = 500;
-
-    const presetColors = [
-        '#ff6b6b', '#ff9f43', '#fbbf24', '#4CAF50', '#2ecc71',
-        '#2196F3', '#3498db', '#5b6abf', '#6a5aaa', '#9b59b6',
-        '#e84393', '#fd79a8', '#00b894', '#00cec9', '#0984e3',
-        '#6c5ce7', '#fd79a8', '#e17055', '#d63031', '#fdcb6e'
-    ];
-
-    function initColorPicker() {
-        const grid = document.getElementById('colorPickerGrid');
-        if (!grid) return;
-        
-        grid.innerHTML = presetColors.map(color => `
-            <button class="color-option ${color === selectedColor ? 'selected' : ''}" 
-                    style="background:${color};" 
-                    onclick="selectColor('${color}')"></button>
-        `).join('');
-        
-        // Добавляем кастомный цвет
-        grid.innerHTML += `
-            <button class="color-option custom-color" onclick="selectCustomColor()" title="Выбрать свой цвет"></button>
-        `;
-        
-        // Синхронизируем input'ы
-        const colorInput = document.getElementById('customColorInput');
-        const colorPicker = document.getElementById('customColorPicker');
-        if (colorInput && colorPicker) {
-            colorInput.value = selectedColor;
-            colorPicker.value = selectedColor;
-            colorInput.addEventListener('input', function() {
-                const val = this.value.trim();
-                if (/^#[0-9a-f]{6}$/i.test(val)) {
-                    selectedColor = val;
-                    colorPicker.value = val;
-                    document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
-                }
-            });
-            colorPicker.addEventListener('input', function() {
-                selectedColor = this.value;
-                document.getElementById('customColorInput').value = this.value;
-                document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
-            });
-        }
-    }
-
-    function selectColor(color) {
-        selectedColor = color;
-        document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
-        document.querySelectorAll('.color-option').forEach(el => {
-            if (el.style.background === color || el.style.background === `rgb(${hexToRgb(color)})`) {
-                el.classList.add('selected');
-            }
-        });
-        document.getElementById('customColorInput').value = color;
-        document.getElementById('customColorPicker').value = color;
-    }
-
-    function selectCustomColor() {
-        document.getElementById('customColorPicker').click();
-    }
-
-    function hexToRgb(hex) {
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '106, 90, 170';
-    }
-
-    function openColorPickerModal() {
-        selectedColor = document.getElementById('editProfileColor')?.value || '#6a5aaa';
-        const priceEl = document.getElementById('colorPriceDisplay');
-        if (priceEl) priceEl.textContent = colorPrice;
-        initColorPicker();
-        openModal('m-color-picker');
-    }
-
-    async function confirmColorPurchase() {
-        const user = getCurrentUser();
-        if (!user) { alert('❌ Войдите, чтобы совершить покупку'); return; }
-        
-        const result = await purchaseColorNick(user.uid, selectedColor);
-        if (result && result.success) {
-            alert('✅ Цвет успешно куплен!');
-            closeModal('m-color-picker');
-            await loadProfile();
-            await updateSidebarBalance(user);
-        } else if (result) {
-            alert('❌ Ошибка: ' + result.error);
-        }
-    }
-
-    // Обновляем purchaseItem для использования модалки
-    window.purchaseItem = async function(type) {
-        const user = getCurrentUser();
-        if (!user) { alert('Войдите, чтобы совершить покупку'); return; }
-        
-        if (type === 'colorNick') {
-            // Открываем модалку выбора цвета
-            const prices = await getShopPrices();
-            colorPrice = prices.success ? (prices.data.colorNick || 500) : 500;
-            document.getElementById('colorPriceDisplay').textContent = colorPrice;
-            openColorPickerModal();
-            return;
-        }
-        
-        let result;
-        switch(type) {
-            case 'prefix':
-                const prefix = prompt('Введите префикс (макс 3 символа):', '⭐');
-                if (!prefix || prefix.length > 3) { alert('Префикс должен быть не более 3 символов'); return; }
-                result = await purchasePrefix(user.uid, prefix);
-                break;
-            case 'achSlot':
-                result = await purchaseAchSlot(user.uid);
-                break;
-            default:
-                alert('❌ Неизвестный товар');
-                return;
-        }
-        if (result && result.success) {
-            alert('✅ Покупка успешно совершена!');
-            await loadProfile();
-            await updateSidebarBalance(user);
-        } else if (result) {
-            alert('❌ Ошибка: ' + result.error);
-        }
-    };
 </script>
 
 <!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
@@ -1162,7 +978,6 @@
                 <button class="action-btn outline action-btn-sm" id="wallSettingsBtn" onclick="openModal('m-wall-settings')" style="display:none;"><i class="fas fa-cog"></i></button>
             </div>
         </div>
-        
         <div id="wallFormContainer" style="display:none;">
             <div class="wall-form">
                 <textarea id="wallInput" placeholder="Что у вас нового?..."></textarea>
@@ -1171,7 +986,6 @@
                 </div>
             </div>
         </div>
-        
         <div id="wallContainer">
             <p style="color:var(--text-muted);font-style:italic;">Загрузка...</p>
         </div>
@@ -1224,7 +1038,7 @@
         getUserRole
     } from './firebase-config.js';
 
-    // Делаем функции глобальными
+    // ===== ДЕЛАЕМ ВСЁ ГЛОБАЛЬНЫМ =====
     window.getUserDSCoins = getUserDSCoins;
     window.getUserByEmail = getUserByEmail;
     window.addDSCoins = addDSCoins;
@@ -1243,13 +1057,12 @@
     window.purchasePrefix = purchasePrefix;
     window.purchaseAchSlot = purchaseAchSlot;
     window.getUserRole = getUserRole;
-    window.openEditProfileModal = openEditProfileModal;
-    window.saveProfileEdit = saveProfileEdit;
-    window.openColorPickerModal = openColorPickerModal;
-    window.confirmColorPurchase = confirmColorPurchase;
-    window.selectColor = selectColor;
-    window.selectCustomColor = selectCustomColor;
-    window.initColorPicker = initColorPicker;
+    window.isAdmin = isAdmin;
+    window.updateUserProfile = updateUserProfile;
+    window.logoutUser = logoutUser;
+    window.getCurrentUser = getCurrentUser;
+    window.toggleSubscribe = toggleSubscribe;
+    window.isSubscribed = isSubscribed;
 
     let currentUser = null;
     let currentUserData = null;
@@ -1258,66 +1071,180 @@
     let isAdminUser = false;
     let isOwnProfile = true;
     let allPlaylists = [];
+    let selectedColor = '#6a5aaa';
+    let colorPrice = 500;
 
     const urlParams = new URLSearchParams(window.location.search);
     const viewedId = urlParams.get('uid');
     const viewedEmail = urlParams.get('email');
 
-    function updateAuthButton(user) {
-        const btn = document.getElementById('authBtn');
-        if (user) {
-            btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
-            btn.href = 'profile.html';
-        } else {
-            btn.textContent = '🔑 Вход';
-            btn.href = 'login.html';
+    // ===== ОТКРЫТИЕ МОДАЛКИ РЕДАКТИРОВАНИЯ =====
+    window.openEditProfileModal = function() {
+        const user = getCurrentUser();
+        if (!user) { alert('❌ Войдите, чтобы редактировать профиль'); return; }
+        if (!currentUserData) { 
+            alert('❌ Данные ещё загружаются, попробуйте позже');
+            return;
         }
+        document.getElementById('editProfileName').value = currentUserData.displayName || '';
+        document.getElementById('editProfileAvatar').value = currentUserData.photoURL || '';
+        document.getElementById('editProfilePrefix').value = currentUserData.prefix || '';
+        document.getElementById('editProfileColor').value = currentUserData.nickColor || '#6a5aaa';
+        openModal('m-edit-profile');
+    };
+
+    // ===== СОХРАНЕНИЕ РЕДАКТИРОВАНИЯ =====
+    window.saveProfileEdit = async function() {
+        const user = getCurrentUser();
+        if (!user) { alert('❌ Войдите, чтобы редактировать профиль'); return; }
+        
+        const name = document.getElementById('editProfileName').value.trim();
+        const avatar = document.getElementById('editProfileAvatar').value.trim();
+        
+        if (!name) { alert('❌ Введите имя'); return; }
+        
+        const data = {};
+        if (name) data.displayName = name;
+        if (avatar) data.photoURL = avatar;
+        
+        const result = await updateUserProfile(user.uid, data);
+        if (result.success) {
+            alert('✅ Профиль обновлён!');
+            closeModal('m-edit-profile');
+            await loadProfile();
+        } else {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    // ===== ВЫБОР ЦВЕТА =====
+    function hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '106, 90, 170';
     }
 
-    async function updateDubInLink(user) {
-        const link = document.getElementById('dubInLink');
-        const sidebarLink = document.getElementById('sidebarDubIn');
-        if (!link) return;
-        if (user) {
-            const role = await getUserRole(user.uid);
-            const show = (role === 'dubber' || role === 'admin');
-            link.style.display = show ? 'inline-flex' : 'none';
-            if (sidebarLink) sidebarLink.style.display = show ? 'flex' : 'none';
-        } else {
-            link.style.display = 'none';
-            if (sidebarLink) sidebarLink.style.display = 'none';
-        }
-    }
+    window.selectColor = function(color) {
+        selectedColor = color;
+        document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+        document.querySelectorAll('.color-option').forEach(el => {
+            const bg = el.style.background || '';
+            if (bg === color || bg === `rgb(${hexToRgb(color)})`) {
+                el.classList.add('selected');
+            }
+        });
+        const input = document.getElementById('customColorInput');
+        const picker = document.getElementById('customColorPicker');
+        if (input) input.value = color;
+        if (picker) picker.value = color;
+    };
 
-    async function updateAdminLinks(user) {
-        const adminLink = document.getElementById('adminLink');
-        const sidebarAdminOrders = document.getElementById('sidebarAdminOrders');
-        const sidebarAdminDSCoins = document.getElementById('sidebarAdminDSCoins');
-        if (user) {
-            const role = await getUserRole(user.uid);
-            const isAdminRole = role === 'admin';
-            if (adminLink) adminLink.style.display = isAdminRole ? 'inline-flex' : 'none';
-            if (sidebarAdminOrders) sidebarAdminOrders.style.display = isAdminRole ? 'flex' : 'none';
-            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = isAdminRole ? 'flex' : 'none';
-        } else {
-            if (adminLink) adminLink.style.display = 'none';
-            if (sidebarAdminOrders) sidebarAdminOrders.style.display = 'none';
-            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = 'none';
-        }
-    }
+    window.selectCustomColor = function() {
+        document.getElementById('customColorPicker')?.click();
+    };
 
-    async function updateSidebarBalance(user) {
-        const balanceEl = document.getElementById('sidebarBalance');
-        if (!balanceEl) return;
-        if (user) {
-            const result = await getUserDSCoins(user.uid);
-            balanceEl.textContent = result.success ? result.coins : '0';
-        } else {
-            balanceEl.textContent = '0';
+    window.initColorPicker = function() {
+        const grid = document.getElementById('colorPickerGrid');
+        if (!grid) return;
+        
+        const presetColors = [
+            '#ff6b6b', '#ff9f43', '#fbbf24', '#4CAF50', '#2ecc71',
+            '#2196F3', '#3498db', '#5b6abf', '#6a5aaa', '#9b59b6',
+            '#e84393', '#fd79a8', '#00b894', '#00cec9', '#0984e3',
+            '#6c5ce7', '#fd79a8', '#e17055', '#d63031', '#fdcb6e'
+        ];
+        
+        grid.innerHTML = presetColors.map(color => `
+            <button class="color-option ${color === selectedColor ? 'selected' : ''}" 
+                    style="background:${color};" 
+                    onclick="selectColor('${color}')"></button>
+        `).join('');
+        
+        grid.innerHTML += `
+            <button class="color-option custom-color" onclick="document.getElementById('customColorPicker')?.click()" title="Выбрать свой цвет"></button>
+        `;
+        
+        const colorInput = document.getElementById('customColorInput');
+        const colorPicker = document.getElementById('customColorPicker');
+        if (colorInput && colorPicker) {
+            colorInput.value = selectedColor;
+            colorPicker.value = selectedColor;
+            colorInput.oninput = function() {
+                const val = this.value.trim();
+                if (/^#[0-9a-f]{6}$/i.test(val)) {
+                    selectedColor = val;
+                    colorPicker.value = val;
+                    document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+                }
+            };
+            colorPicker.oninput = function() {
+                selectedColor = this.value;
+                document.getElementById('customColorInput').value = this.value;
+                document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+            };
         }
-    }
+    };
 
-    // ========== DSCOINS ==========
+    window.openColorPickerModal = function() {
+        const user = getCurrentUser();
+        if (!user) { alert('❌ Войдите, чтобы совершить покупку'); return; }
+        selectedColor = document.getElementById('editProfileColor')?.value || '#6a5aaa';
+        const priceEl = document.getElementById('colorPriceDisplay');
+        if (priceEl) priceEl.textContent = colorPrice;
+        setTimeout(initColorPicker, 100);
+        openModal('m-color-picker');
+    };
+
+    window.confirmColorPurchase = async function() {
+        const user = getCurrentUser();
+        if (!user) { alert('❌ Войдите, чтобы совершить покупку'); return; }
+        const result = await purchaseColorNick(user.uid, selectedColor);
+        if (result && result.success) {
+            alert('✅ Цвет успешно куплен!');
+            closeModal('m-color-picker');
+            await loadProfile();
+            await updateSidebarBalance(user);
+        } else if (result) {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    // ===== ПОКУПКА =====
+    window.purchaseItem = async function(type) {
+        const user = getCurrentUser();
+        if (!user) { alert('❌ Войдите, чтобы совершить покупку'); return; }
+        
+        if (type === 'colorNick') {
+            const prices = await getShopPrices();
+            colorPrice = prices.success ? (prices.data.colorNick || 500) : 500;
+            document.getElementById('colorPriceDisplay').textContent = colorPrice;
+            openColorPickerModal();
+            return;
+        }
+        
+        let result;
+        switch(type) {
+            case 'prefix':
+                const prefix = prompt('Введите префикс (макс 3 символа):', '⭐');
+                if (!prefix || prefix.length > 3) { alert('❌ Префикс должен быть не более 3 символов'); return; }
+                result = await purchasePrefix(user.uid, prefix);
+                break;
+            case 'achSlot':
+                result = await purchaseAchSlot(user.uid);
+                break;
+            default:
+                alert('❌ Неизвестный товар');
+                return;
+        }
+        if (result && result.success) {
+            alert('✅ Покупка успешно совершена!');
+            await loadProfile();
+            await updateSidebarBalance(user);
+        } else if (result) {
+            alert('❌ Ошибка: ' + result.error);
+        }
+    };
+
+    // ===== ОСТАЛЬНЫЕ ФУНКЦИИ =====
     window.showDSCoinHistory = async function() {
         const user = getCurrentUser();
         if (!user) { alert('Войдите, чтобы увидеть историю'); return; }
@@ -1343,17 +1270,6 @@
         openModal('m-dscoin-history');
     };
 
-    async function loadShopPrices() {
-        const result = await getShopPrices();
-        if (result.success) {
-            const prices = result.data;
-            document.getElementById('priceColorNick').textContent = prices.colorNick || 500;
-            document.getElementById('pricePrefix').textContent = prices.prefix || 300;
-            document.getElementById('priceAchSlot').textContent = prices.achSlot || 200;
-        }
-    }
-
-    // ========== ПЛЕЙЛИСТЫ ==========
     window.savePlaylist = async function() {
         const user = getCurrentUser();
         if (!user) { alert('Войдите, чтобы создать плейлист'); return; }
@@ -1398,48 +1314,13 @@
         }
     };
 
-    async function loadPlaylists() {
-        const user = getCurrentUser();
-        if (!user) return;
-        const result = await getPlaylists(user.uid);
-        const container = document.getElementById('playlistsContainer');
-        if (result.success) {
-            allPlaylists = result.playlists;
-            if (allPlaylists.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">У вас пока нет плейлистов</p>';
-            } else {
-                container.innerHTML = `
-                    <div class="playlist-grid">
-                        ${allPlaylists.map(p => `
-                            <div class="playlist-card">
-                                ${p.image ? `<img src="${p.image}" class="cover" onerror="this.style.display='none'">` : `<div class="cover" style="background:var(--bg-welcome);display:flex;align-items:center;justify-content:center;font-size:30px;">📁</div>`}
-                                <div class="name">${p.name}</div>
-                                <div class="count">${p.items?.length || 0} релизов</div>
-                                ${p.pinned ? '<div class="pinned">📌 Закреплён</div>' : ''}
-                                ${isOwnProfile ? `
-                                    <div style="display:flex;gap:5px;margin-top:8px;justify-content:center;">
-                                        <button class="action-btn action-btn-sm outline" onclick="editPlaylist('${p.id}')">✏️</button>
-                                        <button class="action-btn action-btn-sm danger" onclick="deletePlaylistItem('${p.id}')">🗑️</button>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-        }
-    }
-
-    // ========== СТЕНА ==========
     window.addWallPost = async function() {
         const user = getCurrentUser();
         if (!user) { alert('Войдите, чтобы оставить запись'); return; }
         const text = document.getElementById('wallInput').value.trim();
         if (!text) { alert('Введите текст'); return; }
-        
         const userData = await getUserData(user.uid);
         const visibility = userData.success ? (userData.data.wallVisibility || 'all') : 'all';
-        
         const result = await addWallPost(user.uid, text, visibility);
         if (result.success) {
             document.getElementById('wallInput').value = '';
@@ -1474,124 +1355,6 @@
         }
     };
 
-    async function loadWall() {
-        const container = document.getElementById('wallContainer');
-        if (!container) return;
-        
-        const user = getCurrentUser();
-        if (!user) {
-            container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Войдите, чтобы видеть стену</p>';
-            return;
-        }
-        
-        let targetUid = viewedUserId || user.uid;
-        const isOwner = user.uid === targetUid;
-        
-        const formContainer = document.getElementById('wallFormContainer');
-        if (formContainer) {
-            formContainer.style.display = isOwner ? 'block' : 'none';
-        }
-        
-        const settingsBtn = document.getElementById('wallSettingsBtn');
-        if (settingsBtn) {
-            settingsBtn.style.display = isOwner ? 'inline-flex' : 'none';
-        }
-        
-        try {
-            const result = await getWallPosts(targetUid);
-            if (!result.success) {
-                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки записей</p>';
-                return;
-            }
-            
-            const visibility = result.visibility || 'all';
-            const visibilityBadge = document.getElementById('wallVisibilityBadge');
-            if (visibilityBadge) {
-                const labels = {
-                    'all': '🌍 Доступна всем',
-                    'friends': '👥 Только подписчикам',
-                    'disabled': '🔒 Закрыта'
-                };
-                visibilityBadge.textContent = labels[visibility] || '🌍 Доступна всем';
-                visibilityBadge.className = `visibility-badge ${visibility === 'disabled' ? 'private' : visibility === 'friends' ? 'friends' : 'public'}`;
-            }
-            
-            const posts = result.posts;
-            if (posts.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Пока нет записей на стене</p>';
-                return;
-            }
-            
-            container.innerHTML = posts.map(post => {
-                const isOwnPost = user && user.uid === post.userId;
-                const visibilityLabel = post.visibility === 'friends' ? '👥 Подписчики' : 
-                                       post.visibility === 'disabled' ? '🔒 Закрыто' : '🌍 Все';
-                const visClass = post.visibility === 'disabled' ? 'private' : 
-                                post.visibility === 'friends' ? 'friends' : 'public';
-                return `
-                    <div class="wall-post">
-                        <div class="header">
-                            <div class="user">
-                                <div class="avatar" style="background:var(--color-accent);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px;">${post.userName?.charAt(0).toUpperCase() || '?'}</div>
-                                <span class="name">${post.userName || 'Пользователь'}</span>
-                                <span class="visibility-badge ${visClass}">${visibilityLabel}</span>
-                            </div>
-                            <span class="time">${post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleString() : ''}</span>
-                        </div>
-                        <div class="text">${post.text}</div>
-                        ${isOwnPost ? `
-                            <div class="actions">
-                                <button onclick="deleteWallPost('${post.id}')">🗑️ Удалить</button>
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            }).join('');
-        } catch (e) {
-            console.error('Ошибка загрузки стены:', e);
-            container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки записей</p>';
-        }
-    }
-
-    // ========== ЗАЯВКИ ==========
-    async function loadOrders() {
-        const container = document.getElementById('ordersList');
-        if (!container) return;
-        const user = getCurrentUser();
-        if (!user) {
-            container.innerHTML = '<p style="color:var(--text-muted);">Войдите, чтобы увидеть заявки</p>';
-            return;
-        }
-        const result = await getVoiceOrders(user.uid);
-        if (!result.success || result.orders.length === 0) {
-            container.innerHTML = '<p style="color:var(--text-muted);">У вас пока нет заявок</p>';
-            return;
-        }
-        const statusMap = {
-            'pending': '⏳ Ожидает оплаты',
-            'paid': '✅ Оплачено',
-            'completed': '🎉 Выполнено',
-            'cancelled': '❌ Отменено'
-        };
-        container.innerHTML = result.orders.map(order => `
-            <div style="background:var(--bg-order-item);border-radius:10px;padding:15px;margin-bottom:10px;border-left:4px solid ${order.status === 'paid' ? 'var(--color-success)' : order.status === 'completed' ? 'var(--color-accent)' : 'var(--color-warning)'};">
-                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;">
-                    <strong style="color:var(--color-accent);">${order.title}</strong>
-                    <span style="color:var(--text-muted);">${order.type} • ${order.episodes} серий</span>
-                </div>
-                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;margin-top:5px;">
-                    <span style="color:var(--text-muted);font-size:13px;">${order.description || 'Без описания'}</span>
-                    <span style="color:var(--color-warning);font-weight:bold;">${order.price} ₽</span>
-                </div>
-                <div style="margin-top:5px;">
-                    <span style="color:var(--text-muted);font-size:12px;">${statusMap[order.status] || order.status}</span>
-                    ${order.status === 'paid' ? '<span style="color:var(--color-success);font-size:12px;margin-left:10px;">🎙️ Ждите связи</span>' : ''}
-                </div>
-            </div>
-        `).join('');
-    }
-
-    // ========== ПРОФИЛЬ ==========
     window.handleSubscribe = async function() {
         if (!currentUser) { alert('Войдите, чтобы подписаться'); return; }
         if (currentUser.uid === viewedUserId) { alert('Нельзя подписаться на себя'); return; }
@@ -1711,6 +1474,219 @@
         modal.addEventListener('click', function(e) { if (e.target === this) { this.remove(); document.body.style.overflow = ''; } });
     };
 
+    // ===== ОСНОВНЫЕ ФУНКЦИИ =====
+    function updateAuthButton(user) {
+        const btn = document.getElementById('authBtn');
+        if (user) {
+            btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
+            btn.href = 'profile.html';
+        } else {
+            btn.textContent = '🔑 Вход';
+            btn.href = 'login.html';
+        }
+    }
+
+    async function updateDubInLink(user) {
+        const link = document.getElementById('dubInLink');
+        const sidebarLink = document.getElementById('sidebarDubIn');
+        if (!link) return;
+        if (user) {
+            const role = await getUserRole(user.uid);
+            const show = (role === 'dubber' || role === 'admin');
+            link.style.display = show ? 'inline-flex' : 'none';
+            if (sidebarLink) sidebarLink.style.display = show ? 'flex' : 'none';
+        } else {
+            link.style.display = 'none';
+            if (sidebarLink) sidebarLink.style.display = 'none';
+        }
+    }
+
+    async function updateAdminLinks(user) {
+        const adminLink = document.getElementById('adminLink');
+        const sidebarAdminOrders = document.getElementById('sidebarAdminOrders');
+        const sidebarAdminDSCoins = document.getElementById('sidebarAdminDSCoins');
+        if (user) {
+            const role = await getUserRole(user.uid);
+            const isAdminRole = role === 'admin';
+            if (adminLink) adminLink.style.display = isAdminRole ? 'inline-flex' : 'none';
+            if (sidebarAdminOrders) sidebarAdminOrders.style.display = isAdminRole ? 'flex' : 'none';
+            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = isAdminRole ? 'flex' : 'none';
+        } else {
+            if (adminLink) adminLink.style.display = 'none';
+            if (sidebarAdminOrders) sidebarAdminOrders.style.display = 'none';
+            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = 'none';
+        }
+    }
+
+    async function updateSidebarBalance(user) {
+        const balanceEl = document.getElementById('sidebarBalance');
+        if (!balanceEl) return;
+        if (user) {
+            const result = await getUserDSCoins(user.uid);
+            balanceEl.textContent = result.success ? result.coins : '0';
+        } else {
+            balanceEl.textContent = '0';
+        }
+    }
+
+    async function loadShopPrices() {
+        const result = await getShopPrices();
+        if (result.success) {
+            const prices = result.data;
+            document.getElementById('priceColorNick').textContent = prices.colorNick || 500;
+            document.getElementById('pricePrefix').textContent = prices.prefix || 300;
+            document.getElementById('priceAchSlot').textContent = prices.achSlot || 200;
+        }
+    }
+
+    async function loadPlaylists() {
+        const user = getCurrentUser();
+        if (!user) return;
+        const result = await getPlaylists(user.uid);
+        const container = document.getElementById('playlistsContainer');
+        if (result.success) {
+            allPlaylists = result.playlists;
+            if (allPlaylists.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">У вас пока нет плейлистов</p>';
+            } else {
+                container.innerHTML = `
+                    <div class="playlist-grid">
+                        ${allPlaylists.map(p => `
+                            <div class="playlist-card">
+                                ${p.image ? `<img src="${p.image}" class="cover" onerror="this.style.display='none'">` : `<div class="cover" style="background:var(--bg-welcome);display:flex;align-items:center;justify-content:center;font-size:30px;">📁</div>`}
+                                <div class="name">${p.name}</div>
+                                <div class="count">${p.items?.length || 0} релизов</div>
+                                ${p.pinned ? '<div class="pinned">📌 Закреплён</div>' : ''}
+                                ${isOwnProfile ? `
+                                    <div style="display:flex;gap:5px;margin-top:8px;justify-content:center;">
+                                        <button class="action-btn action-btn-sm outline" onclick="editPlaylist('${p.id}')">✏️</button>
+                                        <button class="action-btn action-btn-sm danger" onclick="deletePlaylistItem('${p.id}')">🗑️</button>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+    }
+
+    async function loadWall() {
+        const container = document.getElementById('wallContainer');
+        if (!container) return;
+        
+        const user = getCurrentUser();
+        if (!user) {
+            container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Войдите, чтобы видеть стену</p>';
+            return;
+        }
+        
+        let targetUid = viewedUserId || user.uid;
+        const isOwner = user.uid === targetUid;
+        
+        const formContainer = document.getElementById('wallFormContainer');
+        if (formContainer) {
+            formContainer.style.display = isOwner ? 'block' : 'none';
+        }
+        
+        const settingsBtn = document.getElementById('wallSettingsBtn');
+        if (settingsBtn) {
+            settingsBtn.style.display = isOwner ? 'inline-flex' : 'none';
+        }
+        
+        try {
+            const result = await getWallPosts(targetUid);
+            if (!result.success) {
+                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки записей</p>';
+                return;
+            }
+            
+            const visibility = result.visibility || 'all';
+            const visibilityBadge = document.getElementById('wallVisibilityBadge');
+            if (visibilityBadge) {
+                const labels = {
+                    'all': '🌍 Доступна всем',
+                    'friends': '👥 Только подписчикам',
+                    'disabled': '🔒 Закрыта'
+                };
+                visibilityBadge.textContent = labels[visibility] || '🌍 Доступна всем';
+                visibilityBadge.className = `visibility-badge ${visibility === 'disabled' ? 'private' : visibility === 'friends' ? 'friends' : 'public'}`;
+            }
+            
+            const posts = result.posts;
+            if (posts.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Пока нет записей на стене</p>';
+                return;
+            }
+            
+            container.innerHTML = posts.map(post => {
+                const isOwnPost = user && user.uid === post.userId;
+                const visibilityLabel = post.visibility === 'friends' ? '👥 Подписчики' : 
+                                       post.visibility === 'disabled' ? '🔒 Закрыто' : '🌍 Все';
+                const visClass = post.visibility === 'disabled' ? 'private' : 
+                                post.visibility === 'friends' ? 'friends' : 'public';
+                return `
+                    <div class="wall-post">
+                        <div class="header">
+                            <div class="user">
+                                <div class="avatar" style="background:var(--color-accent);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px;">${post.userName?.charAt(0).toUpperCase() || '?'}</div>
+                                <span class="name">${post.userName || 'Пользователь'}</span>
+                                <span class="visibility-badge ${visClass}">${visibilityLabel}</span>
+                            </div>
+                            <span class="time">${post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleString() : ''}</span>
+                        </div>
+                        <div class="text">${post.text}</div>
+                        ${isOwnPost ? `
+                            <div class="actions">
+                                <button onclick="deleteWallPost('${post.id}')">🗑️ Удалить</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        } catch (e) {
+            console.error('Ошибка загрузки стены:', e);
+            container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки записей</p>';
+        }
+    }
+
+    async function loadOrders() {
+        const container = document.getElementById('ordersList');
+        if (!container) return;
+        const user = getCurrentUser();
+        if (!user) {
+            container.innerHTML = '<p style="color:var(--text-muted);">Войдите, чтобы увидеть заявки</p>';
+            return;
+        }
+        const result = await getVoiceOrders(user.uid);
+        if (!result.success || result.orders.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-muted);">У вас пока нет заявок</p>';
+            return;
+        }
+        const statusMap = {
+            'pending': '⏳ Ожидает оплаты',
+            'paid': '✅ Оплачено',
+            'completed': '🎉 Выполнено',
+            'cancelled': '❌ Отменено'
+        };
+        container.innerHTML = result.orders.map(order => `
+            <div style="background:var(--bg-order-item);border-radius:10px;padding:15px;margin-bottom:10px;border-left:4px solid ${order.status === 'paid' ? 'var(--color-success)' : order.status === 'completed' ? 'var(--color-accent)' : 'var(--color-warning)'};">
+                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;">
+                    <strong style="color:var(--color-accent);">${order.title}</strong>
+                    <span style="color:var(--text-muted);">${order.type} • ${order.episodes} серий</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;margin-top:5px;">
+                    <span style="color:var(--text-muted);font-size:13px;">${order.description || 'Без описания'}</span>
+                    <span style="color:var(--color-warning);font-weight:bold;">${order.price} ₽</span>
+                </div>
+                <div style="margin-top:5px;">
+                    <span style="color:var(--text-muted);font-size:12px;">${statusMap[order.status] || order.status}</span>
+                    ${order.status === 'paid' ? '<span style="color:var(--color-success);font-size:12px;margin-left:10px;">🎙️ Ждите связи</span>' : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+
     async function renderProfile(user, userData, isOwn) {
         const container = document.getElementById('profileContent');
         const avatarUrl = userData.photoURL || '';
@@ -1750,7 +1726,6 @@
             adminPanel = `
                 <div class="admin-panel">
                     <h3>👑 Управление пользователем</h3>
-                    
                     <div style="margin-bottom:15px;padding:10px;background:var(--bg-welcome);border-radius:8px;">
                         <p style="color:var(--text-muted);font-size:13px;">
                             <strong>Цвет ника:</strong> ${nickColor ? `<span style="color:${nickColor};font-weight:bold;">${nickColor}</span>` : 'Не установлен'}
@@ -1758,7 +1733,6 @@
                             <strong>Префикс:</strong> ${prefix ? `<span style="font-weight:bold;">${prefix}</span>` : 'Не установлен'}
                         </p>
                     </div>
-                    
                     <div style="margin-bottom:15px;">
                         <p style="color:var(--text-muted);font-size:14px;">Текущая роль: <strong style="color:var(--color-accent);">${roleNames[role] || role}</strong></p>
                         <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
@@ -1770,9 +1744,7 @@
                             <button class="action-btn primary" onclick="handleRoleChange()">💾 Применить роль</button>
                         </div>
                     </div>
-                    
                     <hr style="border-color:var(--border-primary);margin:15px 0;">
-                    
                     <div style="margin-bottom:15px;">
                         <p style="color:var(--text-muted);font-size:14px;">🏅 Выдать кастомное достижение</p>
                         <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -1781,9 +1753,7 @@
                             <button class="action-btn success" onclick="handleCustomAchievement()">🏅 Выдать</button>
                         </div>
                     </div>
-                    
                     <hr style="border-color:var(--border-primary);margin:15px 0;">
-                    
                     <div class="admin-coin-section">
                         <div class="title"><i class="fas fa-coins"></i> Выдача DSCoins</div>
                         <div class="row">
@@ -1874,7 +1844,6 @@
             </div>
         `;
 
-        // ===== ПОКАЗЫВАЕМ СТЕНУ ДЛЯ ВСЕХ =====
         const wallSection = document.getElementById('wallSection');
         if (wallSection) {
             wallSection.style.display = 'block';
@@ -1956,7 +1925,7 @@
         await loadOrders();
     }
 
-    // ========== ИНИЦИАЛИЗАЦИЯ ==========
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
     onAuthStateChangedListener(async (user) => {
         currentUser = user;
         updateAuthButton(user);
