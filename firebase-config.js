@@ -1405,6 +1405,7 @@ export {
     updateShopPrices,
     purchaseColorNick,
     purchasePrefix,
+    purchaseAchSlot,
     updateTitleRating
 };
 
