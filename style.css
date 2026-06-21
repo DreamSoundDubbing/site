@@ -9,7 +9,7 @@
 :root {
     /* ТЁМНАЯ ТЕМА ПО УМОЛЧАНИЮ */
     --bg-body: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 100%);
-    --bg-container: rgba(18, 10, 30, 0.95);
+    --bg-container: rgba(18, 10, 30, 0);
     --bg-content: #1a1030;
     --bg-content2: linear-gradient(135deg, #1a1040, #2a1040);
     --bg-card: #1a1030;
@@ -84,7 +84,7 @@
 /* ========== СВЕТЛАЯ ТЕМА ========== */
 [data-theme="light"] {
     --bg-body: linear-gradient(135deg, #e8f0ff 0%, #d4c8f0 100%);
-    --bg-container: rgba(255, 255, 255, 0.92);
+    --bg-container: rgba(255, 255, 255, 0);
     --bg-content: #ffffff;
     --bg-content2: linear-gradient(135deg, #d4e8ff, #dcc8f0);
     --bg-card: #ffffff;
