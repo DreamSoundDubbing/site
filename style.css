@@ -44,6 +44,7 @@
     --bg-filter-search: #1a1040;
     --bg-telegram-btn: linear-gradient(135deg, #0066aa, #003366);
     --bg-header: linear-gradient(135deg, #1a3a7a 0%, #4a2a7a 100%);
+    --bg-footer: linear-gradient(135deg, #071a41 0%, #240b49 100%);
     --bg-sidebar: #1a1030;
     --bg-sidebar-header: linear-gradient(135deg, #1a3a7a 0%, #4a2a7a 100%);
     --bg-shop-item: #1a1040;
@@ -85,7 +86,7 @@
 [data-theme="light"] {
     --bg-body: linear-gradient(135deg, #e8f0ff 0%, #d4c8f0 100%);
     --bg-container: rgba(255, 255, 255, 0);
-    --bg-content: #ffffff;
+    --bg-content: #ffffff00;
     --bg-content2: linear-gradient(135deg, #d4e8ff, #dcc8f0);
     --bg-card: #ffffff;
     --bg-stat: #e8f0ff;
@@ -119,6 +120,7 @@
     --bg-filter-search: #f0f4ff;
     --bg-telegram-btn: linear-gradient(135deg, #0088cc, #005f8a);
     --bg-header: linear-gradient(135deg, #2a4a8a 0%, #6a3a9a 100%);
+    --bg-footer: linear-gradient(135deg, #1b53c4 0%, #7122c0 100%);
     --bg-sidebar: #ffffff;
     --bg-sidebar-header: linear-gradient(135deg, #2a4a8a 0%, #6a3a9a 100%);
     --bg-shop-item: #f0f4ff;
@@ -470,6 +472,23 @@ body {
 .header {
     text-align: center;
     margin-bottom: 16px;
+}
+
+.footer {
+    width: 100%;
+    background: var(--bg-footer);
+    padding: 8px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-header);
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    gap: 8px;
+    transition: background 0.3s ease;
+    min-height: 75px;
+    height: 75px;
+    margin-top: auto;
 }
 
 .title {
