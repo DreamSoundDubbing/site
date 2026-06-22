@@ -10,8 +10,8 @@
     /* ТЁМНАЯ ТЕМА ПО УМОЛЧАНИЮ */
     --bg-body: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 100%);
     --bg-container: rgba(18, 10, 30, 0);
-    --bg-content: #1a1030;
-    --bg-content2: linear-gradient(135deg, #1a1040, #2a1040);
+    --bg-content: #1a103000;
+    --bg-content2: linear-gradient(135deg, #1a104000, #2a104000);
     --bg-card: #1a1030;
     --bg-stat: #1a1040;
     --bg-voice-profile: linear-gradient(135deg, #1a1040, #2a1040);
@@ -61,7 +61,7 @@
     
     --shadow-card: 0 8px 20px rgba(0,0,0,0.4);
     --shadow-hover: 0 15px 35px rgba(60, 80, 200, 0.3);
-    --shadow-container: 0 10px 40px rgba(60, 80, 200, 0.2);
+    --shadow-container: 0 10px 40px rgba(60, 81, 200, 0);
     --shadow-header: 0 4px 20px rgba(60, 80, 200, 0.25);
     --shadow-sidebar: 4px 0 30px rgba(0,0,0,0.5);
     
@@ -136,7 +136,7 @@
     
     --shadow-card: 0 8px 20px rgba(40, 60, 140, 0.08);
     --shadow-hover: 0 15px 35px rgba(60, 80, 180, 0.2);
-    --shadow-container: 0 10px 40px rgba(60, 80, 180, 0.12);
+    --shadow-container: 0 10px 40px rgba(60, 80, 180, 0);
     --shadow-header: 0 4px 20px rgba(40, 60, 140, 0.25);
     --shadow-sidebar: 4px 0 30px rgba(0,0,0,0.12);
     
