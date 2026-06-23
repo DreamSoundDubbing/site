@@ -11,8 +11,8 @@
     --bg-body: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 100%);
     --bg-container: rgba(18, 10, 30, 0);
     --bg-content: #1a103000;
-    --bg-content2: linear-gradient(135deg, #1a1040, #2a1040);
-    --bg-card: #1a1030;
+    --bg-content2: linear-gradient(135deg, #1a10403e, #2a10403e);
+    --bg-card: #1a103000;
     --bg-stat: #1a1040;
     --bg-voice-profile: linear-gradient(135deg, #1a1040, #2a1040);
     --bg-comment: #1a1040;
@@ -60,7 +60,7 @@
     --border-primary: #3a2a5a;
     --border-secondary: #2a1a4a;
     
-    --shadow-card: 0 8px 20px rgba(0,0,0,0.4);
+    --shadow-card: 0 8px 20px rgba(0, 0, 0, 0);
     --shadow-hover: 0 15px 35px rgba(60, 80, 200, 0.3);
     --shadow-container: 0 10px 40px rgba(60, 81, 200, 0);
     --shadow-header: 0 4px 20px rgba(60, 80, 200, 0.25);
@@ -88,7 +88,7 @@
     --bg-container: rgba(255, 255, 255, 0);
     --bg-content: #ffffff00;
     --bg-content2: linear-gradient(135deg, #d4e8ff, #dcc8f0);
-    --bg-card: #ffffff;
+    --bg-card: #ffffff00;
     --bg-stat: #e8f0ff;
     --bg-voice-profile: linear-gradient(135deg, #e8f0ff, #e8d8f0);
     --bg-comment: #eef4ff;
@@ -136,7 +136,7 @@
     --border-primary: #b0c8e8;
     --border-secondary: #d0d8e8;
     
-    --shadow-card: 0 8px 20px rgba(40, 60, 140, 0.08);
+    --shadow-card: 0 8px 20px rgba(40, 60, 140, 0);
     --shadow-hover: 0 15px 35px rgba(60, 80, 180, 0.2);
     --shadow-container: 0 10px 40px rgba(60, 80, 180, 0);
     --shadow-header: 0 4px 20px rgba(40, 60, 140, 0.25);

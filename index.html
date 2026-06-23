@@ -20,7 +20,7 @@
         
         /* КОЛОНКИ тоже делаем чуть шире, чтобы они заполняли пространство */
         .main-layout {
-            grid-template-columns: 1.2fr 2.2fr 1.2fr !important;
+            grid-template-columns: 0.8fr 2.6fr 0.8fr !important;
             gap: 2vw !important; /* Расстояние между колонками тоже зависит от ширины экрана */
         }
         
@@ -677,13 +677,13 @@
         } catch (e) { console.error('Ошибка загрузки статистики:', e); }
     }
 
-    // ОБНОВЛЕННАЯ функция загрузки тайтлов для главной (только 2 штуки)
+    // ОБНОВЛЕННАЯ функция загрузки тайтлов для главной (только 3 штуки)
     async function loadFeaturedTitles() {
         const container = document.getElementById('featured-titles-home');
         const result = await getTitles();
         
         if (result.success && result.titles.length > 0) {
-            const titles = result.titles.slice(0, 2); // Берём только 2 последних
+            const titles = result.titles.slice(0, 3); // Берём только 3 последних
             container.innerHTML = titles.map(title => {
                 const image = title.imageHorizontal || title.imageVertical || title.image;
                 return `
