@@ -11,36 +11,51 @@
     <style>
         /* ========== РАСТЯГИВАЕМ СТРАНИЦУ НА ВСЮ ШИРИНУ ========== */
         .container {
-            width: 100% !important;            /* Растягиваем на всю доступную ширину */
-            max-width: none !important;        /* Убираем ограничение 1400px */
-            padding: 20px 3vw !important;      /* Отступы по бокам зависят от ширины экрана (3% от ширины) */
+            width: 100% !important;
+            max-width: none !important;
+            padding: 20px 3vw !important;
             margin: 16px auto !important;
-            box-sizing: border-box !important; /* Чтобы отступы не ломали ширину */
+            box-sizing: border-box !important;
         }
         
-        /* КОЛОНКИ тоже делаем чуть шире, чтобы они заполняли пространство */
+        /* ========== НАСТРОЙКИ КОЛОНОК ========== */
         .main-layout {
-            grid-template-columns: 1.2fr 2.2fr 1.2fr !important;
-            gap: 2vw !important; /* Расстояние между колонками тоже зависит от ширины экрана */
+            /* Боковые колонки уже в 1.5 раза (0.8fr вместо 1.2fr), центральная шире (2.6fr) */
+            grid-template-columns: 0.8fr 2.6fr 0.8fr !important;
+            gap: 2vw !important;
+            margin-bottom: 20px !important;
         }
         
-        /* Блоки снизу */
-        .bottom-panels {
-            gap: 2vw !important;
+        /* ========== ПОЛНАЯ ПРОЗРАЧНОСТЬ ДЛЯ ВСЕХ КОНТЕЙНЕРОВ ========== */
+        .side-panel,
+        .featured-section,
+        .info-panel {
+            background: transparent !important;
+            box-shadow: none !important; /* Убираем тени, чтобы выглядело как парящий текст */
+            backdrop-filter: none !important; /* Убираем размытие, если оно было */
+            border: none !important; /* Убираем рамки */
+            padding: 10px 0 !important; /* Убираем внутренние отступы, оставляем только текст */
+        }
+        
+        /* Центральный блок с тайтлами — убираем обводку и скругления */
+        .featured-section {
+            border-radius: 0 !important;
+            padding: 10px 0 !important;
         }
 
-        /* Картинки в тайтлах пусть растягиваются пропорционально */
-        .featured-item-home img {
-            width: 100%;
-            height: auto;
-            aspect-ratio: 16/9; /* Сохраняем пропорции, чтобы не сплющивались */
-            object-fit: cover;
-            display: block;
+        /* Карточки тайтлов оставляем с лёгким фоном, чтобы они читались */
+        .featured-item-home {
+            background: var(--bg-card); /* Фон карточки остаётся, иначе текст не прочитать */
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid var(--border-secondary);
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
         }
-        
-        /* ========== СПЕЦИАЛЬНЫЕ СТИЛИ ДЛЯ ГЛАВНОЙ ========== */
-        
-        /* Герой (заголовок) */
+
+        /* Остальные стили без изменений (только для контента) */
         .home-hero {
             display: flex;
             flex-direction: column;
@@ -64,21 +79,6 @@
             margin-bottom: 10px;
         }
 
-        /* Сетка из трёх колонок (о нас, тайтлы, соцсети) */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        /* Боковые панели */
-        .side-panel {
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: var(--shadow-card);
-        }
         .side-panel h3 {
             color: var(--color-accent);
             margin-bottom: 12px;
@@ -98,12 +98,6 @@
         }
         .side-panel li:last-child { border-bottom: none; }
 
-        /* Центральный блок с тайтлами */
-        .featured-section {
-            background: var(--bg-content2);
-            padding: 20px;
-            border-radius: 12px;
-        }
         .featured-header {
             display: flex;
             justify-content: space-between;
@@ -119,17 +113,6 @@
             gap: 20px;
         }
 
-        /* Карточка тайтла на главной */
-        .featured-item-home {
-            background: var(--bg-card);
-            border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 2px solid var(--border-secondary);
-            text-align: center;
-            text-decoration: none;
-            color: inherit;
-        }
         .featured-item-home:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-hover);
@@ -154,7 +137,6 @@
             color: var(--text-muted);
         }
 
-        /* Соцсети */
         .social-link {
             display: flex;
             align-items: center;
@@ -166,7 +148,6 @@
         }
         .social-link:hover { color: var(--color-accent); }
 
-        /* Кнопка поддержки */
         .support-btn {
             display: block;
             width: 100%;
@@ -182,27 +163,19 @@
         }
         .support-btn:hover { transform: scale(1.03); }
 
-        /* Нижние блоки (Что озвучиваем / Как работаем) */
         .bottom-panels {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 2vw !important;
             margin-top: 20px;
         }
 
-        .info-panel {
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: var(--shadow-card);
-        }
         .info-panel h3 {
             text-align: center;
             color: var(--color-accent2);
             margin-bottom: 15px;
         }
 
-        /* Сетка иконок (что озвучиваем) */
         .panel-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
@@ -221,7 +194,6 @@
             color: var(--color-accent);
         }
 
-        /* Шаги (как работаем) */
         .steps-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -254,7 +226,7 @@
 
         /* ========== АДАПТИВНОСТЬ ========== */
         @media (max-width: 1024px) {
-            .main-layout { grid-template-columns: 1fr; gap: 15px; }
+            .main-layout { grid-template-columns: 1fr !important; gap: 15px; }
             .bottom-panels { grid-template-columns: 1fr; }
             .steps-grid { grid-template-columns: repeat(3, 1fr); }
             .featured-grid-home { grid-template-columns: 1fr; }
@@ -270,7 +242,7 @@
 </head>
 <body>
 
-<!-- ========== ШАПКА (БЕЗ ИЗМЕНЕНИЙ) ========== -->
+<!-- ========== ШАПКА ========== -->
 <header class="fixed-header">
     <div class="nav-buttons">
         <button class="burger-btn" onclick="openSidebar()" title="Меню" aria-label="Открыть меню">
@@ -294,7 +266,7 @@
     </div>
 </header>
 
-<!-- ========== САЙДБАР (БЕЗ ИЗМЕНЕНИЙ) ========== -->
+<!-- ========== САЙДБАР ========== -->
 <div id="sidebar-overlay" onclick="closeSidebar()"></div>
 <aside id="sidebar">
     <div class="sidebar-header">
@@ -337,7 +309,7 @@
     </div>
 </aside>
 
-<!-- ========== МОДАЛКИ (БЕЗ ИЗМЕНЕНИЙ) ========== -->
+<!-- ========== МОДАЛКИ ========== -->
 <div class="modal-overlay" id="m-dscoin-order">
     <div class="modal-content" style="max-width:440px;">
         <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
@@ -377,7 +349,7 @@
     </div>
 </div>
 
-<!-- ========== ОСНОВНОЙ КОНТЕНТ (НОВЫЙ ДИЗАЙН) ========== -->
+<!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
 <div class="container">
 
     <!-- Герой-секция с логотипом и названием -->
@@ -390,7 +362,7 @@
     <!-- Три колонки: О нас / Последние добавленные / Соцсети -->
     <div class="main-layout">
         
-        <!-- 1. О нас -->
+        <!-- 1. О нас (уже, прозрачный) -->
         <div class="side-panel">
             <h3>О нас</h3>
             <p style="color:var(--text-secondary); font-size: 14px; margin-bottom: 16px;">
@@ -404,7 +376,7 @@
             </ul>
         </div>
 
-        <!-- 2. Последние добавленные (Центр) -->
+        <!-- 2. Последние добавленные (Центр, прозрачный и широкий) -->
         <div class="featured-section">
             <div class="featured-header">
                 <h2>Последние добавленные</h2>
@@ -412,12 +384,11 @@
             </div>
             
             <div class="featured-grid-home" id="featured-titles-home">
-                <!-- Сюда подгружаются карточки через JavaScript (2 штуки) -->
                 <div class="loading">Загрузка...</div>
             </div>
         </div>
 
-        <!-- 3. Соцсети и поддержка -->
+        <!-- 3. Соцсети и поддержка (уже, прозрачный) -->
         <div class="side-panel">
             <h3>Будь в курсе!</h3>
             <p style="color:var(--text-secondary); font-size: 14px; margin-bottom: 12px;">
@@ -435,7 +406,6 @@
             <p style="color:var(--text-secondary); font-size: 14px; margin-bottom: 8px;">
                 Наша работа — это не только хобби, но и труд. Если хочешь поддержать нас — будем благодарны!
             </p>
-            <!-- Кнопка поддержки перекидывает на Boosty -->
             <a href="https://t.me/Bill_Heringtton" target="_blank" style="text-decoration: none;">
                 <button class="support-btn">Поддержать</button>
             </a>
@@ -443,7 +413,7 @@
 
     </div>
 
-    <!-- Нижние блоки: Что озвучиваем / Как работаем -->
+    <!-- Нижние блоки: Что озвучиваем / Как работаем (прозрачные) -->
     <div class="bottom-panels">
         
         <!-- 1. Что озвучиваем -->
@@ -492,7 +462,7 @@
 
 </div>
 
-<!-- ========== ПОДВАЛ (БЕЗ ИЗМЕНЕНИЙ) ========== -->
+<!-- ========== ПОДВАЛ ========== -->
 <div class="footer" style="text-align: center;">
     <div class="footer-links" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin: 15px 0;">
         <a href="index.html">Главная</a>
@@ -504,7 +474,7 @@
     <p style="color:var(--text-muted);">© 2026 Dream Sound Dubbing. Все права защищены.</p>
 </div>
 
-<!-- ========== СКРИПТЫ (БЕЗ ИЗМЕНЕНИЙ) ========== -->
+<!-- ========== СКРИПТЫ ========== -->
 <script>
     // Тема
     function toggleTheme() {
@@ -678,13 +648,12 @@
         } catch (e) { console.error('Ошибка загрузки статистики:', e); }
     }
 
-    // ОБНОВЛЕННАЯ функция загрузки тайтлов для главной (только 2 штуки)
     async function loadFeaturedTitles() {
         const container = document.getElementById('featured-titles-home');
         const result = await getTitles();
         
         if (result.success && result.titles.length > 0) {
-            const titles = result.titles.slice(0, 2); // Берём только 2 последних
+            const titles = result.titles.slice(0, 2);
             container.innerHTML = titles.map(title => {
                 const image = title.imageHorizontal || title.imageVertical || title.image;
                 return `
@@ -717,7 +686,7 @@
         await updateAdminLinks(user);
         await updateSidebarBalance(user);
         await loadStats();
-        await loadFeaturedTitles(); // Загружаем 2 тайтла
+        await loadFeaturedTitles();
     });
 </script>
 
