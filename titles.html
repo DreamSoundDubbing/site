@@ -1137,37 +1137,40 @@
         };
         
         container.innerHTML = filtered.map(title => {
-            const image = title.imageVertical || title.imageHorizontal || title.image || 'https://via.placeholder.com/200x280/d4e8ff/4a90d9?text=No+Image';
-            let adminButtons = '';
-            if (isAdmin) {
-                adminButtons = `
-                    <div class="admin-actions">
-                        <button class="edit-btn" onclick="event.preventDefault(); openEditModal('${title.id}')">✏️</button>
-                        <button class="delete-btn" onclick="event.preventDefault(); handleDelete('${title.id}')">🗑️</button>
+    const image = title.imageVertical || title.imageHorizontal || title.image || 'https://via.placeholder.com/200x280/d4e8ff/4a90d9?text=No+Image';
+    let adminButtons = '';
+    if (isAdmin) {
+        adminButtons = `
+            <div class="admin-actions">
+                <button class="edit-btn" onclick="event.preventDefault(); openEditModal('${title.id}')">✏️</button>
+                <button class="delete-btn" onclick="event.preventDefault(); handleDelete('${title.id}')">🗑️</button>
+            </div>
+        `;
+    }
+    return `
+        <div class="title-card-wrapper">
+            <a href="title.html?id=${title.id}" class="title-card" style="text-decoration:none;color:inherit;display:block;">
+                <img src="${image}" alt="${title.name}" class="title-card-image" onerror="this.src='https://via.placeholder.com/200x280/d4e8ff/4a90d9?text=${encodeURIComponent(title.name)}'">
+                <div class="title-card-info">
+                    <div class="title-card-name">${title.name}</div>
+                    <div class="title-card-meta">
+                        <span>${title.type}</span>
+                        <span>${title.episodes} серий</span>
                     </div>
-                `;
-            }
-            return `
-                <div class="title-card-wrapper">
-                    <a href="title.html?id=${title.id}" class="title-card" style="text-decoration:none;color:inherit;display:block;">
-                        <img src="${image}" alt="${title.name}" class="title-card-image" onerror="this.src='https://via.placeholder.com/200x280/d4e8ff/4a90d9?text=${encodeURIComponent(title.name)}'">
-                        <div class="title-card-info">
-                            <div class="title-card-name">${title.name}</div>
-                            <div class="title-card-meta">
-                                <span>${title.type}</span>
-                                <span>${title.episodes} серий</span>
-                            </div>
-                            <div style="display:flex;justify-content:space-between;margin-top:4px;align-items:center;font-size:12px;">
-                                <span style="color:var(--text-muted);">${title.year || ''}</span>
-                                <span style="color:var(--color-warning);">⭐ ${title.rating}</span>
-                            </div>
-                            <div style="margin-top:4px;">${statusMap[title.status] || ''}</div>
-                        </div>
-                    </a>
-                    ${adminButtons}
+                    <div style="display:flex;justify-content:space-between;margin-top:4px;align-items:center;font-size:12px;">
+                        <span style="color:var(--text-muted);">${title.year || ''}</span>
+                        <span style="color:var(--color-warning);">⭐ ${title.rating}</span>
+                    </div>
+                    <div style="margin-top:4px;">${statusMap[title.status] || ''}</div>
+                    <div style="margin-top:4px;font-size:11px;color:var(--text-muted);">
+                        <i class="fas fa-eye" style="margin-right:4px;"></i> ${title.viewsCount || 0} просмотров
+                    </div>
                 </div>
-            `;
-        }).join('');
+            </a>
+            ${adminButtons}
+        </div>
+    `;
+}).join('');
     }
 
     function filterData() {

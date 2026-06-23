@@ -676,29 +676,32 @@
         } catch (e) { console.error('Ошибка загрузки статистики:', e); }
     }
 
-    // ОБНОВЛЕННАЯ функция загрузки тайтлов для главной (только 3 штуки)
+    // ОБНОВЛЕННАЯ функция загрузки тайтлов для главной (только 2 штуки)
     async function loadFeaturedTitles() {
-        const container = document.getElementById('featured-titles-home');
-        const result = await getTitles();
-        
-        if (result.success && result.titles.length > 0) {
-            const titles = result.titles.slice(0, 3); // Берём только 3 последних
-            container.innerHTML = titles.map(title => {
-                const image = title.imageHorizontal || title.imageVertical || title.image;
-                return `
-                    <a href="title.html?id=${title.id}" class="featured-item-home">
-                        <img src="${image}" alt="${title.name}" onerror="this.src='https://via.placeholder.com/280x180/4a90d9/fff?text=${encodeURIComponent(title.name)}'">
-                        <div class="info">
-                            <strong>${title.name}</strong>
-                            <span>${title.episodes || 0} серий</span>
+    const container = document.getElementById('featured-titles-home');
+    const result = await getTitles();
+    
+    if (result.success && result.titles.length > 0) {
+        const titles = result.titles.slice(0, 2); // Берём только 32 последних
+        container.innerHTML = titles.map(title => {
+            const image = title.imageHorizontal || title.imageVertical || title.image;
+            return `
+                <a href="title.html?id=${title.id}" class="featured-item-home">
+                    <img src="${image}" alt="${title.name}" onerror="this.src='https://via.placeholder.com/280x180/4a90d9/fff?text=${encodeURIComponent(title.name)}'">
+                    <div class="info">
+                        <strong>${title.name}</strong>
+                        <span>${title.episodes || 0} серий</span>
+                        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+                            <i class="fas fa-eye"></i> ${title.viewsCount || 0} просмотров
                         </div>
-                    </a>
-                `;
-            }).join('');
-        } else {
-            container.innerHTML = '<p style="color:var(--text-muted); padding: 20px;">Загрузка данных...</p>';
-        }
+                    </div>
+                </a>
+            `;
+        }).join('');
+    } else {
+        container.innerHTML = '<p style="color:var(--text-muted); padding: 20px;">Загрузка данных...</p>';
     }
+}
 
     onAuthStateChangedListener(async (user) => {
         updateAuthButton(user);

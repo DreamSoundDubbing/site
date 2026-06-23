@@ -846,24 +846,26 @@
 </div>
 <script type="module">
     import { 
-        getCurrentUser, 
-        onAuthStateChangedListener,
-        getUserRole,
-        getTitleById,
-        updateTitle,
-        addComment,
-        getComments,
-        deleteComment,
-        getAverageRating,
-        trackView,
-        getUserByEmail,
-        getUserData,
-        getAllUsers,
-        getUserDSCoins,
-        addDSCoins,
-        createDSCoinOrder,
-        updateTitleRating
-    } from './firebase-config.js';
+    getCurrentUser, 
+    onAuthStateChangedListener,
+    getUserRole,
+    getTitleById,
+    updateTitle,
+    addComment,
+    getComments,
+    deleteComment,
+    getAverageRating,
+    trackView,
+    getUserByEmail,
+    getUserData,
+    getAllUsers,
+    getUserDSCoins,
+    addDSCoins,
+    createDSCoinOrder,
+    updateTitleRating,
+    incrementTitleViews,   // <--- ДОБАВИТЬ СЮДА
+    getTitleViews          // <--- ДОБАВИТЬ СЮДА (если понадобится)
+} from './firebase-config.js';
 
     window.getUserDSCoins = getUserDSCoins;
     window.getUserByEmail = getUserByEmail;
@@ -1374,11 +1376,16 @@ async function updateAverageRating() {
     }
 
     async function loadTitle() {
-        const content = document.getElementById('title-content');
-        content.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
-        await loadAllUsers();
-        
-        const result = await getTitleById(titleId);
+    const content = document.getElementById('title-content');
+    content.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
+    await loadAllUsers();
+
+    // ===== ДОБАВЬТЕ ЭТИ СТРОКИ =====
+    // Увеличиваем счётчик просмотров при каждом заходе на страницу
+    await incrementTitleViews(titleId);
+    // ================================
+
+    const result = await getTitleById(titleId);
         if (!result.success || !result.data) {
             const localTitle = window.getTitleById?.(titleId) || window.titlesDatabase?.find(t => t.id === titleId);
             if (localTitle) {

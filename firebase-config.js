@@ -1328,6 +1328,45 @@ async function updateTitleRating(titleId) {
         return { success: false, error: error.message };
     }
 }
+// ============================================================
+// ========== ПРОСМОТРЫ ТАЙТЛОВ ==========
+// ============================================================
+
+async function incrementTitleViews(titleId) {
+    try {
+        const docRef = doc(db, "titles", titleId);
+        await updateDoc(docRef, {
+            viewsCount: increment(1),
+            lastViewedAt: serverTimestamp()
+        });
+        return { success: true };
+    } catch (error) {
+        // Если тайтла нет, создаём его с 1 просмотром
+        if (error.code === 'not-found') {
+            try {
+                const docRef = doc(db, "titles", titleId);
+                await setDoc(docRef, { viewsCount: 1, lastViewedAt: serverTimestamp() }, { merge: true });
+                return { success: true };
+            } catch (e) {
+                return { success: false, error: e.message };
+            }
+        }
+        return { success: false, error: error.message };
+    }
+}
+
+async function getTitleViews(titleId) {
+    try {
+        const docRef = doc(db, "titles", titleId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            return { success: true, views: docSnap.data().viewsCount || 0 };
+        }
+        return { success: true, views: 0 };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
 
 // ============================================================
 // ========== ЭКСПОРТ ==========
@@ -1406,7 +1445,9 @@ export {
     purchaseColorNick,
     purchasePrefix,
     purchaseAchSlot,
-    updateTitleRating
+    updateTitleRating,
+    incrementTitleViews,
+    getTitleViews
 };
 
 console.log('🔥 Модуль firebase-config.js загружен');
