@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Заявка на озвучку - Dream Sound Dubbing</title>
+    <title>Заказ озвучки - Dream Sound Dubbing</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script type="module" src="firebase-config.js"></script>
@@ -222,7 +222,7 @@
         <div class="sidebar-divider"></div>
         <div class="sidebar-section-label">Студия</div>
         <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
-        <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заявка на озвучку</span></a>
+        <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заказ озвучки</span></a>
         <a href="#" class="sidebar-link" onclick="openDSCoinOrder(); return false;"><i class="fas fa-coins"></i><span>Купить DSCoins</span></a>
         <div class="sidebar-divider"></div>
         <div class="sidebar-section-label">Администрирование</div>
@@ -341,7 +341,7 @@
 <!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
 <div class="container">
     <div class="header">
-        <h1 class="title">📝 Заявка на озвучку</h1>
+        <h1 class="title">📝 Заказ озвучки</h1>
         <hr>
     </div>
     
@@ -352,6 +352,17 @@
     </div>
 </div>
 
+<div class="footer" style="margin-top: 20px; text-align: center;">
+    <hr>
+    <div class="footer-links" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin: 15px 0;">
+        <a href="index.html">Главная</a>
+        <a href="titles.html">Тайтлы</a>
+        <a href="sostav.html">Состав</a>
+        <a href="dub-in.html" style="display:none;" id="dubInFooter">DUB-in</a>
+        <a href="privacy.html">Политика</a>
+    </div>
+    <p style="color:var(--text-muted);">© 2026 Dream Sound Dubbing. Все права защищены.</p>
+</div>
 <script type="module">
     import { getCurrentUser, onAuthStateChangedListener, getUserRole, createVoiceOrder, getUserDSCoins, getUserByEmail, addDSCoins, createDSCoinOrder } from './firebase-config.js';
 
@@ -479,7 +490,7 @@
             container.innerHTML = `
                 <div class="auth-prompt">
                     <h2>🔒 Требуется авторизация</h2>
-                    <p>Войдите, чтобы подать заявку на озвучку</p>
+                    <p>Войдите, чтобы оформить заказ</p>
                     <br>
                     <a href="login.html" class="auth-btn">🔑 Войти</a>
                 </div>
@@ -496,7 +507,7 @@
                     <div class="price-row"><span>🎥 Фильм (до 2 часов)</span><span class="amount">35 000 ₽</span></div>
                     <div class="price-row"><span>🏅 Кастомная ачивка</span><span class="amount">2 500 ₽</span></div>
                     <br>
-                    <small style="color:var(--text-muted);">💡 Стоимость рассчитывается автоматически при выборе типа и количества серий</small>
+                    <div class="price-row">💡 Стоимость рассчитывается автоматически при выборе типа и количества серий, но может меняться в зависимости от сложности рпоекта</div>
                 </div>
 
                 <div class="form-group">
