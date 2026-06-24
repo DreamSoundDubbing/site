@@ -670,13 +670,22 @@
 
     // Функция loadStats удалена, так как на главной нет блока статистики
 
-    // ОБНОВЛЕННАЯ функция загрузки тайтлов для главной (с просмотрами)
+    // ОБНОВЛЕННАЯ функция загрузки тайтлов для главной (сортировка по дате!)
     async function loadFeaturedTitles() {
         const container = document.getElementById('featured-titles-home');
         const result = await getTitles();
         
         if (result.success && result.titles.length > 0) {
-            const titles = result.titles.slice(0, 2); // Берём только 3 последних
+            // ===== ДОБАВЛЕНА СОРТИРОВКА =====
+            // Сортируем по дате создания (createdAt) — от новых к старым
+            const sortedTitles = result.titles.sort((a, b) => {
+                const timeA = a.createdAt?.seconds || 0;
+                const timeB = b.createdAt?.seconds || 0;
+                return timeB - timeA; // Новые сверху
+            });
+
+            const titles = sortedTitles.slice(0, 2); // Берём только 2 последних (самых новых)
+            
             container.innerHTML = titles.map(title => {
                 const image = title.imageHorizontal || title.imageVertical || title.image;
                 return `
