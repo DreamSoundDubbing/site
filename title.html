@@ -863,8 +863,8 @@
     addDSCoins,
     createDSCoinOrder,
     updateTitleRating,
-    incrementTitleViews,   // <--- ДОБАВИТЬ СЮДА
-    getTitleViews          // <--- ДОБАВИТЬ СЮДА (если понадобится)
+    trackTitleView,   // <--- ДОБАВИТЬ СЮДА
+    getTitleViews     // <--- ДОБАВИТЬ СЮДА (если понадобится)
 } from './firebase-config.js';
 
     window.getUserDSCoins = getUserDSCoins;
@@ -1381,8 +1381,11 @@ async function updateAverageRating() {
     await loadAllUsers();
 
     // ===== ДОБАВЬТЕ ЭТИ СТРОКИ =====
-    // Увеличиваем счётчик просмотров при каждом заходе на страницу
-    await incrementTitleViews(titleId);
+    const user = getCurrentUser();
+    if (user) {
+        // Увеличиваем просмотр только если пользователь ещё не смотрел
+        await trackTitleView(titleId, user.uid);
+    }
     // ================================
 
     const result = await getTitleById(titleId);

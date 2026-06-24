@@ -1329,28 +1329,48 @@ async function updateTitleRating(titleId) {
     }
 }
 // ============================================================
-// ========== ПРОСМОТРЫ ТАЙТЛОВ ==========
+// ========== УНИКАЛЬНЫЕ ПРОСМОТРЫ ТАЙТЛОВ ==========
 // ============================================================
 
-async function incrementTitleViews(titleId) {
+async function trackTitleView(titleId, userId) {
+    if (!userId) return { success: false, error: "Пользователь не авторизован" };
+
     try {
         const docRef = doc(db, "titles", titleId);
-        await updateDoc(docRef, {
-            viewsCount: increment(1),
-            lastViewedAt: serverTimestamp()
-        });
-        return { success: true };
-    } catch (error) {
-        // Если тайтла нет, создаём его с 1 просмотром
-        if (error.code === 'not-found') {
-            try {
-                const docRef = doc(db, "titles", titleId);
-                await setDoc(docRef, { viewsCount: 1, lastViewedAt: serverTimestamp() }, { merge: true });
-                return { success: true };
-            } catch (e) {
-                return { success: false, error: e.message };
+        
+        // Используем транзакцию для атомарности
+        return await runTransaction(db, async (transaction) => {
+            const docSnap = await transaction.get(docRef);
+            
+            if (!docSnap.exists()) {
+                // Если тайтла нет — создаём его с массивом [userId] и счётчиком 1
+                transaction.set(docRef, {
+                    viewedBy: [userId],
+                    viewsCount: 1,
+                    lastViewedAt: serverTimestamp()
+                });
+                return { success: true, viewed: true };
             }
-        }
+
+            const data = docSnap.data();
+            const viewedBy = data.viewedBy || [];
+            
+            // Если пользователь уже есть в списке — не добавляем
+            if (viewedBy.includes(userId)) {
+                return { success: true, viewed: false };
+            }
+
+            // Добавляем пользователя и увеличиваем счётчик
+            transaction.update(docRef, {
+                viewedBy: arrayUnion(userId),
+                viewsCount: increment(1),
+                lastViewedAt: serverTimestamp()
+            });
+
+            return { success: true, viewed: true };
+        });
+    } catch (error) {
+        console.error('Ошибка отслеживания просмотра:', error);
         return { success: false, error: error.message };
     }
 }
@@ -1446,7 +1466,7 @@ export {
     purchasePrefix,
     purchaseAchSlot,
     updateTitleRating,
-    incrementTitleViews,
+    trackTitleView,
     getTitleViews
 };
 
