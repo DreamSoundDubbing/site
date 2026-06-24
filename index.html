@@ -676,7 +676,7 @@
         const result = await getTitles();
         
         if (result.success && result.titles.length > 0) {
-            const titles = result.titles.slice(0, 3); // Берём только 3 последних
+            const titles = result.titles.slice(0, 2); // Берём только 3 последних
             container.innerHTML = titles.map(title => {
                 const image = title.imageHorizontal || title.imageVertical || title.image;
                 return `
