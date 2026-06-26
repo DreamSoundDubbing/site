@@ -9,6 +9,27 @@
     <script src="data.js"></script>
     <script type="module" src="firebase-config.js"></script>
     <style>
+        :root {
+            /* Тёмная тема */
+            --bg-home: url('https://dreamsounddubbing.github.io/site/фон-тайтлы.png');
+        }
+        [data-theme="dark"] {
+            /* Замените ссылку на вашу картинку для тёмной темы */
+            --bg-home: url('https://dreamsounddubbing.github.io/site/фон-тайтлы.png');
+        }
+        [data-theme="light"] {
+            /* Замените ссылку на вашу картинку для светлой темы */
+            --bg-home: url('https://dreamsounddubbing.github.io/site/фон-тайтлы-день.png');
+        }
+
+        /* ========== ПРИМЕНЯЕМ ОБОИ ТОЛЬКО НА ГЛАВНОЙ ========== */
+        body {
+            background: var(--bg-home) !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+            background-repeat: no-repeat !important;
+        }
         .filters-container {
             display: flex;
             flex-wrap: wrap;
