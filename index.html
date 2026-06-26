@@ -9,7 +9,6 @@
     <script src="data.js"></script>
     <script type="module" src="firebase-config.js"></script>
     <style>
-        /* ========== ОБОИ ДЛЯ ГЛАВНОЙ (МЕНЯЮТСЯ ПРИ СМЕНЕ ТЕМЫ) ========== */
         :root {
             /* Тёмная тема */
             --bg-home: url('https://dreamsounddubbing.github.io/site/фон-на-главную.png');
@@ -31,7 +30,6 @@
             background-attachment: fixed !important;
             background-repeat: no-repeat !important;
         }
-
         /* ========== РАСТЯГИВАЕМ СТРАНИЦУ НА ВСЮ ШИРИНУ ========== */
         .container {
             width: 100% !important;
@@ -47,6 +45,11 @@
             gap: 2vw !important;
         }
 
+        .info-layout {
+            grid-template-columns: 2.5fr 2.5fr !important;
+            gap: 2vw !important;
+        }
+        
         .bottom-panels {
             gap: 2vw !important;
         }
@@ -262,17 +265,39 @@
             line-height: 1.2;
         }
 
+        /* ========== АДАПТИВНОСТЬ ========== */
         @media (max-width: 1024px) {
-            .main-layout { grid-template-columns: 1fr; gap: 15px; }
+            .main-layout { grid-template-columns: 1fr !important; gap: 15px; }
             .bottom-panels { grid-template-columns: 1fr; }
             .steps-grid { grid-template-columns: repeat(3, 1fr); }
             .featured-grid-home { grid-template-columns: 1fr; }
             .container { padding: 20px 4vw !important; }
         }
 
+        @media (max-width: 768px) {
+            /* ========== НА ТЕЛЕФОНЕ БОКОВЫЕ БЛОКИ СВЕРХУ И СНИЗУ ========== */
+            .main-layout {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+            /* Задаём порядок: Левый блок (1) -> Правый блок (3) -> Центр (2) */
+            .side-panel:first-child { order: 1; }   /* О нас — сверху */
+            .side-panel:last-child  { order: 3; }   /* Соцсети — снизу */
+            .featured-section      { order: 2; }   /* Тайтлы — посередине */
+
+            /* Нижние блоки друг над другом */
+            .bottom-panels {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+
+            .steps-grid { grid-template-columns: repeat(2, 1fr); }
+            .container { padding: 10px 4vw !important; }
+        }
+
         @media (max-width: 480px) {
             .home-hero .title { font-size: 28px; }
-            .steps-grid { grid-template-columns: repeat(2, 1fr); }
             .container { padding: 10px 4vw !important; }
         }
     </style>
@@ -499,7 +524,7 @@
         <a href="sostav.html">Состав</a>
         <a href="dub-in.html" style="display:none;" id="dubInFooter">DUB-in</a>
         <a href="privacy.html">Политика</a>
-        <a href="feedback.html">Обратная связь</a>
+        <a href="https://t.me/dreamsoundsupports">Поддержка</a>
     </div>
     <p style="color:var(--text-muted);">© 2026 Dream Sound Dubbing. Все права защищены.</p>
 </div>
@@ -572,7 +597,7 @@
         if (result.success) {
             alert('✅ Заявка создана! Напишите менеджеру в Telegram.');
             closeModal('m-dscoin-order');
-            window.open('https://t.me/Bill_Heringtton', '_blank');
+            window.open('https://t.me/DSD_manager', '_blank');
         } else alert('❌ Ошибка: ' + result.error);
     }
 
@@ -668,24 +693,35 @@
         } else balanceEl.textContent = '0';
     }
 
-    // Функция loadStats удалена, так как на главной нет блока статистики
+    // ===== ИСПРАВЛЕННАЯ ФУНКЦИЯ loadStats =====
+    async function loadStats() {
+        try {
+            const titlesResult = await getTitles();
+            const voicesResult = await getVoices();
+            
+            const titleCount = titlesResult.success ? titlesResult.titles.length : 0;
+            const voiceCount = voicesResult.success ? voicesResult.voices.length : 0;
+            
+            // Проверяем существование элементов перед присваиванием
+            const elTitles = document.getElementById('statTitles');
+            const elVoices = document.getElementById('statVoices');
+            const elTotal = document.getElementById('statTotal');
+            
+            if (elTitles) elTitles.textContent = titleCount;
+            if (elVoices) elVoices.textContent = voiceCount;
+            if (elTotal) elTotal.textContent = titleCount + voiceCount;
+        } catch (e) {
+            console.error('Ошибка загрузки статистики:', e);
+        }
+    }
 
-    // ОБНОВЛЕННАЯ функция загрузки тайтлов для главной (сортировка по дате!)
+    // ОБНОВЛЕННАЯ функция загрузки тайтлов для главной (с просмотрами)
     async function loadFeaturedTitles() {
         const container = document.getElementById('featured-titles-home');
         const result = await getTitles();
         
         if (result.success && result.titles.length > 0) {
-            // ===== ДОБАВЛЕНА СОРТИРОВКА =====
-            // Сортируем по дате создания (createdAt) — от новых к старым
-            const sortedTitles = result.titles.sort((a, b) => {
-                const timeA = a.createdAt?.seconds || 0;
-                const timeB = b.createdAt?.seconds || 0;
-                return timeB - timeA; // Новые сверху
-            });
-
-            const titles = sortedTitles.slice(0, 2); // Берём только 2 последних (самых новых)
-            
+            const titles = result.titles.slice(0, 2); // Берём только 3 последних
             container.innerHTML = titles.map(title => {
                 const image = title.imageHorizontal || title.imageVertical || title.image;
                 return `
@@ -711,6 +747,7 @@
         await updateDubInLink(user);
         await updateAdminLinks(user);
         await updateSidebarBalance(user);
+        await loadStats();
     });
 
     document.addEventListener('DOMContentLoaded', async () => {
@@ -719,7 +756,8 @@
         await updateDubInLink(user);
         await updateAdminLinks(user);
         await updateSidebarBalance(user);
-        await loadFeaturedTitles(); // Загружаем тайтлы
+        await loadStats();
+        await loadFeaturedTitles(); // Загружаем 3 тайтла
     });
 </script>
 
