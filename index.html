@@ -14,15 +14,12 @@
             --bg-home: url('https://dreamsounddubbing.github.io/site/фон-на-главную.png');
         }
         [data-theme="dark"] {
-            /* Замените ссылку на вашу картинку для тёмной темы */
             --bg-home: url('https://dreamsounddubbing.github.io/site/фон-на-главную.png');
         }
         [data-theme="light"] {
-            /* Замените ссылку на вашу картинку для светлой темы */
             --bg-home: url('https://dreamsounddubbing.github.io/site/светлый-фон.png');
         }
 
-        /* ========== ПРИМЕНЯЕМ ОБОИ ТОЛЬКО НА ГЛАВНОЙ ========== */
         body {
             background: var(--bg-home) !important;
             background-size: cover !important;
@@ -30,7 +27,6 @@
             background-attachment: fixed !important;
             background-repeat: no-repeat !important;
         }
-        /* ========== РАСТЯГИВАЕМ СТРАНИЦУ НА ВСЮ ШИРИНУ ========== */
         .container {
             width: 100% !important;
             max-width: none !important;
@@ -39,7 +35,6 @@
             box-sizing: border-box !important;
         }
         
-        /* КОЛОНКИ */
         .main-layout {
             grid-template-columns: 0.8fr 2.6fr 0.8fr !important;
             gap: 2vw !important;
@@ -62,7 +57,6 @@
             display: block;
         }
         
-        /* ========== СПЕЦИАЛЬНЫЕ СТИЛИ ДЛЯ ГЛАВНОЙ ========== */
         .home-hero {
             display: flex;
             flex-direction: column;
@@ -265,7 +259,6 @@
             line-height: 1.2;
         }
 
-        /* ========== АДАПТИВНОСТЬ ========== */
         @media (max-width: 1024px) {
             .main-layout { grid-template-columns: 1fr !important; gap: 15px; }
             .bottom-panels { grid-template-columns: 1fr; }
@@ -275,23 +268,18 @@
         }
 
         @media (max-width: 768px) {
-            /* ========== НА ТЕЛЕФОНЕ БОКОВЫЕ БЛОКИ СВЕРХУ И СНИЗУ ========== */
             .main-layout {
                 display: grid !important;
                 grid-template-columns: 1fr !important;
                 gap: 15px !important;
             }
-            /* Задаём порядок: Левый блок (1) -> Правый блок (3) -> Центр (2) */
-            .side-panel:first-child { order: 1; }   /* О нас — сверху */
-            .side-panel:last-child  { order: 3; }   /* Соцсети — снизу */
-            .featured-section      { order: 2; }   /* Тайтлы — посередине */
-
-            /* Нижние блоки друг над другом */
+            .side-panel:first-child { order: 1; }
+            .side-panel:last-child  { order: 3; }
+            .featured-section      { order: 2; }
             .bottom-panels {
                 grid-template-columns: 1fr !important;
                 gap: 15px !important;
             }
-
             .steps-grid { grid-template-columns: repeat(2, 1fr); }
             .container { padding: 10px 4vw !important; }
         }
@@ -414,17 +402,14 @@
 <!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
 <div class="container">
 
-    <!-- Герой-секция с логотипом и названием -->
     <div class="home-hero">
         <div class="logo-icon"><i class="fas fa-headphones"></i></div>
         <h1 class="title">Dream Sound Dubbing</h1>
         <p>Студия озвучки аниме и не только</p>
     </div>
 
-    <!-- Три колонки: О нас / Последние добавленные / Соцсети -->
     <div class="main-layout">
         
-        <!-- 1. О нас -->
         <div class="side-panel">
             <h3>О нас</h3>
             <p style="color:var(--text-secondary); font-size: 14px; margin-bottom: 16px;">
@@ -438,7 +423,6 @@
             </ul>
         </div>
 
-        <!-- 2. Последние добавленные (Центр) -->
         <div class="featured-section">
             <div class="featured-header">
                 <h2>Последние добавленные</h2>
@@ -450,7 +434,6 @@
             </div>
         </div>
 
-        <!-- 3. Соцсети и поддержка -->
         <div class="side-panel">
             <h3>Будь в курсе!</h3>
             <p style="color:var(--text-secondary); font-size: 14px; margin-bottom: 12px;">
@@ -467,10 +450,8 @@
 
     </div>
 
-    <!-- Нижние блоки: Что озвучиваем / Как работаем -->
     <div class="bottom-panels">
         
-        <!-- 1. Что озвучиваем -->
         <div class="info-panel">
             <h3>Мы озвучиваем:</h3>
             <div class="panel-grid">
@@ -482,7 +463,6 @@
             </div>
         </div>
 
-        <!-- 2. Как работаем -->
         <div class="info-panel">
             <h3>Как мы работаем?</h3>
             <div class="steps-grid">
@@ -524,13 +504,51 @@
         <a href="sostav.html">Состав</a>
         <a href="dub-in.html" style="display:none;" id="dubInFooter">DUB-in</a>
         <a href="privacy.html">Политика</a>
-        <a href="https://t.me/dreamsoundsupports">Поддержка</a>
+        <a href="feedback.html">Обратная связь</a>
     </div>
     <p style="color:var(--text-muted);">© 2026 Dream Sound Dubbing. Все права защищены.</p>
 </div>
 
 <!-- ========== СКРИПТЫ ========== -->
 <script>
+// ========== TOAST-УВЕДОМЛЕНИЯ ==========
+function showToast(message, type = 'info', duration = 3000) {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+    
+    const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+    };
+    
+    const toast = document.createElement('div');
+    toast.className = `toast-item ${type}`;
+    toast.innerHTML = `
+        <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
+        <span class="toast-text">${message}</span>
+        <button class="toast-close-btn" onclick="this.closest('.toast-item').remove()">✕</button>
+        <div class="toast-progress"></div>
+    `;
+    
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.classList.add('removing');
+            setTimeout(() => {
+                if (toast.parentNode) toast.remove();
+            }, 400);
+        }
+    }, duration);
+}
+
+// Заменяем стандартный alert на showToast
+window.alert = function(message) {
+    showToast(message, 'warning');
+};
+
     // Тема
     function toggleTheme() {
         const html = document.documentElement;
@@ -591,29 +609,29 @@
     async function submitDSCoinOrder() {
         const email = document.getElementById('dscoin-order-email').value.trim();
         const amount = parseInt(document.getElementById('dscoin-order-amount').value);
-        if (!email) { alert('❌ Введите email'); return; }
-        if (!amount || amount < 1) { alert('❌ Введите количество DSCoins'); return; }
+        if (!email) { showToast('❌ Введите email', 'error'); return; }
+        if (!amount || amount < 1) { showToast('❌ Введите количество DSCoins', 'error'); return; }
         const result = await createDSCoinOrder({ email: email, amount: amount, price: amount });
         if (result.success) {
-            alert('✅ Заявка создана! Напишите менеджеру в Telegram.');
+            showToast('✅ Заявка создана! Напишите менеджеру в Telegram.', 'success');
             closeModal('m-dscoin-order');
             window.open('https://t.me/DSD_manager', '_blank');
-        } else alert('❌ Ошибка: ' + result.error);
+        } else showToast('❌ Ошибка: ' + result.error, 'error');
     }
 
     async function adminAddDSCoins() {
         const email = document.getElementById('admin-dscoin-email').value.trim();
         const amount = parseInt(document.getElementById('admin-dscoin-amount').value);
         const reason = document.getElementById('admin-dscoin-reason').value.trim() || 'Начисление администратором';
-        if (!email) { alert('❌ Введите email'); return; }
-        if (!amount || amount < 1) { alert('❌ Введите количество'); return; }
+        if (!email) { showToast('❌ Введите email', 'error'); return; }
+        if (!amount || amount < 1) { showToast('❌ Введите количество', 'error'); return; }
         const userResult = await getUserByEmail(email);
-        if (!userResult.success) { alert('❌ Пользователь не найден'); return; }
+        if (!userResult.success) { showToast('❌ Пользователь не найден', 'error'); return; }
         const result = await addDSCoins(userResult.data.id, amount, reason);
         if (result.success) {
-            alert('✅ Добавлено ' + amount + ' DSCoins пользователю ' + email);
+            showToast('✅ Добавлено ' + amount + ' DSCoins пользователю ' + email, 'success');
             closeModal('m-admin-dscoins');
-        } else alert('❌ Ошибка: ' + result.error);
+        } else showToast('❌ Ошибка: ' + result.error, 'error');
     }
 </script>
 
@@ -693,16 +711,13 @@
         } else balanceEl.textContent = '0';
     }
 
-    // ===== ИСПРАВЛЕННАЯ ФУНКЦИЯ loadStats =====
     async function loadStats() {
         try {
             const titlesResult = await getTitles();
             const voicesResult = await getVoices();
-            
             const titleCount = titlesResult.success ? titlesResult.titles.length : 0;
             const voiceCount = voicesResult.success ? voicesResult.voices.length : 0;
             
-            // Проверяем существование элементов перед присваиванием
             const elTitles = document.getElementById('statTitles');
             const elVoices = document.getElementById('statVoices');
             const elTotal = document.getElementById('statTotal');
@@ -715,13 +730,12 @@
         }
     }
 
-    // ОБНОВЛЕННАЯ функция загрузки тайтлов для главной (с просмотрами)
     async function loadFeaturedTitles() {
         const container = document.getElementById('featured-titles-home');
         const result = await getTitles();
         
         if (result.success && result.titles.length > 0) {
-            const titles = result.titles.slice(0, 2); // Берём только 3 последних
+            const titles = result.titles.slice(0, 3);
             container.innerHTML = titles.map(title => {
                 const image = title.imageHorizontal || title.imageVertical || title.image;
                 return `
@@ -757,9 +771,11 @@
         await updateAdminLinks(user);
         await updateSidebarBalance(user);
         await loadStats();
-        await loadFeaturedTitles(); // Загружаем 3 тайтла
+        await loadFeaturedTitles();
     });
 </script>
 
+<!-- ========== КОНТЕЙНЕР ДЛЯ TOAST-УВЕДОМЛЕНИЙ ========== -->
+<div id="toastContainer" class="toast-container"></div>
 </body>
 </html>

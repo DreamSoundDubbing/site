@@ -38,14 +38,20 @@
             object-fit: cover;
             display: block;
         }
-        .dub-card-info { padding: 10px; text-align: center; }
+        .dub-card-info {
+            padding: 10px;
+            text-align: center;
+        }
         .dub-card-name {
             font-size: 16px;
             font-weight: bold;
             color: var(--color-accent);
             margin-bottom: 4px;
         }
-        .dub-card-meta { font-size: 12px; color: var(--text-muted); }
+        .dub-card-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
 
         .admin-toolbar {
             display: flex;
@@ -86,13 +92,15 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0, 0, 0, 0.8);
             z-index: 9999;
             justify-content: center;
             align-items: center;
             backdrop-filter: blur(5px);
         }
-        .modal-overlay.active { display: flex; }
+        .modal-overlay.active {
+            display: flex;
+        }
         .modal-content {
             background: var(--bg-modal);
             border-radius: 16px;
@@ -104,7 +112,11 @@
             border: 2px solid var(--color-accent);
             position: relative;
         }
-        .modal-content h2 { color: var(--color-accent); margin-bottom: 16px; text-align: center; }
+        .modal-content h2 {
+            color: var(--color-accent);
+            margin-bottom: 16px;
+            text-align: center;
+        }
         .modal-close {
             position: absolute;
             top: 12px;
@@ -116,9 +128,13 @@
             border: none;
             transition: color 0.3s;
         }
-        .modal-close:hover { color: var(--text-primary); }
-        
-        .material-section { margin: 16px 0; }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .material-section {
+            margin: 16px 0;
+        }
         .material-section h3 {
             color: var(--color-accent);
             font-size: 16px;
@@ -136,14 +152,18 @@
             margin-bottom: 6px;
             transition: background 0.3s;
         }
-        .material-item:hover { background: var(--bg-material-hover); }
+        .material-item:hover {
+            background: var(--bg-material-hover);
+        }
         .material-item a {
             color: var(--color-accent);
             text-decoration: none;
             word-break: break-all;
             font-size: 13px;
         }
-        .material-item a:hover { text-decoration: underline; }
+        .material-item a:hover {
+            text-decoration: underline;
+        }
         .material-item .delete-btn {
             background: var(--color-danger);
             color: #fff;
@@ -153,8 +173,10 @@
             cursor: pointer;
             font-size: 11px;
         }
-        .material-item .delete-btn:hover { background: #e05555; }
-        
+        .material-item .delete-btn:hover {
+            background: #e05555;
+        }
+
         .add-material-form {
             display: flex;
             gap: 8px;
@@ -190,16 +212,42 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(60, 80, 180, 0.3);
         }
-        .no-materials { color: var(--text-muted); text-align: center; padding: 8px; font-size: 13px; }
-        .loading-spinner { text-align: center; padding: 32px; color: var(--text-muted); }
-        
-        .access-denied { text-align: center; padding: 48px 20px; }
-        .access-denied h2 { color: var(--color-danger); font-size: 24px; }
-        .access-denied p { color: var(--text-muted); margin: 16px 0; }
-        .access-denied a { color: var(--color-accent); text-decoration: none; font-weight: bold; }
-        .access-denied a:hover { text-decoration: underline; }
+        .no-materials {
+            color: var(--text-muted);
+            text-align: center;
+            padding: 8px;
+            font-size: 13px;
+        }
+        .loading-spinner {
+            text-align: center;
+            padding: 32px;
+            color: var(--text-muted);
+        }
 
-        .add-title-form .form-group { margin-bottom: 12px; }
+        .access-denied {
+            text-align: center;
+            padding: 48px 20px;
+        }
+        .access-denied h2 {
+            color: var(--color-danger);
+            font-size: 24px;
+        }
+        .access-denied p {
+            color: var(--text-muted);
+            margin: 16px 0;
+        }
+        .access-denied a {
+            color: var(--color-accent);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .access-denied a:hover {
+            text-decoration: underline;
+        }
+
+        .add-title-form .form-group {
+            margin-bottom: 12px;
+        }
         .add-title-form .form-group label {
             color: var(--text-muted);
             font-size: 12px;
@@ -219,7 +267,10 @@
             box-sizing: border-box;
             font-family: inherit;
         }
-        .add-title-form .form-group textarea { min-height: 60px; resize: vertical; }
+        .add-title-form .form-group textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
         .add-title-form .form-group input:focus,
         .add-title-form .form-group textarea:focus {
             border-color: var(--color-accent);
@@ -230,7 +281,10 @@
             gap: 10px;
             flex-wrap: wrap;
         }
-        .add-title-form .form-row .form-group { flex: 1; min-width: 120px; }
+        .add-title-form .form-row .form-group {
+            flex: 1;
+            min-width: 120px;
+        }
         .add-title-form .submit-btn {
             width: 100%;
             padding: 12px;
@@ -255,523 +309,675 @@
         }
 
         @media (max-width: 768px) {
-            .dub-card { width: 160px; }
-            .dub-card-image { height: 200px; }
-            .admin-toolbar { justify-content: center; }
-            .admin-toolbar .admin-status { margin-left: 0; }
-            .add-material-form { flex-direction: column; }
-            .add-material-form input { width: 100%; }
+            .dub-card {
+                width: 160px;
+            }
+            .dub-card-image {
+                height: 200px;
+            }
+            .admin-toolbar {
+                justify-content: center;
+            }
+            .admin-toolbar .admin-status {
+                margin-left: 0;
+            }
+            .add-material-form {
+                flex-direction: column;
+            }
+            .add-material-form input {
+                width: 100%;
+            }
         }
         @media (max-width: 480px) {
-            .dub-card { width: 140px; }
-            .dub-card-image { height: 170px; }
-            .dub-card-name { font-size: 14px; }
-            .modal-content { padding: 16px; }
+            .dub-card {
+                width: 140px;
+            }
+            .dub-card-image {
+                height: 170px;
+            }
+            .dub-card-name {
+                font-size: 14px;
+            }
+            .modal-content {
+                padding: 16px;
+            }
         }
     </style>
 </head>
 <body>
 
-<!-- ========== HEADER ========== -->
-<header class="fixed-header">
-    <div class="nav-buttons">
-        <button class="burger-btn" onclick="openSidebar()" title="Меню" aria-label="Открыть меню">
-            <span></span><span></span><span></span>
-        </button>
-        <a href="index.html"><img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo"></a>
-        <a href="index.html" class="nav-icon-btn" id="homeLink" style="display:none;">🏠Главная</a>
-        <a href="titles.html" class="nav-icon-btn" id="titlesLink" style="display:none;">🎦Тайтлы</a>
-        <a href="sostav.html" class="nav-icon-btn" id="sostavLink" style="display:none;">🎭Состав</a>
-        <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
-        <a href="search.html" class="nav-icon-btn" id="searchLink" style="display:none;">🔍Поиск</a>
-        <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
-        <a href="voice-order.html" class="nav-icon-btn" id="voiceOrderLink" style="display:none;">📝Заявка</a>
-        <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
-        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
-    </div>
-</header>
-
-<!-- ========== SIDEBAR ========== -->
-<div id="sidebar-overlay" onclick="closeSidebar()"></div>
-<aside id="sidebar">
-    <div class="sidebar-header">
-        <div class="sidebar-logo">
-            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="sidebar-logo-img">
-            <span>DSD <span style="color:var(--color-accent2);">Menu</span></span>
+    <!-- ========== HEADER ========== -->
+    <header class="fixed-header">
+        <div class="nav-buttons">
+            <button class="burger-btn" onclick="openSidebar()" title="Меню" aria-label="Открыть меню">
+                <span></span><span></span><span></span>
+            </button>
+            <a href="index.html"><img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo"></a>
+            <a href="index.html" class="nav-icon-btn" id="homeLink" style="display:none;">🏠Главная</a>
+            <a href="titles.html" class="nav-icon-btn" id="titlesLink" style="display:none;">🎦Тайтлы</a>
+            <a href="sostav.html" class="nav-icon-btn" id="sostavLink" style="display:none;">🎭Состав</a>
+            <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
+            <a href="search.html" class="nav-icon-btn" id="searchLink" style="display:none;">🔍Поиск</a>
+            <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
+            <a href="voice-order.html" class="nav-icon-btn" id="voiceOrderLink" style="display:none;">📝Заказ</a>
+            <a href="admin-orders.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Заказы</a>
+            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">☀️</button>
         </div>
-        <button class="sidebar-close-btn" onclick="closeSidebar()"><i class="fas fa-times"></i></button>
-    </div>
-    <nav class="sidebar-nav">
-        <div class="sidebar-section-label">Навигация</div>
-        <a href="index.html" class="sidebar-link"><i class="fas fa-home"></i><span>Главная</span></a>
-        <a href="titles.html" class="sidebar-link"><i class="fas fa-film"></i><span>Тайтлы</span></a>
-        <a href="sostav.html" class="sidebar-link"><i class="fas fa-users"></i><span>Состав</span></a>
-        <a href="search.html" class="sidebar-link"><i class="fas fa-search"></i><span>Поиск</span></a>
-        <div class="sidebar-divider"></div>
-        <div class="sidebar-section-label">Личное</div>
-        <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
-        <a href="profile.html#playlists" class="sidebar-link"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
-        <a href="profile.html#shop" class="sidebar-link"><i class="fas fa-coins"></i><span>Магазин DSCoins</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
-        <div class="sidebar-divider"></div>
-        <div class="sidebar-section-label">Студия</div>
-        <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
-        <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заказ озвучки</span></a>
-        <a href="#" class="sidebar-link" onclick="openDSCoinOrder(); return false;"><i class="fas fa-coins"></i><span>Купить DSCoins</span></a>
-        <div class="sidebar-divider"></div>
-        <div class="sidebar-section-label">Администрирование</div>
-        <a href="admin-orders.html" class="sidebar-link" id="sidebarAdminOrders" style="display:none;"><i class="fas fa-clipboard-list"></i><span>Заказы</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
-        <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;"><i class="fas fa-coins"></i><span>Управление DSCoins</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
-    </nav>
-    <div class="sidebar-footer">
-        <div class="sidebar-socials">
-            <a href="#" target="_blank"><i class="fab fa-vk"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-telegram-plane"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
-        </div>
-        <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px;letter-spacing:1px;">© Dream Sound Dubbing</div>
-    </div>
-</aside>
+    </header>
 
-<!-- ========== МОДАЛКИ ========== -->
-<div class="modal-overlay" id="m-dscoin-order">
-    <div class="modal-content" style="max-width:440px;">
-        <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
-        <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Покупка DSCoins</h3>
-        <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">После оформления заявки напишите менеджеру в Telegram для оплаты.</p>
-        <div class="form-group"><label>Ваш Email *</label><input type="email" id="dscoin-order-email" placeholder="your@email.com"></div>
-        <div class="form-group">
-            <label>Количество DSCoins *</label>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
-                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(100)">100</button>
-                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(250)">250</button>
-                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(500)">500</button>
-                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(1000)">1000</button>
-                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(2000)">2000</button>
+    <!-- ========== SIDEBAR ========== -->
+    <div id="sidebar-overlay" onclick="closeSidebar()"></div>
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="logo1.jpg" alt="Dream Sound Dubbing" class="sidebar-logo-img">
+                <span>DSD <span style="color:var(--color-accent2);">Menu</span></span>
             </div>
-            <input type="number" id="dscoin-order-amount" placeholder="Введите количество..." min="1">
+            <button class="sidebar-close-btn" onclick="closeSidebar()"><i class="fas fa-times"></i></button>
         </div>
-        <div style="background:var(--bg-welcome);padding:12px;border-radius:10px;margin:12px 0;text-align:center;">
-            <span style="color:var(--text-muted);">Стоимость: </span>
-            <span id="dscoin-order-price" style="color:var(--color-accent);font-weight:bold;font-size:18px;">0 ₽</span>
-            <div style="font-size:11px;color:var(--text-muted);">1 DSCoin = 1 ₽</div>
+        <nav class="sidebar-nav">
+            <div class="sidebar-section-label">Навигация</div>
+            <a href="index.html" class="sidebar-link"><i class="fas fa-home"></i><span>Главная</span></a>
+            <a href="titles.html" class="sidebar-link"><i class="fas fa-film"></i><span>Тайтлы</span></a>
+            <a href="sostav.html" class="sidebar-link"><i class="fas fa-users"></i><span>Состав</span></a>
+            <a href="search.html" class="sidebar-link"><i class="fas fa-search"></i><span>Поиск</span></a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-label">Личное</div>
+            <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
+            <a href="profile.html#playlists" class="sidebar-link"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
+            <a href="profile.html#shop" class="sidebar-link"><i class="fas fa-coins"></i><span>Магазин DSCoins</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-label">Студия</div>
+            <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
+            <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заказ озвучки</span></a>
+            <a href="#" class="sidebar-link" onclick="openDSCoinOrder(); return false;"><i class="fas fa-coins"></i><span>Купить DSCoins</span></a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-label">Администрирование</div>
+            <a href="admin-orders.html" class="sidebar-link" id="sidebarAdminOrders" style="display:none;"><i class="fas fa-clipboard-list"></i><span>Заказы</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+            <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;"><i class="fas fa-coins"></i><span>Управление DSCoins</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-socials">
+                <a href="#" target="_blank"><i class="fab fa-vk"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+            </div>
+            <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px;letter-spacing:1px;">© Dream Sound Dubbing</div>
         </div>
-        <button class="submit-btn" style="width:100%;" onclick="submitDSCoinOrder()"><i class="fas fa-paper-plane"></i> Оформить заявку</button>
-        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-dscoin-order')">Отмена</button>
+    </aside>
+
+    <!-- ========== МОДАЛКИ ========== -->
+    <div class="modal-overlay" id="m-dscoin-order">
+        <div class="modal-content" style="max-width:440px;">
+            <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
+            <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Покупка DSCoins</h3>
+            <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">После оформления заявки напишите менеджеру в Telegram для оплаты.</p>
+            <div class="form-group"><label>Ваш Email *</label><input type="email" id="dscoin-order-email" placeholder="your@email.com"></div>
+            <div class="form-group">
+                <label>Количество DSCoins *</label>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                    <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(100)">100</button>
+                    <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(250)">250</button>
+                    <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(500)">500</button>
+                    <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(1000)">1000</button>
+                    <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(2000)">2000</button>
+                </div>
+                <input type="number" id="dscoin-order-amount" placeholder="Введите количество..." min="1">
+            </div>
+            <div style="background:var(--bg-welcome);padding:12px;border-radius:10px;margin:12px 0;text-align:center;">
+                <span style="color:var(--text-muted);">Стоимость: </span>
+                <span id="dscoin-order-price" style="color:var(--color-accent);font-weight:bold;font-size:18px;">0 ₽</span>
+                <div style="font-size:11px;color:var(--text-muted);">1 DSCoin = 1 ₽</div>
+            </div>
+            <button class="submit-btn" style="width:100%;" onclick="submitDSCoinOrder()"><i class="fas fa-paper-plane"></i> Оформить заявку</button>
+            <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-dscoin-order')">Отмена</button>
+        </div>
     </div>
-</div>
 
-<div class="modal-overlay" id="m-admin-dscoins">
-    <div class="modal-content" style="max-width:480px;">
-        <button class="modal-close" onclick="closeModal('m-admin-dscoins')">✕</button>
-        <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Управление DSCoins</h3>
-        <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">Добавьте монеты пользователю по email.</p>
-        <div class="form-group"><label>Email пользователя *</label><input type="email" id="admin-dscoin-email" placeholder="user@example.com"></div>
-        <div class="form-group"><label>Количество DSCoins *</label><input type="number" id="admin-dscoin-amount" placeholder="100" min="1"></div>
-        <div class="form-group"><label>Причина</label><input type="text" id="admin-dscoin-reason" value="Начисление администратором"></div>
-        <button class="submit-btn" style="width:100%;background:var(--gradient-primary);" onclick="adminAddDSCoins()"><i class="fas fa-plus"></i> Добавить монеты</button>
-        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-admin-dscoins')">Отмена</button>
+    <div class="modal-overlay" id="m-admin-dscoins">
+        <div class="modal-content" style="max-width:480px;">
+            <button class="modal-close" onclick="closeModal('m-admin-dscoins')">✕</button>
+            <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Управление DSCoins</h3>
+            <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">Добавьте монеты пользователю по email.</p>
+            <div class="form-group"><label>Email пользователя *</label><input type="email" id="admin-dscoin-email" placeholder="user@example.com"></div>
+            <div class="form-group"><label>Количество DSCoins *</label><input type="number" id="admin-dscoin-amount" placeholder="100" min="1"></div>
+            <div class="form-group"><label>Причина</label><input type="text" id="admin-dscoin-reason" value="Начисление администратором"></div>
+            <button class="submit-btn" style="width:100%;background:var(--gradient-primary);" onclick="adminAddDSCoins()"><i class="fas fa-plus"></i> Добавить монеты</button>
+            <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-admin-dscoins')">Отмена</button>
+        </div>
     </div>
-</div>
 
-<script>
-    function toggleTheme() {
-        const html = document.documentElement;
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        const btn = document.getElementById('themeToggle');
-        if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
-    }
-    function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        const btn = document.getElementById('themeToggle');
-        if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
-    }
-    document.addEventListener('DOMContentLoaded', loadTheme);
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            const btn = document.getElementById('themeToggle');
+            if (btn) {
+                btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
+            }
+        }
 
-    function openSidebar() {
-        document.getElementById('sidebar').classList.add('open');
-        document.getElementById('sidebar-overlay').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeSidebar() {
-        document.getElementById('sidebar').classList.remove('open');
-        document.getElementById('sidebar-overlay').classList.remove('active');
-        document.body.style.overflow = '';
-    }
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeSidebar();
-    });
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const btn = document.getElementById('themeToggle');
+            if (btn) {
+                btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', loadTheme);
 
-    function openModal(id) {
-        document.getElementById(id).classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeModal(id) {
-        document.getElementById(id).classList.remove('active');
-        document.body.style.overflow = '';
-    }
-    function openDSCoinOrder() { closeSidebar(); openModal('m-dscoin-order'); }
-    function openAdminDSCoins() { closeSidebar(); openModal('m-admin-dscoins'); }
-</script>
+        function openSidebar() {
+            document.getElementById('sidebar').classList.add('open');
+            document.getElementById('sidebar-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
 
-<!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
-<div class="container">
-    <div class="header">
-        <h1 class="title">🎙️ DUB-in</h1>
-        <p style="color:var(--text-muted); text-align:center;">Материалы для озвучки</p>
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebar-overlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeSidebar();
+        });
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function openDSCoinOrder() {
+            closeSidebar();
+            openModal('m-dscoin-order');
+        }
+
+        function openAdminDSCoins() {
+            closeSidebar();
+            openModal('m-admin-dscoins');
+        }
+
+        function setDSCoinAmount(amount) {
+            document.getElementById('dscoin-order-amount').value = amount;
+            updateDSCoinPrice();
+        }
+
+        function updateDSCoinPrice() {
+            const amount = parseInt(document.getElementById('dscoin-order-amount').value) || 0;
+            const priceEl = document.getElementById('dscoin-order-price');
+            if (priceEl) priceEl.textContent = amount + ' ₽';
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const amountInput = document.getElementById('dscoin-order-amount');
+            if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
+        });
+
+        // ========== TOAST-УВЕДОМЛЕНИЯ ==========
+        function showToast(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `toast-item ${type}`;
+            toast.innerHTML = `
+                        <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
+                        <span class="toast-text">${message}</span>
+                        <button class="toast-close-btn" onclick="this.closest('.toast-item').remove()">✕</button>
+                        <div class="toast-progress"></div>
+                    `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.classList.add('removing');
+                    setTimeout(() => {
+                        if (toast.parentNode) toast.remove();
+                    }, 400);
+                }
+            }, duration);
+        }
+
+        // Заменяем стандартный alert на showToast
+        window.alert = function(message) {
+            showToast(message, 'warning');
+        };
+    </script>
+
+    <!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🎙️ DUB-in</h1>
+            <p style="color:var(--text-muted); text-align:center;">Материалы для озвучки</p>
+            <hr>
+        </div>
+
+        <div class="content-box">
+            <div id="adminPanel" style="display:none;" class="admin-toolbar">
+                <button class="admin-btn" onclick="openAddTitleModal()">➕ Добавить тайтл</button>
+                <button class="admin-btn" onclick="refreshTitles()">🔄 Обновить</button>
+                <span class="admin-status">👑 Режим администратора</span>
+            </div>
+            <div id="dubContent">
+                <div class="loading-spinner">⏳ Проверка доступа...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка для материалов -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content" id="modalContent">
+            <button class="modal-close" onclick="closeModal('modalOverlay')">✕</button>
+            <div id="modalBody"><div class="loading-spinner">⏳ Загрузка...</div></div>
+        </div>
+    </div>
+
+    <!-- Модалка для добавления тайтла -->
+    <div class="modal-overlay" id="addTitleModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('addTitleModal')">✕</button>
+            <h2 id="addTitleModalTitle">➕ Добавить тайтл</h2>
+            <form class="add-title-form" id="addTitleForm" onsubmit="saveNewTitle(event)">
+                <div class="form-group"><label>ID тайтла (уникальный, латиница)</label><input type="text" id="newTitleId" placeholder="например: dandadan" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Название (рус.)</label><input type="text" id="newTitleName" placeholder="Название" required></div>
+                    <div class="form-group"><label>Название (англ.)</label><input type="text" id="newTitleNameEn" placeholder="English name"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Тип</label><select id="newTitleType"><option value="Сериал">Сериал</option><option value="Фильм">Фильм</option><option value="Короткометражка">Короткометражка</option></select></div>
+                    <div class="form-group"><label>Год</label><input type="number" id="newTitleYear" placeholder="2024"></div>
+                    <div class="form-group"><label>Кол-во серий</label><input type="number" id="newTitleEpisodes" placeholder="12" min="1"></div>
+                    <div class="form-group"><label>Рейтинг</label><input type="number" id="newTitleRating" placeholder="5" min="0" max="5" step="0.1"></div>
+                </div>
+                <div class="form-group"><label>Жанры (через запятую)</label><input type="text" id="newTitleGenres" placeholder="Комедия, Экшен, Романтика"></div>
+                <div class="form-group"><label>Вертикальная обложка</label><input type="text" id="newTitleImageVert" placeholder="images/title_vert.jpg"></div>
+                <div class="form-group"><label>Горизонтальная обложка</label><input type="text" id="newTitleImageHoriz" placeholder="images/title_horiz.jpg"></div>
+                <div class="form-group"><label>Описание</label><textarea id="newTitleDescription" placeholder="Описание тайтла..."></textarea></div>
+                <button type="submit" class="submit-btn" id="addTitleSubmitBtn">💾 Создать тайтл</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer" style="margin-top: 20px; text-align: center;">
         <hr>
-    </div>
-    
-    <div class="content-box">
-        <div id="adminPanel" style="display:none;" class="admin-toolbar">
-            <button class="admin-btn" onclick="openAddTitleModal()">➕ Добавить тайтл</button>
-            <button class="admin-btn" onclick="refreshTitles()">🔄 Обновить</button>
-            <span class="admin-status">👑 Режим администратора</span>
+        <div class="footer-links" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin: 15px 0;">
+            <a href="index.html">Главная</a>
+            <a href="titles.html">Тайтлы</a>
+            <a href="sostav.html">Состав</a>
+            <a href="dub-in.html" style="display:none;" id="dubInFooter">DUB-in</a>
+            <a href="privacy.html">Политика</a>
+            <a href="feedback.html">Обратная связь</a>
         </div>
-        <div id="dubContent">
-            <div class="loading-spinner">⏳ Проверка доступа...</div>
-        </div>
+        <p style="color:var(--text-muted);">© 2026 Dream Sound Dubbing. Все права защищены.</p>
     </div>
-</div>
 
-<!-- Модалка для материалов -->
-<div class="modal-overlay" id="modalOverlay">
-    <div class="modal-content" id="modalContent">
-        <button class="modal-close" onclick="closeModal('modalOverlay')">✕</button>
-        <div id="modalBody"><div class="loading-spinner">⏳ Загрузка...</div></div>
-    </div>
-</div>
+    <script type="module">
+        import {
+            getCurrentUser,
+            onAuthStateChangedListener,
+            getTitles,
+            addTitle,
+            getDubMaterials,
+            addDubMaterial,
+            removeDubMaterial,
+            getUserRole,
+            getUserDSCoins,
+            getUserByEmail,
+            addDSCoins,
+            createDSCoinOrder
+        } from './firebase-config.js';
 
-<!-- Модалка для добавления тайтла -->
-<div class="modal-overlay" id="addTitleModal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('addTitleModal')">✕</button>
-        <h2 id="addTitleModalTitle">➕ Добавить тайтл</h2>
-        <form class="add-title-form" id="addTitleForm" onsubmit="saveNewTitle(event)">
-            <div class="form-group"><label>ID тайтла (уникальный, латиница)</label><input type="text" id="newTitleId" placeholder="например: dandadan" required></div>
-            <div class="form-row">
-                <div class="form-group"><label>Название (рус.)</label><input type="text" id="newTitleName" placeholder="Название" required></div>
-                <div class="form-group"><label>Название (англ.)</label><input type="text" id="newTitleNameEn" placeholder="English name"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-group"><label>Тип</label><select id="newTitleType"><option value="Сериал">Сериал</option><option value="Фильм">Фильм</option><option value="Короткометражка">Короткометражка</option></select></div>
-                <div class="form-group"><label>Год</label><input type="number" id="newTitleYear" placeholder="2024"></div>
-                <div class="form-group"><label>Кол-во серий</label><input type="number" id="newTitleEpisodes" placeholder="12" min="1"></div>
-                <div class="form-group"><label>Рейтинг</label><input type="number" id="newTitleRating" placeholder="5" min="0" max="5" step="0.1"></div>
-            </div>
-            <div class="form-group"><label>Жанры (через запятую)</label><input type="text" id="newTitleGenres" placeholder="Комедия, Экшен, Романтика"></div>
-            <div class="form-group"><label>Вертикальная обложка</label><input type="text" id="newTitleImageVert" placeholder="images/title_vert.jpg"></div>
-            <div class="form-group"><label>Горизонтальная обложка</label><input type="text" id="newTitleImageHoriz" placeholder="images/title_horiz.jpg"></div>
-            <div class="form-group"><label>Описание</label><textarea id="newTitleDescription" placeholder="Описание тайтла..."></textarea></div>
-            <button type="submit" class="submit-btn" id="addTitleSubmitBtn">💾 Создать тайтл</button>
-        </form>
-    </div>
-</div>
+        window.getUserDSCoins = getUserDSCoins;
+        window.getUserByEmail = getUserByEmail;
+        window.addDSCoins = addDSCoins;
+        window.createDSCoinOrder = createDSCoinOrder;
 
-<div class="footer" style="margin-top: 20px; text-align: center;">
-    <hr>
-    <div class="footer-links" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin: 15px 0;">
-        <a href="index.html">Главная</a>
-        <a href="titles.html">Тайтлы</a>
-        <a href="sostav.html">Состав</a>
-        <a href="dub-in.html" style="display:none;" id="dubInFooter">DUB-in</a>
-        <a href="privacy.html">Политика</a>
-        <a href="feedback.html">Обратная связь</a>
-    </div>
-    <p style="color:var(--text-muted);">© 2026 Dream Sound Dubbing. Все права защищены.</p>
-</div>
+        let currentUser = null;
+        let currentUserRole = 'user';
+        let currentTitleId = null;
+        let allTitles = [];
 
-<script type="module">
-    import { getCurrentUser, onAuthStateChangedListener, getTitles, addTitle, getDubMaterials, addDubMaterial, removeDubMaterial, getUserRole, getUserDSCoins, getUserByEmail, addDSCoins, createDSCoinOrder } from './firebase-config.js';
-
-    window.getUserDSCoins = getUserDSCoins;
-    window.getUserByEmail = getUserByEmail;
-    window.addDSCoins = addDSCoins;
-    window.createDSCoinOrder = createDSCoinOrder;
-
-    let currentUser = null;
-    let currentUserRole = 'user';
-    let currentTitleId = null;
-    let allTitles = [];
-
-    function updateAuthButton(user) {
-        const btn = document.getElementById('authBtn');
-        if (user) {
-            btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
-            btn.href = 'profile.html';
-        } else {
-            btn.textContent = '🔑 Вход';
-            btn.href = 'login.html';
+        function updateAuthButton(user) {
+            const btn = document.getElementById('authBtn');
+            if (user) {
+                btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
+                btn.href = 'profile.html';
+            } else {
+                btn.textContent = '🔑 Вход';
+                btn.href = 'login.html';
+            }
         }
-    }
 
-    async function updateDubInLink(user) {
-        const link = document.getElementById('dubInLink');
-        const sidebarLink = document.getElementById('sidebarDubIn');
-        if (!link) return;
-        if (user) {
-            const role = await getUserRole(user.uid);
-            const show = (role === 'dubber' || role === 'admin');
-            link.style.display = show ? 'inline-flex' : 'none';
-            if (sidebarLink) sidebarLink.style.display = show ? 'flex' : 'none';
-        } else {
-            link.style.display = 'none';
-            if (sidebarLink) sidebarLink.style.display = 'none';
+        async function updateDubInLink(user) {
+            const link = document.getElementById('dubInLink');
+            const sidebarLink = document.getElementById('sidebarDubIn');
+            if (!link) return;
+            if (user) {
+                const role = await getUserRole(user.uid);
+                const show = (role === 'dubber' || role === 'admin');
+                link.style.display = show ? 'inline-flex' : 'none';
+                if (sidebarLink) sidebarLink.style.display = show ? 'flex' : 'none';
+            } else {
+                link.style.display = 'none';
+                if (sidebarLink) sidebarLink.style.display = 'none';
+            }
         }
-    }
 
-    async function updateAdminLinks(user) {
-        const adminLink = document.getElementById('adminLink');
-        const sidebarAdminOrders = document.getElementById('sidebarAdminOrders');
-        const sidebarAdminDSCoins = document.getElementById('sidebarAdminDSCoins');
-        if (user) {
-            const role = await getUserRole(user.uid);
-            const isAdminRole = role === 'admin';
-            if (adminLink) adminLink.style.display = isAdminRole ? 'inline-flex' : 'none';
-            if (sidebarAdminOrders) sidebarAdminOrders.style.display = isAdminRole ? 'flex' : 'none';
-            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = isAdminRole ? 'flex' : 'none';
-        } else {
-            if (adminLink) adminLink.style.display = 'none';
-            if (sidebarAdminOrders) sidebarAdminOrders.style.display = 'none';
-            if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = 'none';
+        async function updateAdminLinks(user) {
+            const adminLink = document.getElementById('adminLink');
+            const sidebarAdminOrders = document.getElementById('sidebarAdminOrders');
+            const sidebarAdminDSCoins = document.getElementById('sidebarAdminDSCoins');
+            if (user) {
+                const role = await getUserRole(user.uid);
+                const isAdminRole = role === 'admin';
+                if (adminLink) adminLink.style.display = isAdminRole ? 'inline-flex' : 'none';
+                if (sidebarAdminOrders) sidebarAdminOrders.style.display = isAdminRole ? 'flex' : 'none';
+                if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = isAdminRole ? 'flex' : 'none';
+            } else {
+                if (adminLink) adminLink.style.display = 'none';
+                if (sidebarAdminOrders) sidebarAdminOrders.style.display = 'none';
+                if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = 'none';
+            }
         }
-    }
 
-    async function updateSidebarBalance(user) {
-        const balanceEl = document.getElementById('sidebarBalance');
-        if (!balanceEl) return;
-        if (user) {
-            const result = await getUserDSCoins(user.uid);
-            balanceEl.textContent = result.success ? result.coins : '0';
-        } else {
-            balanceEl.textContent = '0';
+        async function updateSidebarBalance(user) {
+            const balanceEl = document.getElementById('sidebarBalance');
+            if (!balanceEl) return;
+            if (user) {
+                const result = await getUserDSCoins(user.uid);
+                balanceEl.textContent = result.success ? result.coins : '0';
+            } else {
+                balanceEl.textContent = '0';
+            }
         }
-    }
 
-    window.setDSCoinAmount = function(amount) {
-        document.getElementById('dscoin-order-amount').value = amount;
-        updateDSCoinPrice();
-    };
-    window.updateDSCoinPrice = function() {
-        const amount = parseInt(document.getElementById('dscoin-order-amount').value) || 0;
-        const priceEl = document.getElementById('dscoin-order-price');
-        if (priceEl) priceEl.textContent = amount + ' ₽';
-    };
-    window.submitDSCoinOrder = async function() {
-        const email = document.getElementById('dscoin-order-email').value.trim();
-        const amount = parseInt(document.getElementById('dscoin-order-amount').value);
-        if (!email) { alert('❌ Введите email'); return; }
-        if (!amount || amount < 1) { alert('❌ Введите количество DSCoins'); return; }
-        const result = await createDSCoinOrder({ email, amount, price: amount });
-        if (result.success) {
-            alert('✅ Заявка создана! Напишите менеджеру в Telegram для оплаты.');
-            closeModal('m-dscoin-order');
-            window.open('https://t.me/Bill_Heringtton', '_blank');
-        } else {
-            alert('❌ Ошибка: ' + result.error);
-        }
-    };
-    window.adminAddDSCoins = async function() {
-        const email = document.getElementById('admin-dscoin-email').value.trim();
-        const amount = parseInt(document.getElementById('admin-dscoin-amount').value);
-        const reason = document.getElementById('admin-dscoin-reason').value.trim() || 'Начисление администратором';
-        if (!email) { alert('❌ Введите email пользователя'); return; }
-        if (!amount || amount < 1) { alert('❌ Введите количество DSCoins'); return; }
-        const userResult = await getUserByEmail(email);
-        if (!userResult.success) { alert('❌ Пользователь не найден'); return; }
-        const result = await addDSCoins(userResult.data.id, amount, reason);
-        if (result.success) {
-            alert('✅ Добавлено ' + amount + ' DSCoins пользователю ' + email);
-            closeModal('m-admin-dscoins');
-        } else {
-            alert('❌ Ошибка: ' + result.error);
-        }
-    };
-    document.addEventListener('DOMContentLoaded', function() {
-        const amountInput = document.getElementById('dscoin-order-amount');
-        if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
-    });
-
-    window.openAddTitleModal = function() {
-        document.getElementById('addTitleModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-        document.getElementById('addTitleForm').reset();
-        document.getElementById('addTitleSubmitBtn').disabled = false;
-        document.getElementById('addTitleSubmitBtn').textContent = '💾 Создать тайтл';
-    };
-
-    window.saveNewTitle = async function(event) {
-        event.preventDefault();
-        const submitBtn = document.getElementById('addTitleSubmitBtn');
-        submitBtn.disabled = true;
-        submitBtn.textContent = '⏳ Сохранение...';
-        const id = document.getElementById('newTitleId').value.trim();
-        const name = document.getElementById('newTitleName').value.trim();
-        const nameEn = document.getElementById('newTitleNameEn').value.trim();
-        const type = document.getElementById('newTitleType').value;
-        const year = parseInt(document.getElementById('newTitleYear').value) || 0;
-        const episodes = parseInt(document.getElementById('newTitleEpisodes').value) || 0;
-        const rating = parseFloat(document.getElementById('newTitleRating').value) || 0;
-        const genres = document.getElementById('newTitleGenres').value.split(',').map(s => s.trim()).filter(Boolean);
-        const imageVertical = document.getElementById('newTitleImageVert').value.trim();
-        const imageHorizontal = document.getElementById('newTitleImageHoriz').value.trim();
-        const description = document.getElementById('newTitleDescription').value.trim();
-        if (!id || !name) { alert('❌ Заполните ID и название тайтла'); submitBtn.disabled = false; submitBtn.textContent = '💾 Создать тайтл'; return; }
-        const data = { id, name, nameEn, type, year, episodes: episodes || 1, rating, genres, imageVertical, imageHorizontal, description, episodesList: [] };
-        const result = await addTitle(data);
-        if (result.success) { alert('✅ Тайтл успешно создан!'); closeModal('addTitleModal'); await loadTitles(); } 
-        else { alert('❌ Ошибка: ' + result.error); submitBtn.disabled = false; submitBtn.textContent = '💾 Создать тайтл'; }
-    };
-
-    window.refreshTitles = async function() { await loadTitles(); };
-
-    window.openModal = function(titleId, titleName) {
-        currentTitleId = titleId;
-        const overlay = document.getElementById('modalOverlay');
-        const body = document.getElementById('modalBody');
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        body.innerHTML = '<div class="loading-spinner">⏳ Загрузка материалов...</div>';
-        loadMaterials(titleId, titleName);
-    };
-
-    async function loadMaterials(titleId, titleName) {
-        const body = document.getElementById('modalBody');
-        const isAdminUser = currentUserRole === 'admin';
-        const isDubberUser = currentUserRole === 'dubber' || currentUserRole === 'admin';
-        const result = await getDubMaterials(titleId);
-        if (!result.success) {
-            body.innerHTML = `<p style="color:var(--color-danger);">❌ Ошибка загрузки: ${result.error}</p>`;
-            return;
-        }
-        const data = result.data;
-        const raw = data.raw || [];
-        const softsubs = data.softsubs || [];
-        const hardsubs = data.hardsubs || [];
-        let html = `
-            <h2>${titleName}</h2>
-            <p style="color:var(--text-muted);margin-bottom:16px;">Материалы для озвучки</p>
-            ${!isDubberUser ? `<div style="background:var(--bg-welcome);padding:12px;border-radius:8px;text-align:center;color:var(--text-muted);margin-bottom:16px;">🔒 Для доступа к материалам нужна роль <strong style="color:var(--color-accent);">Даббер</strong> или <strong style="color:var(--color-accent);">Админ</strong></div>` : ''}
-        `;
-        html += `<div class="material-section"><h3>🎬 RAW (оригинал)</h3>`;
-        if (raw.length === 0) html += `<div class="no-materials">Нет материалов</div>`;
-        else {
-            raw.forEach((item, index) => {
-                html += `<div class="material-item"><a href="${item}" target="_blank">${item}</a>${isAdminUser ? `<button class="delete-btn" onclick="deleteMaterial('${titleId}','raw',${index})">🗑️</button>` : ''}</div>`;
+        window.setDSCoinAmount = function(amount) {
+            document.getElementById('dscoin-order-amount').value = amount;
+            updateDSCoinPrice();
+        };
+        window.updateDSCoinPrice = function() {
+            const amount = parseInt(document.getElementById('dscoin-order-amount').value) || 0;
+            const priceEl = document.getElementById('dscoin-order-price');
+            if (priceEl) priceEl.textContent = amount + ' ₽';
+        };
+        window.submitDSCoinOrder = async function() {
+            const email = document.getElementById('dscoin-order-email').value.trim();
+            const amount = parseInt(document.getElementById('dscoin-order-amount').value);
+            if (!email) {
+                showToast('❌ Введите email', 'error');
+                return;
+            }
+            if (!amount || amount < 1) {
+                showToast('❌ Введите количество DSCoins', 'error');
+                return;
+            }
+            const result = await createDSCoinOrder({
+                email,
+                amount,
+                price: amount
             });
-        }
-        if (isAdminUser) html += `<div class="add-material-form"><input type="text" id="rawInput" placeholder="Ссылка на Google Drive"><button onclick="addMaterial('${titleId}','raw')">➕ Добавить</button></div>`;
-        html += `</div>`;
-        html += `<div class="material-section"><h3>📝 Софтсабы (.ass)</h3>`;
-        if (softsubs.length === 0) html += `<div class="no-materials">Нет материалов</div>`;
-        else {
-            softsubs.forEach((item, index) => {
-                html += `<div class="material-item"><a href="${item}" target="_blank">${item}</a>${isAdminUser ? `<button class="delete-btn" onclick="deleteMaterial('${titleId}','softsubs',${index})">🗑️</button>` : ''}</div>`;
-            });
-        }
-        if (isAdminUser) html += `<div class="add-material-form"><input type="text" id="softsubsInput" placeholder="Ссылка на Google Drive"><button onclick="addMaterial('${titleId}','softsubs')">➕ Добавить</button></div>`;
-        html += `</div>`;
-        html += `<div class="material-section"><h3>🎥 Хардсабы (со встроенными субтитрами)</h3>`;
-        if (hardsubs.length === 0) html += `<div class="no-materials">Нет материалов</div>`;
-        else {
-            hardsubs.forEach((item, index) => {
-                html += `<div class="material-item"><a href="${item}" target="_blank">${item}</a>${isAdminUser ? `<button class="delete-btn" onclick="deleteMaterial('${titleId}','hardsubs',${index})">🗑️</button>` : ''}</div>`;
-            });
-        }
-        if (isAdminUser) html += `<div class="add-material-form"><input type="text" id="hardsubsInput" placeholder="Ссылка на Google Drive"><button onclick="addMaterial('${titleId}','hardsubs')">➕ Добавить</button></div>`;
-        html += `</div>`;
-        if (!isDubberUser) html += `<div style="text-align:center;margin-top:16px;padding:12px;background:var(--bg-welcome);border-radius:8px;"><a href="login.html" style="color:var(--color-accent);">Войдите</a> или запросите роль у администратора</div>`;
-        body.innerHTML = html;
-    }
+            if (result.success) {
+                showToast('✅ Заявка создана! Напишите менеджеру в Telegram для оплаты.', 'success');
+                closeModal('m-dscoin-order');
+                window.open('https://t.me/Bill_Heringtton', '_blank');
+            } else {
+                showToast('❌ Ошибка: ' + result.error, 'error');
+            }
+        };
+        window.adminAddDSCoins = async function() {
+            const email = document.getElementById('admin-dscoin-email').value.trim();
+            const amount = parseInt(document.getElementById('admin-dscoin-amount').value);
+            const reason = document.getElementById('admin-dscoin-reason').value.trim() || 'Начисление администратором';
+            if (!email) {
+                showToast('❌ Введите email пользователя', 'error');
+                return;
+            }
+            if (!amount || amount < 1) {
+                showToast('❌ Введите количество DSCoins', 'error');
+                return;
+            }
+            const userResult = await getUserByEmail(email);
+            if (!userResult.success) {
+                showToast('❌ Пользователь не найден', 'error');
+                return;
+            }
+            const result = await addDSCoins(userResult.data.id, amount, reason);
+            if (result.success) {
+                showToast('✅ Добавлено ' + amount + ' DSCoins пользователю ' + email, 'success');
+                closeModal('m-admin-dscoins');
+            } else {
+                showToast('❌ Ошибка: ' + result.error, 'error');
+            }
+        };
+        document.addEventListener('DOMContentLoaded', function() {
+            const amountInput = document.getElementById('dscoin-order-amount');
+            if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
+        });
 
-    window.addMaterial = async function(titleId, type) {
-        const inputId = type + 'Input';
-        const input = document.getElementById(inputId);
-        if (!input) return;
-        const url = input.value.trim();
-        if (!url) { alert('Введите ссылку на Google Drive'); return; }
-        const result = await addDubMaterial(titleId, type, url);
-        if (result.success) {
-            input.value = '';
-            const titleName = document.querySelector('.modal-content h2')?.textContent || '';
-            await loadMaterials(titleId, titleName);
-        } else { alert('❌ Ошибка: ' + result.error); }
-    };
+        window.openAddTitleModal = function() {
+            document.getElementById('addTitleModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('addTitleForm').reset();
+            document.getElementById('addTitleSubmitBtn').disabled = false;
+            document.getElementById('addTitleSubmitBtn').textContent = '💾 Создать тайтл';
+        };
 
-    window.deleteMaterial = async function(titleId, type, index) {
-        if (!confirm('Удалить этот материал?')) return;
-        const result = await removeDubMaterial(titleId, type, index);
-        if (result.success) {
-            const titleName = document.querySelector('.modal-content h2')?.textContent || '';
-            await loadMaterials(titleId, titleName);
-        } else { alert('❌ Ошибка: ' + result.error); }
-    };
+        window.saveNewTitle = async function(event) {
+            event.preventDefault();
+            const submitBtn = document.getElementById('addTitleSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Сохранение...';
+            const id = document.getElementById('newTitleId').value.trim();
+            const name = document.getElementById('newTitleName').value.trim();
+            const nameEn = document.getElementById('newTitleNameEn').value.trim();
+            const type = document.getElementById('newTitleType').value;
+            const year = parseInt(document.getElementById('newTitleYear').value) || 0;
+            const episodes = parseInt(document.getElementById('newTitleEpisodes').value) || 0;
+            const rating = parseFloat(document.getElementById('newTitleRating').value) || 0;
+            const genres = document.getElementById('newTitleGenres').value.split(',').map(s => s.trim()).filter(Boolean);
+            const imageVertical = document.getElementById('newTitleImageVert').value.trim();
+            const imageHorizontal = document.getElementById('newTitleImageHoriz').value.trim();
+            const description = document.getElementById('newTitleDescription').value.trim();
+            if (!id || !name) {
+                showToast('❌ Заполните ID и название тайтла', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '💾 Создать тайтл';
+                return;
+            }
+            const data = { id, name, nameEn, type, year, episodes: episodes || 1, rating, genres, imageVertical, imageHorizontal, description, episodesList: [] };
+            const result = await addTitle(data);
+            if (result.success) {
+                showToast('✅ Тайтл успешно создан!', 'success');
+                closeModal('addTitleModal');
+                await loadTitles();
+            } else {
+                showToast('❌ Ошибка: ' + result.error, 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '💾 Создать тайтл';
+            }
+        };
 
-    async function loadTitles() {
-        const container = document.getElementById('dubContent');
-        const titlesResult = await getTitles();
-        if (!titlesResult.success) {
-            container.innerHTML = `<p style="color:var(--color-danger);">❌ Ошибка загрузки: ${titlesResult.error}</p>`;
-            return;
-        }
-        allTitles = titlesResult.titles;
-        if (allTitles.length === 0) {
-            container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:32px;">Пока нет тайтлов. Создайте первый!</p>';
-            return;
-        }
-        container.innerHTML = `<div class="dub-grid">${allTitles.map(title => {
-            const image = title.imageVertical || title.imageHorizontal || title.image;
-            return `<div class="dub-card" onclick="openModal('${title.id}','${title.name}')">
-                <img src="${image}" alt="${title.name}" class="dub-card-image" onerror="this.src='https://via.placeholder.com/200x250/d4e8ff/4a90d9?text=${encodeURIComponent(title.name)}'">
-                <div class="dub-card-info"><div class="dub-card-name">${title.name}</div><div class="dub-card-meta">${title.type} • ${title.episodes} серий</div></div>
-            </div>`;
-        }).join('')}</div>`;
-    }
-
-    async function checkAccess() {
-        const container = document.getElementById('dubContent');
-        const user = getCurrentUser();
-        if (!user) {
-            container.innerHTML = `<div class="access-denied"><h2>🔒 Доступ запрещён</h2><p>Только <strong style="color:var(--color-accent);">дабберы</strong> и <strong style="color:var(--color-accent);">администраторы</strong> имеют доступ к этой странице.</p><p><a href="login.html">Войдите</a> в аккаунт или обратитесь к администратору.</p><br><a href="index.html" style="color:var(--color-accent);text-decoration:none;">🏠 На главную</a></div>`;
-            return false;
-        }
-        const role = await getUserRole(user.uid);
-        currentUserRole = role;
-        if (role !== 'dubber' && role !== 'admin') {
-            container.innerHTML = `<div class="access-denied"><h2>🚫 Недостаточно прав</h2><p>Ваша роль: <strong style="color:var(--color-warning);">${role}</strong></p><p>Для доступа к этой странице нужна роль <strong style="color:var(--color-accent);">Даббер</strong> или <strong style="color:var(--color-accent);">Администратор</strong>.</p><p>Обратитесь к администратору для изменения роли.</p><br><a href="index.html" style="color:var(--color-accent);text-decoration:none;">🏠 На главную</a></div>`;
-            return false;
-        }
-        return true;
-    }
-
-    async function initPage() {
-        const user = getCurrentUser();
-        updateAuthButton(user);
-        await updateDubInLink(user);
-        await updateAdminLinks(user);
-        await updateSidebarBalance(user);
-        const hasAccess = await checkAccess();
-        if (hasAccess) {
-            const adminPanel = document.getElementById('adminPanel');
-            adminPanel.style.display = currentUserRole === 'admin' ? 'flex' : 'none';
+        window.refreshTitles = async function() {
             await loadTitles();
+        };
+
+        window.openModal = function(titleId, titleName) {
+            currentTitleId = titleId;
+            const overlay = document.getElementById('modalOverlay');
+            const body = document.getElementById('modalBody');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            body.innerHTML = '<div class="loading-spinner">⏳ Загрузка материалов...</div>';
+            loadMaterials(titleId, titleName);
+        };
+
+        async function loadMaterials(titleId, titleName) {
+            const body = document.getElementById('modalBody');
+            const isAdminUser = currentUserRole === 'admin';
+            const isDubberUser = currentUserRole === 'dubber' || currentUserRole === 'admin';
+            const result = await getDubMaterials(titleId);
+            if (!result.success) {
+                body.innerHTML = `<p style="color:var(--color-danger);">❌ Ошибка загрузки: ${result.error}</p>`;
+                return;
+            }
+            const data = result.data;
+            const raw = data.raw || [];
+            const softsubs = data.softsubs || [];
+            const hardsubs = data.hardsubs || [];
+            let html = `
+                        <h2>${titleName}</h2>
+                        <p style="color:var(--text-muted);margin-bottom:16px;">Материалы для озвучки</p>
+                        ${!isDubberUser ? `<div style="background:var(--bg-welcome);padding:12px;border-radius:8px;text-align:center;color:var(--text-muted);margin-bottom:16px;">🔒 Для доступа к материалам нужна роль <strong style="color:var(--color-accent);">Даббер</strong> или <strong style="color:var(--color-accent);">Админ</strong></div>` : ''}
+                    `;
+            html += `<div class="material-section"><h3>🎬 RAW (оригинал)</h3>`;
+            if (raw.length === 0) html += `<div class="no-materials">Нет материалов</div>`;
+            else {
+                raw.forEach((item, index) => {
+                    html +=
+                        `<div class="material-item"><a href="${item}" target="_blank">${item}</a>${isAdminUser ? `<button class="delete-btn" onclick="deleteMaterial('${titleId}','raw',${index})">🗑️</button>` : ''}</div>`;
+                });
+            }
+            if (isAdminUser) html +=
+                `<div class="add-material-form"><input type="text" id="rawInput" placeholder="Ссылка на Google Drive"><button onclick="addMaterial('${titleId}','raw')">➕ Добавить</button></div>`;
+            html += `</div>`;
+            html += `<div class="material-section"><h3>📝 Софтсабы (.ass)</h3>`;
+            if (softsubs.length === 0) html += `<div class="no-materials">Нет материалов</div>`;
+            else {
+                softsubs.forEach((item, index) => {
+                    html +=
+                        `<div class="material-item"><a href="${item}" target="_blank">${item}</a>${isAdminUser ? `<button class="delete-btn" onclick="deleteMaterial('${titleId}','softsubs',${index})">🗑️</button>` : ''}</div>`;
+                });
+            }
+            if (isAdminUser) html +=
+                `<div class="add-material-form"><input type="text" id="softsubsInput" placeholder="Ссылка на Google Drive"><button onclick="addMaterial('${titleId}','softsubs')">➕ Добавить</button></div>`;
+            html += `</div>`;
+            html += `<div class="material-section"><h3>🎥 Хардсабы (со встроенными субтитрами)</h3>`;
+            if (hardsubs.length === 0) html += `<div class="no-materials">Нет материалов</div>`;
+            else {
+                hardsubs.forEach((item, index) => {
+                    html +=
+                        `<div class="material-item"><a href="${item}" target="_blank">${item}</a>${isAdminUser ? `<button class="delete-btn" onclick="deleteMaterial('${titleId}','hardsubs',${index})">🗑️</button>` : ''}</div>`;
+                });
+            }
+            if (isAdminUser) html +=
+                `<div class="add-material-form"><input type="text" id="hardsubsInput" placeholder="Ссылка на Google Drive"><button onclick="addMaterial('${titleId}','hardsubs')">➕ Добавить</button></div>`;
+            html += `</div>`;
+            if (!isDubberUser) html +=
+                `<div style="text-align:center;margin-top:16px;padding:12px;background:var(--bg-welcome);border-radius:8px;"><a href="login.html" style="color:var(--color-accent);">Войдите</a> или запросите роль у администратора</div>`;
+            body.innerHTML = html;
         }
-    }
 
-    onAuthStateChangedListener(async (user) => {
-        currentUser = user;
-        updateAuthButton(user);
-        await updateDubInLink(user);
-        await updateAdminLinks(user);
-        await updateSidebarBalance(user);
-        await initPage();
-    });
+        window.addMaterial = async function(titleId, type) {
+            const inputId = type + 'Input';
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            const url = input.value.trim();
+            if (!url) {
+                showToast('Введите ссылку на Google Drive', 'warning');
+                return;
+            }
+            const result = await addDubMaterial(titleId, type, url);
+            if (result.success) {
+                input.value = '';
+                const titleName = document.querySelector('.modal-content h2')?.textContent || '';
+                await loadMaterials(titleId, titleName);
+            } else {
+                showToast('❌ Ошибка: ' + result.error, 'error');
+            }
+        };
 
-    document.addEventListener('DOMContentLoaded', initPage);
-</script>
+        window.deleteMaterial = async function(titleId, type, index) {
+            if (!confirm('Удалить этот материал?')) return;
+            const result = await removeDubMaterial(titleId, type, index);
+            if (result.success) {
+                const titleName = document.querySelector('.modal-content h2')?.textContent || '';
+                await loadMaterials(titleId, titleName);
+            } else {
+                showToast('❌ Ошибка: ' + result.error, 'error');
+            }
+        };
+
+        async function loadTitles() {
+            const container = document.getElementById('dubContent');
+            const titlesResult = await getTitles();
+            if (!titlesResult.success) {
+                container.innerHTML = `<p style="color:var(--color-danger);">❌ Ошибка загрузки: ${titlesResult.error}</p>`;
+                return;
+            }
+            allTitles = titlesResult.titles;
+            if (allTitles.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:32px;">Пока нет тайтлов. Создайте первый!</p>';
+                return;
+            }
+            container.innerHTML = `<div class="dub-grid">${allTitles.map(title => {
+                        const image = title.imageVertical || title.imageHorizontal || title.image;
+                        return `<div class="dub-card" onclick="openModal('${title.id}','${title.name}')">
+                                    <img src="${image}" alt="${title.name}" class="dub-card-image" onerror="this.src='https://via.placeholder.com/200x250/d4e8ff/4a90d9?text=${encodeURIComponent(title.name)}'">
+                                    <div class="dub-card-info"><div class="dub-card-name">${title.name}</div><div class="dub-card-meta">${title.type} • ${title.episodes} серий</div></div>
+                                </div>`;
+                    }).join('')}</div>`;
+        }
+
+        async function checkAccess() {
+            const container = document.getElementById('dubContent');
+            const user = getCurrentUser();
+            if (!user) {
+                container.innerHTML = `<div class="access-denied"><h2>🔒 Доступ запрещён</h2><p>Только <strong style="color:var(--color-accent);">дабберы</strong> и <strong style="color:var(--color-accent);">администраторы</strong> имеют доступ к этой странице.</p><p><a href="login.html">Войдите</a> в аккаунт или обратитесь к администратору.</p><br><a href="index.html" style="color:var(--color-accent);text-decoration:none;">🏠 На главную</a></div>`;
+                return false;
+            }
+            const role = await getUserRole(user.uid);
+            currentUserRole = role;
+            if (role !== 'dubber' && role !== 'admin') {
+                container.innerHTML =
+                    `<div class="access-denied"><h2>🚫 Недостаточно прав</h2><p>Ваша роль: <strong style="color:var(--color-warning);">${role}</strong></p><p>Для доступа к этой странице нужна роль <strong style="color:var(--color-accent);">Даббер</strong> или <strong style="color:var(--color-accent);">Администратор</strong>.</p><p>Обратитесь к администратору для изменения роли.</p><br><a href="index.html" style="color:var(--color-accent);text-decoration:none;">🏠 На главную</a></div>`;
+                return false;
+            }
+            return true;
+        }
+
+        async function initPage() {
+            const user = getCurrentUser();
+            updateAuthButton(user);
+            await updateDubInLink(user);
+            await updateAdminLinks(user);
+            await updateSidebarBalance(user);
+            const hasAccess = await checkAccess();
+            if (hasAccess) {
+                const adminPanel = document.getElementById('adminPanel');
+                adminPanel.style.display = currentUserRole === 'admin' ? 'flex' : 'none';
+                await loadTitles();
+            }
+        }
+
+        onAuthStateChangedListener(async (user) => {
+            currentUser = user;
+            updateAuthButton(user);
+            await updateDubInLink(user);
+            await updateAdminLinks(user);
+            await updateSidebarBalance(user);
+            await initPage();
+        });
+
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+
+    <!-- ========== КОНТЕЙНЕР ДЛЯ TOAST-УВЕДОМЛЕНИЙ ========== -->
+    <div id="toastContainer" class="toast-container"></div>
 
 </body>
 </html>
