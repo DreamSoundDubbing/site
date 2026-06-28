@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="ru" data-theme="dark">
 <head>
+    <link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DSD">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#4a2a7a">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Обратная связь - Dream Sound Dubbing</title>
@@ -594,6 +600,24 @@ window.confirmAction = function(message, title = 'Подтверждение') {
     return showConfirm(message, title, '🤔', false);
 };
 </script>
+<script>
+    // Регистрация Service Worker для PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(() => console.log('✅ Service Worker зарегистрирован'))
+            .catch(err => console.log('❌ Ошибка SW:', err));
+    }
 
+    // Обработка глобальных ошибок сети
+    window.addEventListener('online', () => {
+        document.body.style.display = 'block';
+    });
+    window.addEventListener('offline', () => {
+        // Если нет интернета и страница ещё не загружена — показать заглушку
+        if (!navigator.onLine) {
+            window.location.href = '/offline.html';
+        }
+    });
+</script>
 </body>
 </html>

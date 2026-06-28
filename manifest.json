@@ -1,0 +1,24 @@
+{
+  "name": "Dream Sound Dubbing",
+  "short_name": "DSD App",
+  "description": "Студия озвучки аниме и не только",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0a0a1a",
+  "theme_color": "#4a2a7a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

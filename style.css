@@ -1056,3 +1056,23 @@ hr {
     background: #e05555;
     transform: translateY(-2px);
 }
+/* ========== ИСПРАВЛЕНИЯ ДЛЯ МОДЕРАЦИИ ========== */
+/* Скрываем полосу прокрутки, которая выдает браузер */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-accent); border-radius: 10px; }
+
+/* Убираем липкие браузерные эффекты на телефонах */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
+/* Скрываем адресную строку в WebView */
+body {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Запрещаем выделение текста (чтобы не было "синего" выделения) */
+.no-select { user-select: none; }

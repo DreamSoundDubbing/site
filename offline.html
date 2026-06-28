@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DSD">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#4a2a7a">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Нет соединения</title>
+    <style>
+        body {
+            background: #0a0a1a;
+            color: #d0c8e8;
+            font-family: 'Gill Sans', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+        }
+        .icon { font-size: 80px; margin-bottom: 20px; }
+        h1 { color: #6a5aaa; font-size: 28px; margin-bottom: 10px; }
+        p { color: #8878a8; line-height: 1.6; max-width: 400px; margin: 0 auto; }
+        .retry-btn {
+            margin-top: 25px;
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #4a5a9a, #7a4a8a);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .retry-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(60,80,180,0.3); }
+    </style>
+</head>
+<body>
+    <div class="icon">📡</div>
+    <h1>Нет подключения к интернету</h1>
+    <p>Пожалуйста, проверьте соединение и попробуйте снова. Приложение требует доступа к сети.</p>
+    <button class="retry-btn" onclick="location.reload()">🔄 Попробовать снова</button>
+    <script>
+    // Регистрация Service Worker для PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(() => console.log('✅ Service Worker зарегистрирован'))
+            .catch(err => console.log('❌ Ошибка SW:', err));
+    }
+
+    // Обработка глобальных ошибок сети
+    window.addEventListener('online', () => {
+        document.body.style.display = 'block';
+    });
+    window.addEventListener('offline', () => {
+        // Если нет интернета и страница ещё не загружена — показать заглушку
+        if (!navigator.onLine) {
+            window.location.href = '/offline.html';
+        }
+    });
+</script>
+</body>
+</html>
