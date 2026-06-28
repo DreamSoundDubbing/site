@@ -8,6 +8,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script type="module" src="firebase-config.js"></script>
     <style>
+        :root {
+            /* Тёмная тема */
+            --bg-home: url('https://s3.radikal.cloud/2026/06/28/FON-PROFIL6f2cb57342dd098d.png');
+        }
+        [data-theme="dark"] {
+            --bg-home: url('https://s3.radikal.cloud/2026/06/28/FON-PROFIL6f2cb57342dd098d.png');
+        }
+        [data-theme="light"] {
+            --bg-home: url('https://radika1.link/2026/06/28/FON-PROFIL-DENd8737ff7bc38da6c.md.png');
+        }
+
+        body {
+            background: var(--bg-home) !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+            background-repeat: no-repeat !important;
+        }
         /* ... стили из вашего файла profile.html ... */
         .profile-container {
             max-width: 800px;

@@ -9,6 +9,24 @@
     <script src="data.js"></script>
     <script type="module" src="firebase-config.js"></script>
     <style>
+        :root {
+            /* Тёмная тема */
+            --bg-home: url('https://s1.radikal.cloud/2026/06/28/FON-SOSTAV-TEMNYIaecacf56b154176b.jpg');
+        }
+        [data-theme="dark"] {
+            --bg-home: url('https://s1.radikal.cloud/2026/06/28/FON-SOSTAV-TEMNYIaecacf56b154176b.jpg');
+        }
+        [data-theme="light"] {
+            --bg-home: url('https://s2.radikal.cloud/2026/06/28/FON-SOSTAV-DNEVNOI68d022a2891e1222.png');
+        }
+
+        body {
+            background: var(--bg-home) !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+            background-repeat: no-repeat !important;
+        }
         .admin-toolbar {
             display: flex;
             gap: 12px;

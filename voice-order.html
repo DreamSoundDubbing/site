@@ -8,6 +8,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script type="module" src="firebase-config.js"></script>
     <style>
+        :root {
+            /* Тёмная тема */
+            --bg-home: url('https://s3.radikal.cloud/2026/06/28/FON-ZAKAZYeff27fa259c370dd.png');
+        }
+        [data-theme="dark"] {
+            --bg-home: url('https://s3.radikal.cloud/2026/06/28/FON-ZAKAZYeff27fa259c370dd.png');
+        }
+        [data-theme="light"] {
+            --bg-home: url('https://s2.radikal.cloud/2026/06/28/FON-ZAKAZY-DEN71e5b7f46e3c5203.png');
+        }
+
+        body {
+            background: var(--bg-home) !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+            background-repeat: no-repeat !important;
+        }
         .order-container {
             max-width: 700px;
             margin: 0 auto;
