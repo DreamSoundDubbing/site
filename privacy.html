@@ -519,6 +519,86 @@
 
     <!-- ========== КОНТЕЙНЕР ДЛЯ TOAST-УВЕДОМЛЕНИЙ ========== -->
     <div id="toastContainer" class="toast-container"></div>
+    <!-- ========== МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ ========== -->
+<div id="confirm-modal">
+    <div class="modal-box">
+        <div class="modal-icon" id="confirmIcon">❓</div>
+        <div class="modal-title" id="confirmTitle">Подтверждение</div>
+        <div class="modal-message" id="confirmMessage">Вы уверены?</div>
+        <div class="modal-buttons">
+            <button class="btn-no" id="confirmNo">Отмена</button>
+            <button class="btn-yes" id="confirmYes">Да</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ========== ЕДИНАЯ ФУНКЦИЯ ПОДТВЕРЖДЕНИЯ ЧЕРЕЗ МОДАЛКУ ==========
+// Заменяет стандартный confirm() на красивую модалку
+function showConfirm(message, title = 'Подтверждение', icon = '❓', isDanger = false) {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('confirm-modal');
+        const titleEl = document.getElementById('confirmTitle');
+        const msgEl = document.getElementById('confirmMessage');
+        const iconEl = document.getElementById('confirmIcon');
+        const yesBtn = document.getElementById('confirmYes');
+        const noBtn = document.getElementById('confirmNo');
+
+        // Настраиваем содержимое
+        titleEl.textContent = title;
+        msgEl.textContent = message;
+        iconEl.textContent = icon;
+
+        // Если опасное действие — делаем кнопку Да красной
+        if (isDanger) {
+            yesBtn.className = 'btn-danger';
+        } else {
+            yesBtn.className = 'btn-yes';
+        }
+
+        // Открываем модалку
+        modal.classList.add('active');
+
+        // Обработчики
+        const closeAndResolve = (value) => {
+            modal.classList.remove('active');
+            resolve(value);
+        };
+
+        yesBtn.onclick = () => closeAndResolve(true);
+        noBtn.onclick = () => closeAndResolve(false);
+
+        // Закрытие по клику вне окна
+        modal.onclick = (e) => {
+            if (e.target === modal) closeAndResolve(false);
+        };
+
+        // Закрытие по Escape
+        const keyHandler = (e) => {
+            if (e.key === 'Escape') {
+                closeAndResolve(false);
+                document.removeEventListener('keydown', keyHandler);
+            }
+        };
+        document.addEventListener('keydown', keyHandler);
+    });
+}
+
+// ===== ПЕРЕОПРЕДЕЛЯЕМ СТАНДАРТНЫЙ confirm =====
+// Теперь везде, где был confirm(), будет вызываться наша модалка
+window.confirm = function(message) {
+    return showConfirm(message, 'Подтверждение', '❓', false);
+};
+
+// Дополнительные удобные варианты
+window.confirmDelete = function(message) {
+    return showConfirm(message, 'Удаление', '⚠️', true);
+};
+
+window.confirmAction = function(message, title = 'Подтверждение') {
+    return showConfirm(message, title, '🤔', false);
+};
+</script>
 
 </body>
 </html>
