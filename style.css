@@ -88,7 +88,7 @@
     --bg-container: rgba(255, 255, 255, 0);
     --bg-content: #ffffff00;
     --bg-content2: linear-gradient(135deg, #d4e8ff, #dcc8f0);
-    --bg-card: #ffffffc2;
+    --bg-card: #ffffff00;
     --bg-stat: #e8f0ff;
     --bg-voice-profile: linear-gradient(135deg, #e8f0ff, #e8d8f0);
     --bg-comment: #eef4ff;
@@ -127,8 +127,8 @@
     --bg-playlist: #f0f4ff;
     --bg-wall-post: #f0f4ff;
     
-    --text-primary: #2870ff;
-    --text-secondary: #73a1fb;
+    --text-primary: #001031;
+    --text-secondary: #003091;
     --text-muted: #6a7a9a;
     --text-light: #5a6a8a;
     --text-white: #ffffff;
