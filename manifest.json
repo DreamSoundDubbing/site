@@ -3,11 +3,23 @@
   "dir": "ltr",
   "display": "standalone",
   "name": "Dream Sound Dubbing",
-  "orientation": "any",
-  "scope": "/",
+  "orientation": "natural",
+  "scope": "https://dreamsounddubbing.github.io/site/",
   "short_name": "DSD",
-  "start_url": "/",
+  "start_url": "/index.html",
   "theme_color": "#4a2a7a",
   "id": "DreamSoundDubbing",
-  "description": "Студия озвучки аниме и не только"
+  "description": "Студия озвучки аниме и не только",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
