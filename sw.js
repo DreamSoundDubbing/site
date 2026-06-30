@@ -1,10 +1,10 @@
 const CACHE_NAME = 'dsd-cache-v1';
 const urlsToCache = [
-    '/',
-    '/index.html',
-    '/style.css',
-    '/offline.html',
-    '/manifest.json',
+    '/site/',
+    '/site/index.html',
+    '/site/style.css',
+    '/site/offline.html',
+    '/site/manifest.json',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css'
 ];
 

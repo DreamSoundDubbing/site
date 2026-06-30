@@ -6,7 +6,7 @@
   "orientation": "natural",
   "scope": "https://dreamsounddubbing.github.io/site/",
   "short_name": "DSD",
-  "start_url": "/index.html",
+  "start_url": "/site/index.html",
   "theme_color": "#4a2a7a",
   "id": "DreamSoundDubbing",
   "description": "Студия озвучки аниме и не только",
