@@ -21,5 +21,45 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "screenshots": [
+  {
+    "src": "screenshots/home.jpg",
+    "sizes": "1280x720",
+    "type": "image/jpg"
+  },
+  {
+    "src": "screenshots/order.jpg",
+    "sizes": "1280x720",
+    "type": "image/jpg"
+  },
+  {
+    "src": "screenshots/sostav.jpg",
+    "sizes": "1280x720",
+    "type": "image/jpg"
+  },
+  {
+    "src": "screenshots/titles.jpg",
+    "sizes": "1280x720",
+    "type": "image/jpg"
+  }
+],
+"shortcuts": [
+  {
+    "name": "home",
+    "url": "/index.html"
+  },
+  {
+    "name": "sostav",
+    "url": "/sostav.html"
+  }
+],
+"related_applications": [
+  {
+    "platform": "play",
+    "url": "https://play.google.com/store/apps/details?id=com.example.app1",
+    "id": "com.example.app1"
+  }
+],
+  "iarc_rating_id": "e58c174a-81d2-5c3c-32cc-34b8de4a52e9"
 }
