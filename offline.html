@@ -47,6 +47,17 @@
     <h1>Нет подключения к интернету</h1>
     <p>Пожалуйста, проверьте соединение и попробуйте снова. Приложение требует доступа к сети.</p>
     <button class="retry-btn" onclick="location.reload()">🔄 Попробовать снова</button>
+<script>
+    // Если интернет есть — мгновенно перекидываем на главную
+    if (navigator.onLine) {
+        window.location.href = 'index.html';
+    }
+
+    // Дополнительно: если интернет вернулся, пока пользователь сидит на этой странице
+    window.addEventListener('online', function() {
+        window.location.href = 'index.html';
+    });
+</script>
     <script>
     // Регистрация Service Worker для PWA
     if ('serviceWorker' in navigator) {
