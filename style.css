@@ -80,6 +80,8 @@
     --color-danger: #ff6b6b;
     --color-warning: #ffaa00;
     --color-coin: #fbbf24;
+    --sidebar-bg-image: url('https://s1.radikal.cloud/2026/06/29/Max_a_SKIN_TOLKO_FON_SAIcf6a942366443959.md.png');
+    --sidebar-bg-overlay: rgba(0, 0, 0, 0.5);
 }
 
 /* ========== СВЕТЛАЯ ТЕМА ========== */
@@ -151,6 +153,8 @@
     --color-accent: #3a6ab8;
     --color-accent2: #8a4aba;
     --color-accent-light: #aa6aca;
+    --sidebar-bg-image: url('https://s2.radikal.cloud/2026/06/29/Max_a_PEREDELAI_V_DNEVNOE_b7375ac1c55771bc.md.png');
+    --sidebar-bg-overlay: rgba(255, 255, 255, 0.1);
 }
 
 /* Белая обводка для основного и вторичного текста в светлой теме */
@@ -1106,17 +1110,6 @@ body {
 
 /* ===== ФОН САЙДБАРА В ЗАВИСИМОСТИ ОТ ТЕМЫ (БЕЗ ПОЛОМКИ) ===== */
 
-/* Определяем переменные для картинок прямо в :root */
-:root {
-    --sidebar-bg-image: url('https://s1.radikal.cloud/2026/06/29/Max_a_SKIN_TOLKO_FON_SAIcf6a942366443959.md.png');
-    --sidebar-bg-overlay: rgba(0, 0, 0, 0.5);
-}
-
-/* Для светлой темы переопределяем переменные */
-[data-theme="light"] {
-    --sidebar-bg-image: url('https://s2.radikal.cloud/2026/06/29/Max_a_PEREDELAI_V_DNEVNOE_b7375ac1c55771bc.md.png');
-    --sidebar-bg-overlay: rgba(255, 255, 255, 0.1);
-}
 
 /* Применяем фон к самому контейнеру сайдбара (не ломая flex) */
 #sidebar {
