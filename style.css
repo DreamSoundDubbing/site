@@ -127,8 +127,8 @@
     --bg-playlist: #f0f4ff;
     --bg-wall-post: #f0f4ff;
     
-    --text-primary: #000000;
-    --text-secondary: #000000;
+    --text-primary: #ffffff;
+    --text-secondary: #ffffff;
     --text-muted: #6a7a9a;
     --text-light: #5a6a8a;
     --text-white: #ffffff;
@@ -153,7 +153,7 @@
     --color-accent-light: #aa6aca;
 }
 
-/* Белая обводка для основного и вторичного текста в светлой теме */
+/* Черная обводка для белого текста в светлой теме */
 [data-theme="light"] .text,
 [data-theme="light"] p,
 [data-theme="light"] .h2,
@@ -170,14 +170,14 @@
 [data-theme="light"] #confirm-modal .modal-title,
 [data-theme="light"] #confirm-modal .modal-message {
     text-shadow: 
-        -1px -1px 0 #ffffff,  
-         1px -1px 0 #ffffff,
-        -1px  1px 0 #ffffff,
-         1px  1px 0 #ffffff,
-        -1px  0px 0 #ffffff,
-         1px  0px 0 #ffffff,
-         0px -1px 0 #ffffff,
-         0px  1px 0 #ffffff;
+        -1px -1px 0 #000000,  
+         1px -1px 0 #000000,
+        -1px  1px 0 #000000,
+         1px  1px 0 #000000,
+        -1px  0px 0 #000000,
+         1px  0px 0 #000000,
+         0px -1px 0 #000000,
+         0px  1px 0 #000000;
 }
 
 /* ========== БАЗОВЫЕ СТИЛИ ========== */
