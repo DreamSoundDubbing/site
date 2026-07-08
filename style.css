@@ -131,8 +131,9 @@
     --bg-playlist: #f0f4ff;
     --bg-wall-post: #f0f4ff;
     
-    --text-primary: #000000;
-    --text-secondary: #000000;
+    /* ===== ГЛАВНОЕ: ВОЗВРАЩАЕМ БЕЛЫЙ ТЕКСТ В СВЕТЛОЙ ТЕМЕ ===== */
+    --text-primary: #ffffff;
+    --text-secondary: #ffffff;
     --text-muted: #6a7a9a;
     --text-light: #5a6a8a;
     --text-white: #ffffff;
@@ -162,37 +163,10 @@
 }
 
 /* ================================================================ */
-/* ===== СТИЛИ ОБВОДКИ ТЕКСТА (ИЗ ВАШЕГО ФАЙЛА) ===== */
+/* ===== ОБВОДКА ТЕКСТА (СВЕТЛАЯ ТЕМА) ===== */
 /* ================================================================ */
 
-/* Белая обводка для текста в тёмной теме (чтобы читалось на фоне) */
-.text,
-p,
-.h2,
-.title-card-meta,
-.sidebar-link,
-.modal-title,
-.modal-message,
-.modal-content .form-group label,
-.modal-content .form-group input,
-.modal-content .form-group textarea,
-.modal-content .form-group select,
-.toast-item,
-.toast-text,
-#confirm-modal .modal-title,
-#confirm-modal .modal-message {
-    text-shadow: 
-        -1px -1px 0 #000000,  
-         1px -1px 0 #000000,
-        -1px  1px 0 #000000,
-         1px  1px 0 #000000,
-        -1px  0px 0 #000000,
-         1px  0px 0 #000000,
-         0px -1px 0 #000000,
-         0px  1px 0 #000000;
-}
-
-/* Белая обводка для текста в светлой теме (чтобы читалось на фоне) */
+/* Тонкая чёрная обводка для белого текста в светлой теме (чтобы не сливался с фоном) */
 [data-theme="light"] .text,
 [data-theme="light"] p,
 [data-theme="light"] .h2,
@@ -209,14 +183,14 @@ p,
 [data-theme="light"] #confirm-modal .modal-title,
 [data-theme="light"] #confirm-modal .modal-message {
     text-shadow: 
-        -1px -1px 0 #ffffff,  
-         1px -1px 0 #ffffff,
-        -1px  1px 0 #ffffff,
-         1px  1px 0 #ffffff,
-        -1px  0px 0 #ffffff,
-         1px  0px 0 #ffffff,
-         0px -1px 0 #ffffff,
-         0px  1px 0 #ffffff;
+        -1px -1px 0 #000000,  
+         1px -1px 0 #000000,
+        -1px  1px 0 #000000,
+         1px  1px 0 #000000,
+        -1px  0px 0 #000000,
+         1px  0px 0 #000000,
+         0px -1px 0 #000000,
+         0px  1px 0 #000000;
 }
 
 /* ================================================================ */
