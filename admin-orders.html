@@ -985,19 +985,17 @@ window.confirmAction = function(message, title = 'Подтверждение') {
 <script>
     // Регистрация Service Worker для PWA
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('/site/sw.js')
             .then(() => console.log('✅ Service Worker зарегистрирован'))
             .catch(err => console.log('❌ Ошибка SW:', err));
     }
-
     // Обработка глобальных ошибок сети
     window.addEventListener('online', () => {
         document.body.style.display = 'block';
     });
     window.addEventListener('offline', () => {
-        // Если нет интернета и страница ещё не загружена — показать заглушку
         if (!navigator.onLine) {
-            window.location.href = '/offline.html';
+            window.location.href = '/site/offline.html'; // <-- Тоже исправляем путь
         }
     });
 </script>
