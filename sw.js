@@ -1,12 +1,23 @@
-const CACHE_NAME = 'dsd-cache-v1';
-const urlsToCache = [
-    '/site/',
-    '/site/index.html',
-    '/site/style.css',
-    '/site/offline.html',
-    '/site/manifest.json',
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css'
+const CACHE_NAME = 'dream-sound-dubbing-v1';
+const ASSETS_TO_CACHE = [
+  '/site/',
+  '/site/index.html',
+  '/site/titles.html',
+  '/site/title.html',
+  '/site/profile.html',
+  '/site/login.html',
+  '/site/search.html',
+  '/site/sostav.html',
+  '/site/dub-in.html',
+  '/site/voice-order.html',
+  '/site/admin-orders.html',
+  '/site/privacy.html',
+  '/site/style.css',
+  '/site/logo1.jpg',
+  '/site/data.js',
+  '/site/offline.html'
 ];
+// ... остальной код sw.js ...
 
 self.addEventListener('install', event => {
     event.waitUntil(

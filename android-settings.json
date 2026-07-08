@@ -1,0 +1,49 @@
+{
+  "appVersion": "1.0.0.0",
+  "appVersionCode": 1,
+  "backgroundColor": "#0a0a1a",
+  "display": "standalone",
+  "enableNotifications": true,
+  "enableSiteSettingsShortcut": true,
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": {
+      "enabled": true
+    },
+    "playBilling": {
+      "enabled": false
+    }
+  },
+  "host": "https://dreamsounddubbing.github.io",
+  "iconUrl": "https://dreamsounddubbing.github.io/site/logo1.jpg",
+  "maskableIconUrl": "https://dreamsounddubbing.github.io/site/logo1.jpg",
+  "monochromeIconUrl": "https://dreamsounddubbing.github.io/site/logo1.jpg",
+  "includeSourceCode": false,
+  "isChromeOSOnly": false,
+  "launcherName": "Dream Sound Dubbing",
+  "name": "Dream Sound Dubbing",
+  "navigationColor": "#4a2a7a",
+  "navigationColorDark": "#0a0a1a",
+  "navigationDividerColor": "#6a5aaa",
+  "navigationDividerColorDark": "#1a0a2e",
+  "orientation": "any",
+  "packageId": "com.dreamsounddubbing.app",
+  "shortcuts": [],
+  "signing": {
+    "file": null,
+    "alias": "dreamsound-key",
+    "fullName": "Dream Sound Dubbing Team",
+    "organization": "Dream Sound Dubbing",
+    "organizationalUnit": "Development",
+    "countryCode": "RU",
+    "keyPassword": "",
+    "storePassword": ""
+  },
+  "signingMode": "new",
+  "splashScreenFadeOutDuration": 300,
+  "startUrl": "/site/",
+  "themeColor": "#4a2a7a",
+  "themeColorDark": "#0a0a1a",
+  "shareTarget": [],
+  "webManifestUrl": "https://dreamsounddubbing.github.io/site/manifest.json"
+}
