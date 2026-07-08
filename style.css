@@ -1104,32 +1104,28 @@ body {
 /* Запрещаем выделение текста (чтобы не было "синего" выделения) */
 .no-select { user-select: none; }
 
-/* ===== ФОН САЙДБАРА С ЗАТЕМНЕНИЕМ ===== */
+/* ===== ФОН САЙДБАРА В ЗАВИСИМОСТИ ОТ ТЕМЫ (БЕЗ ПОЛОМКИ) ===== */
+
+/* Определяем переменные для картинок прямо в :root */
+:root {
+    --sidebar-bg-image: url('https://s1.radikal.cloud/2026/06/29/Max_a_SKIN_TOLKO_FON_SAIcf6a942366443959.md.png');
+    --sidebar-bg-overlay: rgba(0, 0, 0, 0.5);
+}
+
+/* Для светлой темы переопределяем переменные */
+[data-theme="light"] {
+    --sidebar-bg-image: url('https://s2.radikal.cloud/2026/06/29/Max_a_PEREDELAI_V_DNEVNOE_b7375ac1c55771bc.md.png');
+    --sidebar-bg-overlay: rgba(255, 255, 255, 0.1);
+}
+
+/* Применяем фон к самому контейнеру сайдбара (не ломая flex) */
 #sidebar {
-    position: relative; /* Важно для позиционирования псевдо-элемента */
+    background-image: var(--sidebar-bg-image) !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    /* Добавляем overlay через background-blend-mode, чтобы текст читался */
+    background-color: var(--sidebar-bg-overlay) !important;
+    background-blend-mode: overlay !important;
     border-right: 2px solid var(--color-accent) !important;
-}
-
-/* Создаём слой с картинкой */
-#sidebar::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background-image: url('https://s1.radikal.cloud/2026/06/29/Max_a_SKIN_TOLKO_FON_SAIcf6a942366443959.md.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    /* Затемнение, чтобы текст был виден (0.5 = 50% прозрачности чёрного) */
-    background-color: rgba(0, 0, 0, 0.6);
-    background-blend-mode: overlay; 
-}
-
-/* Светлая тема — меняем картинку и убираем затемнение */
-[data-theme="light"] #sidebar::before {
-    background-image: url('https://s2.radikal.cloud/2026/06/29/Max_a_PEREDELAI_V_DNEVNOE_b7375ac1c55771bc.md.png');
-    background-color: rgba(255, 255, 255, 0.1); /* Лёгкое осветление */
 }
