@@ -80,6 +80,8 @@
     --color-danger: #ff6b6b;
     --color-warning: #ffaa00;
     --color-coin: #fbbf24;
+
+    /* ФОН САЙДБАРА (ТЕМНАЯ ТЕМА) */
     --sidebar-bg-image: url('https://s1.radikal.cloud/2026/06/29/Max_a_SKIN_TOLKO_FON_SAIcf6a942366443959.md.png');
     --sidebar-bg-overlay: rgba(0, 0, 0, 0.5);
 }
@@ -153,11 +155,44 @@
     --color-accent: #3a6ab8;
     --color-accent2: #8a4aba;
     --color-accent-light: #aa6aca;
+
+    /* ФОН САЙДБАРА (СВЕТЛАЯ ТЕМА) */
     --sidebar-bg-image: url('https://s2.radikal.cloud/2026/06/29/Max_a_PEREDELAI_V_DNEVNOE_b7375ac1c55771bc.md.png');
     --sidebar-bg-overlay: rgba(255, 255, 255, 0.1);
 }
 
-/* Белая обводка для основного и вторичного текста в светлой теме */
+/* ================================================================ */
+/* ===== СТИЛИ ОБВОДКИ ТЕКСТА (ИЗ ВАШЕГО ФАЙЛА) ===== */
+/* ================================================================ */
+
+/* Белая обводка для текста в тёмной теме (чтобы читалось на фоне) */
+.text,
+p,
+.h2,
+.title-card-meta,
+.sidebar-link,
+.modal-title,
+.modal-message,
+.modal-content .form-group label,
+.modal-content .form-group input,
+.modal-content .form-group textarea,
+.modal-content .form-group select,
+.toast-item,
+.toast-text,
+#confirm-modal .modal-title,
+#confirm-modal .modal-message {
+    text-shadow: 
+        -1px -1px 0 #000000,  
+         1px -1px 0 #000000,
+        -1px  1px 0 #000000,
+         1px  1px 0 #000000,
+        -1px  0px 0 #000000,
+         1px  0px 0 #000000,
+         0px -1px 0 #000000,
+         0px  1px 0 #000000;
+}
+
+/* Белая обводка для текста в светлой теме (чтобы читалось на фоне) */
 [data-theme="light"] .text,
 [data-theme="light"] p,
 [data-theme="light"] .h2,
@@ -184,7 +219,9 @@
          0px  1px 0 #ffffff;
 }
 
+/* ================================================================ */
 /* ========== БАЗОВЫЕ СТИЛИ ========== */
+/* ================================================================ */
 body { 
     background: var(--bg-body);
     background-attachment: fixed;
@@ -344,6 +381,14 @@ body {
     flex-direction: column;
     overflow: hidden;
     border-right: 2px solid var(--color-accent);
+    
+    /* ФОН ИЗ ПЕРЕМЕННЫХ (ТЕМНАЯ/СВЕТЛАЯ ТЕМА) */
+    background-image: var(--sidebar-bg-image) !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-color: var(--sidebar-bg-overlay) !important;
+    background-blend-mode: overlay !important;
 }
 #sidebar.open {
     left: 0;
@@ -998,6 +1043,7 @@ hr {
     .title-card-image { height: 170px; }
     .content-box { padding: 12px; }
 }
+
 /* ========== МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ ========== */
 #confirm-modal {
     display: none;
@@ -1087,6 +1133,7 @@ hr {
     background: #e05555;
     transform: translateY(-2px);
 }
+
 /* ========== ИСПРАВЛЕНИЯ ДЛЯ МОДЕРАЦИИ ========== */
 /* Скрываем полосу прокрутки, которая выдает браузер */
 ::-webkit-scrollbar { width: 6px; }
@@ -1107,18 +1154,3 @@ body {
 
 /* Запрещаем выделение текста (чтобы не было "синего" выделения) */
 .no-select { user-select: none; }
-
-/* ===== ФОН САЙДБАРА В ЗАВИСИМОСТИ ОТ ТЕМЫ (БЕЗ ПОЛОМКИ) ===== */
-
-
-/* Применяем фон к самому контейнеру сайдбара (не ломая flex) */
-#sidebar {
-    background-image: var(--sidebar-bg-image) !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    /* Добавляем overlay через background-blend-mode, чтобы текст читался */
-    background-color: var(--sidebar-bg-overlay) !important;
-    background-blend-mode: overlay !important;
-    border-right: 2px solid var(--color-accent) !important;
-}
