@@ -1,65 +1,59 @@
 {
-  "background_color": "#0a0a1a",
-  "dir": "ltr",
-  "display": "standalone",
   "name": "Dream Sound Dubbing",
-  "orientation": "natural",
-  "scope": "https://dreamsounddubbing.github.io/site/",
   "short_name": "DSD",
-  "start_url": "/site/index.html",
-  "theme_color": "#4a2a7a",
-  "id": "DreamSoundDubbing",
   "description": "Студия озвучки аниме и не только",
+  "id": "DreamSoundDubbing",
+  "start_url": "/site/",
+  "scope": "/site/",
+  "display": "standalone",
+  "orientation": "natural",
+  "background_color": "#0a0a1a",
+  "theme_color": "#4a2a7a",
+  "dir": "ltr",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "/site/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/site/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
   ],
   "screenshots": [
-  {
-    "src": "screenshots/home.jpg",
-    "sizes": "1280x720",
-    "type": "image/jpg"
-  },
-  {
-    "src": "screenshots/order.jpg",
-    "sizes": "1280x720",
-    "type": "image/jpg"
-  },
-  {
-    "src": "screenshots/sostav.jpg",
-    "sizes": "1280x720",
-    "type": "image/jpg"
-  },
-  {
-    "src": "screenshots/titles.jpg",
-    "sizes": "1280x720",
-    "type": "image/jpg"
-  }
-],
-"shortcuts": [
-  {
-    "name": "home",
-    "url": "/index.html"
-  },
-  {
-    "name": "sostav",
-    "url": "/sostav.html"
-  }
-],
-"related_applications": [
-  {
-    "platform": "play",
-    "url": "https://play.google.com/store/apps/details?id=com.example.app1",
-    "id": "com.example.app1"
-  }
-],
+    {
+      "src": "/site/screenshots/home.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/site/screenshots/order.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/site/screenshots/sostav.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/site/screenshots/titles.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Главная",
+      "url": "/site/index.html"
+    },
+    {
+      "name": "Состав",
+      "url": "/site/sostav.html"
+    }
+  ],
+  "related_applications": [],
   "iarc_rating_id": "e58c174a-81d2-5c3c-32cc-34b8de4a52e9"
 }
