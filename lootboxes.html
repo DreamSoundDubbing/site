@@ -458,7 +458,7 @@
             createDSCoinOrder,
             spendDSCoins,
             addItemToInventory,
-            openLootbox // Теперь эта функция точно экспортируется!
+            openLootbox
         } from './firebase-config.js';
 
         window.getUserDSCoins = getUserDSCoins;
@@ -472,6 +472,7 @@
         let currentUser = null;
         let isAdmin = false;
 
+        // ===== ОБНОВЛЕНИЕ КНОПКИ ВХОДА =====
         function updateAuthButton(user) {
             const btn = document.getElementById('authBtn');
             if (user) {
@@ -526,8 +527,7 @@
             }
         }
 
-        // ========== ОТКРЫТИЕ ЛУТБОКСА С АНИМАЦИЕЙ ==========
-        // Делаем функцию глобальной, чтобы кнопка onclick работала
+        // ===== ОТКРЫТИЕ ЛУТБОКСА С АНИМАЦИЕЙ =====
         window.openLootboxUI = async function(price, boxId) {
             const user = getCurrentUser();
             if (!user) {
@@ -634,7 +634,7 @@
             }, 3000);
         }
 
-        // ========== ИНИЦИАЛИЗАЦИЯ ==========
+        // ===== СЛУШАТЕЛЬ АВТОРИЗАЦИИ =====
         onAuthStateChangedListener(async (user) => {
             currentUser = user;
             updateAuthButton(user);
@@ -647,6 +647,7 @@
             }
         });
 
+        // ===== ПРИНУДИТЕЛЬНАЯ ПРОВЕРКА ПРИ ЗАГРУЗКЕ =====
         document.addEventListener('DOMContentLoaded', async () => {
             const user = getCurrentUser();
             if (user) {

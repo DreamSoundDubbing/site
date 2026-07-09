@@ -231,6 +231,119 @@
         <p style="color:var(--text-muted);">© 2026 Dream Sound Dubbing. Все права защищены.</p>
     </div>
 
+    <script>
+        // ========== УПРАВЛЕНИЕ ТЕМОЙ ==========
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            const btn = document.getElementById('themeToggle');
+            if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const btn = document.getElementById('themeToggle');
+            if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
+        }
+        document.addEventListener('DOMContentLoaded', loadTheme);
+
+        // ========== САЙДБАР ==========
+        function openSidebar() {
+            document.getElementById('sidebar').classList.add('open');
+            document.getElementById('sidebar-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebar-overlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeSidebar();
+        });
+
+        // ========== МОДАЛКИ ==========
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function openDSCoinOrder() {
+            closeSidebar();
+            openModal('m-dscoin-order');
+        }
+
+        function openAdminDSCoins() {
+            closeSidebar();
+            openModal('m-admin-dscoins');
+        }
+
+        // ========== DSCOINS ==========
+        function setDSCoinAmount(amount) {
+            document.getElementById('dscoin-order-amount').value = amount;
+            updateDSCoinPrice();
+        }
+
+        function updateDSCoinPrice() {
+            const amount = parseInt(document.getElementById('dscoin-order-amount').value) || 0;
+            const priceEl = document.getElementById('dscoin-order-price');
+            if (priceEl) priceEl.textContent = amount + ' ₽';
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const amountInput = document.getElementById('dscoin-order-amount');
+            if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
+        });
+
+        // ========== TOAST-УВЕДОМЛЕНИЯ ==========
+        function showToast(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `toast-item ${type}`;
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
+                <span class="toast-text">${message}</span>
+                <button class="toast-close-btn" onclick="this.closest('.toast-item').remove()">✕</button>
+                <div class="toast-progress"></div>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.classList.add('removing');
+                    setTimeout(() => {
+                        if (toast.parentNode) toast.remove();
+                    }, 400);
+                }
+            }, duration);
+        }
+
+        // Заменяем стандартный alert на showToast
+        window.alert = function(message) {
+            showToast(message, 'warning');
+        };
+    </script>
+
+    <!-- ========== МОДУЛЬНЫЙ СКРИПТ ========== -->
     <script type="module">
         import {
             loginUser,
@@ -248,6 +361,8 @@
         window.getUserByEmail = getUserByEmail;
         window.addDSCoins = addDSCoins;
         window.createDSCoinOrder = createDSCoinOrder;
+
+        // ===== ДЕЛАЕМ ФУНКЦИИ ГЛОБАЛЬНЫМИ (ЧТОБЫ КНОПКИ РАБОТАЛИ) =====
         window.setDSCoinAmount = setDSCoinAmount;
         window.updateDSCoinPrice = updateDSCoinPrice;
 
@@ -297,60 +412,6 @@
                 showToast('❌ Ошибка: ' + result.error, 'error');
             }
         };
-
-        function updateAuthButton(user) {
-            const btn = document.getElementById('authBtn');
-            if (user) {
-                btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
-                btn.href = 'profile.html';
-            } else {
-                btn.textContent = '🔑 Вход';
-                btn.href = 'login.html';
-            }
-        }
-
-        async function updateDubInLink(user) {
-            const link = document.getElementById('dubInLink');
-            const sidebarLink = document.getElementById('sidebarDubIn');
-            if (!link) return;
-            if (user) {
-                const role = await getUserRole(user.uid);
-                const show = (role === 'dubber' || role === 'admin');
-                link.style.display = show ? 'inline-flex' : 'none';
-                if (sidebarLink) sidebarLink.style.display = show ? 'flex' : 'none';
-            } else {
-                link.style.display = 'none';
-                if (sidebarLink) sidebarLink.style.display = 'none';
-            }
-        }
-
-        async function updateAdminLinks(user) {
-            const adminLink = document.getElementById('adminLink');
-            const sidebarAdminOrders = document.getElementById('sidebarAdminOrders');
-            const sidebarAdminDSCoins = document.getElementById('sidebarAdminDSCoins');
-            if (user) {
-                const role = await getUserRole(user.uid);
-                const isAdminRole = role === 'admin';
-                if (adminLink) adminLink.style.display = isAdminRole ? 'inline-flex' : 'none';
-                if (sidebarAdminOrders) sidebarAdminOrders.style.display = isAdminRole ? 'flex' : 'none';
-                if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = isAdminRole ? 'flex' : 'none';
-            } else {
-                if (adminLink) adminLink.style.display = 'none';
-                if (sidebarAdminOrders) sidebarAdminOrders.style.display = 'none';
-                if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = 'none';
-            }
-        }
-
-        async function updateSidebarBalance(user) {
-            const balanceEl = document.getElementById('sidebarBalance');
-            if (!balanceEl) return;
-            if (user) {
-                const result = await getUserDSCoins(user.uid);
-                balanceEl.textContent = result.success ? result.coins : '0';
-            } else {
-                balanceEl.textContent = '0';
-            }
-        }
 
         // ===== ФУНКЦИИ АВТОРИЗАЦИИ =====
         window.showRegister = function() {
@@ -415,33 +476,60 @@
             }
         };
 
-        // ===== TOAST-УВЕДОМЛЕНИЯ =====
-        function showToast(message, type = 'info', duration = 3000) {
-            const container = document.getElementById('toastContainer');
-            if (!container) return;
-            const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
-            const toast = document.createElement('div');
-            toast.className = `toast-item ${type}`;
-            toast.innerHTML = `
-                <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
-                <span class="toast-text">${message}</span>
-                <button class="toast-close-btn" onclick="this.closest('.toast-item').remove()">✕</button>
-                <div class="toast-progress"></div>
-            `;
-            container.appendChild(toast);
-            setTimeout(() => {
-                if (toast.parentNode) {
-                    toast.classList.add('removing');
-                    setTimeout(() => {
-                        if (toast.parentNode) toast.remove();
-                    }, 400);
-                }
-            }, duration);
+        // ===== ОБНОВЛЕНИЕ КНОПКИ =====
+        function updateAuthButton(user) {
+            const btn = document.getElementById('authBtn');
+            if (user) {
+                btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
+                btn.href = 'profile.html';
+            } else {
+                btn.textContent = '🔑 Вход';
+                btn.href = 'login.html';
+            }
         }
 
-        window.alert = function(message) {
-            showToast(message, 'warning');
-        };
+        async function updateDubInLink(user) {
+            const link = document.getElementById('dubInLink');
+            const sidebarLink = document.getElementById('sidebarDubIn');
+            if (!link) return;
+            if (user) {
+                const role = await getUserRole(user.uid);
+                const show = (role === 'dubber' || role === 'admin');
+                link.style.display = show ? 'inline-flex' : 'none';
+                if (sidebarLink) sidebarLink.style.display = show ? 'flex' : 'none';
+            } else {
+                link.style.display = 'none';
+                if (sidebarLink) sidebarLink.style.display = 'none';
+            }
+        }
+
+        async function updateAdminLinks(user) {
+            const adminLink = document.getElementById('adminLink');
+            const sidebarAdminOrders = document.getElementById('sidebarAdminOrders');
+            const sidebarAdminDSCoins = document.getElementById('sidebarAdminDSCoins');
+            if (user) {
+                const role = await getUserRole(user.uid);
+                const isAdminRole = role === 'admin';
+                if (adminLink) adminLink.style.display = isAdminRole ? 'inline-flex' : 'none';
+                if (sidebarAdminOrders) sidebarAdminOrders.style.display = isAdminRole ? 'flex' : 'none';
+                if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = isAdminRole ? 'flex' : 'none';
+            } else {
+                if (adminLink) adminLink.style.display = 'none';
+                if (sidebarAdminOrders) sidebarAdminOrders.style.display = 'none';
+                if (sidebarAdminDSCoins) sidebarAdminDSCoins.style.display = 'none';
+            }
+        }
+
+        async function updateSidebarBalance(user) {
+            const balanceEl = document.getElementById('sidebarBalance');
+            if (!balanceEl) return;
+            if (user) {
+                const result = await getUserDSCoins(user.uid);
+                balanceEl.textContent = result.success ? result.coins : '0';
+            } else {
+                balanceEl.textContent = '0';
+            }
+        }
 
         const user = getCurrentUser();
         if (user) {
@@ -466,6 +554,7 @@
 
     <!-- ========== КОНТЕЙНЕР ДЛЯ TOAST-УВЕДОМЛЕНИЙ ========== -->
     <div id="toastContainer" class="toast-container"></div>
+
     <!-- ========== МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ ========== -->
     <div id="confirm-modal">
         <div class="modal-box">
@@ -478,6 +567,7 @@
             </div>
         </div>
     </div>
+
     <script>
         function showConfirm(message, title = 'Подтверждение', icon = '❓', isDanger = false) {
             return new Promise((resolve) => {
@@ -516,6 +606,7 @@
         window.confirmDelete = function(message) { return showConfirm(message, 'Удаление', '⚠️', true); };
         window.confirmAction = function(message, title = 'Подтверждение') { return showConfirm(message, title, '🤔', false); };
     </script>
+
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/site/sw.js')
