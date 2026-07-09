@@ -1518,39 +1518,54 @@ async function unequipStatus(uid) {
 }
 
 // Изменить текст статуса (платно)
-async function updateStatusText(uid, newText) {
-    try {
-        const userRef = doc(db, "users", uid);
-        const docSnap = await getDoc(userRef);
-        const equipped = docSnap.data().equippedStatus;
-        
-        // Если статус не надет — ошибка
-        if (!equipped) {
-            return { success: false, error: "Статус не надет" };
-        }
-
-        // Проверяем, что newText не undefined и не пустой
-        if (!newText || newText.trim() === "") {
-            return { success: false, error: "Текст статуса не может быть пустым" };
-        }
-
-        const cost = 15;
-        const coins = docSnap.data().dsCoins || 0;
-        if (coins < cost) {
-            return { success: false, error: `Недостаточно монет. Нужно ${cost}` };
-        }
-
-        // Списываем монеты и меняем текст
-        await updateDoc(userRef, {
-            dsCoins: increment(-cost),
-            "equippedStatus.text": newText.trim()
-        });
-
-        return { success: true, cost: cost };
-    } catch (error) {
-        return { success: false, error: error.message };
+window.saveStatusText = async function() {
+    const user = getCurrentUser();
+    if (!user) { showToast('❌ Войдите в аккаунт', 'error'); return; }
+    
+    const input = document.getElementById('statusTextInput');
+    const newText = input.value.trim();
+    
+    // Проверяем, что текст существует и не пустой
+    if (!newText || newText === '') {
+        showToast('❌ Текст не может быть пустым', 'error');
+        return;
     }
-}
+    if (newText.length > 50) {
+        showToast('❌ Максимум 50 символов', 'error');
+        return;
+    }
+
+    // Если есть pendingEquipItemId — значит мы надеваем статус
+    if (window._pendingEquipItemId) {
+        // Сначала сохраняем текст в профиль
+        const textResult = await updateUserProfile(user.uid, { statusText: newText });
+        if (!textResult.success) {
+            showToast('❌ Ошибка сохранения текста: ' + textResult.error, 'error');
+            window._pendingEquipItemId = null;
+            return;
+        }
+        // Надеваем статус
+        const equipResult = await equipStatus(user.uid, window._pendingEquipItemId);
+        window._pendingEquipItemId = null;
+        if (equipResult.success) {
+            showToast('✅ Статус надет!', 'success');
+            closeModal('m-status-text');
+            await loadInventory();
+        } else {
+            showToast('❌ ' + equipResult.error, 'error');
+        }
+    } else {
+        // Иначе — просто меняем текст (платно)
+        const result = await updateStatusText(user.uid, newText);
+        if (result.success) {
+            showToast(`✅ Текст статуса обновлён! Списано ${result.cost} монет`, 'success');
+            closeModal('m-status-text');
+            await loadInventory();
+        } else {
+            showToast('❌ ' + result.error, 'error');
+        }
+    }
+};
 
 // Подарить предмет другому пользователю
 async function giftItem(uid, targetUid, itemId) {
