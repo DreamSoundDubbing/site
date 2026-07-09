@@ -1716,33 +1716,25 @@ async function openLootbox(uid, price) {
         // Списываем монеты за лутбокс
         await updateDoc(userRef, { dsCoins: increment(-price) });
 
-        // Получаем текущий инвентарь
         let inventory = docSnap.data().inventory || [];
+        const MAX_STACK_SIZE = 25;
 
-        // ===== НАСТРОЙКА ШАНСОВ В ЗАВИСИМОСТИ ОТ ЦЕНЫ ЛУТБОКСА =====
-        let coinAmounts;
-        let itemChanceModifier;
-
+        // ===== ШАНСЫ =====
+        let coinAmounts, itemChanceModifier;
         if (price === 10) {
-            // Дешёвый бокс: монеты 2–20, шанс предмета низкий, только дешёвые предметы
             coinAmounts = [2, 5, 10, 15, 20];
             itemChanceModifier = 0.03;
         } else if (price === 50) {
-            // Средний бокс: монеты 10–100, шанс предмета средний
             coinAmounts = [10, 25, 50, 75, 100];
             itemChanceModifier = 0.08;
         } else if (price === 100) {
-            // Дорогой бокс: монеты 20–200, шанс предмета высокий
             coinAmounts = [20, 50, 100, 150, 200];
             itemChanceModifier = 0.15;
         } else {
             return { success: false, error: "Неизвестная цена лутбокса" };
         }
 
-        // Собираем все возможные призы: монеты + предметы
         let allPrizes = [];
-        
-        // Добавляем монеты
         coinAmounts.forEach(amount => {
             allPrizes.push({
                 type: 'coins',
@@ -1753,20 +1745,11 @@ async function openLootbox(uid, price) {
             });
         });
 
-        // Добавляем предметы из магазина
         SHOP_ITEMS.forEach(item => {
-            // Шанс выпадения зависит от цены бокса и цены предмета
             let baseChance = itemChanceModifier;
-            // Корректируем шанс: для дешёвых боксов дешёвые предметы выпадают чаще
-            if (price === 10 && item.price > 400) {
-                baseChance = baseChance * 0.3; // Уменьшаем шанс для дорогих предметов в дешёвом боксе
-            }
-            if (price === 100 && item.price < 500) {
-                baseChance = baseChance * 1.5; // Увеличиваем шанс для дешёвых предметов в дорогом боксе
-            }
-            // Ограничиваем шанс
+            if (price === 10 && item.price > 400) baseChance *= 0.3;
+            if (price === 100 && item.price < 500) baseChance *= 1.5;
             baseChance = Math.max(0.001, Math.min(0.2, baseChance));
-
             allPrizes.push({
                 type: 'item',
                 item: item,
@@ -1776,14 +1759,11 @@ async function openLootbox(uid, price) {
             });
         });
 
-        // Нормализуем шансы
         const totalChance = allPrizes.reduce((sum, p) => sum + p.chance, 0);
         allPrizes.forEach(p => p.chance = p.chance / totalChance);
 
-        // Выбираем приз
         let roll = Math.random();
         let selectedPrize = allPrizes[allPrizes.length - 1];
-
         for (const prize of allPrizes) {
             if (roll < prize.chance) {
                 selectedPrize = prize;
@@ -1792,38 +1772,31 @@ async function openLootbox(uid, price) {
             roll -= prize.chance;
         }
 
-        // Обрабатываем выигрыш
         let inventoryItem;
         let rewardText;
         let isStackOverflow = false;
 
         if (selectedPrize.type === 'coins') {
-            // Монеты всегда складываются в инвентарь как предмет
+            // Монеты в инвентарь
             inventoryItem = {
                 id: 'coin_' + Date.now(),
                 type: 'coin',
                 name: `${selectedPrize.amount} DSCoins`,
                 icon: '🪙',
                 amount: selectedPrize.amount,
-                price: selectedPrize.amount,
-                purchasedAt: serverTimestamp()
+                price: selectedPrize.amount
+                // serverTimestamp() УДАЛЕН
             };
             rewardText = `${selectedPrize.amount} 🪙`;
         } else {
-            // Предмет из магазина
             const shopItem = selectedPrize.item;
-            
-            // Проверяем, есть ли уже такой предмет в инвентаре
-            const existingItem = findItemInStack(inventory, shopItem.id);
-            
+            const existingItem = inventory.find(item => item.id === shopItem.id);
+
             if (existingItem) {
-                // Если предмет уже есть, увеличиваем стак
                 const currentCount = existingItem.count || 1;
-                
                 if (currentCount >= MAX_STACK_SIZE) {
-                    // Стак переполнен! Конвертируем в монеты
                     isStackOverflow = true;
-                    const refundAmount = Math.floor(shopItem.price * 0.9); // 90% от цены
+                    const refundAmount = Math.floor(shopItem.price * 0.9);
                     await updateDoc(userRef, { dsCoins: increment(refundAmount) });
                     rewardText = `🔥 Стак переполнен! Получено ${refundAmount} монет`;
                     return {
@@ -1834,7 +1807,7 @@ async function openLootbox(uid, price) {
                         refundAmount: refundAmount
                     };
                 } else {
-                    // Увеличиваем стак
+                    // Обновляем стак вручную
                     const newInventory = inventory.map(item => {
                         if (item.id === shopItem.id) {
                             return { ...item, count: currentCount + 1 };
@@ -1852,25 +1825,27 @@ async function openLootbox(uid, price) {
                     };
                 }
             } else {
-                // Создаём новый предмет с count: 1
+                // Новый предмет
                 inventoryItem = {
                     id: shopItem.id,
                     type: shopItem.type,
                     name: shopItem.name,
                     icon: shopItem.icon,
-                    price: shopItem.price,
-                    count: 1,
-                    purchasedAt: serverTimestamp()
+                    price: shopItem.price
+                    // serverTimestamp() УДАЛЕН
                 };
                 rewardText = shopItem.icon + ' ' + shopItem.name;
             }
         }
 
-        // Если это новый предмет или монеты, добавляем в инвентарь
+        // Добавляем в инвентарь через исправленную addItemToInventory (без arrayUnion)
         if (inventoryItem) {
-            await updateDoc(userRef, {
-                inventory: arrayUnion(inventoryItem)
-            });
+            const addResult = await addItemToInventory(uid, inventoryItem);
+            if (!addResult.success) {
+                // Возвращаем монеты если не удалось добавить
+                await updateDoc(userRef, { dsCoins: increment(price) });
+                return { success: false, error: addResult.error };
+            }
         }
 
         return {
