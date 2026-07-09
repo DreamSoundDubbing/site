@@ -2009,7 +2009,7 @@ export {
     removeItemFromInventory,
     equipStatus,
     unequipStatus,
-    updateStatusText,  // <--- ДОБАВЛЕНА ЭТА СТРОКА
+    updateStatusText,  // <--- ОБЯЗАТЕЛЬНО ДОБАВИТЬ СТРОКУ
     giftItem,
     sellItem,
     buyItem,

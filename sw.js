@@ -12,15 +12,15 @@ const ASSETS_TO_CACHE = [
   '/site/voice-order.html',
   '/site/admin-orders.html',
   '/site/privacy.html',
+  '/site/feedback.html',
+  '/site/inventory.html',
+  '/site/lootboxes.html',
   '/site/style.css',
-  '/site/logo1.jpg',
-  '/site/data.js',
   '/site/offline.html',
-  '/site/sw.js',
-  '/site/manifest.json'
+  '/site/manifest.json',
+  '/site/sw.js'
 ];
 
-// Установка сервис-воркера и кеширование файлов
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -31,7 +31,6 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Активация и очистка старого кеша
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -47,9 +46,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Обработка запросов: сначала из кеша, затем из сети
 self.addEventListener('fetch', (event) => {
-  // Игнорируем запросы к Firebase и сторонним API
   const url = new URL(event.request.url);
   if (url.pathname.startsWith('/__/auth/') || 
       url.hostname.includes('firebase') || 
@@ -72,7 +69,6 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         }).catch(() => {
-          // Если сеть упала — показываем офлайн-страницу
           if (event.request.headers.get('accept').includes('text/html')) {
             return caches.match('/site/offline.html');
           }
