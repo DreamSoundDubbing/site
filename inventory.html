@@ -680,5 +680,64 @@
             return showConfirm(message, title, '🤔', false);
         };
     </script>
+    <!-- ========== СКРИПТЫ САЙДБАРА И ТЕМЫ ========== -->
+<script>
+    // Тема
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
+    }
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        const btn = document.getElementById('themeToggle');
+        if (btn) btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
+    }
+    document.addEventListener('DOMContentLoaded', loadTheme);
+
+    // Сайдбар
+    function openSidebar() {
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebar-overlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebar-overlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeSidebar(); });
+
+    // Модалки
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    function openDSCoinOrder() { closeSidebar(); openModal('m-dscoin-order'); }
+    function openAdminDSCoins() { closeSidebar(); openModal('m-admin-dscoins'); }
+
+    // DSCoins
+    function setDSCoinAmount(amount) {
+        document.getElementById('dscoin-order-amount').value = amount;
+        updateDSCoinPrice();
+    }
+    function updateDSCoinPrice() {
+        const amount = parseInt(document.getElementById('dscoin-order-amount').value) || 0;
+        document.getElementById('dscoin-order-price').textContent = amount + ' ₽';
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const amountInput = document.getElementById('dscoin-order-amount');
+        if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
+    });
+</script>
 </body>
 </html>
