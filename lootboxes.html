@@ -34,11 +34,10 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
             padding: 20px;
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
         }
         .lootbox-card:hover {
             transform: translateY(-6px);
@@ -48,11 +47,7 @@
         .lootbox-card .loot-icon {
             font-size: 80px;
             margin-bottom: 10px;
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            transition: transform 0.3s ease;
         }
         .lootbox-card .loot-name {
             font-size: 22px;
@@ -92,20 +87,74 @@
         }
         .lootbox-card:hover .shine { opacity: 1; }
 
-        .details-btn {
-            background: transparent;
+        /* Кнопка Открыть */
+        .lootbox-btn {
+            margin-top: 12px;
+            padding: 8px 24px;
+            background: var(--gradient-primary);
+            color: #fff;
             border: none;
-            color: var(--text-muted);
+            border-radius: 50px;
+            font-weight: bold;
             font-size: 14px;
             cursor: pointer;
-            transition: color 0.3s;
-            text-decoration: underline;
-            margin-top: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(60, 80, 180, 0.2);
         }
-        .details-btn:hover {
-            color: var(--color-accent);
+        .lootbox-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(60, 80, 180, 0.4);
+        }
+        .lootbox-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
 
+        /* Анимация открытия */
+        .lootbox-card.opening .loot-icon {
+            animation: shake 0.5s ease-in-out;
+        }
+        .lootbox-card.opening .shine {
+            opacity: 1 !important;
+            animation: flash 0.8s ease;
+        }
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+            75% { transform: rotate(-5deg); }
+        }
+        @keyframes flash {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.5); }
+            100% { opacity: 0; transform: scale(2); }
+        }
+
+        /* Конфетти */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 99999;
+            overflow: hidden;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+            animation: confettiFall linear forwards;
+        }
+        @keyframes confettiFall {
+            0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+            100% { opacity: 0; transform: translateY(100vh) rotate(720deg) scale(0.5); }
+        }
+
+        /* Результат */
         .loot-result {
             margin-top: 30px;
             padding: 30px;
@@ -123,6 +172,18 @@
         .loot-result .result-text { font-size: 22px; font-weight: bold; color: var(--text-primary); }
         .loot-result .result-sub { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
         .loot-result .result-extra { color: var(--color-warning); font-size: 16px; margin-top: 6px; }
+
+        .details-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.3s;
+            text-decoration: underline;
+            margin-top: 10px;
+        }
+        .details-btn:hover { color: var(--color-accent); }
 
         /* Модалка с шансами */
         #chances-modal .modal-content { max-width: 500px; text-align: left; }
@@ -179,34 +240,28 @@
             <button class="sidebar-close-btn" onclick="closeSidebar()"><i class="fas fa-times"></i></button>
         </div>
         <nav class="sidebar-nav">
-    <div class="sidebar-section-label">Навигация</div>
-    <a href="index.html" class="sidebar-link"><i class="fas fa-home"></i><span>Главная</span></a>
-    <a href="titles.html" class="sidebar-link"><i class="fas fa-film"></i><span>Тайтлы</span></a>
-    <a href="sostav.html" class="sidebar-link"><i class="fas fa-users"></i><span>Состав</span></a>
-    <a href="search.html" class="sidebar-link"><i class="fas fa-search"></i><span>Поиск</span></a>
-
-    <div class="sidebar-divider"></div>
-    
-    <div class="sidebar-section-label">Личное</div>
-    <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
-    <a href="inventory.html" class="sidebar-link"><i class="fas fa-box"></i><span>Инвентарь</span></a>
-    <a href="lootboxes.html" class="sidebar-link"><i class="fas fa-gift"></i><span>Лутбоксы</span></a>
-    <a href="profile.html#playlists" class="sidebar-link"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
-    <a href="profile.html#shop" class="sidebar-link"><i class="fas fa-coins"></i><span>Магазин DSCoins</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
-
-    <div class="sidebar-divider"></div>
-    
-    <div class="sidebar-section-label">Студия</div>
-    <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
-    <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заказ озвучки</span></a>
-    <a href="#" class="sidebar-link" onclick="openDSCoinOrder(); return false;"><i class="fas fa-coins"></i><span>Купить DSCoins</span></a>
-
-    <div class="sidebar-divider"></div>
-    
-    <div class="sidebar-section-label">Администрирование</div>
-    <a href="admin-orders.html" class="sidebar-link" id="sidebarAdminOrders" style="display:none;"><i class="fas fa-clipboard-list"></i><span>Заказы</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
-    <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;"><i class="fas fa-coins"></i><span>Управление DSCoins</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
-</nav>
+            <div class="sidebar-section-label">Навигация</div>
+            <a href="index.html" class="sidebar-link"><i class="fas fa-home"></i><span>Главная</span></a>
+            <a href="titles.html" class="sidebar-link"><i class="fas fa-film"></i><span>Тайтлы</span></a>
+            <a href="sostav.html" class="sidebar-link"><i class="fas fa-users"></i><span>Состав</span></a>
+            <a href="search.html" class="sidebar-link"><i class="fas fa-search"></i><span>Поиск</span></a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-label">Личное</div>
+            <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
+            <a href="inventory.html" class="sidebar-link"><i class="fas fa-box"></i><span>Инвентарь</span></a>
+            <a href="lootboxes.html" class="sidebar-link"><i class="fas fa-gift"></i><span>Лутбоксы</span></a>
+            <a href="profile.html#playlists" class="sidebar-link"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
+            <a href="profile.html#shop" class="sidebar-link"><i class="fas fa-coins"></i><span>Магазин DSCoins</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-label">Студия</div>
+            <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
+            <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заказ озвучки</span></a>
+            <a href="#" class="sidebar-link" onclick="openDSCoinOrder(); return false;"><i class="fas fa-coins"></i><span>Купить DSCoins</span></a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-label">Администрирование</div>
+            <a href="admin-orders.html" class="sidebar-link" id="sidebarAdminOrders" style="display:none;"><i class="fas fa-clipboard-list"></i><span>Заказы</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+            <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;"><i class="fas fa-coins"></i><span>Управление DSCoins</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+        </nav>
         <div class="sidebar-footer">
             <div class="sidebar-socials">
                 <a href="#" target="_blank"><i class="fab fa-vk"></i></a>
@@ -251,26 +306,29 @@
                 </p>
 
                 <div class="lootbox-grid">
-                    <div class="lootbox-card common" onclick="openLootboxUI(10)">
+                    <div class="lootbox-card common" id="box-10">
                         <div class="shine"></div>
                         <div class="loot-badge">Обычный</div>
                         <div class="loot-icon">📦</div>
                         <div class="loot-name">Обычный бокс</div>
                         <div class="loot-price">🪙 10</div>
+                        <button class="lootbox-btn" onclick="openLootboxUI(10, 'box-10')">✨ Открыть</button>
                     </div>
-                    <div class="lootbox-card rare" onclick="openLootboxUI(50)">
+                    <div class="lootbox-card rare" id="box-50">
                         <div class="shine"></div>
                         <div class="loot-badge">Редкий</div>
                         <div class="loot-icon">✨</div>
                         <div class="loot-name">Редкий бокс</div>
                         <div class="loot-price">🪙 50</div>
+                        <button class="lootbox-btn" onclick="openLootboxUI(50, 'box-50')">✨ Открыть</button>
                     </div>
-                    <div class="lootbox-card epic" onclick="openLootboxUI(100)">
+                    <div class="lootbox-card epic" id="box-100">
                         <div class="shine"></div>
                         <div class="loot-badge">Эпический</div>
                         <div class="loot-icon">🌟</div>
                         <div class="loot-name">Эпический бокс</div>
                         <div class="loot-price">🪙 100</div>
+                        <button class="lootbox-btn" onclick="openLootboxUI(100, 'box-100')">✨ Открыть</button>
                     </div>
                 </div>
 
@@ -299,6 +357,95 @@
         <p style="color:var(--text-muted);">© 2026 Dream Sound Dubbing. Все права защищены.</p>
     </div>
 
+    <!-- ========== БАЗОВЫЕ СКРИПТЫ (САЙДБАР, ТЕМА, МОДАЛКИ) ========== -->
+    <script>
+        // ========== УПРАВЛЕНИЕ ТЕМОЙ ==========
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            const btn = document.getElementById('themeToggle');
+            if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
+        }
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const btn = document.getElementById('themeToggle');
+            if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
+        }
+        document.addEventListener('DOMContentLoaded', loadTheme);
+
+        // ========== САЙДБАР ==========
+        function openSidebar() {
+            document.getElementById('sidebar').classList.add('open');
+            document.getElementById('sidebar-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebar-overlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeSidebar();
+        });
+
+        // ========== МОДАЛКИ ==========
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        function openDSCoinOrder() { closeSidebar(); openModal('m-dscoin-order'); }
+        function openAdminDSCoins() { closeSidebar(); openModal('m-admin-dscoins'); }
+
+        // ========== DSCOINS ==========
+        function setDSCoinAmount(amount) {
+            document.getElementById('dscoin-order-amount').value = amount;
+            updateDSCoinPrice();
+        }
+        function updateDSCoinPrice() {
+            const amount = parseInt(document.getElementById('dscoin-order-amount').value) || 0;
+            const priceEl = document.getElementById('dscoin-order-price');
+            if (priceEl) priceEl.textContent = amount + ' ₽';
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const amountInput = document.getElementById('dscoin-order-amount');
+            if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
+        });
+
+        // ========== TOAST ==========
+        function showToast(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+            const toast = document.createElement('div');
+            toast.className = `toast-item ${type}`;
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
+                <span class="toast-text">${message}</span>
+                <button class="toast-close-btn" onclick="this.closest('.toast-item').remove()">✕</button>
+                <div class="toast-progress"></div>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.classList.add('removing');
+                    setTimeout(() => {
+                        if (toast.parentNode) toast.remove();
+                    }, 400);
+                }
+            }, duration);
+        }
+        window.alert = function(message) { showToast(message, 'warning'); };
+    </script>
+
+    <!-- ========== МОДУЛЬНЫЙ СКРИПТ ========== -->
     <script type="module">
         import {
             getCurrentUser,
@@ -311,8 +458,7 @@
             createDSCoinOrder,
             spendDSCoins,
             addItemToInventory,
-            openLootbox, // Эту функцию вы должны были добавить в firebase-config
-            getUserDSCoins
+            openLootbox
         } from './firebase-config.js';
 
         window.getUserDSCoins = getUserDSCoins;
@@ -380,42 +526,14 @@
             }
         }
 
-        function showToast(message, type = 'info', duration = 3000) {
-            const container = document.getElementById('toastContainer');
-            if (!container) return;
-            const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
-            const toast = document.createElement('div');
-            toast.className = `toast-item ${type}`;
-            toast.innerHTML = `
-                <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
-                <span class="toast-text">${message}</span>
-                <button class="toast-close-btn" onclick="this.closest('.toast-item').remove()">✕</button>
-                <div class="toast-progress"></div>
-            `;
-            container.appendChild(toast);
-            setTimeout(() => {
-                if (toast.parentNode) {
-                    toast.classList.add('removing');
-                    setTimeout(() => {
-                        if (toast.parentNode) toast.remove();
-                    }, 400);
-                }
-            }, duration);
-        }
-
-        window.alert = function(message) {
-            showToast(message, 'warning');
-        };
-
-        // ========== ОТКРЫТИЕ ЛУТБОКСА ==========
-        window.openLootboxUI = async function(price) {
+        // ========== ОТКРЫТИЕ ЛУТБОКСА С АНИМАЦИЕЙ ==========
+        window.openLootboxUI = async function(price, boxId) {
             const user = getCurrentUser();
             if (!user) {
                 showToast('❌ Войдите в аккаунт, чтобы открыть лутбокс', 'error');
                 return;
             }
 
-            // Проверяем баланс на балансе (не в инвентаре)
             const result = await getUserDSCoins(user.uid);
             if (!result.success) {
                 showToast('❌ Ошибка проверки баланса', 'error');
@@ -429,7 +547,17 @@
 
             if (!confirm(`Открыть лутбокс за ${price} монет?`)) return;
 
-            // Открываем лутбокс через функцию из firebase-config
+            // Анимация открытия
+            const box = document.getElementById(boxId);
+            const btn = box.querySelector('.lootbox-btn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Открывается...';
+            box.classList.add('opening');
+
+            // Ждём окончания анимации (0.8с)
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            // Открываем лутбокс
             const lootResult = await openLootbox(user.uid, price);
             
             const resultDiv = document.getElementById('lootResult');
@@ -438,38 +566,72 @@
             const subEl = document.getElementById('resultSub');
             const extraEl = document.getElementById('resultExtra');
 
+            // Сброс анимации
+            box.classList.remove('opening');
+            btn.disabled = false;
+            btn.textContent = '✨ Открыть';
+
             if (lootResult.success) {
-    if (lootResult.isStackOverflow) {
-        iconEl.textContent = '💥';
-        textEl.textContent = `Стак переполнен!`;
-        subEl.textContent = `У вас уже максимум ${MAX_STACK_SIZE} таких предметов`;
-        extraEl.textContent = `💸 Получено ${lootResult.refundAmount} монет`;
-        showToast(`💥 Стак переполнен! +${lootResult.refundAmount} монет`, 'warning');
-    } else if (lootResult.prize.type === 'coins') {
-        iconEl.textContent = '🪙';
-        textEl.textContent = `+${lootResult.prize.amount} монет!`;
-        subEl.textContent = `Вы выиграли ${lootResult.prize.amount} монет (предмет в инвентаре)`;
-        if (lootResult.prize.amount < price) {
-            extraEl.textContent = '😅 В этот раз не повезло!';
-        } else if (lootResult.prize.amount === price) {
-            extraEl.textContent = '🤝 Вернули своё!';
-        } else {
-            extraEl.textContent = '🎉 Отличный выигрыш!';
-        }
-        showToast(`🪙 +${lootResult.prize.amount} монет в инвентарь!`, 'success');
-    } else {
-        iconEl.textContent = lootResult.prize.item.icon;
-        textEl.textContent = `🎁 ${lootResult.prize.item.name}!`;
-        subEl.textContent = `Предмет отправлен в инвентарь`;
-        extraEl.textContent = `💰 Стоимость: ${lootResult.prize.item.price} монет`;
-        showToast(`🎁 Получен предмет: ${lootResult.prize.item.name}!`, 'success');
-    }
-    resultDiv.style.display = 'block';
-} else {
+                // Запускаем конфетти
+                launchConfetti();
+
+                if (lootResult.isStackOverflow) {
+                    iconEl.textContent = '💥';
+                    textEl.textContent = `Стак переполнен!`;
+                    subEl.textContent = `У вас уже максимум таких предметов`;
+                    extraEl.textContent = `💸 Получено ${lootResult.refundAmount} монет`;
+                    showToast(`💥 Стак переполнен! +${lootResult.refundAmount} монет`, 'warning');
+                } else if (lootResult.prize.type === 'coins') {
+                    iconEl.textContent = '🪙';
+                    textEl.textContent = `+${lootResult.prize.amount} монет!`;
+                    subEl.textContent = `Вы выиграли ${lootResult.prize.amount} монет`;
+                    if (lootResult.prize.amount < price) {
+                        extraEl.textContent = '😅 В этот раз не повезло!';
+                    } else if (lootResult.prize.amount === price) {
+                        extraEl.textContent = '🤝 Вернули своё!';
+                    } else {
+                        extraEl.textContent = '🎉 Отличный выигрыш!';
+                    }
+                    showToast(`🪙 +${lootResult.prize.amount} монет в инвентарь!`, 'success');
+                } else {
+                    iconEl.textContent = lootResult.prize.item.icon;
+                    textEl.textContent = `🎁 ${lootResult.prize.item.name}!`;
+                    subEl.textContent = `Предмет отправлен в инвентарь`;
+                    extraEl.textContent = `💰 Стоимость: ${lootResult.prize.item.price} монет`;
+                    showToast(`🎁 Получен предмет: ${lootResult.prize.item.name}!`, 'success');
+                }
+                resultDiv.style.display = 'block';
+            } else {
                 showToast('❌ Ошибка: ' + lootResult.error, 'error');
                 resultDiv.style.display = 'none';
             }
         };
+
+        // ========== КОНФЕТТИ ==========
+        function launchConfetti() {
+            const container = document.createElement('div');
+            container.className = 'confetti-container';
+            document.body.appendChild(container);
+
+            const colors = ['#ff6b6b', '#fbbf24', '#4CAF50', '#2196F3', '#9b59b6', '#ff9ff3'];
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-10px';
+                confetti.style.width = (Math.random() * 8 + 4) + 'px';
+                confetti.style.height = (Math.random() * 8 + 4) + 'px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                confetti.style.animationDelay = (Math.random() * 0.5) + 's';
+                container.appendChild(confetti);
+            }
+
+            setTimeout(() => {
+                container.remove();
+            }, 3000);
+        }
 
         // ========== ИНИЦИАЛИЗАЦИЯ ==========
         onAuthStateChangedListener(async (user) => {
@@ -500,6 +662,7 @@
 
     <!-- ========== TOAST КОНТЕЙНЕР ========== -->
     <div id="toastContainer" class="toast-container"></div>
+
     <!-- ========== МОДАЛКА ПОДТВЕРЖДЕНИЯ ========== -->
     <div id="confirm-modal">
         <div class="modal-box">
@@ -546,74 +709,20 @@
                 document.addEventListener('keydown', keyHandler);
             });
         }
-        window.confirm = function(message) {
-            return showConfirm(message, 'Подтверждение', '❓', false);
-        };
-        window.confirmDelete = function(message) {
-            return showConfirm(message, 'Удаление', '⚠️', true);
-        };
-        window.confirmAction = function(message, title = 'Подтверждение') {
-            return showConfirm(message, title, '🤔', false);
-        };
+        window.confirm = function(message) { return showConfirm(message, 'Подтверждение', '❓', false); };
+        window.confirmDelete = function(message) { return showConfirm(message, 'Удаление', '⚠️', true); };
+        window.confirmAction = function(message, title = 'Подтверждение') { return showConfirm(message, title, '🤔', false); };
     </script>
-    <!-- ========== СКРИПТЫ САЙДБАРА И ТЕМЫ ========== -->
-<script>
-    // Тема
-    function toggleTheme() {
-        const html = document.documentElement;
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        const btn = document.getElementById('themeToggle');
-        if (btn) btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
-    }
-    function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        const btn = document.getElementById('themeToggle');
-        if (btn) btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
-    }
-    document.addEventListener('DOMContentLoaded', loadTheme);
-
-    // Сайдбар
-    function openSidebar() {
-        document.getElementById('sidebar').classList.add('open');
-        document.getElementById('sidebar-overlay').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeSidebar() {
-        document.getElementById('sidebar').classList.remove('open');
-        document.getElementById('sidebar-overlay').classList.remove('active');
-        document.body.style.overflow = '';
-    }
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeSidebar(); });
-
-    // Модалки
-    function openModal(id) {
-        document.getElementById(id).classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeModal(id) {
-        document.getElementById(id).classList.remove('active');
-        document.body.style.overflow = '';
-    }
-    function openDSCoinOrder() { closeSidebar(); openModal('m-dscoin-order'); }
-    function openAdminDSCoins() { closeSidebar(); openModal('m-admin-dscoins'); }
-
-    // DSCoins
-    function setDSCoinAmount(amount) {
-        document.getElementById('dscoin-order-amount').value = amount;
-        updateDSCoinPrice();
-    }
-    function updateDSCoinPrice() {
-        const amount = parseInt(document.getElementById('dscoin-order-amount').value) || 0;
-        document.getElementById('dscoin-order-price').textContent = amount + ' ₽';
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-        const amountInput = document.getElementById('dscoin-order-amount');
-        if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
-    });
-</script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/site/sw.js')
+                .then(() => console.log('✅ Service Worker зарегистрирован'))
+                .catch(err => console.log('❌ Ошибка SW:', err));
+        }
+        window.addEventListener('online', () => { document.body.style.display = 'block'; });
+        window.addEventListener('offline', () => {
+            if (!navigator.onLine) { window.location.href = '/site/offline.html'; }
+        });
+    </script>
 </body>
 </html>
