@@ -1430,15 +1430,38 @@ async function claimDailyBonus(uid) {
 // ========== ИНВЕНТАРЬ И ПРЕДМЕТЫ ==========
 // ============================================================
 
-// Добавить предмет в инвентарь
 async function addItemToInventory(uid, item) {
     try {
         const userRef = doc(db, "users", uid);
-        await updateDoc(userRef, {
-            inventory: arrayUnion(item)
-        });
+        const docSnap = await getDoc(userRef);
+        if (!docSnap.exists()) {
+            return { success: false, error: "Пользователь не найден" };
+        }
+
+        let inventory = docSnap.data().inventory || [];
+
+        // Если у item есть serverTimestamp, убираем его (он не нужен в массиве)
+        // Мы просто удаляем поле purchasedAt, чтобы оно не ломало arrayUnion
+        const cleanItem = { ...item };
+        delete cleanItem.purchasedAt; // <--- ВАЖНО! Убираем serverTimestamp
+
+        // Проверяем, есть ли уже такой предмет (по id)
+        const existingIndex = inventory.findIndex(i => i.id === cleanItem.id);
+        
+        if (existingIndex !== -1) {
+            // Если есть, увеличиваем стак
+            inventory[existingIndex].count = (inventory[existingIndex].count || 1) + 1;
+        } else {
+            // Если нет, добавляем с count: 1 и без serverTimestamp
+            inventory.push({ ...cleanItem, count: 1 });
+        }
+
+        // Обновляем весь инвентарь целиком (без arrayUnion, через set/update)
+        await updateDoc(userRef, { inventory: inventory });
+
         return { success: true };
     } catch (error) {
+        console.error('Ошибка добавления в инвентарь:', error);
         return { success: false, error: error.message };
     }
 }
@@ -1582,13 +1605,13 @@ async function buyItem(uid, shopItem) {
 
         // Создаём предмет для инвентаря
         const newItem = {
-            id: shopItem.id + "_" + Date.now(),
-            type: shopItem.type, // 'status', 'background', 'frame', etc.
-            name: shopItem.name,
-            icon: shopItem.icon || '🎁',
-            price: shopItem.price,
-            purchasedAt: serverTimestamp()
-        };
+    id: shopItem.id + "_" + Date.now(),
+    type: shopItem.type,
+    name: shopItem.name,
+    icon: shopItem.icon || '🎁',
+    price: shopItem.price,
+    // purchasedAt: serverTimestamp() // <--- УДАЛИТЬ ЭТУ СТРОКУ
+};
 
         // Списываем монеты и добавляем в инвентарь
         await updateDoc(userRef, {
