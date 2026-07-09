@@ -458,7 +458,7 @@
             createDSCoinOrder,
             spendDSCoins,
             addItemToInventory,
-            openLootbox
+            openLootbox // Теперь эта функция точно экспортируется!
         } from './firebase-config.js';
 
         window.getUserDSCoins = getUserDSCoins;
@@ -527,6 +527,7 @@
         }
 
         // ========== ОТКРЫТИЕ ЛУТБОКСА С АНИМАЦИЕЙ ==========
+        // Делаем функцию глобальной, чтобы кнопка onclick работала
         window.openLootboxUI = async function(price, boxId) {
             const user = getCurrentUser();
             if (!user) {
