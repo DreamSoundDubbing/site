@@ -1752,6 +1752,41 @@ function findItemInStack(inventory, itemId) {
     return inventory.find(item => item.id === itemId);
 }
 
+// ============================================================
+// ========== ИЗМЕНЕНИЕ ТЕКСТА СТАТУСА (ПЛАТНОЕ) ==========
+// ============================================================
+
+async function updateStatusText(uid, newText) {
+    try {
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
+        const equipped = docSnap.data().equippedStatus;
+        if (!equipped) {
+            return { success: false, error: "Статус не надет" };
+        }
+
+        if (!newText || newText.trim() === '') {
+            return { success: false, error: "Текст не может быть пустым" };
+        }
+
+        const cost = 15; // Стоимость смены текста
+        const coins = docSnap.data().dsCoins || 0;
+        if (coins < cost) {
+            return { success: false, error: `Недостаточно монет. Нужно ${cost}` };
+        }
+
+        // Списываем монеты и меняем текст
+        await updateDoc(userRef, {
+            dsCoins: increment(-cost),
+            "equippedStatus.text": newText.trim()
+        });
+
+        return { success: true, cost: cost };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
 async function openLootbox(uid, price) {
     try {
         const userRef = doc(db, "users", uid);
