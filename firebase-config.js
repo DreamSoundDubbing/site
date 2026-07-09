@@ -1523,17 +1523,29 @@ async function updateStatusText(uid, newText) {
         const userRef = doc(db, "users", uid);
         const docSnap = await getDoc(userRef);
         const equipped = docSnap.data().equippedStatus;
-        if (!equipped) return { success: false, error: "Статус не надет" };
+        
+        // Если статус не надет — ошибка
+        if (!equipped) {
+            return { success: false, error: "Статус не надет" };
+        }
 
-        const cost = 15; // Стоимость смены текста (15 монет)
+        // Проверяем, что newText не undefined и не пустой
+        if (!newText || newText.trim() === "") {
+            return { success: false, error: "Текст статуса не может быть пустым" };
+        }
+
+        const cost = 15;
         const coins = docSnap.data().dsCoins || 0;
-        if (coins < cost) return { success: false, error: `Недостаточно монет. Нужно ${cost}` };
+        if (coins < cost) {
+            return { success: false, error: `Недостаточно монет. Нужно ${cost}` };
+        }
 
         // Списываем монеты и меняем текст
         await updateDoc(userRef, {
             dsCoins: increment(-cost),
-            "equippedStatus.text": newText
+            "equippedStatus.text": newText.trim()
         });
+
         return { success: true, cost: cost };
     } catch (error) {
         return { success: false, error: error.message };
