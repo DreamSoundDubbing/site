@@ -1567,6 +1567,29 @@ window.saveStatusText = async function() {
     }
 };
 
+// Изменить текст статуса (платно)
+async function updateStatusText(uid, newText) {
+    try {
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
+        const equipped = docSnap.data().equippedStatus;
+        if (!equipped) return { success: false, error: "Статус не надет" };
+
+        const cost = 150; // Стоимость смены текста
+        const coins = docSnap.data().dsCoins || 0;
+        if (coins < cost) return { success: false, error: `Недостаточно монет. Нужно ${cost}` };
+
+        // Списываем монеты и меняем текст
+        await updateDoc(userRef, {
+            dsCoins: increment(-cost),
+            "equippedStatus.text": newText
+        });
+        return { success: true, cost: cost };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
 // Подарить предмет другому пользователю
 async function giftItem(uid, targetUid, itemId) {
     try {
@@ -2009,8 +2032,8 @@ export {
     removeItemFromInventory,
     equipStatus,
     unequipStatus,
-    updateStatusText,  // <--- ОБЯЗАТЕЛЬНО ДОБАВИТЬ СТРОКУ
     giftItem,
+    updateStatusText,
     sellItem,
     buyItem,
     openLootbox
