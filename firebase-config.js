@@ -2009,11 +2009,11 @@ export {
     removeItemFromInventory,
     equipStatus,
     unequipStatus,
-    updateStatusText,
+    updateStatusText,  // <--- ДОБАВЛЕНА ЭТА СТРОКА
     giftItem,
     sellItem,
     buyItem,
-    openLootbox  // <--- ДОБАВЛЕНА ЭТА СТРОКА!
+    openLootbox
 };
 
 console.log('🔥 Модуль firebase-config.js загружен');
