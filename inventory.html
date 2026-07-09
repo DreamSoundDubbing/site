@@ -138,6 +138,15 @@
         .btn-edit-text:hover {
             background: var(--color-accent);
         }
+        /* Новая кнопка для монет */
+        .btn-claim {
+            background: var(--color-warning);
+            color: #fff;
+        }
+        .btn-claim:hover {
+            background: #fbbf24;
+            transform: scale(1.05);
+        }
         .empty-inventory {
             text-align: center;
             padding: 40px;
@@ -214,34 +223,28 @@
             <button class="sidebar-close-btn" onclick="closeSidebar()"><i class="fas fa-times"></i></button>
         </div>
         <nav class="sidebar-nav">
-    <div class="sidebar-section-label">Навигация</div>
-    <a href="index.html" class="sidebar-link"><i class="fas fa-home"></i><span>Главная</span></a>
-    <a href="titles.html" class="sidebar-link"><i class="fas fa-film"></i><span>Тайтлы</span></a>
-    <a href="sostav.html" class="sidebar-link"><i class="fas fa-users"></i><span>Состав</span></a>
-    <a href="search.html" class="sidebar-link"><i class="fas fa-search"></i><span>Поиск</span></a>
-
-    <div class="sidebar-divider"></div>
-    
-    <div class="sidebar-section-label">Личное</div>
-    <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
-    <a href="inventory.html" class="sidebar-link"><i class="fas fa-box"></i><span>Инвентарь</span></a>
-    <a href="lootboxes.html" class="sidebar-link"><i class="fas fa-gift"></i><span>Лутбоксы</span></a>
-    <a href="profile.html#playlists" class="sidebar-link"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
-    <a href="profile.html#shop" class="sidebar-link"><i class="fas fa-coins"></i><span>Магазин DSCoins</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
-
-    <div class="sidebar-divider"></div>
-    
-    <div class="sidebar-section-label">Студия</div>
-    <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
-    <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заказ озвучки</span></a>
-    <a href="#" class="sidebar-link" onclick="openDSCoinOrder(); return false;"><i class="fas fa-coins"></i><span>Купить DSCoins</span></a>
-
-    <div class="sidebar-divider"></div>
-    
-    <div class="sidebar-section-label">Администрирование</div>
-    <a href="admin-orders.html" class="sidebar-link" id="sidebarAdminOrders" style="display:none;"><i class="fas fa-clipboard-list"></i><span>Заказы</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
-    <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;"><i class="fas fa-coins"></i><span>Управление DSCoins</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
-</nav>
+            <div class="sidebar-section-label">Навигация</div>
+            <a href="index.html" class="sidebar-link"><i class="fas fa-home"></i><span>Главная</span></a>
+            <a href="titles.html" class="sidebar-link"><i class="fas fa-film"></i><span>Тайтлы</span></a>
+            <a href="sostav.html" class="sidebar-link"><i class="fas fa-users"></i><span>Состав</span></a>
+            <a href="search.html" class="sidebar-link"><i class="fas fa-search"></i><span>Поиск</span></a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-label">Личное</div>
+            <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
+            <a href="inventory.html" class="sidebar-link"><i class="fas fa-box"></i><span>Инвентарь</span></a>
+            <a href="lootboxes.html" class="sidebar-link"><i class="fas fa-gift"></i><span>Лутбоксы</span></a>
+            <a href="profile.html#playlists" class="sidebar-link"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
+            <a href="profile.html#shop" class="sidebar-link"><i class="fas fa-coins"></i><span>Магазин DSCoins</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-label">Студия</div>
+            <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
+            <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заказ озвучки</span></a>
+            <a href="#" class="sidebar-link" onclick="openDSCoinOrder(); return false;"><i class="fas fa-coins"></i><span>Купить DSCoins</span></a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-label">Администрирование</div>
+            <a href="admin-orders.html" class="sidebar-link" id="sidebarAdminOrders" style="display:none;"><i class="fas fa-clipboard-list"></i><span>Заказы</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+            <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;"><i class="fas fa-coins"></i><span>Управление DSCoins</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+        </nav>
         <div class="sidebar-footer">
             <div class="sidebar-socials">
                 <a href="#" target="_blank"><i class="fab fa-vk"></i></a>
@@ -450,38 +453,38 @@
                 `;
             } else {
                 inventory.forEach(item => {
-    const isEquipped = equipped && equipped.id === item.id;
-    const count = item.count || 1;
-    html += `
-        <div class="item-card">
-            ${isEquipped ? '<div class="equipped-badge">✅ Надето</div>' : ''}
-            <span class="icon">${item.icon || '🎁'}</span>
-            <div class="name">${item.name || 'Без названия'}</div>
-            <div class="type-badge">${item.type || 'предмет'} ${count > 1 ? `x${count}` : ''}</div>
-            <div class="item-actions">
-                ${item.type === 'status' ? `
-                    ${isEquipped ? `
-                        <button class="btn-unequip" onclick="handleUnequip('${item.id}')">Снять</button>
-                        <button class="btn-edit-text" onclick="handleChangeStatusText()">✏️ Текст</button>
-                    ` : `
-                        <button class="btn-equip" onclick="handleEquip('${item.id}')">Надеть</button>
-                    `}
-                ` : ''}
-                ${item.type === 'color_nick' ? `
-                    <button class="btn-equip" onclick="handleEquipColor()">🎨 Использовать</button>
-                ` : ''}
-                ${item.type === 'prefix' ? `
-                    <button class="btn-equip" onclick="handleEquipPrefix()">🏷️ Использовать</button>
-                ` : ''}
-                ${item.type === 'coin' ? `
-                    <button class="btn-sell" onclick="handleSellCoin('${item.id}')">💰 Продать</button>
-                ` : ''}
-                <button class="btn-gift" onclick="openGiftModal('${item.id}')">🎁 Подарить</button>
-                <button class="btn-sell" onclick="handleSell('${item.id}')">💰 Продать</button>
-            </div>
-        </div>
-    `;
-});
+                    const isEquipped = equipped && equipped.id === item.id;
+                    const count = item.count || 1;
+                    html += `
+                        <div class="item-card">
+                            ${isEquipped ? '<div class="equipped-badge">✅ Надето</div>' : ''}
+                            <span class="icon">${item.icon || '🎁'}</span>
+                            <div class="name">${item.name || 'Без названия'}</div>
+                            <div class="type-badge">${item.type || 'предмет'} ${count > 1 ? `x${count}` : ''}</div>
+                            <div class="item-actions">
+                                ${item.type === 'status' ? `
+                                    ${isEquipped ? `
+                                        <button class="btn-unequip" onclick="handleUnequip('${item.id}')">Снять</button>
+                                        <button class="btn-edit-text" onclick="handleChangeStatusText()">✏️ Текст</button>
+                                    ` : `
+                                        <button class="btn-equip" onclick="handleEquip('${item.id}')">Надеть</button>
+                                    `}
+                                ` : ''}
+                                ${item.type === 'color_nick' ? `
+                                    <button class="btn-equip" onclick="handleEquipColor()">🎨 Использовать</button>
+                                ` : ''}
+                                ${item.type === 'prefix' ? `
+                                    <button class="btn-equip" onclick="handleEquipPrefix()">🏷️ Использовать</button>
+                                ` : ''}
+                                ${item.type === 'coin' ? `
+                                    <button class="btn-claim" onclick="handleClaimCoin('${item.id}', ${item.amount})">💰 Получить</button>
+                                ` : ''}
+                                <button class="btn-gift" onclick="openGiftModal('${item.id}')">🎁 Подарить</button>
+                                <button class="btn-sell" onclick="handleSell('${item.id}')">💰 Продать</button>
+                            </div>
+                        </div>
+                    `;
+                });
             }
 
             html += `</div>`;
@@ -548,6 +551,32 @@
                 await loadInventory();
             } else {
                 showToast('❌ ' + result.error, 'error');
+            }
+        };
+
+        // НОВАЯ ФУНКЦИЯ: Получить монеты на баланс
+        window.handleClaimCoin = async function(itemId, amount) {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('❌ Войдите в аккаунт', 'error');
+                return;
+            }
+            if (!confirm(`Зачислить ${amount} монет на баланс?`)) return;
+
+            // 1. Удаляем предмет из инвентаря
+            const removeResult = await removeItemFromInventory(user.uid, itemId);
+            if (!removeResult.success) {
+                showToast('❌ Ошибка удаления предмета: ' + removeResult.error, 'error');
+                return;
+            }
+
+            // 2. Зачисляем монеты на баланс
+            const addResult = await addDSCoins(user.uid, amount, 'Получение монет из инвентаря');
+            if (addResult.success) {
+                showToast(`✅ ${amount} монет зачислено на баланс!`, 'success');
+                await loadInventory();
+            } else {
+                showToast('❌ Ошибка зачисления монет: ' + addResult.error, 'error');
             }
         };
 
@@ -670,74 +699,9 @@
                 document.addEventListener('keydown', keyHandler);
             });
         }
-        window.confirm = function(message) {
-            return showConfirm(message, 'Подтверждение', '❓', false);
-        };
-        window.confirmDelete = function(message) {
-            return showConfirm(message, 'Удаление', '⚠️', true);
-        };
-        window.confirmAction = function(message, title = 'Подтверждение') {
-            return showConfirm(message, title, '🤔', false);
-        };
+        window.confirm = function(message) { return showConfirm(message, 'Подтверждение', '❓', false); };
+        window.confirmDelete = function(message) { return showConfirm(message, 'Удаление', '⚠️', true); };
+        window.confirmAction = function(message, title = 'Подтверждение') { return showConfirm(message, title, '🤔', false); };
     </script>
-    <!-- ========== СКРИПТЫ САЙДБАРА И ТЕМЫ ========== -->
-<script>
-    // Тема
-    function toggleTheme() {
-        const html = document.documentElement;
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        const btn = document.getElementById('themeToggle');
-        if (btn) btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
-    }
-    function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        const btn = document.getElementById('themeToggle');
-        if (btn) btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
-    }
-    document.addEventListener('DOMContentLoaded', loadTheme);
-
-    // Сайдбар
-    function openSidebar() {
-        document.getElementById('sidebar').classList.add('open');
-        document.getElementById('sidebar-overlay').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeSidebar() {
-        document.getElementById('sidebar').classList.remove('open');
-        document.getElementById('sidebar-overlay').classList.remove('active');
-        document.body.style.overflow = '';
-    }
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeSidebar(); });
-
-    // Модалки
-    function openModal(id) {
-        document.getElementById(id).classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeModal(id) {
-        document.getElementById(id).classList.remove('active');
-        document.body.style.overflow = '';
-    }
-    function openDSCoinOrder() { closeSidebar(); openModal('m-dscoin-order'); }
-    function openAdminDSCoins() { closeSidebar(); openModal('m-admin-dscoins'); }
-
-    // DSCoins
-    function setDSCoinAmount(amount) {
-        document.getElementById('dscoin-order-amount').value = amount;
-        updateDSCoinPrice();
-    }
-    function updateDSCoinPrice() {
-        const amount = parseInt(document.getElementById('dscoin-order-amount').value) || 0;
-        document.getElementById('dscoin-order-price').textContent = amount + ' ₽';
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-        const amountInput = document.getElementById('dscoin-order-amount');
-        if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
-    });
-</script>
 </body>
 </html>
