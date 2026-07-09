@@ -313,7 +313,7 @@
         <p style="color:var(--text-muted);">© 2026 Dream Sound Dubbing. Все права защищены.</p>
     </div>
 
-    <script type="module">
+        <script type="module">
         import {
             getCurrentUser,
             onAuthStateChangedListener,
@@ -481,9 +481,9 @@
                                 ${item.type === 'status' ? `
                                     ${isEquipped ? `
                                         <button class="btn-unequip" onclick="handleUnequip('${item.id}')">Снять</button>
-                                        <button class="btn-edit-text" onclick="handleChangeStatusText()">✏️ Текст</button>
+                                        <button class="btn-edit-text" onclick="handleChangeStatusText('${equipped.text || 'Мой статус'}')">✏️ Текст</button>
                                     ` : `
-                                        <button class="btn-equip" onclick="handleEquip('${item.id}')">Надеть</button>
+                                        <button class="btn-equip" onclick="handleEquip('${item.id}', '${statusText}')">Надеть</button>
                                     `}
                                 ` : ''}
                                 ${item.type === 'color_nick' ? `
@@ -508,19 +508,22 @@
         }
 
         // ========== ДЕЙСТВИЯ С ПРЕДМЕТАМИ ==========
-        window.handleEquip = async function(itemId) {
+        // === ИЗМЕНЕНИЕ: Новая, более надёжная логика ===
+        
+        // Глобальная переменная для хранения ID предмета, который надеваем
+        window._pendingEquipItemId = null;
+
+        window.handleEquip = function(itemId, currentStatusText) {
             const user = getCurrentUser();
             if (!user) return;
             const item = currentUserData.inventory.find(i => i.id === itemId);
             if (!item) { showToast('❌ Предмет не найден', 'error'); return; }
             
-            // Открываем модалку для ввода текста
-            const currentText = currentUserData.statusText || 'Мой статус';
-            document.getElementById('statusTextInput').value = currentText;
-            
-            // Сохраняем itemId в глобальную переменную, чтобы знать, что надеваем
+            // Устанавливаем pending ID для надевания
             window._pendingEquipItemId = itemId;
             
+            // Открываем модалку для ввода текста
+            document.getElementById('statusTextInput').value = currentStatusText || 'Мой статус';
             openModal('m-status-text');
         };
 
@@ -537,14 +540,14 @@
             }
         };
 
-        window.handleChangeStatusText = function() {
+        window.handleChangeStatusText = function(currentText) {
             const user = getCurrentUser();
             if (!user) return;
             
-            const currentText = currentUserData.statusText || 'Мой статус';
-            document.getElementById('statusTextInput').value = currentText;
             // Сбрасываем pendingEquipItemId, чтобы это было просто изменение текста
             window._pendingEquipItemId = null;
+            
+            document.getElementById('statusTextInput').value = currentText || 'Мой статус';
             openModal('m-status-text');
         };
 
@@ -555,7 +558,7 @@
             const input = document.getElementById('statusTextInput');
             const newText = input.value.trim();
             
-            if (!newText) {
+            if (!newText || newText === '') {
                 showToast('❌ Текст не может быть пустым', 'error');
                 return;
             }
@@ -566,6 +569,9 @@
 
             // Если есть pendingEquipItemId — значит мы надеваем статус
             if (window._pendingEquipItemId) {
+                const itemId = window._pendingEquipItemId;
+                showToast('⏳ Надеваем статус...', 'info');
+                
                 // Сначала сохраняем текст в профиль
                 const textResult = await updateUserProfile(user.uid, { statusText: newText });
                 if (!textResult.success) {
@@ -573,18 +579,22 @@
                     window._pendingEquipItemId = null;
                     return;
                 }
+                
                 // Надеваем статус
-                const equipResult = await equipStatus(user.uid, window._pendingEquipItemId);
+                const equipResult = await equipStatus(user.uid, itemId, newText);
+                // Сбрасываем pending ТОЛЬКО после попытки надевания
                 window._pendingEquipItemId = null;
+                
                 if (equipResult.success) {
                     showToast('✅ Статус надет!', 'success');
                     closeModal('m-status-text');
                     await loadInventory();
                 } else {
-                    showToast('❌ ' + equipResult.error, 'error');
+                    showToast('❌ Ошибка надевания статуса: ' + equipResult.error, 'error');
                 }
             } else {
                 // Иначе — просто меняем текст (платно)
+                showToast('⏳ Изменяем текст статуса...', 'info');
                 const result = await updateStatusText(user.uid, newText);
                 if (result.success) {
                     showToast(`✅ Текст статуса обновлён! Списано ${result.cost} монет`, 'success');
@@ -688,7 +698,6 @@
             await loadInventory();
         });
     </script>
-
     <!-- ========== TOAST КОНТЕЙНЕР ========== -->
     <div id="toastContainer" class="toast-container"></div>
     <!-- ========== МОДАЛКА ПОДТВЕРЖДЕНИЯ ========== -->

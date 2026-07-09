@@ -1518,54 +1518,36 @@ async function unequipStatus(uid) {
 }
 
 // Изменить текст статуса (платно)
-window.saveStatusText = async function() {
-    const user = getCurrentUser();
-    if (!user) { showToast('❌ Войдите в аккаунт', 'error'); return; }
-    
-    const input = document.getElementById('statusTextInput');
-    const newText = input.value.trim();
-    
-    // Проверяем, что текст существует и не пустой
-    if (!newText || newText === '') {
-        showToast('❌ Текст не может быть пустым', 'error');
-        return;
-    }
-    if (newText.length > 50) {
-        showToast('❌ Максимум 50 символов', 'error');
-        return;
-    }
+async function updateStatusText(uid, newText) {
+    try {
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
+        const equipped = docSnap.data().equippedStatus;
+        if (!equipped) {
+            return { success: false, error: "Статус не надет" };
+        }
 
-    // Если есть pendingEquipItemId — значит мы надеваем статус
-    if (window._pendingEquipItemId) {
-        // Сначала сохраняем текст в профиль
-        const textResult = await updateUserProfile(user.uid, { statusText: newText });
-        if (!textResult.success) {
-            showToast('❌ Ошибка сохранения текста: ' + textResult.error, 'error');
-            window._pendingEquipItemId = null;
-            return;
+        if (!newText || newText.trim() === '') {
+            return { success: false, error: "Текст не может быть пустым" };
         }
-        // Надеваем статус
-        const equipResult = await equipStatus(user.uid, window._pendingEquipItemId);
-        window._pendingEquipItemId = null;
-        if (equipResult.success) {
-            showToast('✅ Статус надет!', 'success');
-            closeModal('m-status-text');
-            await loadInventory();
-        } else {
-            showToast('❌ ' + equipResult.error, 'error');
+
+        const cost = 15; // Стоимость смены текста
+        const coins = docSnap.data().dsCoins || 0;
+        if (coins < cost) {
+            return { success: false, error: `Недостаточно монет. Нужно ${cost}` };
         }
-    } else {
-        // Иначе — просто меняем текст (платно)
-        const result = await updateStatusText(user.uid, newText);
-        if (result.success) {
-            showToast(`✅ Текст статуса обновлён! Списано ${result.cost} монет`, 'success');
-            closeModal('m-status-text');
-            await loadInventory();
-        } else {
-            showToast('❌ ' + result.error, 'error');
-        }
+
+        // Списываем монеты и меняем текст
+        await updateDoc(userRef, {
+            dsCoins: increment(-cost),
+            "equippedStatus.text": newText.trim()
+        });
+
+        return { success: true, cost: cost };
+    } catch (error) {
+        return { success: false, error: error.message };
     }
-};
+}
 
 // Подарить предмет другому пользователю
 async function giftItem(uid, targetUid, itemId) {
@@ -1710,10 +1692,6 @@ async function transferCoins(senderUid, receiverUid, amount) {
 // ========== ЛУТБОКСЫ (ОБНОВЛЕННАЯ ЛОГИКА) ==========
 // ============================================================
 
-// ============================================================
-// ========== НОВАЯ ЛОГИКА ЛУТБОКСОВ СО СТАКАМИ ==========
-// ============================================================
-
 // Список всех предметов магазина
 const SHOP_ITEMS = [
     { id: 'color_nick', type: 'color_nick', name: '🎨 Цвет ника', icon: '🎨', price: 500 },
@@ -1727,41 +1705,6 @@ const MAX_STACK_SIZE = 25;
 // Вспомогательная функция: найти предмет в стаке
 function findItemInStack(inventory, itemId) {
     return inventory.find(item => item.id === itemId);
-}
-
-// ============================================================
-// ========== ИЗМЕНЕНИЕ ТЕКСТА СТАТУСА (ПЛАТНОЕ) ==========
-// ============================================================
-
-async function updateStatusText(uid, newText) {
-    try {
-        const userRef = doc(db, "users", uid);
-        const docSnap = await getDoc(userRef);
-        const equipped = docSnap.data().equippedStatus;
-        if (!equipped) {
-            return { success: false, error: "Статус не надет" };
-        }
-
-        if (!newText || newText.trim() === '') {
-            return { success: false, error: "Текст не может быть пустым" };
-        }
-
-        const cost = 150; // Стоимость смены текста
-        const coins = docSnap.data().dsCoins || 0;
-        if (coins < cost) {
-            return { success: false, error: `Недостаточно монет. Нужно ${cost}` };
-        }
-
-        // Списываем монеты и меняем текст
-        await updateDoc(userRef, {
-            dsCoins: increment(-cost),
-            "equippedStatus.text": newText.trim()
-        });
-
-        return { success: true, cost: cost };
-    } catch (error) {
-        return { success: false, error: error.message };
-    }
 }
 
 async function openLootbox(uid, price) {
@@ -1959,10 +1902,6 @@ async function sellCoinFromInventory(uid, itemId) {
 // ========== ЭКСПОРТ ==========
 // ============================================================
 
-// ============================================================
-// ========== ЭКСПОРТ ==========
-// ============================================================
-
 export {
     auth,
     db,
@@ -2052,4 +1991,91 @@ export {
     transferCoins
 };
 
-console.log('🔥 Модуль firebase-config.js загружен');
+// === ИЗМЕНЕНИЕ: ЯВНОЕ ПРИСВОЕНИЕ ВСЕХ ФУНКЦИЙ В GLOBAL SCOPE ===
+// Это гарантирует, что все функции будут доступны через window.имя_функции
+// и решит проблему с кешированием на страницах.
+window.registerUser = registerUser;
+window.loginUser = loginUser;
+window.logoutUser = logoutUser;
+window.getCurrentUser = getCurrentUser;
+window.onAuthStateChangedListener = onAuthStateChangedListener;
+window.resetPassword = resetPassword;
+window.getUserData = getUserData;
+window.getUserByEmail = getUserByEmail;
+window.getUserRole = getUserRole;
+window.updateUserProfile = updateUserProfile;
+window.updateUserRole = updateUserRole;
+window.getAllUsers = getAllUsers;
+window.isAdmin = isAdmin;
+window.isDubber = isDubber;
+window.toggleSubscribe = toggleSubscribe;
+window.getSubscribersCount = getSubscribersCount;
+window.isSubscribed = isSubscribed;
+window.checkAndAddAchievement = checkAndAddAchievement;
+window.addCustomAchievement = addCustomAchievement;
+window.addComment = addComment;
+window.getComments = getComments;
+window.deleteComment = deleteComment;
+window.trackView = trackView;
+window.getAverageRating = getAverageRating;
+window.getTitles = getTitles;
+window.getTitleById = getTitleById;
+window.addTitle = addTitle;
+window.updateTitle = updateTitle;
+window.deleteTitle = deleteTitle;
+window.getVoices = getVoices;
+window.getVoiceById = getVoiceById;
+window.addVoice = addVoice;
+window.updateVoice = updateVoice;
+window.deleteVoice = deleteVoice;
+window.getRoles = getRoles;
+window.getRolesByTitleId = getRolesByTitleId;
+window.getRolesByVoiceId = getRolesByVoiceId;
+window.addRole = addRole;
+window.updateRole = updateRole;
+window.deleteRole = deleteRole;
+window.getDubMaterials = getDubMaterials;
+window.addDubMaterial = addDubMaterial;
+window.removeDubMaterial = removeDubMaterial;
+window.initializeData = initializeData;
+window.createVoiceOrder = createVoiceOrder;
+window.getVoiceOrders = getVoiceOrders;
+window.updateVoiceOrder = updateVoiceOrder;
+window.getUserDSCoins = getUserDSCoins;
+window.addDSCoins = addDSCoins;
+window.spendDSCoins = spendDSCoins;
+window.getDSCoinTransactions = getDSCoinTransactions;
+window.createDSCoinOrder = createDSCoinOrder;
+window.getDSCoinOrders = getDSCoinOrders;
+window.updateDSCoinOrder = updateDSCoinOrder;
+window.getPlaylists = getPlaylists;
+window.createPlaylist = createPlaylist;
+window.updatePlaylist = updatePlaylist;
+window.deletePlaylist = deletePlaylist;
+window.addToPlaylist = addToPlaylist;
+window.removeFromPlaylist = removeFromPlaylist;
+window.getWallPosts = getWallPosts;
+window.addWallPost = addWallPost;
+window.deleteWallPost = deleteWallPost;
+window.updateWallVisibility = updateWallVisibility;
+window.getShopPrices = getShopPrices;
+window.updateShopPrices = updateShopPrices;
+window.purchaseColorNick = purchaseColorNick;
+window.purchasePrefix = purchasePrefix;
+window.purchaseAchSlot = purchaseAchSlot;
+window.updateTitleRating = updateTitleRating;
+window.trackTitleView = trackTitleView;
+window.getTitleViews = getTitleViews;
+window.claimDailyBonus = claimDailyBonus;
+window.addItemToInventory = addItemToInventory;
+window.removeItemFromInventory = removeItemFromInventory;
+window.equipStatus = equipStatus;
+window.unequipStatus = unequipStatus;
+window.giftItem = giftItem;
+window.updateStatusText = updateStatusText;
+window.sellItem = sellItem;
+window.buyItem = buyItem;
+window.openLootbox = openLootbox;
+window.transferCoins = transferCoins;
+
+console.log('🔥 Модуль firebase-config.js загружен и все функции экспортированы в window');
