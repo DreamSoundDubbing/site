@@ -138,7 +138,6 @@
         .btn-edit-text:hover {
             background: var(--color-accent);
         }
-        /* Новая кнопка для монет */
         .btn-claim {
             background: var(--color-warning);
             color: #fff;
@@ -265,6 +264,25 @@
             <input type="hidden" id="giftItemId" value="">
             <button class="submit-btn" onclick="submitGift()">📤 Отправить подарок</button>
             <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('gift-modal')">Отмена</button>
+        </div>
+    </div>
+
+    <!-- ===== МОДАЛКА ИЗМЕНЕНИЯ ТЕКСТА СТАТУСА ===== -->
+    <div class="modal-overlay" id="m-status-text">
+        <div class="modal-content" style="max-width:400px;">
+            <button class="modal-close" onclick="closeModal('m-status-text')">✕</button>
+            <h3>✏️ Изменить текст статуса</h3>
+            <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">
+                Введите новый текст для облачка. Стоимость: <strong style="color:#fbbf24;">15</strong> DSCoins.
+            </p>
+            <div class="form-group">
+                <label>Новый текст статуса</label>
+                <input type="text" id="statusTextInput" placeholder="Введите текст..." maxlength="50" style="width:100%;padding:10px 14px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);font-size:14px;box-sizing:border-box;">
+            </div>
+            <div style="display:flex;gap:10px;margin-top:12px;">
+                <button class="submit-btn" style="flex:1;" onclick="saveStatusText()">💾 Сохранить</button>
+                <button class="cancel-btn" style="flex:1;" onclick="closeModal('m-status-text')">Отмена</button>
+            </div>
         </div>
     </div>
 
@@ -409,9 +427,7 @@
             }, duration);
         }
 
-        window.alert = function(message) {
-            showToast(message, 'warning');
-        };
+        window.alert = function(message) { showToast(message, 'warning'); };
 
         // ========== ИНВЕНТАРЬ ==========
         async function loadInventory() {
@@ -493,20 +509,20 @@
 
         // ========== ДЕЙСТВИЯ С ПРЕДМЕТАМИ ==========
         window.handleEquip = async function(itemId) {
-    const user = getCurrentUser();
-    if (!user) return;
-    const item = currentUserData.inventory.find(i => i.id === itemId);
-    if (!item) { showToast('❌ Предмет не найден', 'error'); return; }
-    
-    // Открываем модалку для ввода текста
-    const currentText = currentUserData.statusText || 'Мой статус';
-    document.getElementById('statusTextInput').value = currentText;
-    
-    // Сохраняем itemId в глобальную переменную, чтобы знать, что надеваем
-    window._pendingEquipItemId = itemId;
-    
-    openModal('m-status-text');
-};
+            const user = getCurrentUser();
+            if (!user) return;
+            const item = currentUserData.inventory.find(i => i.id === itemId);
+            if (!item) { showToast('❌ Предмет не найден', 'error'); return; }
+            
+            // Открываем модалку для ввода текста
+            const currentText = currentUserData.statusText || 'Мой статус';
+            document.getElementById('statusTextInput').value = currentText;
+            
+            // Сохраняем itemId в глобальную переменную, чтобы знать, что надеваем
+            window._pendingEquipItemId = itemId;
+            
+            openModal('m-status-text');
+        };
 
         window.handleUnequip = async function(itemId) {
             const user = getCurrentUser();
@@ -522,20 +538,67 @@
         };
 
         window.handleChangeStatusText = function() {
-    const user = getCurrentUser();
-    if (!user) return;
-    
-    const currentText = currentUserData.statusText || 'Мой статус';
-    document.getElementById('statusTextInput').value = currentText;
-    openModal('m-status-text');
-};
-        // НОВАЯ ФУНКЦИЯ: Получить монеты на баланс
-        window.handleClaimCoin = async function(itemId, amount) {
             const user = getCurrentUser();
-            if (!user) {
-                showToast('❌ Войдите в аккаунт', 'error');
+            if (!user) return;
+            
+            const currentText = currentUserData.statusText || 'Мой статус';
+            document.getElementById('statusTextInput').value = currentText;
+            // Сбрасываем pendingEquipItemId, чтобы это было просто изменение текста
+            window._pendingEquipItemId = null;
+            openModal('m-status-text');
+        };
+
+        window.saveStatusText = async function() {
+            const user = getCurrentUser();
+            if (!user) { showToast('❌ Войдите в аккаунт', 'error'); return; }
+            
+            const input = document.getElementById('statusTextInput');
+            const newText = input.value.trim();
+            
+            if (!newText) {
+                showToast('❌ Текст не может быть пустым', 'error');
                 return;
             }
+            if (newText.length > 50) {
+                showToast('❌ Максимум 50 символов', 'error');
+                return;
+            }
+
+            // Если есть pendingEquipItemId — значит мы надеваем статус
+            if (window._pendingEquipItemId) {
+                // Сначала сохраняем текст в профиль
+                const textResult = await updateUserProfile(user.uid, { statusText: newText });
+                if (!textResult.success) {
+                    showToast('❌ Ошибка сохранения текста: ' + textResult.error, 'error');
+                    window._pendingEquipItemId = null;
+                    return;
+                }
+                // Надеваем статус
+                const equipResult = await equipStatus(user.uid, window._pendingEquipItemId);
+                window._pendingEquipItemId = null;
+                if (equipResult.success) {
+                    showToast('✅ Статус надет!', 'success');
+                    closeModal('m-status-text');
+                    await loadInventory();
+                } else {
+                    showToast('❌ ' + equipResult.error, 'error');
+                }
+            } else {
+                // Иначе — просто меняем текст (платно)
+                const result = await updateStatusText(user.uid, newText);
+                if (result.success) {
+                    showToast(`✅ Текст статуса обновлён! Списано ${result.cost} монет`, 'success');
+                    closeModal('m-status-text');
+                    await loadInventory();
+                } else {
+                    showToast('❌ ' + result.error, 'error');
+                }
+            }
+        };
+
+        window.handleClaimCoin = async function(itemId, amount) {
+            const user = getCurrentUser();
+            if (!user) { showToast('❌ Войдите в аккаунт', 'error'); return; }
             if (!confirm(`Зачислить ${amount} монет на баланс?`)) return;
 
             // 1. Удаляем предмет из инвентаря
@@ -596,53 +659,6 @@
                 showToast('❌ ' + result.error, 'error');
             }
         };
-        window.saveStatusText = async function() {
-    const user = getCurrentUser();
-    if (!user) { showToast('❌ Войдите в аккаунт', 'error'); return; }
-    
-    const input = document.getElementById('statusTextInput');
-    const newText = input.value.trim();
-    
-    if (!newText) {
-        showToast('❌ Текст не может быть пустым', 'error');
-        return;
-    }
-    if (newText.length > 50) {
-        showToast('❌ Максимум 50 символов', 'error');
-        return;
-    }
-
-    // Если есть pendingEquipItemId — значит мы надеваем статус
-    if (window._pendingEquipItemId) {
-        // Сначала сохраняем текст в профиль
-        const textResult = await updateUserProfile(user.uid, { statusText: newText });
-        if (!textResult.success) {
-            showToast('❌ Ошибка сохранения текста: ' + textResult.error, 'error');
-            window._pendingEquipItemId = null;
-            return;
-        }
-        // Надеваем статус
-        const equipResult = await equipStatus(user.uid, window._pendingEquipItemId);
-        window._pendingEquipItemId = null;
-        if (equipResult.success) {
-            showToast('✅ Статус надет!', 'success');
-            closeModal('m-status-text');
-            await loadInventory();
-        } else {
-            showToast('❌ ' + equipResult.error, 'error');
-        }
-    } else {
-        // Иначе — просто меняем текст (платно)
-        const result = await updateStatusText(user.uid, newText);
-        if (result.success) {
-            showToast(`✅ Текст статуса обновлён! Списано ${result.cost} монет`, 'success');
-            closeModal('m-status-text');
-            await loadInventory();
-        } else {
-            showToast('❌ ' + result.error, 'error');
-        }
-    }
-};
 
         // ========== ИНИЦИАЛИЗАЦИЯ ==========
         onAuthStateChangedListener(async (user) => {
@@ -687,61 +703,62 @@
             </div>
         </div>
     </div>
+
+    <!-- ========== ГЛОБАЛЬНЫЕ ФУНКЦИИ (САЙДБАР, ТЕМА, МОДАЛКИ) ========== -->
     <script>
-        function showConfirm(message, title = 'Подтверждение', icon = '❓', isDanger = false) {
-            return new Promise((resolve) => {
-                const modal = document.getElementById('confirm-modal');
-                const titleEl = document.getElementById('confirmTitle');
-                const msgEl = document.getElementById('confirmMessage');
-                const iconEl = document.getElementById('confirmIcon');
-                const yesBtn = document.getElementById('confirmYes');
-                const noBtn = document.getElementById('confirmNo');
-
-                titleEl.textContent = title;
-                msgEl.textContent = message;
-                iconEl.textContent = icon;
-                yesBtn.className = isDanger ? 'btn-danger' : 'btn-yes';
-                modal.classList.add('active');
-
-                const closeAndResolve = (value) => {
-                    modal.classList.remove('active');
-                    resolve(value);
-                };
-                yesBtn.onclick = () => closeAndResolve(true);
-                noBtn.onclick = () => closeAndResolve(false);
-                modal.onclick = (e) => {
-                    if (e.target === modal) closeAndResolve(false);
-                };
-                const keyHandler = (e) => {
-                    if (e.key === 'Escape') {
-                        closeAndResolve(false);
-                        document.removeEventListener('keydown', keyHandler);
-                    }
-                };
-                document.addEventListener('keydown', keyHandler);
-            });
+        // ========== УПРАВЛЕНИЕ ТЕМОЙ ==========
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            const btn = document.getElementById('themeToggle');
+            if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
         }
-        window.confirm = function(message) { return showConfirm(message, 'Подтверждение', '❓', false); };
-        window.confirmDelete = function(message) { return showConfirm(message, 'Удаление', '⚠️', true); };
-        window.confirmAction = function(message, title = 'Подтверждение') { return showConfirm(message, title, '🤔', false); };
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const btn = document.getElementById('themeToggle');
+            if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
+        }
+        document.addEventListener('DOMContentLoaded', loadTheme);
+
+        // ========== САЙДБАР ==========
+        function openSidebar() {
+            document.getElementById('sidebar').classList.add('open');
+            document.getElementById('sidebar-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebar-overlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeSidebar();
+        });
+
+        // ========== МОДАЛКИ ==========
+        function openModal(id) {
+            const el = document.getElementById(id);
+            if (el) { el.classList.add('active'); document.body.style.overflow = 'hidden'; }
+        }
+        function closeModal(id) {
+            const el = document.getElementById(id);
+            if (el) { el.classList.remove('active'); document.body.style.overflow = ''; }
+        }
+
+        // ========== DSCOINS (для модалки покупки, если она есть) ==========
+        function setDSCoinAmount(amount) {
+            document.getElementById('dscoin-order-amount').value = amount;
+            updateDSCoinPrice();
+        }
+        function updateDSCoinPrice() {
+            const amount = parseInt(document.getElementById('dscoin-order-amount').value) || 0;
+            const priceEl = document.getElementById('dscoin-order-price');
+            if (priceEl) priceEl.textContent = amount + ' ₽';
+        }
     </script>
-    <!-- ===== МОДАЛКА ИЗМЕНЕНИЯ ТЕКСТА СТАТУСА ===== -->
-<div class="modal-overlay" id="m-status-text">
-    <div class="modal-content" style="max-width:400px;">
-        <button class="modal-close" onclick="closeModal('m-status-text')">✕</button>
-        <h3>✏️ Изменить текст статуса</h3>
-        <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">
-            Введите новый текст для облачка. Стоимость: <strong style="color:#fbbf24;">15</strong> DSCoins.
-        </p>
-        <div class="form-group">
-            <label>Новый текст статуса</label>
-            <input type="text" id="statusTextInput" placeholder="Введите текст..." maxlength="50" style="width:100%;padding:10px 14px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);font-size:14px;box-sizing:border-box;">
-        </div>
-        <div style="display:flex;gap:10px;margin-top:12px;">
-            <button class="submit-btn" style="flex:1;" onclick="saveStatusText()">💾 Сохранить</button>
-            <button class="cancel-btn" style="flex:1;" onclick="closeModal('m-status-text')">Отмена</button>
-        </div>
-    </div>
-</div>
 </body>
 </html>
