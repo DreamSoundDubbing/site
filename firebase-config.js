@@ -1893,7 +1893,7 @@ async function sellCoinFromInventory(uid, itemId) {
     } catch (error) {
         return { success: false, error: error.message };
     }
-}Ы
+}
 
 // ============================================================
 // ========== ЭКСПОРТ ==========
