@@ -2036,7 +2036,8 @@ export {
     updateStatusText,
     sellItem,
     buyItem,
-    openLootbox
+    openLootbox,
+    transferCoins
 };
 
 console.log('🔥 Модуль firebase-config.js загружен');
