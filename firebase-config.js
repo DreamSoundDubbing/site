@@ -71,7 +71,10 @@ async function registerUser(email, password, displayName) {
             subscribers: [],
             subscriptions: [],
             achievements: [],
-            dsCoins: 0,
+            dsCoins: 90,
+            lastDailyClaim: null,
+            inventory: [],
+            equippedStatus: null,
             wallVisibility: 'all',
             achSlots: 1,
             nickColor: null,
@@ -1389,6 +1392,510 @@ async function getTitleViews(titleId) {
 }
 
 // ============================================================
+// ========== СИСТЕМА ЕЖЕДНЕВНОГО БОНУСА ==========
+// ============================================================
+
+async function claimDailyBonus(uid) {
+    try {
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
+        if (!docSnap.exists()) return { success: false, error: "Пользователь не найден" };
+
+        const data = docSnap.data();
+        const lastClaim = data.lastDailyClaim?.toDate?.() || null;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (lastClaim) {
+            const lastDate = new Date(lastClaim);
+            lastDate.setHours(0, 0, 0, 0);
+            if (lastDate.getTime() === today.getTime()) {
+                return { success: false, error: "Вы уже получили бонус сегодня!" };
+            }
+        }
+
+        const bonusAmount = 10; // Ежедневный бонус (10 монет)
+        await updateDoc(userRef, {
+            dsCoins: increment(bonusAmount),
+            lastDailyClaim: serverTimestamp()
+        });
+
+        return { success: true, coins: bonusAmount };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// ============================================================
+// ========== ИНВЕНТАРЬ И ПРЕДМЕТЫ ==========
+// ============================================================
+
+// Добавить предмет в инвентарь
+async function addItemToInventory(uid, item) {
+    try {
+        const userRef = doc(db, "users", uid);
+        await updateDoc(userRef, {
+            inventory: arrayUnion(item)
+        });
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Удалить предмет из инвентаря
+async function removeItemFromInventory(uid, itemId) {
+    try {
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
+        if (!docSnap.exists()) return { success: false, error: "Пользователь не найден" };
+
+        const inventory = docSnap.data().inventory || [];
+        const itemIndex = inventory.findIndex(item => item.id === itemId);
+        if (itemIndex === -1) return { success: false, error: "Предмет не найден" };
+
+        inventory.splice(itemIndex, 1);
+        await updateDoc(userRef, { inventory: inventory });
+
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Надеть статус (облачко) - обязательно должен быть в инвентаре
+async function equipStatus(uid, statusId, statusText) {
+    try {
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
+        const inventory = docSnap.data().inventory || [];
+        
+        // Проверяем, есть ли этот предмет в инвентаре
+        const hasItem = inventory.some(item => item.id === statusId && item.type === 'status');
+        if (!hasItem) return { success: false, error: "У вас нет этого статуса в инвентаре" };
+
+        await updateDoc(userRef, {
+            equippedStatus: { id: statusId, text: statusText }
+        });
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Снять статус (убрать облачко)
+async function unequipStatus(uid) {
+    try {
+        const userRef = doc(db, "users", uid);
+        await updateDoc(userRef, { equippedStatus: null });
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Изменить текст статуса (платно)
+async function updateStatusText(uid, newText) {
+    try {
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
+        const equipped = docSnap.data().equippedStatus;
+        if (!equipped) return { success: false, error: "Статус не надет" };
+
+        const cost = 15; // Стоимость смены текста (15 монет)
+        const coins = docSnap.data().dsCoins || 0;
+        if (coins < cost) return { success: false, error: `Недостаточно монет. Нужно ${cost}` };
+
+        // Списываем монеты и меняем текст
+        await updateDoc(userRef, {
+            dsCoins: increment(-cost),
+            "equippedStatus.text": newText
+        });
+        return { success: true, cost: cost };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Подарить предмет другому пользователю
+async function giftItem(uid, targetUid, itemId) {
+    try {
+        // 1. Удаляем предмет у себя
+        const removeResult = await removeItemFromInventory(uid, itemId);
+        if (!removeResult.success) return removeResult;
+
+        // 2. Добавляем предмет получателю
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
+        const inventory = docSnap.data().inventory || [];
+        const item = inventory.find(i => i.id === itemId);
+        if (!item) return { success: false, error: "Предмет не найден" };
+
+        // Добавляем копию предмета с новым ID, чтобы не сломать логику
+        const giftItem = { ...item, id: item.id + "_gift_" + Date.now() };
+        const addResult = await addItemToInventory(targetUid, giftItem);
+        if (!addResult.success) return addResult;
+
+        return { success: true, message: "Подарок успешно отправлен!" };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Продать предмет (за 90% цены)
+async function sellItem(uid, itemId) {
+    try {
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
+        const inventory = docSnap.data().inventory || [];
+        const item = inventory.find(i => i.id === itemId);
+        if (!item) return { success: false, error: "Предмет не найден" };
+
+        const price = item.price || 100; // Цена предмета (по умолчанию 100)
+        const sellPrice = Math.floor(price * 0.9); // 90% от цены
+
+        // Удаляем предмет и добавляем монеты
+        await updateDoc(userRef, {
+            inventory: arrayRemove(item),
+            dsCoins: increment(sellPrice)
+        });
+
+        return { success: true, coins: sellPrice };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// ============================================================
+// ========== МАГАЗИН (Покупка товаров) ==========
+// ============================================================
+
+async function buyItem(uid, shopItem) {
+    try {
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
+        const coins = docSnap.data().dsCoins || 0;
+
+        if (coins < shopItem.price) {
+            return { success: false, error: `Недостаточно монет. Нужно ${shopItem.price}` };
+        }
+
+        // Создаём предмет для инвентаря
+        const newItem = {
+            id: shopItem.id + "_" + Date.now(),
+            type: shopItem.type, // 'status', 'background', 'frame', etc.
+            name: shopItem.name,
+            icon: shopItem.icon || '🎁',
+            price: shopItem.price,
+            purchasedAt: serverTimestamp()
+        };
+
+        // Списываем монеты и добавляем в инвентарь
+        await updateDoc(userRef, {
+            dsCoins: increment(-shopItem.price),
+            inventory: arrayUnion(newItem)
+        });
+
+        return { success: true, item: newItem };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// ============================================================
+// ========== ПЕРЕДАЧА МОНЕТ (ПОЛЬЗОВАТЕЛЬ -> ПОЛЬЗОВАТЕЛЬ) ==========
+// ============================================================
+
+async function transferCoins(senderUid, receiverUid, amount) {
+    try {
+        if (senderUid === receiverUid) {
+            return { success: false, error: "Нельзя перевести монеты самому себе" };
+        }
+        if (amount < 1) {
+            return { success: false, error: "Сумма должна быть больше 0" };
+        }
+
+        const senderRef = doc(db, "users", senderUid);
+        const receiverRef = doc(db, "users", receiverUid);
+
+        // Проверяем баланс отправителя
+        const senderSnap = await getDoc(senderRef);
+        if (!senderSnap.exists()) {
+            return { success: false, error: "Отправитель не найден" };
+        }
+        const senderCoins = senderSnap.data().dsCoins || 0;
+        if (senderCoins < amount) {
+            return { success: false, error: `Недостаточно монет. У вас ${senderCoins}` };
+        }
+
+        // Выполняем транзакцию
+        await runTransaction(db, async (transaction) => {
+            transaction.update(senderRef, { dsCoins: increment(-amount) });
+            transaction.update(receiverRef, { dsCoins: increment(amount) });
+        });
+
+        // Записываем транзакции в историю
+        await addDoc(collection(db, "dsCoinTransactions"), {
+            uid: senderUid,
+            amount: -amount,
+            reason: `Перевод пользователю ${receiverUid}`,
+            timestamp: serverTimestamp(),
+            type: 'transfer_out'
+        });
+        await addDoc(collection(db, "dsCoinTransactions"), {
+            uid: receiverUid,
+            amount: amount,
+            reason: `Перевод от пользователя ${senderUid}`,
+            timestamp: serverTimestamp(),
+            type: 'transfer_in'
+        });
+
+        return { success: true, amount: amount };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// ============================================================
+// ========== ЛУТБОКСЫ (ОБНОВЛЕННАЯ ЛОГИКА) ==========
+// ============================================================
+
+// ============================================================
+// ========== НОВАЯ ЛОГИКА ЛУТБОКСОВ СО СТАКАМИ ==========
+// ============================================================
+
+// Список всех предметов магазина
+const SHOP_ITEMS = [
+    { id: 'color_nick', type: 'color_nick', name: '🎨 Цвет ника', icon: '🎨', price: 500 },
+    { id: 'prefix', type: 'prefix', name: '🏷️ Префикс', icon: '🏷️', price: 300 },
+    { id: 'status', type: 'status', name: '💬 Статус (облачко)', icon: '💬', price: 1000 },
+];
+
+// Максимальное количество одинаковых предметов
+const MAX_STACK_SIZE = 25;
+
+// Вспомогательная функция: найти предмет в стаке
+function findItemInStack(inventory, itemId) {
+    return inventory.find(item => item.id === itemId);
+}
+
+async function openLootbox(uid, price) {
+    try {
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
+        if (!docSnap.exists()) return { success: false, error: "Пользователь не найден" };
+
+        const coins = docSnap.data().dsCoins || 0;
+        if (coins < price) {
+            return { success: false, error: `Недостаточно монет. Нужно ${price}` };
+        }
+
+        // Списываем монеты за лутбокс
+        await updateDoc(userRef, { dsCoins: increment(-price) });
+
+        // Получаем текущий инвентарь
+        let inventory = docSnap.data().inventory || [];
+
+        // ===== НАСТРОЙКА ШАНСОВ В ЗАВИСИМОСТИ ОТ ЦЕНЫ ЛУТБОКСА =====
+        let coinAmounts;
+        let itemChanceModifier;
+
+        if (price === 10) {
+            // Дешёвый бокс: монеты 2–20, шанс предмета низкий, только дешёвые предметы
+            coinAmounts = [2, 5, 10, 15, 20];
+            itemChanceModifier = 0.03;
+        } else if (price === 50) {
+            // Средний бокс: монеты 10–100, шанс предмета средний
+            coinAmounts = [10, 25, 50, 75, 100];
+            itemChanceModifier = 0.08;
+        } else if (price === 100) {
+            // Дорогой бокс: монеты 20–200, шанс предмета высокий
+            coinAmounts = [20, 50, 100, 150, 200];
+            itemChanceModifier = 0.15;
+        } else {
+            return { success: false, error: "Неизвестная цена лутбокса" };
+        }
+
+        // Собираем все возможные призы: монеты + предметы
+        let allPrizes = [];
+        
+        // Добавляем монеты
+        coinAmounts.forEach(amount => {
+            allPrizes.push({
+                type: 'coins',
+                amount: amount,
+                label: `${amount} монет`,
+                icon: '🪙',
+                chance: 1
+            });
+        });
+
+        // Добавляем предметы из магазина
+        SHOP_ITEMS.forEach(item => {
+            // Шанс выпадения зависит от цены бокса и цены предмета
+            let baseChance = itemChanceModifier;
+            // Корректируем шанс: для дешёвых боксов дешёвые предметы выпадают чаще
+            if (price === 10 && item.price > 400) {
+                baseChance = baseChance * 0.3; // Уменьшаем шанс для дорогих предметов в дешёвом боксе
+            }
+            if (price === 100 && item.price < 500) {
+                baseChance = baseChance * 1.5; // Увеличиваем шанс для дешёвых предметов в дорогом боксе
+            }
+            // Ограничиваем шанс
+            baseChance = Math.max(0.001, Math.min(0.2, baseChance));
+
+            allPrizes.push({
+                type: 'item',
+                item: item,
+                label: item.name,
+                icon: item.icon,
+                chance: baseChance
+            });
+        });
+
+        // Нормализуем шансы
+        const totalChance = allPrizes.reduce((sum, p) => sum + p.chance, 0);
+        allPrizes.forEach(p => p.chance = p.chance / totalChance);
+
+        // Выбираем приз
+        let roll = Math.random();
+        let selectedPrize = allPrizes[allPrizes.length - 1];
+
+        for (const prize of allPrizes) {
+            if (roll < prize.chance) {
+                selectedPrize = prize;
+                break;
+            }
+            roll -= prize.chance;
+        }
+
+        // Обрабатываем выигрыш
+        let inventoryItem;
+        let rewardText;
+        let isStackOverflow = false;
+
+        if (selectedPrize.type === 'coins') {
+            // Монеты всегда складываются в инвентарь как предмет
+            inventoryItem = {
+                id: 'coin_' + Date.now(),
+                type: 'coin',
+                name: `${selectedPrize.amount} DSCoins`,
+                icon: '🪙',
+                amount: selectedPrize.amount,
+                price: selectedPrize.amount,
+                purchasedAt: serverTimestamp()
+            };
+            rewardText = `${selectedPrize.amount} 🪙`;
+        } else {
+            // Предмет из магазина
+            const shopItem = selectedPrize.item;
+            
+            // Проверяем, есть ли уже такой предмет в инвентаре
+            const existingItem = findItemInStack(inventory, shopItem.id);
+            
+            if (existingItem) {
+                // Если предмет уже есть, увеличиваем стак
+                const currentCount = existingItem.count || 1;
+                
+                if (currentCount >= MAX_STACK_SIZE) {
+                    // Стак переполнен! Конвертируем в монеты
+                    isStackOverflow = true;
+                    const refundAmount = Math.floor(shopItem.price * 0.9); // 90% от цены
+                    await updateDoc(userRef, { dsCoins: increment(refundAmount) });
+                    rewardText = `🔥 Стак переполнен! Получено ${refundAmount} монет`;
+                    return {
+                        success: true,
+                        prize: selectedPrize,
+                        rewardText: rewardText,
+                        isStackOverflow: true,
+                        refundAmount: refundAmount
+                    };
+                } else {
+                    // Увеличиваем стак
+                    const newInventory = inventory.map(item => {
+                        if (item.id === shopItem.id) {
+                            return { ...item, count: currentCount + 1 };
+                        }
+                        return item;
+                    });
+                    await updateDoc(userRef, { inventory: newInventory });
+                    rewardText = `${shopItem.icon} ${shopItem.name} x${currentCount + 1}`;
+                    return {
+                        success: true,
+                        prize: selectedPrize,
+                        rewardText: rewardText,
+                        isStackOverflow: false,
+                        inventoryItem: { ...shopItem, count: currentCount + 1 }
+                    };
+                }
+            } else {
+                // Создаём новый предмет с count: 1
+                inventoryItem = {
+                    id: shopItem.id,
+                    type: shopItem.type,
+                    name: shopItem.name,
+                    icon: shopItem.icon,
+                    price: shopItem.price,
+                    count: 1,
+                    purchasedAt: serverTimestamp()
+                };
+                rewardText = shopItem.icon + ' ' + shopItem.name;
+            }
+        }
+
+        // Если это новый предмет или монеты, добавляем в инвентарь
+        if (inventoryItem) {
+            await updateDoc(userRef, {
+                inventory: arrayUnion(inventoryItem)
+            });
+        }
+
+        return {
+            success: true,
+            prize: selectedPrize,
+            inventoryItem: inventoryItem,
+            rewardText: rewardText,
+            isStackOverflow: false
+        };
+
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// ============================================================
+// ========== ПРОДАЖА МОНЕТ ИЗ ИНВЕНТАРЯ ==========
+// ============================================================
+
+async function sellCoinFromInventory(uid, itemId) {
+    try {
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
+        if (!docSnap.exists()) return { success: false, error: "Пользователь не найден" };
+
+        const inventory = docSnap.data().inventory || [];
+        const itemIndex = inventory.findIndex(i => i.id === itemId);
+        if (itemIndex === -1) return { success: false, error: "Предмет не найден" };
+
+        const item = inventory[itemIndex];
+        if (item.type !== 'coin') {
+            return { success: false, error: "Это не монета" };
+        }
+
+        // Удаляем предмет из инвентаря
+        inventory.splice(itemIndex, 1);
+        await updateDoc(userRef, {
+            inventory: inventory,
+            dsCoins: increment(item.amount) // Добавляем монеты на баланс
+        });
+
+        return { success: true, amount: item.amount };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}Ы
+
+// ============================================================
 // ========== ЭКСПОРТ ==========
 // ============================================================
 
@@ -1467,7 +1974,16 @@ export {
     purchaseAchSlot,
     updateTitleRating,
     trackTitleView,
-    getTitleViews
+    getTitleViews,
+    claimDailyBonus,
+    addItemToInventory,
+    removeItemFromInventory,
+    equipStatus,
+    unequipStatus,
+    updateStatusText,
+    giftItem,
+    sellItem,
+    buyItem
 };
 
 console.log('🔥 Модуль firebase-config.js загружен');

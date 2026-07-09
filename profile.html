@@ -2,11 +2,11 @@
 <html lang="ru" data-theme="dark">
 <head>
     <link rel="manifest" href="/site/manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="DSD">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#4a2a7a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DSD">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4a2a7a">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Профиль - Dream Sound Dubbing</title>
@@ -15,7 +15,6 @@
     <script type="module" src="firebase-config.js"></script>
     <style>
         :root {
-            /* Тёмная тема */
             --bg-home: url('https://s3.radikal.cloud/2026/06/28/FON-PROFIL6f2cb57342dd098d.png');
         }
         [data-theme="dark"] {
@@ -32,754 +31,193 @@
             background-attachment: fixed !important;
             background-repeat: no-repeat !important;
         }
-        /* ... стили из вашего файла profile.html ... */
-        .profile-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+
+        .profile-container { max-width: 800px; margin: 0 auto; }
         .profile-header {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            align-items: center;
-            padding: 20px;
-            background: var(--bg-profile-header);
-            border-radius: 20px;
-            border: 1px solid var(--border-primary);
-            transition: background 0.3s ease;
+            display: flex; gap: 30px; flex-wrap: wrap; align-items: center;
+            padding: 20px; background: var(--bg-profile-header); border-radius: 20px;
+            border: 1px solid var(--border-primary); transition: background 0.3s ease;
         }
         .profile-avatar-large {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--color-accent);
-            cursor: pointer;
-            transition: all 0.3s;
+            width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
+            border: 4px solid var(--color-accent); cursor: pointer; transition: all 0.3s;
         }
-        .profile-avatar-large:hover {
-            transform: scale(1.05);
-        }
-        .profile-info {
-            flex: 1;
-        }
+        .profile-avatar-large:hover { transform: scale(1.05); }
+        .profile-info { flex: 1; }
         .profile-name {
-            font-size: 28px;
-            color: var(--color-accent);
-            margin: 0;
-            transition: color 0.3s;
+            font-size: 28px; color: var(--color-accent); margin: 0; transition: color 0.3s;
         }
-        .profile-name .prefix {
-            font-size: 20px;
-            margin-right: 4px;
-            opacity: 0.8;
-        }
-        .profile-email {
-            color: var(--text-muted);
-            font-size: 14px;
-        }
+        .profile-name .prefix { font-size: 20px; margin-right: 4px; opacity: 0.8; }
+        .profile-email { color: var(--text-muted); font-size: 14px; }
         .profile-role {
-            display: inline-block;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: bold;
-            margin-top: 5px;
+            display: inline-block; padding: 4px 16px; border-radius: 20px;
+            font-size: 13px; font-weight: bold; margin-top: 5px;
         }
-        .role-admin {
-            background: var(--color-accent);
-            color: #fff;
-        }
-        .role-dubber {
-            background: var(--color-accent2);
-            color: #fff;
-        }
-        .role-user {
-            background: var(--border-primary);
-            color: var(--color-accent);
-        }
+        .role-admin { background: var(--color-accent); color: #fff; }
+        .role-dubber { background: var(--color-accent2); color: #fff; }
+        .role-user { background: var(--border-primary); color: var(--color-accent); }
 
         .profile-stats {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin: 20px 0;
-            justify-content: center;
+            display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; justify-content: center;
         }
         .stat-item {
-            text-align: center;
-            padding: 10px 20px;
-            background: var(--bg-stat-card);
-            border-radius: 12px;
-            border: 1px solid var(--border-primary);
-            min-width: 80px;
+            text-align: center; padding: 10px 20px; background: var(--bg-stat-card);
+            border-radius: 12px; border: 1px solid var(--border-primary); min-width: 80px;
             transition: background 0.3s ease;
         }
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--color-accent);
-        }
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        .stat-clickable {
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .stat-clickable:hover {
-            background: var(--bg-stat-card-hover);
-        }
+        .stat-number { font-size: 24px; font-weight: bold; color: var(--color-accent); }
+        .stat-label { font-size: 12px; color: var(--text-muted); }
+        .stat-clickable { cursor: pointer; transition: all 0.3s; }
+        .stat-clickable:hover { background: var(--bg-stat-card-hover); }
 
         .profile-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin: 15px 0;
+            display: flex; gap: 10px; flex-wrap: wrap; margin: 15px 0;
         }
         .action-btn {
-            padding: 8px 20px;
-            border: none;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
+            padding: 8px 20px; border: none; border-radius: 25px; font-weight: bold;
+            cursor: pointer; transition: all 0.3s; font-size: 14px;
         }
-        .action-btn.primary {
-            background: var(--gradient-primary);
-            color: #fff;
-        }
-        .action-btn.primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
-        }
-        .action-btn.danger {
-            background: var(--color-danger);
-            color: #fff;
-        }
-        .action-btn.danger:hover {
-            background: #e05555;
-        }
-        .action-btn.outline {
-            background: transparent;
-            border: 2px solid var(--color-accent);
-            color: var(--color-accent);
-        }
-        .action-btn.outline:hover {
-            background: var(--color-accent);
-            color: #fff;
-        }
-        .action-btn.subscribed {
-            background: var(--bg-auth-success);
-            color: var(--color-success);
-            border: 2px solid var(--color-success);
-        }
-        .action-btn.success {
-            background: var(--color-success);
-            color: #fff;
-        }
-        .action-btn.success:hover {
-            background: #388E3C;
-        }
-        .action-btn.coin {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: #fff;
-        }
-        .action-btn.coin:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.3);
-        }
-        .action-btn-sm {
-            padding: 4px 14px;
-            font-size: 12px;
-        }
+        .action-btn.primary { background: var(--gradient-primary); color: #fff; }
+        .action-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3); }
+        .action-btn.danger { background: var(--color-danger); color: #fff; }
+        .action-btn.danger:hover { background: #e05555; }
+        .action-btn.outline { background: transparent; border: 2px solid var(--color-accent); color: var(--color-accent); }
+        .action-btn.outline:hover { background: var(--color-accent); color: #fff; }
+        .action-btn.subscribed { background: var(--bg-auth-success); color: var(--color-success); border: 2px solid var(--color-success); }
+        .action-btn.success { background: var(--color-success); color: #fff; }
+        .action-btn.success:hover { background: #388E3C; }
+        .action-btn.coin { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; }
+        .action-btn.coin:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(251, 191, 36, 0.3); }
+        .action-btn-sm { padding: 4px 14px; font-size: 12px; }
 
         .dscoin-balance {
-            background: var(--bg-welcome);
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid var(--color-accent);
-            margin: 20px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
+            background: var(--bg-welcome); border-radius: 15px; padding: 20px;
+            border: 1px solid var(--color-accent); margin: 20px 0;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
         }
-        .dscoin-balance .amount {
-            font-size: 36px;
-            font-weight: bold;
-            color: #fbbf24;
-        }
-        .dscoin-balance .label {
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-        .dscoin-balance .actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+        .dscoin-balance .amount { font-size: 36px; font-weight: bold; color: #fbbf24; }
+        .dscoin-balance .label { color: var(--text-muted); font-size: 14px; }
+        .dscoin-balance .actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
-        .achievements-section {
-            margin-top: 30px;
-        }
-        .achievements-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
+        .achievements-section { margin-top: 30px; }
+        .achievements-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
         .achievement-card {
-            padding: 10px 16px;
-            background: var(--bg-achievement);
-            border: 1px solid var(--color-accent);
-            border-radius: 12px;
-            text-align: center;
-            min-width: 100px;
-            cursor: pointer;
-            transition: all 0.3s;
+            padding: 10px 16px; background: var(--bg-achievement); border: 1px solid var(--color-accent);
+            border-radius: 12px; text-align: center; min-width: 100px; cursor: pointer; transition: all 0.3s;
         }
-        .achievement-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-hover);
-        }
-        .achievement-icon {
-            font-size: 28px;
-        }
-        .achievement-name {
-            font-size: 12px;
-            color: var(--color-accent);
-            margin-top: 4px;
-        }
-        .achievement-desc {
-            font-size: 10px;
-            color: var(--text-muted);
-        }
+        .achievement-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+        .achievement-icon { font-size: 28px; }
+        .achievement-name { font-size: 12px; color: var(--color-accent); margin-top: 4px; }
+        .achievement-desc { font-size: 10px; color: var(--text-muted); }
 
         .admin-panel {
-            margin-top: 30px;
-            padding: 20px;
-            background: var(--bg-admin-panel-dark);
-            border: 1px solid var(--color-accent);
-            border-radius: 15px;
+            margin-top: 30px; padding: 20px; background: var(--bg-admin-panel-dark);
+            border: 1px solid var(--color-accent); border-radius: 15px;
         }
-        .admin-panel h3 {
-            color: var(--color-accent);
-            margin-bottom: 15px;
+        .admin-panel h3 { color: var(--color-accent); margin-bottom: 15px; }
+        .admin-panel .form-group { margin-bottom: 12px; }
+        .admin-panel .form-group label { color: var(--text-muted); font-size: 13px; display: block; margin-bottom: 4px; }
+        .admin-panel .form-group input, .admin-panel .form-group select {
+            width: 100%; padding: 8px 12px; border-radius: 8px; border: 2px solid var(--border-primary);
+            background: var(--bg-input); color: var(--text-primary); font-size: 14px; box-sizing: border-box;
         }
-        .admin-panel .form-group {
-            margin-bottom: 12px;
-        }
-        .admin-panel .form-group label {
-            color: var(--text-muted);
-            font-size: 13px;
-            display: block;
-            margin-bottom: 4px;
-        }
-        .admin-panel .form-group input,
-        .admin-panel .form-group select {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 2px solid var(--border-primary);
-            background: var(--bg-input);
-            color: var(--text-primary);
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-        .admin-panel .form-group input:focus,
-        .admin-panel .form-group select:focus {
-            border-color: var(--color-accent);
-            outline: none;
-        }
-        .admin-panel .form-row {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .admin-panel .form-row .form-group {
-            flex: 1;
-            min-width: 150px;
-        }
-        .admin-panel .search-btn {
-            padding: 8px 20px;
-            background: var(--color-accent);
-            color: #fff;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        .admin-panel .search-btn:hover {
-            background: var(--color-accent2);
-        }
+        .admin-panel .form-group input:focus, .admin-panel .form-group select:focus { border-color: var(--color-accent); outline: none; }
+        .admin-panel .form-row { display: flex; gap: 12px; flex-wrap: wrap; }
+        .admin-panel .form-row .form-group { flex: 1; min-width: 150px; }
+        .admin-panel .search-btn { padding: 8px 20px; background: var(--color-accent); color: #fff; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
+        .admin-panel .search-btn:hover { background: var(--color-accent2); }
 
         .admin-coin-section {
-            background: rgba(251, 191, 36, 0.08);
-            border: 1px solid #fbbf24;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 12px;
+            background: rgba(251, 191, 36, 0.08); border: 1px solid #fbbf24; border-radius: 12px; padding: 16px; margin-top: 12px;
         }
-        .admin-coin-section .title {
-            color: #fbbf24;
-            font-weight: bold;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .admin-coin-section .row {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .admin-coin-section .row input {
-            flex: 1;
-            min-width: 120px;
-            padding: 8px 14px;
-            border-radius: 8px;
-            border: 2px solid var(--border-primary);
-            background: var(--bg-input);
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-        .admin-coin-section .row input:focus {
-            border-color: #fbbf24;
-            outline: none;
-        }
-        .admin-coin-section .row .btn-coin-add {
-            padding: 8px 24px;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: #fff;
-            border: none;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-        .admin-coin-section .row .btn-coin-add:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
-        }
+        .admin-coin-section .title { color: #fbbf24; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .admin-coin-section .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .admin-coin-section .row input { flex: 1; min-width: 120px; padding: 8px 14px; border-radius: 8px; border: 2px solid var(--border-primary); background: var(--bg-input); color: var(--text-primary); font-size: 14px; }
+        .admin-coin-section .row input:focus { border-color: #fbbf24; outline: none; }
+        .admin-coin-section .row .btn-coin-add { padding: 8px 24px; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; transition: all 0.3s; white-space: nowrap; }
+        .admin-coin-section .row .btn-coin-add:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3); }
 
-        .user-search-result {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
-            background: var(--bg-user-search);
-            border-radius: 8px;
-            margin-bottom: 8px;
-        }
-        .user-search-result .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .user-search-result .user-avatar-small {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .user-search-result .user-name {
-            color: var(--color-accent);
-        }
-        .user-search-result .user-email {
-            color: var(--text-muted);
-            font-size: 12px;
-        }
-        .user-search-result .user-current-role {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin: 0 10px;
-        }
+        .user-search-result { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: var(--bg-user-search); border-radius: 8px; margin-bottom: 8px; }
+        .user-search-result .user-info { display: flex; align-items: center; gap: 10px; }
+        .user-search-result .user-avatar-small { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+        .user-search-result .user-name { color: var(--color-accent); }
+        .user-search-result .user-email { color: var(--text-muted); font-size: 12px; }
+        .user-search-result .user-current-role { font-size: 12px; color: var(--text-muted); margin: 0 10px; }
 
-        .playlist-section {
-            margin-top: 30px;
-        }
-        .playlist-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .playlist-card {
-            background: var(--bg-playlist);
-            border-radius: 12px;
-            padding: 14px;
-            text-align: center;
-            border: 2px solid var(--border-secondary);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .playlist-card:hover {
-            border-color: var(--color-accent);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-hover);
-        }
-        .playlist-card .cover {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 8px;
-        }
-        .playlist-card .name {
-            font-size: 15px;
-            font-weight: bold;
-            color: var(--text-primary);
-        }
-        .playlist-card .count {
-            color: var(--text-muted);
-            font-size: 12px;
-        }
-        .playlist-card .pinned {
-            color: var(--color-accent);
-            font-size: 11px;
-            font-weight: bold;
-        }
+        .playlist-section { margin-top: 30px; }
+        .playlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 15px; }
+        .playlist-card { background: var(--bg-playlist); border-radius: 12px; padding: 14px; text-align: center; border: 2px solid var(--border-secondary); transition: all 0.3s ease; cursor: pointer; }
+        .playlist-card:hover { border-color: var(--color-accent); transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+        .playlist-card .cover { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 8px; }
+        .playlist-card .name { font-size: 15px; font-weight: bold; color: var(--text-primary); }
+        .playlist-card .count { color: var(--text-muted); font-size: 12px; }
+        .playlist-card .pinned { color: var(--color-accent); font-size: 11px; font-weight: bold; }
 
-        /* ===== СТЕНА ===== */
-        .wall-section {
-            margin-top: 30px;
-            background: var(--bg-content);
-            padding: 20px;
-            border-radius: 15px;
-            border: 1px solid var(--border-primary);
-        }
-        .wall-section .wall-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .wall-section .wall-header h3 {
-            color: var(--color-accent);
-            margin: 0;
-        }
-        .wall-form {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .wall-form textarea {
-            flex: 1;
-            min-width: 200px;
-            padding: 12px;
-            border-radius: 10px;
-            border: 2px solid var(--border-primary);
-            background: var(--bg-input);
-            color: var(--text-primary);
-            font-size: 15px;
-            resize: vertical;
-            min-height: 60px;
-            font-family: inherit;
-        }
-        .wall-form textarea:focus {
-            border-color: var(--color-accent);
-            outline: none;
-        }
-        .wall-form .actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        .wall-post {
-            background: var(--bg-wall-post);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border-left: 4px solid var(--color-accent);
-        }
-        .wall-post .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        .wall-post .user {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .wall-post .user .avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .wall-post .user .name {
-            font-weight: bold;
-            color: var(--color-accent);
-        }
-        .wall-post .text {
-            color: var(--text-primary);
-            font-size: 15px;
-            line-height: 1.6;
-        }
-        .wall-post .time {
-            color: var(--text-muted);
-            font-size: 11px;
-        }
-        .wall-post .actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        .wall-post .actions button {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 13px;
-            transition: color 0.3s;
-        }
-        .wall-post .actions button:hover {
-            color: var(--color-danger);
-        }
-        .wall-post .visibility-badge {
-            font-size: 10px;
-            padding: 2px 10px;
-            border-radius: 12px;
-            background: var(--bg-welcome);
-            color: var(--text-muted);
-        }
-        .wall-post .visibility-badge.private {
-            background: rgba(255, 107, 107, 0.15);
-            color: var(--color-danger);
-        }
-        .wall-post .visibility-badge.friends {
-            background: rgba(251, 191, 36, 0.15);
-            color: #fbbf24;
-        }
-        .wall-post .visibility-badge.public {
-            background: rgba(76, 175, 80, 0.15);
-            color: var(--color-success);
-        }
+        .wall-section { margin-top: 30px; background: var(--bg-content); padding: 20px; border-radius: 15px; border: 1px solid var(--border-primary); }
+        .wall-section .wall-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
+        .wall-section .wall-header h3 { color: var(--color-accent); margin: 0; }
+        .wall-form { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .wall-form textarea { flex: 1; min-width: 200px; padding: 12px; border-radius: 10px; border: 2px solid var(--border-primary); background: var(--bg-input); color: var(--text-primary); font-size: 15px; resize: vertical; min-height: 60px; font-family: inherit; }
+        .wall-form textarea:focus { border-color: var(--color-accent); outline: none; }
+        .wall-form .actions { display: flex; gap: 8px; align-items: center; }
+        .wall-post { background: var(--bg-wall-post); border-radius: 12px; padding: 16px; margin-bottom: 12px; border-left: 4px solid var(--color-accent); }
+        .wall-post .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .wall-post .user { display: flex; align-items: center; gap: 10px; }
+        .wall-post .user .avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+        .wall-post .user .name { font-weight: bold; color: var(--color-accent); }
+        .wall-post .text { color: var(--text-primary); font-size: 15px; line-height: 1.6; }
+        .wall-post .time { color: var(--text-muted); font-size: 11px; }
+        .wall-post .actions { display: flex; gap: 8px; margin-top: 8px; }
+        .wall-post .actions button { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 13px; transition: color 0.3s; }
+        .wall-post .actions button:hover { color: var(--color-danger); }
+        .wall-post .visibility-badge { font-size: 10px; padding: 2px 10px; border-radius: 12px; background: var(--bg-welcome); color: var(--text-muted); }
+        .wall-post .visibility-badge.private { background: rgba(255, 107, 107, 0.15); color: var(--color-danger); }
+        .wall-post .visibility-badge.friends { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+        .wall-post .visibility-badge.public { background: rgba(76, 175, 80, 0.15); color: var(--color-success); }
 
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
-        }
-        .modal-overlay.active {
-            display: flex;
-        }
-        .modal-content {
-            background: var(--bg-modal);
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 500px;
-            width: 95%;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 2px solid var(--color-accent);
-            position: relative;
-        }
-        .modal-content h2 {
-            color: var(--color-accent);
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 28px;
-            color: var(--text-muted);
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-        .modal-close:hover {
-            color: var(--text-primary);
-        }
-        .modal-content .form-group {
-            margin-bottom: 12px;
-        }
-        .modal-content .form-group label {
-            color: var(--text-muted);
-            font-size: 13px;
-            display: block;
-            margin-bottom: 4px;
-        }
-        .modal-content .form-group input,
-        .modal-content .form-group textarea {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 2px solid var(--border-primary);
-            background: var(--bg-input);
-            color: var(--text-primary);
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-        .modal-content .form-group textarea {
-            min-height: 60px;
-            resize: vertical;
-        }
-        .modal-content .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background: var(--gradient-primary);
-            color: #fff;
-            border: none;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-        .modal-content .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
-        }
-        .modal-content .cancel-btn {
-            width: 100%;
-            padding: 10px;
-            background: transparent;
-            color: var(--text-muted);
-            border: 2px solid var(--border-primary);
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 8px;
-        }
-        .modal-content .cancel-btn:hover {
-            border-color: var(--color-accent);
-            color: var(--text-primary);
-        }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: var(--bg-modal); border-radius: 20px; padding: 30px; max-width: 500px; width: 95%; max-height: 90vh; overflow-y: auto; border: 2px solid var(--color-accent); position: relative; }
+        .modal-content h2 { color: var(--color-accent); text-align: center; margin-bottom: 20px; }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 28px; color: var(--text-muted); cursor: pointer; background: none; border: none; }
+        .modal-close:hover { color: var(--text-primary); }
+        .modal-content .form-group { margin-bottom: 12px; }
+        .modal-content .form-group label { color: var(--text-muted); font-size: 13px; display: block; margin-bottom: 4px; }
+        .modal-content .form-group input, .modal-content .form-group textarea { width: 100%; padding: 8px 12px; border-radius: 8px; border: 2px solid var(--border-primary); background: var(--bg-input); color: var(--text-primary); font-size: 14px; box-sizing: border-box; }
+        .modal-content .form-group textarea { min-height: 60px; resize: vertical; }
+        .modal-content .submit-btn { width: 100%; padding: 12px; background: var(--gradient-primary); color: #fff; border: none; border-radius: 25px; font-weight: bold; cursor: pointer; transition: all 0.3s; margin-top: 10px; }
+        .modal-content .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3); }
+        .modal-content .cancel-btn { width: 100%; padding: 10px; background: transparent; color: var(--text-muted); border: 2px solid var(--border-primary); border-radius: 25px; font-weight: bold; cursor: pointer; transition: all 0.3s; margin-top: 8px; }
+        .modal-content .cancel-btn:hover { border-color: var(--color-accent); color: var(--text-primary); }
 
-        .color-picker-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
-            gap: 8px;
-            margin: 10px 0;
-        }
-        .color-picker-grid .color-option {
-            width: 100%;
-            aspect-ratio: 1;
-            border-radius: 50%;
-            border: 3px solid var(--border-primary);
-            cursor: pointer;
-            transition: all 0.3s;
-            padding: 0;
-            min-height: 36px;
-        }
-        .color-picker-grid .color-option:hover {
-            transform: scale(1.15);
-            border-color: var(--color-accent);
-        }
-        .color-picker-grid .color-option.selected {
-            border-color: #fff;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-        }
-        .color-picker-grid .color-option.custom-color {
-            background: linear-gradient(135deg, #ff6b6b, #fbbf24, #4CAF50, #2196F3, #9b59b6);
-            border-style: dashed;
-        }
+        .color-picker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 8px; margin: 10px 0; }
+        .color-picker-grid .color-option { width: 100%; aspect-ratio: 1; border-radius: 50%; border: 3px solid var(--border-primary); cursor: pointer; transition: all 0.3s; padding: 0; min-height: 36px; }
+        .color-picker-grid .color-option:hover { transform: scale(1.15); border-color: var(--color-accent); }
+        .color-picker-grid .color-option.selected { border-color: #fff; box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+        .color-picker-grid .color-option.custom-color { background: linear-gradient(135deg, #ff6b6b, #fbbf24, #4CAF50, #2196F3, #9b59b6); border-style: dashed; }
 
-        .auth-message {
-            text-align: center;
-            padding: 40px 20px;
-        }
-        .auth-message h2 {
-            color: var(--color-accent);
-        }
-        .auth-message p {
-            color: var(--text-muted);
-        }
-        .auth-btn {
-            display: inline-block;
-            padding: 14px 40px;
-            background: var(--gradient-primary);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 18px;
-            transition: all 0.3s ease;
-        }
-        .auth-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
-        }
+        .auth-message { text-align: center; padding: 40px 20px; }
+        .auth-message h2 { color: var(--color-accent); }
+        .auth-message p { color: var(--text-muted); }
+        .auth-btn { display: inline-block; padding: 14px 40px; background: var(--gradient-primary); color: white; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 18px; transition: all 0.3s ease; }
+        .auth-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3); }
 
-        .shop-item {
-            background: var(--bg-shop-item);
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            border: 2px solid var(--border-secondary);
-            transition: all 0.3s;
-        }
-        .shop-item:hover {
-            border-color: var(--color-accent);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-hover);
-        }
-        .shop-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-        }
+        .shop-item { background: var(--bg-shop-item); border-radius: 12px; padding: 16px; text-align: center; border: 2px solid var(--border-secondary); transition: all 0.3s; }
+        .shop-item:hover { border-color: var(--color-accent); transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+        .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
 
         @media (max-width: 768px) {
-            .profile-header {
-                flex-direction: column;
-                text-align: center;
-            }
-            .profile-stats {
-                justify-content: center;
-            }
-            .admin-panel .form-row {
-                flex-direction: column;
-            }
-            .playlist-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            }
-            .admin-coin-section .row {
-                flex-direction: column;
-            }
-            .admin-coin-section .row input {
-                width: 100%;
-            }
-            .admin-coin-section .row .btn-coin-add {
-                width: 100%;
-                text-align: center;
-            }
-            .wall-form {
-                flex-direction: column;
-            }
-            .wall-form .actions {
-                justify-content: flex-end;
-            }
-            .color-picker-grid {
-                grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
-            }
-            .color-picker-grid .color-option {
-                min-height: 30px;
-            }
+            .profile-header { flex-direction: column; text-align: center; }
+            .profile-stats { justify-content: center; }
+            .admin-panel .form-row { flex-direction: column; }
+            .playlist-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+            .admin-coin-section .row { flex-direction: column; }
+            .admin-coin-section .row input { width: 100%; }
+            .admin-coin-section .row .btn-coin-add { width: 100%; text-align: center; }
+            .wall-form { flex-direction: column; }
+            .wall-form .actions { justify-content: flex-end; }
+            .color-picker-grid { grid-template-columns: repeat(auto-fill, minmax(30px, 1fr)); }
+            .color-picker-grid .color-option { min-height: 30px; }
         }
     </style>
 </head>
@@ -823,6 +261,8 @@
             <div class="sidebar-divider"></div>
             <div class="sidebar-section-label">Личное</div>
             <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
+            <a href="inventory.html" class="sidebar-link"><i class="fas fa-box"></i><span>Инвентарь</span></a>
+            <a href="lootboxes.html" class="sidebar-link"><i class="fas fa-gift"></i><span>Лутбоксы</span></a>
             <a href="#playlists" class="sidebar-link"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
             <a href="#shop" class="sidebar-link"><i class="fas fa-coins"></i><span>Магазин DSCoins</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
             <div class="sidebar-divider"></div>
@@ -967,18 +407,13 @@
             html.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             const btn = document.getElementById('themeToggle');
-            if (btn) {
-                btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️';
-            }
+            if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
         }
-
         function loadTheme() {
             const savedTheme = localStorage.getItem('theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
             const btn = document.getElementById('themeToggle');
-            if (btn) {
-                btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
-            }
+            if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
         }
         document.addEventListener('DOMContentLoaded', loadTheme);
 
@@ -988,7 +423,6 @@
             document.getElementById('sidebar-overlay').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
-
         function closeSidebar() {
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('sidebar-overlay').classList.remove('active');
@@ -1001,35 +435,19 @@
         // ========== МОДАЛКИ ==========
         function openModal(id) {
             const el = document.getElementById(id);
-            if (el) {
-                el.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
+            if (el) { el.classList.add('active'); document.body.style.overflow = 'hidden'; }
         }
-
         function closeModal(id) {
             const el = document.getElementById(id);
-            if (el) {
-                el.classList.remove('active');
-                document.body.style.overflow = '';
-            }
+            if (el) { el.classList.remove('active'); document.body.style.overflow = ''; }
         }
-
-        function openDSCoinOrder() {
-            closeSidebar();
-            openModal('m-dscoin-order');
-        }
-
-        function openAdminDSCoins() {
-            closeSidebar();
-            openModal('m-admin-dscoins');
-        }
+        function openDSCoinOrder() { closeSidebar(); openModal('m-dscoin-order'); }
+        function openAdminDSCoins() { closeSidebar(); openModal('m-admin-dscoins'); }
 
         function setDSCoinAmount(amount) {
             document.getElementById('dscoin-order-amount').value = amount;
             updateDSCoinPrice();
         }
-
         function updateDSCoinPrice() {
             const amount = parseInt(document.getElementById('dscoin-order-amount').value) || 0;
             const priceEl = document.getElementById('dscoin-order-price');
@@ -1063,25 +481,16 @@
         function showToast(message, type = 'info', duration = 3000) {
             const container = document.getElementById('toastContainer');
             if (!container) return;
-
-            const icons = {
-                success: '✅',
-                error: '❌',
-                warning: '⚠️',
-                info: 'ℹ️'
-            };
-
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
             const toast = document.createElement('div');
             toast.className = `toast-item ${type}`;
             toast.innerHTML = `
-                        <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
-                        <span class="toast-text">${message}</span>
-                        <button class="toast-close-btn" onclick="this.closest('.toast-item').remove()">✕</button>
-                        <div class="toast-progress"></div>
-                    `;
-
+                <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
+                <span class="toast-text">${message}</span>
+                <button class="toast-close-btn" onclick="this.closest('.toast-item').remove()">✕</button>
+                <div class="toast-progress"></div>
+            `;
             container.appendChild(toast);
-
             setTimeout(() => {
                 if (toast.parentNode) {
                     toast.classList.add('removing');
@@ -1091,11 +500,7 @@
                 }
             }, duration);
         }
-
-        // Заменяем стандартный alert на showToast
-        window.alert = function(message) {
-            showToast(message, 'warning');
-        };
+        window.alert = function(message) { showToast(message, 'warning'); };
     </script>
 
     <!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
@@ -1121,6 +526,7 @@
                 <button class="action-btn coin" onclick="openDSCoinOrder()"><i class="fas fa-plus"></i> Купить</button>
                 <button class="action-btn outline" onclick="document.getElementById('shopSection')?.scrollIntoView({behavior:'smooth'})"><i class="fas fa-store"></i> Магазин</button>
                 <button class="action-btn outline" onclick="showDSCoinHistory()"><i class="fas fa-history"></i> История</button>
+                <button class="action-btn outline" onclick="openTransferCoinsModal()"><i class="fas fa-paper-plane"></i> Перевести</button>
             </div>
         </div>
 
@@ -1133,14 +539,21 @@
                     <div style="font-weight:bold;color:var(--text-primary);">Цветной никнейм</div>
                     <div style="color:#fbbf24;font-weight:bold;font-size:16px;margin:6px 0;"><i class="fas fa-coins"></i> <span id="priceColorNick">500</span></div>
                     <div style="color:var(--text-muted);font-size:12px;margin-bottom:10px;">Измените цвет своего ника в профиле</div>
-                    <button class="action-btn primary" onclick="openEditProfileModal()">Изменить</button>
+                    <button class="action-btn primary" onclick="purchaseItem('color_nick', 500, '🎨 Цветной никнейм')">Купить</button>
                 </div>
                 <div class="shop-item">
                     <div style="font-size:36px;margin-bottom:8px;">🏷️</div>
                     <div style="font-weight:bold;color:var(--text-primary);">Префикс</div>
                     <div style="color:#fbbf24;font-weight:bold;font-size:16px;margin:6px 0;"><i class="fas fa-coins"></i> <span id="pricePrefix">300</span></div>
                     <div style="color:var(--text-muted);font-size:12px;margin-bottom:10px;">Добавьте префикс перед ником (любой длины)</div>
-                    <button class="action-btn primary" onclick="openEditProfileModal()">Изменить</button>
+                    <button class="action-btn primary" onclick="purchaseItem('prefix', 300, '🏷️ Префикс')">Купить</button>
+                </div>
+                <div class="shop-item">
+                    <div style="font-size:36px;margin-bottom:8px;">💬</div>
+                    <div style="font-weight:bold;color:var(--text-primary);">Статус (облачко)</div>
+                    <div style="color:#fbbf24;font-weight:bold;font-size:16px;margin:6px 0;"><i class="fas fa-coins"></i> <span id="priceStatus">1000</span></div>
+                    <div style="color:var(--text-muted);font-size:12px;margin-bottom:10px;">Кастомное облачко под ником. Текст меняется за монеты.</div>
+                    <button class="action-btn primary" onclick="purchaseItem('status', 1000, '💬 Статус (облачко)')">Купить</button>
                 </div>
             </div>
         </div>
@@ -1206,39 +619,14 @@
 
     <script type="module">
         import {
-            getCurrentUser,
-            onAuthStateChangedListener,
-            getUserData,
-            getUserByEmail,
-            updateUserProfile,
-            updateUserRole,
-            getAllUsers,
-            toggleSubscribe,
-            isSubscribed,
-            addCustomAchievement,
-            logoutUser,
-            isAdmin,
-            getVoiceOrders,
-            getUserDSCoins,
-            addDSCoins,
-            createDSCoinOrder,
-            getDSCoinTransactions,
-            getPlaylists,
-            createPlaylist,
-            updatePlaylist,
-            deletePlaylist,
-            getWallPosts,
-            addWallPost,
-            deleteWallPost,
-            updateWallVisibility,
-            getShopPrices,
-            purchaseColorNick,
-            purchasePrefix,
-            getUserRole,
-            spendDSCoins
+            getCurrentUser, onAuthStateChangedListener, getUserData, getUserByEmail, updateUserProfile,
+            updateUserRole, getAllUsers, toggleSubscribe, isSubscribed, addCustomAchievement, logoutUser,
+            isAdmin, getVoiceOrders, getUserDSCoins, addDSCoins, createDSCoinOrder, getDSCoinTransactions,
+            getPlaylists, createPlaylist, updatePlaylist, deletePlaylist, getWallPosts, addWallPost,
+            deleteWallPost, updateWallVisibility, getShopPrices, purchaseColorNick, purchasePrefix,
+            getUserRole, spendDSCoins, addItemToInventory, transferCoins, equipStatus
         } from './firebase-config.js';
 
-        // ===== ДЕЛАЕМ ВСЁ ГЛОБАЛЬНЫМ =====
         window.getUserDSCoins = getUserDSCoins;
         window.getUserByEmail = getUserByEmail;
         window.addDSCoins = addDSCoins;
@@ -1263,6 +651,9 @@
         window.toggleSubscribe = toggleSubscribe;
         window.isSubscribed = isSubscribed;
         window.spendDSCoins = spendDSCoins;
+        window.addItemToInventory = addItemToInventory;
+        window.transferCoins = transferCoins;
+        window.equipStatus = equipStatus;
 
         let currentUser = null;
         let currentUserData = null;
@@ -1281,14 +672,8 @@
         // ===== ОТКРЫТИЕ МОДАЛКИ РЕДАКТИРОВАНИЯ =====
         window.openEditProfileModal = function() {
             const user = getCurrentUser();
-            if (!user) {
-                showToast('❌ Войдите, чтобы редактировать профиль', 'error');
-                return;
-            }
-            if (!currentUserData) {
-                showToast('❌ Данные ещё загружаются, попробуйте позже', 'warning');
-                return;
-            }
+            if (!user) { showToast('❌ Войдите, чтобы редактировать профиль', 'error'); return; }
+            if (!currentUserData) { showToast('❌ Данные ещё загружаются, попробуйте позже', 'warning'); return; }
             document.getElementById('editProfileName').value = currentUserData.displayName || '';
             document.getElementById('editProfileAvatar').value = currentUserData.photoURL || '';
             document.getElementById('editProfilePrefix').value = currentUserData.prefix || '';
@@ -1305,28 +690,19 @@
         // ===== СОХРАНЕНИЕ РЕДАКТИРОВАНИЯ =====
         window.saveProfileEdit = async function() {
             const user = getCurrentUser();
-            if (!user) {
-                showToast('❌ Войдите, чтобы редактировать профиль', 'error');
-                return;
-            }
+            if (!user) { showToast('❌ Войдите, чтобы редактировать профиль', 'error'); return; }
 
             const name = document.getElementById('editProfileName').value.trim();
             const avatar = document.getElementById('editProfileAvatar').value.trim();
             const newPrefix = document.getElementById('editProfilePrefix').value.trim();
             const newColor = document.getElementById('editProfileColor').value;
 
-            if (!name) {
-                showToast('❌ Введите имя', 'error');
-                return;
-            }
+            if (!name) { showToast('❌ Введите имя', 'error'); return; }
 
             let prefixChanged = false;
             let prefixCost = 0;
             if (newPrefix !== (currentUserData.prefix || '')) {
-                if (newPrefix.length > 10) {
-                    showToast('❌ Префикс должен быть не более 10 символов', 'error');
-                    return;
-                }
+                if (newPrefix.length > 10) { showToast('❌ Префикс должен быть не более 10 символов', 'error'); return; }
                 prefixChanged = true;
                 prefixCost = prefixPrice;
             }
@@ -1354,10 +730,7 @@
             }
 
             const coinsResult = await getUserDSCoins(user.uid);
-            if (!coinsResult.success) {
-                showToast('❌ Ошибка проверки баланса', 'error');
-                return;
-            }
+            if (!coinsResult.success) { showToast('❌ Ошибка проверки баланса', 'error'); return; }
             const totalCost = prefixCost + colorCost;
             if (coinsResult.coins < totalCost) {
                 showToast(`❌ Недостаточно DSCoins! Нужно: ${totalCost}, у вас: ${coinsResult.coins}`, 'error');
@@ -1371,10 +744,7 @@
 
             const spendResult = await spendDSCoins(user.uid, totalCost,
                 `Изменение профиля: префикс=${newPrefix}, цвет=${newColor}`);
-            if (!spendResult.success) {
-                showToast('❌ Ошибка списания монет: ' + spendResult.error, 'error');
-                return;
-            }
+            if (!spendResult.success) { showToast('❌ Ошибка списания монет: ' + spendResult.error, 'error'); return; }
 
             const data = {};
             if (name) data.displayName = name;
@@ -1393,13 +763,81 @@
             }
         };
 
+        // ===== ПОКУПКА ПРЕДМЕТА В МАГАЗИНЕ =====
+        window.purchaseItem = async function(itemId, price, itemName) {
+            const user = getCurrentUser();
+            if (!user) { showToast('❌ Войдите в аккаунт', 'error'); return; }
+
+            const coinsResult = await getUserDSCoins(user.uid);
+            if (!coinsResult.success) { showToast('❌ Ошибка проверки баланса', 'error'); return; }
+            const coins = coinsResult.coins;
+            if (coins < price) { showToast(`❌ Недостаточно монет! Нужно ${price}, у вас ${coins}`, 'error'); return; }
+
+            if (!confirm(`Купить "${itemName}" за ${price} монет?`)) return;
+
+            const spendResult = await spendDSCoins(user.uid, price, `Покупка: ${itemName}`);
+            if (!spendResult.success) { showToast('❌ Ошибка списания монет: ' + spendResult.error, 'error'); return; }
+
+            const inventoryItem = {
+                id: itemId,
+                type: itemId,
+                name: itemName,
+                icon: itemId === 'color_nick' ? '🎨' : itemId === 'prefix' ? '🏷️' : '💬',
+                price: price,
+                count: 1,
+                purchasedAt: new Date()
+            };
+
+            const addResult = await addItemToInventory(user.uid, inventoryItem);
+            if (addResult.success) {
+                showToast(`✅ "${itemName}" куплен и добавлен в инвентарь!`, 'success');
+                const newCoinsResult = await getUserDSCoins(user.uid);
+                document.getElementById('profileDSCoins').textContent = newCoinsResult.success ? newCoinsResult.coins : '0';
+                document.getElementById('sidebarBalance').textContent = newCoinsResult.success ? newCoinsResult.coins : '0';
+            } else {
+                showToast('❌ Ошибка добавления в инвентарь: ' + addResult.error, 'error');
+                await addDSCoins(user.uid, price, 'Возврат за неудачную покупку');
+            }
+        };
+
+        // ===== ПЕРЕВОД МОНЕТ =====
+        window.openTransferCoinsModal = function() {
+            openModal('m-transfer-coins');
+        };
+
+        window.handleTransferCoins = async function() {
+            const user = getCurrentUser();
+            if (!user) { showToast('❌ Войдите в аккаунт', 'error'); return; }
+
+            const email = document.getElementById('transfer-target-email').value.trim();
+            const amount = parseInt(document.getElementById('transfer-amount').value);
+
+            if (!email) { showToast('❌ Введите Email получателя', 'error'); return; }
+            if (!amount || amount < 1) { showToast('❌ Введите корректную сумму', 'error'); return; }
+
+            const targetResult = await getUserByEmail(email);
+            if (!targetResult.success) { showToast('❌ Пользователь с таким Email не найден', 'error'); return; }
+            if (user.uid === targetResult.data.id) { showToast('❌ Нельзя перевести монеты самому себе', 'error'); return; }
+
+            if (!confirm(`Перевести ${amount} монет пользователю ${email}?`)) return;
+
+            const result = await transferCoins(user.uid, targetResult.data.id, amount);
+            if (result.success) {
+                showToast(`✅ ${amount} монет переведено!`, 'success');
+                closeModal('m-transfer-coins');
+                document.getElementById('transfer-target-email').value = '';
+                document.getElementById('transfer-amount').value = '';
+                const coinsResult = await getUserDSCoins(user.uid);
+                document.getElementById('profileDSCoins').textContent = coinsResult.success ? coinsResult.coins : '0';
+            } else {
+                showToast('❌ ' + result.error, 'error');
+            }
+        };
+
         // ===== ОСТАЛЬНЫЕ ФУНКЦИИ =====
         window.showDSCoinHistory = async function() {
             const user = getCurrentUser();
-            if (!user) {
-                showToast('Войдите, чтобы увидеть историю', 'warning');
-                return;
-            }
+            if (!user) { showToast('Войдите, чтобы увидеть историю', 'warning'); return; }
             const result = await getDSCoinTransactions(user.uid);
             const list = document.getElementById('historyList');
             if (!result.success || result.transactions.length === 0) {
@@ -1409,14 +847,14 @@
                     const date = t.timestamp ? new Date(t.timestamp.seconds * 1000).toLocaleDateString() : '';
                     const isIncome = t.amount > 0;
                     return `
-                                <div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid var(--border-secondary);">
-                                    <div>
-                                        <div style="font-weight:bold;color:${isIncome ? 'var(--color-success)' : 'var(--color-danger)'};">${isIncome ? '+' : ''}${t.amount} DSCoins</div>
-                                        <div style="font-size:12px;color:var(--text-muted);">${t.reason || ''}</div>
-                                    </div>
-                                    <div style="font-size:12px;color:var(--text-muted);">${date}</div>
-                                </div>
-                            `;
+                        <div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid var(--border-secondary);">
+                            <div>
+                                <div style="font-weight:bold;color:${isIncome ? 'var(--color-success)' : 'var(--color-danger)'};">${isIncome ? '+' : ''}${t.amount} DSCoins</div>
+                                <div style="font-size:12px;color:var(--text-muted);">${t.reason || ''}</div>
+                            </div>
+                            <div style="font-size:12px;color:var(--text-muted);">${date}</div>
+                        </div>
+                    `;
                 }).join('');
             }
             openModal('m-dscoin-history');
@@ -1424,19 +862,13 @@
 
         window.savePlaylist = async function() {
             const user = getCurrentUser();
-            if (!user) {
-                showToast('Войдите, чтобы создать плейлист', 'warning');
-                return;
-            }
+            if (!user) { showToast('Войдите, чтобы создать плейлист', 'warning'); return; }
             const id = document.getElementById('editPlaylistId').value;
             const name = document.getElementById('playlistName').value.trim();
             const description = document.getElementById('playlistDesc').value.trim();
             const image = document.getElementById('playlistImg').value.trim();
             const pinned = document.getElementById('playlistPinned').checked;
-            if (!name) {
-                showToast('Введите название плейлиста', 'warning');
-                return;
-            }
+            if (!name) { showToast('Введите название плейлиста', 'warning'); return; }
 
             let result;
             const data = { name, description, image, pinned };
@@ -1469,26 +901,17 @@
             const playlist = allPlaylists.find(p => p.id === id);
             if (playlist) {
                 openPlaylistModal({
-                    id: playlist.id,
-                    name: playlist.name,
-                    description: playlist.description,
-                    image: playlist.image,
-                    pinned: playlist.pinned
+                    id: playlist.id, name: playlist.name, description: playlist.description,
+                    image: playlist.image, pinned: playlist.pinned
                 });
             }
         };
 
         window.addWallPost = async function() {
             const user = getCurrentUser();
-            if (!user) {
-                showToast('Войдите, чтобы оставить запись', 'warning');
-                return;
-            }
+            if (!user) { showToast('Войдите, чтобы оставить запись', 'warning'); return; }
             const text = document.getElementById('wallInput').value.trim();
-            if (!text) {
-                showToast('Введите текст', 'warning');
-                return;
-            }
+            if (!text) { showToast('Введите текст', 'warning'); return; }
             const userData = await getUserData(user.uid);
             const visibility = userData.success ? (userData.data.wallVisibility || 'all') : 'all';
             const result = await addWallPost(user.uid, text, visibility);
@@ -1526,28 +949,16 @@
         };
 
         window.handleSubscribe = async function() {
-            if (!currentUser) {
-                showToast('Войдите, чтобы подписаться', 'warning');
-                return;
-            }
-            if (currentUser.uid === viewedUserId) {
-                showToast('Нельзя подписаться на себя', 'warning');
-                return;
-            }
+            if (!currentUser) { showToast('Войдите, чтобы подписаться', 'warning'); return; }
+            if (currentUser.uid === viewedUserId) { showToast('Нельзя подписаться на себя', 'warning'); return; }
             const result = await toggleSubscribe(currentUser.uid, viewedUserId);
-            if (result.success) {
-                await loadProfile();
-            } else {
-                showToast('Ошибка: ' + result.error, 'error');
-            }
+            if (result.success) { await loadProfile(); } else { showToast('Ошибка: ' + result.error, 'error'); }
         };
 
         window.handleLogout = async function() {
             if (!confirm('Вы уверены, что хотите выйти?')) return;
             const result = await logoutUser();
-            if (result.success) {
-                window.location.href = 'index.html';
-            }
+            if (result.success) { window.location.href = 'index.html'; }
         };
 
         window.handleRoleChange = async function() {
@@ -1566,10 +977,7 @@
         window.handleCustomAchievement = async function() {
             const name = document.getElementById('customAchievementName')?.value?.trim();
             const icon = document.getElementById('customAchievementIcon')?.value?.trim() || '🏅';
-            if (!name) {
-                showToast('Введите название достижения', 'warning');
-                return;
-            }
+            if (!name) { showToast('Введите название достижения', 'warning'); return; }
             if (!confirm(`Выдать достижение "${name}" пользователю?`)) return;
             const achievement = { id: 'custom_' + Date.now(), name, icon, description: 'Кастомное достижение' };
             const result = await addCustomAchievement(viewedUserId, achievement);
@@ -1589,10 +997,7 @@
             const amountInput = document.getElementById('adminDSCoinsAmount');
             if (!amountInput) return;
             const amount = parseInt(amountInput.value);
-            if (!amount || amount < 1) {
-                showToast('Введите количество DSCoins', 'warning');
-                return;
-            }
+            if (!amount || amount < 1) { showToast('Введите количество DSCoins', 'warning'); return; }
             if (!confirm(`Добавить ${amount} DSCoins пользователю?`)) return;
             const result = await addDSCoins(viewedUserId, amount, 'Начисление администратором');
             if (result.success) {
@@ -1608,30 +1013,27 @@
             const email = document.getElementById('adminSearchEmail')?.value?.trim();
             const resultsContainer = document.getElementById('adminSearchResults');
             if (!resultsContainer) return;
-            if (!email) {
-                resultsContainer.innerHTML = '<p style="color:var(--text-muted);">Введите email для поиска</p>';
-                return;
-            }
+            if (!email) { resultsContainer.innerHTML = '<p style="color:var(--text-muted);">Введите email для поиска</p>'; return; }
             resultsContainer.innerHTML = '<p style="color:var(--text-muted);">⏳ Поиск...</p>';
             const result = await getUserByEmail(email);
             if (result.success) {
                 const user = result.data;
                 const roleNames = { 'admin': 'Администратор', 'dubber': 'Даббер', 'user': 'Пользователь' };
                 resultsContainer.innerHTML = `
-                            <div class="user-search-result">
-                                <div class="user-info">
-                                    <img src="${user.photoURL || 'https://via.placeholder.com/32/d4e8ff/4a90d9?text=?'}" class="user-avatar-small" onerror="this.src='https://via.placeholder.com/32/d4e8ff/4a90d9?text=?'">
-                                    <div>
-                                        <div class="user-name">${user.displayName || 'Без имени'}</div>
-                                        <div class="user-email">${user.email}</div>
-                                    </div>
-                                    <span class="user-current-role">Текущая роль: <strong>${roleNames[user.role] || user.role}</strong></span>
-                                </div>
-                                <div>
-                                    <a href="profile.html?uid=${user.id}" class="action-btn primary" style="padding:4px 12px;font-size:12px;text-decoration:none;">Перейти</a>
-                                </div>
+                    <div class="user-search-result">
+                        <div class="user-info">
+                            <img src="${user.photoURL || 'https://via.placeholder.com/32/d4e8ff/4a90d9?text=?'}" class="user-avatar-small" onerror="this.src='https://via.placeholder.com/32/d4e8ff/4a90d9?text=?'">
+                            <div>
+                                <div class="user-name">${user.displayName || 'Без имени'}</div>
+                                <div class="user-email">${user.email}</div>
                             </div>
-                        `;
+                            <span class="user-current-role">Текущая роль: <strong>${roleNames[user.role] || user.role}</strong></span>
+                        </div>
+                        <div>
+                            <a href="profile.html?uid=${user.id}" class="action-btn primary" style="padding:4px 12px;font-size:12px;text-decoration:none;">Перейти</a>
+                        </div>
+                    </div>
+                `;
             } else {
                 resultsContainer.innerHTML = `<p style="color:var(--color-danger);">❌ ${result.error}</p>`;
             }
@@ -1642,23 +1044,23 @@
             modal.className = 'modal-overlay active';
             modal.style.display = 'flex';
             modal.innerHTML = `
-                        <div class="modal-content" style="max-width:480px;">
-                            <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
-                            <h2>${title}</h2>
-                            <div id="usersModalBody" style="max-height:400px;overflow-y:auto;">
-                                ${users && users.length > 0 ? users.map(uid => `
-                                    <a href="profile.html?uid=${uid}" class="user-search-result" style="text-decoration:none;">
-                                        <div class="user-info">
-                                            <img src="https://via.placeholder.com/32/d4e8ff/4a90d9?text=?" class="user-avatar-small">
-                                            <span class="user-name">${uid}</span>
-                                        </div>
-                                        <span style="color:var(--text-muted);">→</span>
-                                    </a>
-                                `).join('') : '<p style="color:var(--text-muted);text-align:center;">Нет пользователей</p>'}
-                            </div>
-                            <button class="action-btn outline" style="width:100%;margin-top:16px;" onclick="this.closest('.modal-overlay').remove()">Закрыть</button>
-                        </div>
-                    `;
+                <div class="modal-content" style="max-width:480px;">
+                    <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
+                    <h2>${title}</h2>
+                    <div id="usersModalBody" style="max-height:400px;overflow-y:auto;">
+                        ${users && users.length > 0 ? users.map(uid => `
+                            <a href="profile.html?uid=${uid}" class="user-search-result" style="text-decoration:none;">
+                                <div class="user-info">
+                                    <img src="https://via.placeholder.com/32/d4e8ff/4a90d9?text=?" class="user-avatar-small">
+                                    <span class="user-name">${uid}</span>
+                                </div>
+                                <span style="color:var(--text-muted);">→</span>
+                            </a>
+                        `).join('') : '<p style="color:var(--text-muted);text-align:center;">Нет пользователей</p>'}
+                    </div>
+                    <button class="action-btn outline" style="width:100%;margin-top:16px;" onclick="this.closest('.modal-overlay').remove()">Закрыть</button>
+                </div>
+            `;
             document.body.appendChild(modal);
             document.body.style.overflow = 'hidden';
             modal.addEventListener('click', function(e) {
@@ -1748,23 +1150,23 @@
                     container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">У вас пока нет плейлистов</p>';
                 } else {
                     container.innerHTML = `
-                                <div class="playlist-grid">
-                                    ${allPlaylists.map(p => `
-                                        <div class="playlist-card">
-                                            ${p.image ? `<img src="${p.image}" class="cover" onerror="this.style.display='none'">` : `<div class="cover" style="background:var(--bg-welcome);display:flex;align-items:center;justify-content:center;font-size:30px;">📁</div>`}
-                                            <div class="name">${p.name}</div>
-                                            <div class="count">${p.items?.length || 0} релизов</div>
-                                            ${p.pinned ? '<div class="pinned">📌 Закреплён</div>' : ''}
-                                            ${isOwnProfile ? `
-                                                <div style="display:flex;gap:5px;margin-top:8px;justify-content:center;">
-                                                    <button class="action-btn action-btn-sm outline" onclick="editPlaylist('${p.id}')">✏️</button>
-                                                    <button class="action-btn action-btn-sm danger" onclick="deletePlaylistItem('${p.id}')">🗑️</button>
-                                                </div>
-                                            ` : ''}
+                        <div class="playlist-grid">
+                            ${allPlaylists.map(p => `
+                                <div class="playlist-card">
+                                    ${p.image ? `<img src="${p.image}" class="cover" onerror="this.style.display='none'">` : `<div class="cover" style="background:var(--bg-welcome);display:flex;align-items:center;justify-content:center;font-size:30px;">📁</div>`}
+                                    <div class="name">${p.name}</div>
+                                    <div class="count">${p.items?.length || 0} релизов</div>
+                                    ${p.pinned ? '<div class="pinned">📌 Закреплён</div>' : ''}
+                                    ${isOwnProfile ? `
+                                        <div style="display:flex;gap:5px;margin-top:8px;justify-content:center;">
+                                            <button class="action-btn action-btn-sm outline" onclick="editPlaylist('${p.id}')">✏️</button>
+                                            <button class="action-btn action-btn-sm danger" onclick="deletePlaylistItem('${p.id}')">🗑️</button>
                                         </div>
-                                    `).join('')}
+                                    ` : ''}
                                 </div>
-                            `;
+                            `).join('')}
+                        </div>
+                    `;
                 }
             }
         }
@@ -1772,76 +1174,53 @@
         async function loadWall() {
             const container = document.getElementById('wallContainer');
             if (!container) return;
-
             const user = getCurrentUser();
-            if (!user) {
-                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Войдите, чтобы видеть стену</p>';
-                return;
-            }
+            if (!user) { container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Войдите, чтобы видеть стену</p>'; return; }
 
             let targetUid = viewedUserId || user.uid;
             const isOwner = user.uid === targetUid;
-
             const formContainer = document.getElementById('wallFormContainer');
-            if (formContainer) {
-                formContainer.style.display = isOwner ? 'block' : 'none';
-            }
-
+            if (formContainer) formContainer.style.display = isOwner ? 'block' : 'none';
             const settingsBtn = document.getElementById('wallSettingsBtn');
-            if (settingsBtn) {
-                settingsBtn.style.display = isOwner ? 'inline-flex' : 'none';
-            }
+            if (settingsBtn) settingsBtn.style.display = isOwner ? 'inline-flex' : 'none';
 
             try {
                 const result = await getWallPosts(targetUid);
-                if (!result.success) {
-                    container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки записей</p>';
-                    return;
-                }
+                if (!result.success) { container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки записей</p>'; return; }
 
                 const visibility = result.visibility || 'all';
                 const visibilityBadge = document.getElementById('wallVisibilityBadge');
                 if (visibilityBadge) {
-                    const labels = {
-                        'all': '🌍 Доступна всем',
-                        'friends': '👥 Только подписчикам',
-                        'disabled': '🔒 Закрыта'
-                    };
+                    const labels = { 'all': '🌍 Доступна всем', 'friends': '👥 Только подписчикам', 'disabled': '🔒 Закрыта' };
                     visibilityBadge.textContent = labels[visibility] || '🌍 Доступна всем';
-                    visibilityBadge.className =
-                        `visibility-badge ${visibility === 'disabled' ? 'private' : visibility === 'friends' ? 'friends' : 'public'}`;
+                    visibilityBadge.className = `visibility-badge ${visibility === 'disabled' ? 'private' : visibility === 'friends' ? 'friends' : 'public'}`;
                 }
 
                 const posts = result.posts;
-                if (posts.length === 0) {
-                    container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Пока нет записей на стене</p>';
-                    return;
-                }
+                if (posts.length === 0) { container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Пока нет записей на стене</p>'; return; }
 
                 container.innerHTML = posts.map(post => {
                     const isOwnPost = user && user.uid === post.userId;
-                    const visibilityLabel = post.visibility === 'friends' ? '👥 Подписчики' :
-                        post.visibility === 'disabled' ? '🔒 Закрыто' : '🌍 Все';
-                    const visClass = post.visibility === 'disabled' ? 'private' :
-                        post.visibility === 'friends' ? 'friends' : 'public';
+                    const visibilityLabel = post.visibility === 'friends' ? '👥 Подписчики' : post.visibility === 'disabled' ? '🔒 Закрыто' : '🌍 Все';
+                    const visClass = post.visibility === 'disabled' ? 'private' : post.visibility === 'friends' ? 'friends' : 'public';
                     return `
-                                <div class="wall-post">
-                                    <div class="header">
-                                        <div class="user">
-                                            <div class="avatar" style="background:var(--color-accent);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px;">${post.userName?.charAt(0).toUpperCase() || '?'}</div>
-                                            <span class="name">${post.userName || 'Пользователь'}</span>
-                                            <span class="visibility-badge ${visClass}">${visibilityLabel}</span>
-                                        </div>
-                                        <span class="time">${post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleString() : ''}</span>
-                                    </div>
-                                    <div class="text">${post.text}</div>
-                                    ${isOwnPost ? `
-                                        <div class="actions">
-                                            <button onclick="deleteWallPost('${post.id}')">🗑️ Удалить</button>
-                                        </div>
-                                    ` : ''}
+                        <div class="wall-post">
+                            <div class="header">
+                                <div class="user">
+                                    <div class="avatar" style="background:var(--color-accent);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px;">${post.userName?.charAt(0).toUpperCase() || '?'}</div>
+                                    <span class="name">${post.userName || 'Пользователь'}</span>
+                                    <span class="visibility-badge ${visClass}">${visibilityLabel}</span>
                                 </div>
-                            `;
+                                <span class="time">${post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleString() : ''}</span>
+                            </div>
+                            <div class="text">${post.text}</div>
+                            ${isOwnPost ? `
+                                <div class="actions">
+                                    <button onclick="deleteWallPost('${post.id}')">🗑️ Удалить</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
                 }).join('');
             } catch (e) {
                 console.error('Ошибка загрузки стены:', e);
@@ -1853,37 +1232,29 @@
             const container = document.getElementById('ordersList');
             if (!container) return;
             const user = getCurrentUser();
-            if (!user) {
-                container.innerHTML = '<p style="color:var(--text-muted);">Войдите, чтобы увидеть заявки</p>';
-                return;
-            }
+            if (!user) { container.innerHTML = '<p style="color:var(--text-muted);">Войдите, чтобы увидеть заявки</p>'; return; }
             const result = await getVoiceOrders(user.uid);
             if (!result.success || result.orders.length === 0) {
                 container.innerHTML = '<p style="color:var(--text-muted);">У вас пока нет заявок</p>';
                 return;
             }
-            const statusMap = {
-                'pending': '⏳ Ожидает оплаты',
-                'paid': '✅ Оплачено',
-                'completed': '🎉 Выполнено',
-                'cancelled': '❌ Отменено'
-            };
+            const statusMap = { 'pending': '⏳ Ожидает оплаты', 'paid': '✅ Оплачено', 'completed': '🎉 Выполнено', 'cancelled': '❌ Отменено' };
             container.innerHTML = result.orders.map(order => `
-                        <div style="background:var(--bg-order-item);border-radius:10px;padding:15px;margin-bottom:10px;border-left:4px solid ${order.status === 'paid' ? 'var(--color-success)' : order.status === 'completed' ? 'var(--color-accent)' : 'var(--color-warning)'};">
-                            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;">
-                                <strong style="color:var(--color-accent);">${order.title}</strong>
-                                <span style="color:var(--text-muted);">${order.type} • ${order.episodes} серий</span>
-                            </div>
-                            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;margin-top:5px;">
-                                <span style="color:var(--text-muted);font-size:13px;">${order.description || 'Без описания'}</span>
-                                <span style="color:var(--color-warning);font-weight:bold;">${order.price} ₽</span>
-                            </div>
-                            <div style="margin-top:5px;">
-                                <span style="color:var(--text-muted);font-size:12px;">${statusMap[order.status] || order.status}</span>
-                                ${order.status === 'paid' ? '<span style="color:var(--color-success);font-size:12px;margin-left:10px;">🎙️ Ждите связи</span>' : ''}
-                            </div>
-                        </div>
-                    `).join('');
+                <div style="background:var(--bg-order-item);border-radius:10px;padding:15px;margin-bottom:10px;border-left:4px solid ${order.status === 'paid' ? 'var(--color-success)' : order.status === 'completed' ? 'var(--color-accent)' : 'var(--color-warning)'};">
+                    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;">
+                        <strong style="color:var(--color-accent);">${order.title}</strong>
+                        <span style="color:var(--text-muted);">${order.type} • ${order.episodes} серий</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;margin-top:5px;">
+                        <span style="color:var(--text-muted);font-size:13px;">${order.description || 'Без описания'}</span>
+                        <span style="color:var(--color-warning);font-weight:bold;">${order.price} ₽</span>
+                    </div>
+                    <div style="margin-top:5px;">
+                        <span style="color:var(--text-muted);font-size:12px;">${statusMap[order.status] || order.status}</span>
+                        ${order.status === 'paid' ? '<span style="color:var(--color-success);font-size:12px;margin-left:10px;">🎙️ Ждите связи</span>' : ''}
+                    </div>
+                </div>
+            `).join('');
         }
 
         async function renderProfile(user, userData, isOwn) {
@@ -1900,6 +1271,7 @@
 
             const nickColor = userData.nickColor || null;
             const prefix = userData.prefix || null;
+            const equippedStatus = userData.equippedStatus || null;
 
             const roleNames = { 'admin': '👑 Администратор', 'dubber': '🎙️ Даббер', 'user': '👤 Пользователь' };
             const roleClass = { 'admin': 'role-admin', 'dubber': 'role-dubber', 'user': 'role-user' };
@@ -1908,145 +1280,142 @@
             if (!isOwn && currentUser) {
                 const isSub = await isSubscribed(currentUser.uid, viewedUserId);
                 subscribeButton = `
-                            <button class="action-btn ${isSub ? 'subscribed' : 'outline'}" onclick="handleSubscribe()">
-                                ${isSub ? '✅ Подписан' : '➕ Подписаться'}
-                            </button>
-                        `;
+                    <button class="action-btn ${isSub ? 'subscribed' : 'outline'}" onclick="handleSubscribe()">
+                        ${isSub ? '✅ Подписан' : '➕ Подписаться'}
+                    </button>
+                `;
             }
 
             let nameHtml = displayName;
-            if (prefix) {
-                nameHtml = `<span class="prefix">${prefix}</span> ${displayName}`;
-            }
+            if (prefix) { nameHtml = `<span class="prefix">${prefix}</span> ${displayName}`; }
             const nameStyle = nickColor ? `color: ${nickColor};` : '';
 
             let adminPanel = '';
             if (isAdminUser && !isOwn) {
                 adminPanel = `
-                            <div class="admin-panel">
-                                <h3>👑 Управление пользователем</h3>
-                                <div style="margin-bottom:15px;padding:10px;background:var(--bg-welcome);border-radius:8px;">
-                                    <p style="color:var(--text-muted);font-size:13px;">
-                                        <strong>Цвет ника:</strong> ${nickColor ? `<span style="color:${nickColor};font-weight:bold;">${nickColor}</span>` : 'Не установлен'}
-                                        &nbsp;|&nbsp;
-                                        <strong>Префикс:</strong> ${prefix ? `<span style="font-weight:bold;">${prefix}</span>` : 'Не установлен'}
-                                    </p>
-                                </div>
-                                <div style="margin-bottom:15px;">
-                                    <p style="color:var(--text-muted);font-size:14px;">Текущая роль: <strong style="color:var(--color-accent);">${roleNames[role] || role}</strong></p>
-                                    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-                                        <select id="adminRoleSelect" style="padding:8px 16px;border-radius:15px;border:2px solid var(--border-primary);background:var(--bg-card);color:var(--text-primary);font-size:14px;">
-                                            <option value="user" ${role === 'user' ? 'selected' : ''}>👤 Пользователь</option>
-                                            <option value="dubber" ${role === 'dubber' ? 'selected' : ''}>🎙️ Даббер</option>
-                                            <option value="admin" ${role === 'admin' ? 'selected' : ''}>👑 Администратор</option>
-                                        </select>
-                                        <button class="action-btn primary" onclick="handleRoleChange()">💾 Применить роль</button>
-                                    </div>
-                                </div>
-                                <hr style="border-color:var(--border-primary);margin:15px 0;">
-                                <div style="margin-bottom:15px;">
-                                    <p style="color:var(--text-muted);font-size:14px;">🏅 Выдать кастомное достижение</p>
-                                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                                        <input type="text" id="customAchievementName" placeholder="Название" style="flex:1;padding:8px 14px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);min-width:150px;">
-                                        <input type="text" id="customAchievementIcon" placeholder="Иконка" style="width:60px;padding:8px 14px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);">
-                                        <button class="action-btn success" onclick="handleCustomAchievement()">🏅 Выдать</button>
-                                    </div>
-                                </div>
-                                <hr style="border-color:var(--border-primary);margin:15px 0;">
-                                <div class="admin-coin-section">
-                                    <div class="title"><i class="fas fa-coins"></i> Выдача DSCoins</div>
-                                    <div class="row">
-                                        <input type="number" id="adminDSCoinsAmount" placeholder="Количество монет..." min="1">
-                                        <button class="btn-coin-add" onclick="handleAdminDSCoins()">
-                                            <i class="fas fa-plus"></i> Добавить монеты
-                                        </button>
-                                    </div>
-                                    <div style="font-size:11px;color:var(--text-muted);margin-top:6px;">
-                                        💡 Монеты будут добавлены на баланс пользователя
-                                    </div>
-                                </div>
+                    <div class="admin-panel">
+                        <h3>👑 Управление пользователем</h3>
+                        <div style="margin-bottom:15px;padding:10px;background:var(--bg-welcome);border-radius:8px;">
+                            <p style="color:var(--text-muted);font-size:13px;">
+                                <strong>Цвет ника:</strong> ${nickColor ? `<span style="color:${nickColor};font-weight:bold;">${nickColor}</span>` : 'Не установлен'}
+                                &nbsp;|&nbsp;
+                                <strong>Префикс:</strong> ${prefix ? `<span style="font-weight:bold;">${prefix}</span>` : 'Не установлен'}
+                            </p>
+                        </div>
+                        <div style="margin-bottom:15px;">
+                            <p style="color:var(--text-muted);font-size:14px;">Текущая роль: <strong style="color:var(--color-accent);">${roleNames[role] || role}</strong></p>
+                            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                                <select id="adminRoleSelect" style="padding:8px 16px;border-radius:15px;border:2px solid var(--border-primary);background:var(--bg-card);color:var(--text-primary);font-size:14px;">
+                                    <option value="user" ${role === 'user' ? 'selected' : ''}>👤 Пользователь</option>
+                                    <option value="dubber" ${role === 'dubber' ? 'selected' : ''}>🎙️ Даббер</option>
+                                    <option value="admin" ${role === 'admin' ? 'selected' : ''}>👑 Администратор</option>
+                                </select>
+                                <button class="action-btn primary" onclick="handleRoleChange()">💾 Применить роль</button>
                             </div>
-                        `;
+                        </div>
+                        <hr style="border-color:var(--border-primary);margin:15px 0;">
+                        <div style="margin-bottom:15px;">
+                            <p style="color:var(--text-muted);font-size:14px;">🏅 Выдать кастомное достижение</p>
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                                <input type="text" id="customAchievementName" placeholder="Название" style="flex:1;padding:8px 14px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);min-width:150px;">
+                                <input type="text" id="customAchievementIcon" placeholder="Иконка" style="width:60px;padding:8px 14px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);">
+                                <button class="action-btn success" onclick="handleCustomAchievement()">🏅 Выдать</button>
+                            </div>
+                        </div>
+                        <hr style="border-color:var(--border-primary);margin:15px 0;">
+                        <div class="admin-coin-section">
+                            <div class="title"><i class="fas fa-coins"></i> Выдача DSCoins</div>
+                            <div class="row">
+                                <input type="number" id="adminDSCoinsAmount" placeholder="Количество монет..." min="1">
+                                <button class="btn-coin-add" onclick="handleAdminDSCoins()"><i class="fas fa-plus"></i> Добавить монеты</button>
+                            </div>
+                            <div style="font-size:11px;color:var(--text-muted);margin-top:6px;">💡 Монеты будут добавлены на баланс пользователя</div>
+                        </div>
+                    </div>
+                `;
             }
 
             let adminOwnPanel = '';
             if (isAdminUser && isOwn) {
                 adminOwnPanel = `
-                            <div class="admin-panel">
-                                <h3>👑 Админ-панель</h3>
-                                <p style="color:var(--text-muted);font-size:14px;margin-bottom:15px;">Управление пользователями по email</p>
-                                <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                                    <input type="email" id="adminSearchEmail" placeholder="Введите email пользователя" style="flex:1;padding:10px 16px;border-radius:10px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);font-size:14px;min-width:200px;">
-                                    <button class="search-btn" onclick="searchUserByEmail()">🔍 Найти</button>
-                                </div>
-                                <div id="adminSearchResults" style="margin-top:15px;">
-                                    <p style="color:var(--text-muted);">Введите email для поиска пользователя</p>
-                                </div>
-                            </div>
-                        `;
+                    <div class="admin-panel">
+                        <h3>👑 Админ-панель</h3>
+                        <p style="color:var(--text-muted);font-size:14px;margin-bottom:15px;">Управление пользователями по email</p>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                            <input type="email" id="adminSearchEmail" placeholder="Введите email пользователя" style="flex:1;padding:10px 16px;border-radius:10px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);font-size:14px;min-width:200px;">
+                            <button class="search-btn" onclick="searchUserByEmail()">🔍 Найти</button>
+                        </div>
+                        <div id="adminSearchResults" style="margin-top:15px;">
+                            <p style="color:var(--text-muted);">Введите email для поиска пользователя</p>
+                        </div>
+                    </div>
+                `;
             }
 
             let achievementsHtml = '';
             if (achievements.length > 0) {
                 achievementsHtml = `
-                            <div class="achievements-section">
-                                <h3 style="color:var(--color-accent);">🏆 Достижения</h3>
-                                <div class="achievements-grid">
-                                    ${achievements.map(a => `
-                                        <div class="achievement-card">
-                                            <div class="achievement-icon">${a.icon || '🏅'}</div>
-                                            <div class="achievement-name">${a.name}</div>
-                                            <div class="achievement-desc">${a.description || ''}</div>
-                                        </div>
-                                    `).join('')}
+                    <div class="achievements-section">
+                        <h3 style="color:var(--color-accent);">🏆 Достижения</h3>
+                        <div class="achievements-grid">
+                            ${achievements.map(a => `
+                                <div class="achievement-card">
+                                    <div class="achievement-icon">${a.icon || '🏅'}</div>
+                                    <div class="achievement-name">${a.name}</div>
+                                    <div class="achievement-desc">${a.description || ''}</div>
                                 </div>
-                            </div>
-                        `;
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
             }
 
             const subscribersCount = subscribers.length;
             const subscriptionsCount = subscriptions.length;
 
             container.innerHTML = `
-                        <div class="profile-container">
-                            <div class="profile-header">
-                                <img src="${avatarUrl || 'https://via.placeholder.com/120/d4e8ff/4a90d9?text=?'}" 
-                                     class="profile-avatar-large" 
-                                     onerror="this.src='https://via.placeholder.com/120/d4e8ff/4a90d9?text=?'">
-                                <div class="profile-info">
-                                    <h1 class="profile-name" id="profileDisplayName" style="${nameStyle}">${nameHtml}</h1>
-                                    <div class="profile-email">${isOwn ? email : ''}</div>
-                                    <span class="profile-role ${roleClass[role] || 'role-user'}">${roleNames[role] || 'Пользователь'}</span>
-                                    <div class="profile-actions">
-                                        ${isOwn ? `
-                                            <button class="action-btn primary" onclick="openEditProfileModal()">✏️ Редактировать</button>
-                                            <button class="action-btn danger" onclick="handleLogout()">🚪 Выйти</button>
-                                        ` : subscribeButton}
-                                    </div>
+                <div class="profile-container">
+                    <div class="profile-header">
+                        <img src="${avatarUrl || 'https://via.placeholder.com/120/d4e8ff/4a90d9?text=?'}" 
+                             class="profile-avatar-large" 
+                             onerror="this.src='https://via.placeholder.com/120/d4e8ff/4a90d9?text=?'">
+                        <div class="profile-info">
+                            <h1 class="profile-name" id="profileDisplayName" style="${nameStyle}">${nameHtml}</h1>
+                            ${equippedStatus ? `
+                                <div style="display:inline-block;background:var(--bg-welcome);border:1px solid var(--color-accent);border-radius:12px;padding:2px 12px;font-size:12px;color:var(--text-primary);margin-top:4px;box-shadow:0 2px 8px rgba(60,80,180,0.1);">
+                                    💬 ${equippedStatus.text}
                                 </div>
+                            ` : ''}
+                            <div class="profile-email">${isOwn ? email : ''}</div>
+                            <span class="profile-role ${roleClass[role] || 'role-user'}">${roleNames[role] || 'Пользователь'}</span>
+                            <div class="profile-actions">
+                                ${isOwn ? `
+                                    <button class="action-btn primary" onclick="openEditProfileModal()">✏️ Редактировать</button>
+                                    <button class="action-btn danger" onclick="handleLogout()">🚪 Выйти</button>
+                                ` : subscribeButton}
                             </div>
-
-                            <div class="profile-stats">
-                                <div class="stat-item"><div class="stat-number">${viewsCount}</div><div class="stat-label">Просмотров</div></div>
-                                <div class="stat-item"><div class="stat-number">${commentsCount}</div><div class="stat-label">Комментариев</div></div>
-                                <div class="stat-item stat-clickable" onclick="openUsersModal('Подписчики', ${JSON.stringify(subscribers)})">
-                                    <div class="stat-number">${subscribersCount}</div><div class="stat-label">Подписчиков</div>
-                                </div>
-                                <div class="stat-item stat-clickable" onclick="openUsersModal('Подписки', ${JSON.stringify(subscriptions)})">
-                                    <div class="stat-number">${subscriptionsCount}</div><div class="stat-label">Подписок</div>
-                                </div>
-                            </div>
-
-                            ${achievementsHtml}
-                            ${adminPanel}
-                            ${adminOwnPanel}
                         </div>
-                    `;
+                    </div>
+
+                    <div class="profile-stats">
+                        <div class="stat-item"><div class="stat-number">${viewsCount}</div><div class="stat-label">Просмотров</div></div>
+                        <div class="stat-item"><div class="stat-number">${commentsCount}</div><div class="stat-label">Комментариев</div></div>
+                        <div class="stat-item stat-clickable" onclick="openUsersModal('Подписчики', ${JSON.stringify(subscribers)})">
+                            <div class="stat-number">${subscribersCount}</div><div class="stat-label">Подписчиков</div>
+                        </div>
+                        <div class="stat-item stat-clickable" onclick="openUsersModal('Подписки', ${JSON.stringify(subscriptions)})">
+                            <div class="stat-number">${subscriptionsCount}</div><div class="stat-label">Подписок</div>
+                        </div>
+                    </div>
+
+                    ${achievementsHtml}
+                    ${adminPanel}
+                    ${adminOwnPanel}
+                </div>
+            `;
 
             const wallSection = document.getElementById('wallSection');
-            if (wallSection) {
-                wallSection.style.display = 'block';
-            }
+            if (wallSection) wallSection.style.display = 'block';
 
             await loadWall();
 
@@ -2079,12 +1448,8 @@
                 targetUid = viewedId;
             } else if (viewedEmail) {
                 const result = await getUserByEmail(viewedEmail);
-                if (result.success) {
-                    targetUid = result.data.id;
-                    viewedUserData = result.data;
-                } else {
-                    container.innerHTML =
-                        `<p style="color:var(--color-danger);text-align:center;">❌ Пользователь с email "${viewedEmail}" не найден</p>`;
+                if (result.success) { targetUid = result.data.id; viewedUserData = result.data; } else {
+                    container.innerHTML = `<p style="color:var(--color-danger);text-align:center;">❌ Пользователь с email "${viewedEmail}" не найден</p>`;
                     return;
                 }
             } else if (user) {
@@ -2093,13 +1458,13 @@
 
             if (!targetUid) {
                 container.innerHTML = `
-                            <div class="auth-message">
-                                <h2>🔒 Вы не авторизованы</h2>
-                                <p>Войдите или зарегистрируйтесь, чтобы увидеть профиль</p>
-                                <br>
-                                <a href="login.html" class="auth-btn">🔑 Войти</a>
-                            </div>
-                        `;
+                    <div class="auth-message">
+                        <h2>🔒 Вы не авторизованы</h2>
+                        <p>Войдите или зарегистрируйтесь, чтобы увидеть профиль</p>
+                        <br>
+                        <a href="login.html" class="auth-btn">🔑 Войти</a>
+                    </div>
+                `;
                 return;
             }
 
@@ -2107,21 +1472,12 @@
             isOwnProfile = user && user.uid === targetUid;
 
             const result = await getUserData(targetUid);
-            if (!result.success) {
-                container.innerHTML = `<p style="color:var(--color-danger);text-align:center;">❌ ${result.error}</p>`;
-                return;
-            }
+            if (!result.success) { container.innerHTML = `<p style="color:var(--color-danger);text-align:center;">❌ ${result.error}</p>`; return; }
 
             viewedUserData = result.data;
-            if (isOwnProfile) {
-                currentUserData = result.data;
-            }
+            if (isOwnProfile) { currentUserData = result.data; }
 
-            if (user) {
-                isAdminUser = await isAdmin(user.uid);
-            } else {
-                isAdminUser = false;
-            }
+            if (user) { isAdminUser = await isAdmin(user.uid); } else { isAdminUser = false; }
 
             await renderProfile(user, viewedUserData, isOwnProfile);
             await loadOrders();
@@ -2152,102 +1508,91 @@
 
     <!-- ========== КОНТЕЙНЕР ДЛЯ TOAST-УВЕДОМЛЕНИЙ ========== -->
     <div id="toastContainer" class="toast-container"></div>
+
     <!-- ========== МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ ========== -->
-<div id="confirm-modal">
-    <div class="modal-box">
-        <div class="modal-icon" id="confirmIcon">❓</div>
-        <div class="modal-title" id="confirmTitle">Подтверждение</div>
-        <div class="modal-message" id="confirmMessage">Вы уверены?</div>
-        <div class="modal-buttons">
-            <button class="btn-no" id="confirmNo">Отмена</button>
-            <button class="btn-yes" id="confirmYes">Да</button>
+    <div id="confirm-modal">
+        <div class="modal-box">
+            <div class="modal-icon" id="confirmIcon">❓</div>
+            <div class="modal-title" id="confirmTitle">Подтверждение</div>
+            <div class="modal-message" id="confirmMessage">Вы уверены?</div>
+            <div class="modal-buttons">
+                <button class="btn-no" id="confirmNo">Отмена</button>
+                <button class="btn-yes" id="confirmYes">Да</button>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-// ========== ЕДИНАЯ ФУНКЦИЯ ПОДТВЕРЖДЕНИЯ ЧЕРЕЗ МОДАЛКУ ==========
-// Заменяет стандартный confirm() на красивую модалку
-function showConfirm(message, title = 'Подтверждение', icon = '❓', isDanger = false) {
-    return new Promise((resolve) => {
-        const modal = document.getElementById('confirm-modal');
-        const titleEl = document.getElementById('confirmTitle');
-        const msgEl = document.getElementById('confirmMessage');
-        const iconEl = document.getElementById('confirmIcon');
-        const yesBtn = document.getElementById('confirmYes');
-        const noBtn = document.getElementById('confirmNo');
+    <script>
+        function showConfirm(message, title = 'Подтверждение', icon = '❓', isDanger = false) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('confirm-modal');
+                const titleEl = document.getElementById('confirmTitle');
+                const msgEl = document.getElementById('confirmMessage');
+                const iconEl = document.getElementById('confirmIcon');
+                const yesBtn = document.getElementById('confirmYes');
+                const noBtn = document.getElementById('confirmNo');
 
-        // Настраиваем содержимое
-        titleEl.textContent = title;
-        msgEl.textContent = message;
-        iconEl.textContent = icon;
+                titleEl.textContent = title;
+                msgEl.textContent = message;
+                iconEl.textContent = icon;
+                yesBtn.className = isDanger ? 'btn-danger' : 'btn-yes';
+                modal.classList.add('active');
 
-        // Если опасное действие — делаем кнопку Да красной
-        if (isDanger) {
-            yesBtn.className = 'btn-danger';
-        } else {
-            yesBtn.className = 'btn-yes';
+                const closeAndResolve = (value) => {
+                    modal.classList.remove('active');
+                    resolve(value);
+                };
+                yesBtn.onclick = () => closeAndResolve(true);
+                noBtn.onclick = () => closeAndResolve(false);
+                modal.onclick = (e) => {
+                    if (e.target === modal) closeAndResolve(false);
+                };
+                const keyHandler = (e) => {
+                    if (e.key === 'Escape') {
+                        closeAndResolve(false);
+                        document.removeEventListener('keydown', keyHandler);
+                    }
+                };
+                document.addEventListener('keydown', keyHandler);
+            });
         }
+        window.confirm = function(message) { return showConfirm(message, 'Подтверждение', '❓', false); };
+        window.confirmDelete = function(message) { return showConfirm(message, 'Удаление', '⚠️', true); };
+        window.confirmAction = function(message, title = 'Подтверждение') { return showConfirm(message, title, '🤔', false); };
+    </script>
 
-        // Открываем модалку
-        modal.classList.add('active');
+    <!-- ===== МОДАЛКА ПЕРЕВОДА МОНЕТ ===== -->
+    <div class="modal-overlay" id="m-transfer-coins">
+        <div class="modal-content" style="max-width:400px;">
+            <button class="modal-close" onclick="closeModal('m-transfer-coins')">✕</button>
+            <h3><i class="fas fa-paper-plane" style="color:var(--color-accent);"></i> Перевести монеты</h3>
+            <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">
+                Введите Email получателя и сумму. Монеты спишутся с вашего баланса.
+            </p>
+            <div class="form-group">
+                <label>Email получателя *</label>
+                <input type="email" id="transfer-target-email" placeholder="user@example.com">
+            </div>
+            <div class="form-group">
+                <label>Количество монет *</label>
+                <input type="number" id="transfer-amount" placeholder="10" min="1">
+            </div>
+            <button class="submit-btn" onclick="handleTransferCoins()"><i class="fas fa-paper-plane"></i> Перевести</button>
+            <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-transfer-coins')">Отмена</button>
+        </div>
+    </div>
 
-        // Обработчики
-        const closeAndResolve = (value) => {
-            modal.classList.remove('active');
-            resolve(value);
-        };
-
-        yesBtn.onclick = () => closeAndResolve(true);
-        noBtn.onclick = () => closeAndResolve(false);
-
-        // Закрытие по клику вне окна
-        modal.onclick = (e) => {
-            if (e.target === modal) closeAndResolve(false);
-        };
-
-        // Закрытие по Escape
-        const keyHandler = (e) => {
-            if (e.key === 'Escape') {
-                closeAndResolve(false);
-                document.removeEventListener('keydown', keyHandler);
-            }
-        };
-        document.addEventListener('keydown', keyHandler);
-    });
-}
-
-// ===== ПЕРЕОПРЕДЕЛЯЕМ СТАНДАРТНЫЙ confirm =====
-// Теперь везде, где был confirm(), будет вызываться наша модалка
-window.confirm = function(message) {
-    return showConfirm(message, 'Подтверждение', '❓', false);
-};
-
-// Дополнительные удобные варианты
-window.confirmDelete = function(message) {
-    return showConfirm(message, 'Удаление', '⚠️', true);
-};
-
-window.confirmAction = function(message, title = 'Подтверждение') {
-    return showConfirm(message, title, '🤔', false);
-};
-</script>
-<script>
-    // Регистрация Service Worker для PWA
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/site/sw.js')
-            .then(() => console.log('✅ Service Worker зарегистрирован'))
-            .catch(err => console.log('❌ Ошибка SW:', err));
-    }
-    // Обработка глобальных ошибок сети
-    window.addEventListener('online', () => {
-        document.body.style.display = 'block';
-    });
-    window.addEventListener('offline', () => {
-        if (!navigator.onLine) {
-            window.location.href = '/site/offline.html'; // <-- Тоже исправляем путь
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/site/sw.js')
+                .then(() => console.log('✅ Service Worker зарегистрирован'))
+                .catch(err => console.log('❌ Ошибка SW:', err));
         }
-    });
-</script>
+        window.addEventListener('online', () => { document.body.style.display = 'block'; });
+        window.addEventListener('offline', () => {
+            if (!navigator.onLine) { window.location.href = '/site/offline.html'; }
+        });
+    </script>
+
 </body>
 </html>
