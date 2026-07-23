@@ -133,7 +133,9 @@
     
     /* ===== ГЛАВНОЕ: ВОЗВРАЩАЕМ БЕЛЫЙ ТЕКСТ В СВЕТЛОЙ ТЕМЕ ===== */
     --text-primary: #ffffff;
+    --featured-header: #2a44ec;
     --text-secondary: #ffffff;
+    --text-title-meta: #2a44ec;
     --text-muted: #6a7a9a;
     --text-light: #5a6a8a;
     --text-white: #ffffff;
@@ -701,8 +703,8 @@ hr {
 }
 
 .title-card-meta {
-    font-size: 14px;
-    color: var(--text-secondary);
+    font-size: 16px;
+    color: var(--text-title-meta);
     display: flex;
     justify-content: space-between;
 }
@@ -945,6 +947,110 @@ hr {
 }
 .toast-close-btn:hover {
     color: var(--text-primary);
+}
+
+/* ===== НОВЫЙ ДИЗАЙН ЗАГОЛОВКА НА ГЛАВНОЙ ===== */
+.new-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 30px auto 40px auto;
+    text-align: center;
+    gap: 15px;
+    max-width: 800px;
+}
+
+/* Иконка наушников */
+.hero-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 5px;
+}
+.hero-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Главная плашка (Dream Sound Dubbing) */
+.hero-main-plaque {
+    display: inline-block;
+    padding: 18px 50px;
+    border-radius: 60px;
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 30px rgba(60, 80, 180, 0.25);
+    
+    /* Градиент в точности как на макете (синий -> фиолетовый) */
+    background: linear-gradient(90deg, #1a3a8a 0%, #6a2aaa 50%, #9a4aba 100%);
+    
+    /* Убедимся, что текст не переносится на мобильных без нужды */
+    white-space: nowrap;
+}
+
+/* Подпись (Студия озвучки...) */
+.hero-sub-plaque {
+    display: inline-block;
+    padding: 10px 32px;
+    border-radius: 40px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: #ffffff;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 15px rgba(60, 80, 180, 0.15);
+    
+    /* Градиент с более мягким переходом */
+    background: linear-gradient(90deg, #1a3a8a 0%, #7a3aaa 100%);
+}
+
+/* ===== АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ ===== */
+@media (max-width: 768px) {
+    .hero-main-plaque {
+        font-size: 28px;
+        padding: 14px 28px;
+        white-space: normal; /* Разрешаем перенос на маленьких экранах */
+        width: 100%;
+        max-width: 90%;
+        box-sizing: border-box;
+    }
+    .hero-sub-plaque {
+        font-size: 15px;
+        padding: 8px 20px;
+        width: 100%;
+        max-width: 80%;
+        box-sizing: border-box;
+    }
+    .hero-icon {
+        width: 38px;
+        height: 38px;
+    }
+    .new-hero {
+        gap: 12px;
+        margin: 20px auto 30px auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-main-plaque {
+        font-size: 22px;
+        padding: 12px 16px;
+        border-radius: 40px;
+    }
+    .hero-sub-plaque {
+        font-size: 13px;
+        padding: 6px 14px;
+        border-radius: 30px;
+    }
+    .hero-icon {
+        width: 32px;
+        height: 32px;
+    }
 }
 
 @keyframes slideIn {
