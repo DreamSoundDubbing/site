@@ -54,6 +54,9 @@
     --text-primary: #d0c8e8;
     --text-secondary: #b0a8c8;
     --text-muted: #8878a8;
+    --featured-header: #6a5aaa;
+    --text-title-meta: #6a5aaa;
+    --text-comment: #e8e0f0;
     --text-light: #a090b0;
     --text-white: #e8e0f0;
     
@@ -137,7 +140,7 @@
     --text-secondary: #ffffff;
     --text-title-meta: #2a44ec;
     --text-comment: #2a44ec;
-    --text-muted: #6a7a9a;
+    --text-muted: #6a5aaa;
     --text-light: #5a6a8a;
     --text-white: #ffffff;
     
@@ -159,6 +162,10 @@
     --color-accent: #3a6ab8;
     --color-accent2: #8a4aba;
     --color-accent-light: #aa6aca;
+    --color-success: #4CAF50;
+    --color-danger: #ff6b6b;
+    --color-warning: #ffaa00;
+    --color-coin: #fbbf24;
 
     /* ФОН САЙДБАРА (СВЕТЛАЯ ТЕМА) */
     --sidebar-bg-image: url('https://s2.radikal.cloud/2026/06/29/Max_a_PEREDELAI_V_DNEVNOE_b7375ac1c55771bc.md.png');
