@@ -92,7 +92,7 @@
 /* ========== СВЕТЛАЯ ТЕМА ========== */
 [data-theme="light"] {
     --bg-body: linear-gradient(135deg, #e8f0ff 0%, #d4c8f0 100%);
-    --bg-container: rgba(255, 255, 255, 0.12);
+    --bg-container: rgba(255, 255, 255, 0);
     --bg-content: rgba(255, 255, 255, 0.74);
     --bg-content2: linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(241, 236, 255, 0.80));
     --bg-card: rgba(255, 255, 255, 0.72);
