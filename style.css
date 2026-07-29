@@ -226,13 +226,11 @@
 
 [data-theme="dark"] body {
     color: var(--text-primary);
-    background-color: rgba(6, 8, 22, 0.30) !important;
-    background-blend-mode: multiply !important;
 }
 
 [data-theme="dark"] .container {
-    background: transparent !important;
-    box-shadow: none !important;
+    background: var(--bg-container) !important;
+    box-shadow: var(--shadow-container) !important;
 }
 
 [data-theme="dark"] .text,
@@ -1316,8 +1314,6 @@ body {
 /* ================================================================ */
 [data-theme="light"] body {
     color: var(--text-primary);
-    background-color: rgba(236, 244, 255, 0.42) !important;
-    background-blend-mode: screen !important;
 }
 
 [data-theme="light"] .side-panel,
