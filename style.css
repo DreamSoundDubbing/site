@@ -10,9 +10,9 @@
     /* ТЁМНАЯ ТЕМА ПО УМОЛЧАНИЮ */
     --bg-body: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 100%);
     --bg-container: rgba(18, 10, 30, 0);
-    --bg-content: #1a103000;
-    --bg-content2: linear-gradient(135deg, #1a10403e, #2a10403e);
-    --bg-card: #1a103000;
+    --bg-content: rgba(26, 16, 48, 0.72);
+    --bg-content2: linear-gradient(135deg, rgba(26, 16, 64, 0.78), rgba(42, 16, 64, 0.74));
+    --bg-card: rgba(26, 16, 48, 0.68);
     --bg-stat: #1a1040;
     --bg-voice-profile: linear-gradient(135deg, #1a1040, #2a1040);
     --bg-comment: #1a1040;
@@ -1363,25 +1363,6 @@ body {
     backdrop-filter: blur(14px) !important;
 }
 
-[data-theme="light"] .material-section,
-[data-theme="light"] .search-form-wrapper,
-[data-theme="light"] .search-tabs,
-[data-theme="light"] .payment-result {
-    background: var(--light-surface-2) !important;
-    box-shadow: 0 0 0 1px var(--light-outline), var(--light-panel-shadow);
-    backdrop-filter: blur(14px) !important;
-}
-
-[data-theme="light"] .material-section,
-[data-theme="light"] .search-form-wrapper,
-[data-theme="light"] .search-tabs {
-    border-radius: 18px !important;
-    padding: 14px 16px !important;
-}
-
-[data-theme="light"] .payment-result {
-    border-radius: 20px !important;
-} 
 [data-theme="light"] .search-tab,
 [data-theme="light"] .filter-btn,
 [data-theme="light"] .reset-episodes-btn,
