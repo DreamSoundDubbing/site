@@ -105,7 +105,7 @@
     --bg-news1: #e8f0ff;
     --bg-news2: #f0e8ff;
     --bg-auth: #f0f4ff;
-    --bg-auth-error: #fff0f0;
+    --bg-auth-error: #fff0f0; 
     --bg-auth-success: #e8f5e9;
     --bg-order-summary: #f0f4ff;
     --bg-dub-card: #ffffff;
@@ -128,7 +128,7 @@
     --bg-playlist: #f0f4ff;
     --bg-wall-post: #f0f4ff;
     
-    --text-primary: #ffffff;
+    --text-primary: #0046a1;
     --text-secondary: #ffffff;
     --text-muted: #6a7a9a;
     --text-light: #5a6a8a;
@@ -150,7 +150,7 @@
     --gradient-button: linear-gradient(135deg, #3a6ab8 0%, #8a4aba 100%);
     --gradient-header: linear-gradient(135deg, #2a4a8a 0%, #6a3a9a 100%);
     
-    --color-accent: #0c8aff;
+    --color-accent: #00315f;
     --color-accent2: #771fbb;
     --color-accent-light: #aa6aca;
 }
