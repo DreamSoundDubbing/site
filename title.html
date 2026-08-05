@@ -134,6 +134,19 @@
             background: #FF9800;
             color: #fff;
         }
+        /* ===== НОВЫЕ СТАТУСЫ ===== */
+        .status-in_progress {
+            background: #FF8C00;
+            color: #fff;
+        }
+        .status-dubbed {
+            background: #8A2BE2;
+            color: #fff;
+        }
+        .status-announce {
+            background: #FF4500;
+            color: #fff;
+        }
 
         /* ===== КОММЕНТАРИИ ===== */
         #comments-container {
@@ -824,10 +837,10 @@
 </nav>
         <div class="sidebar-footer">
             <div class="sidebar-socials">
-                <a href="#" target="_blank"><i class="fab fa-vk"></i></a>
-                <a href="#" target="_blank"><i class="fab fa-telegram-plane"></i></a>
-                <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
-            </div>
+            <a href="https://vk.ru/dreamsounddubbing" target="_blank"><i class="fab fa-vk"></i></a>
+            <a href="https://t.me/DreamSoundDubbing" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+            <a href="https://youtube.com/@dreamsounddubbing?si=3iGiDPH9ZK" target="_blank"><i class="fab fa-youtube"></i></a>
+        </div>
             <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px;letter-spacing:1px;">© Dream Sound Dubbing</div>
         </div>
     </aside>
@@ -1458,6 +1471,8 @@
             document.getElementById('editImageHoriz').value = t.imageHorizontal || '';
             document.getElementById('editWallpaper').value = t.wallpaper || '';
             document.getElementById('editDescription').value = t.description || '';
+            document.getElementById('editStatus').value = t.status || 'ongoing';
+            document.getElementById('editNewStatus').value = t.newStatus || '';
             renderEpisodeEditor(t.episodesList || []);
         }
 
@@ -1552,6 +1567,8 @@
                 year: parseInt(document.getElementById('editYear').value) || 0,
                 episodes: parseInt(document.getElementById('editEpisodes').value) || episodes.length,
                 rating: parseFloat(document.getElementById('editRating').value) || 0,
+                status: document.getElementById('editStatus').value,
+                newStatus: document.getElementById('editNewStatus').value || null,
                 genres: document.getElementById('editGenres').value.split(',').map(s => s.trim()).filter(Boolean),
                 imageVertical: document.getElementById('editImageVert').value.trim(),
                 imageHorizontal: document.getElementById('editImageHoriz').value.trim(),
@@ -1622,6 +1639,12 @@
                 'ongoing': '<span class="status-badge status-ongoing">🔄 Онгоинг</span>',
                 'completed': '<span class="status-badge status-completed">✅ Завершён</span>',
                 'announced': '<span class="status-badge status-announced">📢 Анонс</span>'
+            };
+
+            const newStatusMap = {
+                'in_progress': '<span class="status-badge status-in_progress">🔧 В работе</span>',
+                'dubbed': '<span class="status-badge status-dubbed">🎙️ Озвучен</span>',
+                'announce': '<span class="status-badge status-announce">📢 Анонс</span>'
             };
 
             let roles = [];
@@ -1714,6 +1737,10 @@
                                     <div class="form-group"><label>Кол-во серий</label><input type="number" id="editEpisodes" min="0"></div>
                                     <div class="form-group"><label>Рейтинг</label><input type="number" id="editRating" step="0.1" min="0" max="5"></div>
                                 </div>
+                                <div class="form-row">
+                                    <div class="form-group"><label>Старый статус</label><select id="editStatus"><option value="ongoing">Онгоинг</option><option value="completed">Завершён</option><option value="announced">Анонс</option></select></div>
+                                    <div class="form-group"><label>Новый статус (отдельно)</label><select id="editNewStatus"><option value="">Не указан</option><option value="in_progress">В работе</option><option value="dubbed">Озвучен</option><option value="announce">Анонс</option></select></div>
+                                </div>
                                 <div class="form-group"><label>Жанры (через запятую)</label><input type="text" id="editGenres"></div>
                                 <div class="form-group"><label>Вертикальная обложка</label><input type="text" id="editImageVert"></div>
                                 <div class="form-group"><label>Горизонтальная обложка</label><input type="text" id="editImageHoriz"></div>
@@ -1778,6 +1805,7 @@
                                     <span class="anime-tag">${title.episodes || '?'} серий</span>
                                     <span class="anime-tag">⭐ ${title.rating || '4.5'}</span>
                                     ${title.status ? statusMap[title.status] || '' : ''}
+                                    ${title.newStatus ? newStatusMap[title.newStatus] || '' : ''}
                                 </div>
                                 <p style="color:var(--text-primary);"><strong style="color:var(--color-accent);">Жанры:</strong> ${title.genres?.join(', ') || 'Не указаны'}</p>
                                 <div class="anime-description">${title.description || 'Описание отсутствует'}</div>

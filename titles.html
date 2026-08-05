@@ -319,6 +319,10 @@
 
         .title-card-status {
             margin-top: 2px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
         }
 
         .status-badge {
@@ -341,6 +345,20 @@
 
         .status-announced {
             background: #FF9800;
+            color: #fff;
+        }
+
+        /* ===== НОВЫЕ СТАТУСЫ (ОТДЕЛЬНАЯ ГРУППА) ===== */
+        .status-in_progress {
+            background: #FF8C00;
+            color: #fff;
+        }
+        .status-dubbed {
+            background: #8A2BE2;
+            color: #fff;
+        }
+        .status-announce {
+            background: #FF4500;
             color: #fff;
         }
 
@@ -584,29 +602,6 @@
             font-style: italic;
         }
 
-        .status-badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        .status-ongoing {
-            background: #4CAF50;
-            color: #fff;
-        }
-
-        .status-completed {
-            background: #2196F3;
-            color: #fff;
-        }
-
-        .status-announced {
-            background: #FF9800;
-            color: #fff;
-        }
-
         @media (max-width: 768px) {
             .filters-container {
                 flex-direction: column;
@@ -756,10 +751,10 @@
 
         <div class="sidebar-footer">
             <div class="sidebar-socials">
-                <a href="#" target="_blank"><i class="fab fa-vk"></i></a>
-                <a href="#" target="_blank"><i class="fab fa-telegram-plane"></i></a>
-                <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
-            </div>
+            <a href="https://vk.ru/dreamsounddubbing" target="_blank"><i class="fab fa-vk"></i></a>
+            <a href="https://t.me/DreamSoundDubbing" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+            <a href="https://youtube.com/@dreamsounddubbing?si=3iGiDPH9ZK" target="_blank"><i class="fab fa-youtube"></i></a>
+        </div>
             <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px;letter-spacing:1px;">© Dream Sound Dubbing</div>
         </div>
     </aside>
@@ -951,7 +946,7 @@
                 </div>
                 <span class="filter-divider">|</span>
 
-                <!-- Фильтр по статусу -->
+                <!-- Фильтр по старому статусу (ongoing, completed, announced) -->
                 <div class="filter-group">
                     <span class="filter-label">📌 Статус:</span>
                     <select class="filter-select" id="filterStatus" onchange="filterData()">
@@ -959,6 +954,18 @@
                         <option value="ongoing">Онгоинг</option>
                         <option value="completed">Завершён</option>
                         <option value="announced">Анонс</option>
+                    </select>
+                </div>
+                <span class="filter-divider">|</span>
+
+                <!-- ===== НОВЫЙ ФИЛЬТР (отдельная группа) ===== -->
+                <div class="filter-group">
+                    <span class="filter-label">🔧 Cтатус работы:</span>
+                    <select class="filter-select" id="filterNewStatus" onchange="filterData()">
+                        <option value="all">Все</option>
+                        <option value="in_progress">В работе</option>
+                        <option value="dubbed">Озвучен</option>
+                        <option value="announce">Анонс</option>
                     </select>
                 </div>
                 <span class="filter-divider">|</span>
@@ -1036,6 +1043,15 @@
                             <option value="ongoing">Онгоинг</option>
                             <option value="completed">Завершён</option>
                             <option value="announced">Анонс</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Статус работы</label>
+                        <select id="titleNewStatus">
+                            <option value="">Не указан</option>
+                            <option value="in_progress">В работе</option>
+                            <option value="dubbed">Озвучен</option>
+                            <option value="announce">Анонс</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -1117,6 +1133,7 @@
         let currentFilterType = 'all';
         let currentFilterRating = 'all';
         let currentFilterStatus = 'all';
+        let currentFilterNewStatus = 'all';
         let currentYearFrom = 0;
         let currentYearTo = Infinity;
         let currentEpisodeFrom = 0;
@@ -1324,6 +1341,11 @@
                 titles = titles.filter(t => t.status === currentFilterStatus);
             }
 
+            // ===== НОВЫЙ ФИЛЬТР ПО НОВОМУ СТАТУСУ =====
+            if (currentFilterNewStatus !== 'all') {
+                titles = titles.filter(t => t.newStatus === currentFilterNewStatus);
+            }
+
             titles = titles.filter(t => {
                 const eps = t.episodes || 0;
                 return eps >= currentEpisodeFrom && eps <= currentEpisodeTo;
@@ -1357,6 +1379,12 @@
                 'announced': '<span class="status-badge status-announced">📢 Анонс</span>'
             };
 
+            const newStatusMap = {
+                'in_progress': '<span class="status-badge status-in_progress">🔧 В работе</span>',
+                'dubbed': '<span class="status-badge status-dubbed">🎙️ Озвучен</span>',
+                'announce': '<span class="status-badge status-announce">📢 Анонс</span>'
+            };
+
             container.innerHTML = filtered.map(title => {
                 const image = title.imageVertical || title.imageHorizontal || title.image ||
                     'https://via.placeholder.com/200x280/d4e8ff/4a90d9?text=No+Image';
@@ -1369,6 +1397,10 @@
                                 </div>
                             `;
                 }
+                // Оба статуса
+                const oldStatusHtml = title.status ? statusMap[title.status] || '' : '';
+                const newStatusHtml = title.newStatus ? newStatusMap[title.newStatus] || '' : '';
+
                 return `
                             <div class="title-card-wrapper">
                                 <a href="title.html?id=${title.id}" class="title-card" style="text-decoration:none;color:inherit;display:block;">
@@ -1383,7 +1415,10 @@
                                             <span style="color:var(--text-muted);">${title.year || ''}</span>
                                             <span style="color:var(--color-warning);">⭐ ${title.rating}</span>
                                         </div>
-                                        <div style="margin-top:4px;">${statusMap[title.status] || ''}</div>
+                                        <div class="title-card-status">
+                                            ${oldStatusHtml}
+                                            ${newStatusHtml}
+                                        </div>
                                         <div style="margin-top:4px;font-size:11px;color:var(--text-muted);">
                                             <i class="fas fa-eye" style="margin-right:4px;"></i> ${title.viewsCount || 0} просмотров
                                         </div>
@@ -1398,8 +1433,10 @@
         function filterData() {
             const rating = document.getElementById('filterRating');
             const status = document.getElementById('filterStatus');
+            const newStatus = document.getElementById('filterNewStatus');
             currentFilterRating = rating ? rating.value : 'all';
             currentFilterStatus = status ? status.value : 'all';
+            currentFilterNewStatus = newStatus ? newStatus.value : 'all';
             renderTitles();
         }
 
@@ -1409,6 +1446,7 @@
             currentFilterType = 'all';
             currentFilterRating = 'all';
             currentFilterStatus = 'all';
+            currentFilterNewStatus = 'all';
             currentYearFrom = 0;
             currentYearTo = Infinity;
             currentEpisodeFrom = 0;
@@ -1422,6 +1460,7 @@
             document.getElementById('yearTo').value = '';
             document.getElementById('filterRating').value = 'all';
             document.getElementById('filterStatus').value = 'all';
+            document.getElementById('filterNewStatus').value = 'all';
             renderTitles();
         };
 
@@ -1506,6 +1545,7 @@
             document.getElementById('titleEpisodes').value = title.episodes || '';
             document.getElementById('titleRating').value = title.rating || '';
             document.getElementById('titleStatus').value = title.status || 'ongoing';
+            document.getElementById('titleNewStatus').value = title.newStatus || '';
             document.getElementById('titleGenres').value = (title.genres || []).join(', ');
             document.getElementById('titleImageVert').value = title.imageVertical || '';
             document.getElementById('titleImageHoriz').value = title.imageHorizontal || '';
@@ -1532,6 +1572,7 @@
             const episodes = parseInt(document.getElementById('titleEpisodes').value) || 0;
             const rating = parseFloat(document.getElementById('titleRating').value) || 0;
             const status = document.getElementById('titleStatus').value;
+            const newStatus = document.getElementById('titleNewStatus').value;
             const genres = document.getElementById('titleGenres').value.split(',').map(s => s.trim()).filter(Boolean);
             const imageVertical = document.getElementById('titleImageVert').value.trim();
             const imageHorizontal = document.getElementById('titleImageHoriz').value.trim();
@@ -1574,6 +1615,7 @@
                 episodes: finalEpisodes,
                 rating,
                 status,
+                newStatus: newStatus || null,
                 genres,
                 imageVertical,
                 imageHorizontal,

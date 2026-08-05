@@ -56,6 +56,7 @@
     --text-muted: #8878a8;
     --text-light: #a090b0;
     --text-white: #e8e0f0;
+    --featured-header: #6919c4;
     
     --border-primary: #3a2a5a;
     --border-secondary: #2a1a4a;
@@ -132,6 +133,7 @@
     --text-muted: #6a7a9a;
     --text-light: #5a6a8a;
     --text-white: #ffffff;
+    --featured-header: #1952c4;
     
     --border-primary: #b0c8e8;
     --border-secondary: #d0d8e8;
@@ -148,8 +150,8 @@
     --gradient-button: linear-gradient(135deg, #3a6ab8 0%, #8a4aba 100%);
     --gradient-header: linear-gradient(135deg, #2a4a8a 0%, #6a3a9a 100%);
     
-    --color-accent: #3a6ab8;
-    --color-accent2: #8a4aba;
+    --color-accent: #0c8aff;
+    --color-accent2: #771fbb;
     --color-accent-light: #aa6aca;
 }
 
@@ -937,6 +939,20 @@ hr {
 .toast-item.removing {
     transform: translateX(calc(100% + 30px));
     opacity: 0;
+}
+
+/* ========== НОВЫЕ БЕЙДЖИ СТАТУСОВ (В РАБОТЕ / ОЗВУЧЕН / АНОНС) ========== */
+.status-in_progress {
+    background: #FF8C00;
+    color: #fff;
+}
+.status-dubbed {
+    background: #8A2BE2;
+    color: #fff;
+}
+.status-announce {
+    background: #FF4500;
+    color: #fff;
 }
 
 /* ========== АДАПТИВНОСТЬ ========== */
