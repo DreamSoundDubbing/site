@@ -1228,3 +1228,14 @@ body {
 
 /* Запрещаем выделение текста (чтобы не было "синего" выделения) */
 .no-select { user-select: none; }
+
+/* ===== ПЕРЕОПРЕДЕЛЕНИЕ ДЛЯ СВЕТЛОЙ ТЕМЫ: ЧЁРНЫЙ ТЕКСТ В МОДАЛКАХ ===== */
+[data-theme="light"] .modal-content .form-group input,
+[data-theme="light"] .modal-content .form-group textarea,
+[data-theme="light"] .modal-content .form-group select {
+    color: #000000 !important;
+}
+[data-theme="light"] .modal-content .form-group select option {
+    color: #000000 !important;
+    background: #ffffff !important;
+}
