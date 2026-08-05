@@ -10,9 +10,9 @@
     /* ТЁМНАЯ ТЕМА ПО УМОЛЧАНИЮ */
     --bg-body: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 100%);
     --bg-container: rgba(18, 10, 30, 0);
-    --bg-content: rgba(26, 16, 48, 0.72);
-    --bg-content2: linear-gradient(135deg, rgba(26, 16, 64, 0.78), rgba(42, 16, 64, 0.74));
-    --bg-card: rgba(26, 16, 48, 0.68);
+    --bg-content: #1a103000;
+    --bg-content2: linear-gradient(135deg, #1a10403e, #2a10403e);
+    --bg-card: #1a103000;
     --bg-stat: #1a1040;
     --bg-voice-profile: linear-gradient(135deg, #1a1040, #2a1040);
     --bg-comment: #1a1040;
@@ -51,14 +51,11 @@
     --bg-playlist: #1a1040;
     --bg-wall-post: #1a1040;
     
-    --text-primary: #d7d8f4;
-    --text-secondary: #b9bce0;
-    --text-muted: #8f92bd;
-    --featured-header: #8f86de;
-    --text-title-meta: #8a83d6;
-    --text-comment: #eceaff;
-    --text-light: #a6abd2;
-    --text-white: #f2f0ff;
+    --text-primary: #d0c8e8;
+    --text-secondary: #b0a8c8;
+    --text-muted: #8878a8;
+    --text-light: #a090b0;
+    --text-white: #e8e0f0;
     
     --border-primary: #3a2a5a;
     --border-secondary: #2a1a4a;
@@ -68,7 +65,6 @@
     --shadow-container: 0 10px 40px rgba(60, 81, 200, 0);
     --shadow-header: 0 4px 20px rgba(60, 80, 200, 0.25);
     --shadow-sidebar: 4px 0 30px rgba(0,0,0,0.5);
-    --dark-reading-shadow: 0 1px 10px rgba(4, 6, 20, 0.55);
     
     --gradient-primary: linear-gradient(135deg, #4a5a9a, #7a4a8a);
     --gradient-title: linear-gradient(135deg, #5a4aaa, #9a5a7a);
@@ -84,73 +80,65 @@
     --color-danger: #ff6b6b;
     --color-warning: #ffaa00;
     --color-coin: #fbbf24;
-
-    /* ФОН САЙДБАРА (ТЕМНАЯ ТЕМА) */
-    --sidebar-bg-image: url('https://s1.radikal.cloud/2026/06/29/Max_a_SKIN_TOLKO_FON_SAIcf6a942366443959.md.png');
-    --sidebar-bg-overlay: rgba(0, 0, 0, 0.5);
 }
 
 /* ========== СВЕТЛАЯ ТЕМА ========== */
 [data-theme="light"] {
     --bg-body: linear-gradient(135deg, #e8f0ff 0%, #d4c8f0 100%);
     --bg-container: rgba(255, 255, 255, 0);
-    --bg-content: rgba(255, 255, 255, 0);
-    --bg-content2: linear-gradient(135deg, rgba(255, 255, 255, 0), rgba(241, 236, 255, 0));
-    --bg-card: rgba(255, 255, 255, 0.72);
-    --bg-stat: rgba(255, 255, 255, 0.80);
-    --bg-voice-profile: linear-gradient(135deg, rgba(255, 255, 255, 0.90), rgba(237, 231, 255, 0.82));
-    --bg-comment: rgba(255, 255, 255, 0.84);
-    --bg-character: rgba(246, 247, 252, 0.82);
-    --bg-episode: rgba(60, 80, 180, 0.10);
-    --bg-episode-hover: rgba(60, 80, 180, 0.18);
-    --bg-player: rgba(236, 241, 250, 0.95);
-    --bg-admin-panel: rgba(255, 255, 255, 0.72);
-    --bg-input: rgba(255, 255, 255, 0.90);
-    --bg-modal: rgba(255, 255, 255, 0.96);
-    --bg-filter: rgba(255, 255, 255, 0.70);
-    --bg-welcome: rgba(255, 255, 255, 0.78);
-    --bg-news1: rgba(255, 255, 255, 0.86);
-    --bg-news2: rgba(244, 239, 255, 0.84);
-    --bg-auth: rgba(255, 255, 255, 0.88);
+    --bg-content: #ffffff00;
+    --bg-content2: linear-gradient(135deg, #d4e8ff, #dcc8f0);
+    --bg-card: #ffffff00;
+    --bg-stat: #e8f0ff;
+    --bg-voice-profile: linear-gradient(135deg, #e8f0ff, #e8d8f0);
+    --bg-comment: #eef4ff;
+    --bg-character: #f0f0f8;
+    --bg-episode: rgba(60, 80, 180, 0.06);
+    --bg-episode-hover: rgba(60, 80, 180, 0.15);
+    --bg-player: #e8ecf4;
+    --bg-admin-panel: rgba(60, 80, 180, 0.08);
+    --bg-input: #f0f4ff;
+    --bg-modal: #ffffff;
+    --bg-filter: rgba(60, 80, 180, 0.08);
+    --bg-welcome: rgba(60, 80, 180, 0.12);
+    --bg-news1: #e8f0ff;
+    --bg-news2: #f0e8ff;
+    --bg-auth: #f0f4ff;
     --bg-auth-error: #fff0f0;
     --bg-auth-success: #e8f5e9;
-    --bg-order-summary: rgba(255, 255, 255, 0.86);
-    --bg-dub-card: rgba(255, 255, 255, 0.80);
-    --bg-material: rgba(255, 255, 255, 0.86);
-    --bg-material-hover: rgba(232, 239, 255, 0.94);
-    --bg-stat-card: rgba(255, 255, 255, 0.86);
-    --bg-stat-card-hover: rgba(234, 240, 255, 0.94);
-    --bg-admin-panel-dark: rgba(255, 255, 255, 0.86);
-    --bg-profile-header: linear-gradient(135deg, rgba(255, 255, 255, 0.90), rgba(237, 231, 255, 0.82));
-    --bg-achievement: rgba(255, 255, 255, 0.86);
-    --bg-user-search: rgba(255, 255, 255, 0.86);
-    --bg-order-item: rgba(255, 255, 255, 0.86);
-    --bg-filter-search: rgba(255, 255, 255, 0.86);
+    --bg-order-summary: #f0f4ff;
+    --bg-dub-card: #ffffff;
+    --bg-material: #f0f4ff;
+    --bg-material-hover: #e0e8ff;
+    --bg-stat-card: #f0f4ff;
+    --bg-stat-card-hover: #e0e8ff;
+    --bg-admin-panel-dark: #f0f4ff;
+    --bg-profile-header: linear-gradient(135deg, #e8f0ff, #e8d8f0);
+    --bg-achievement: #f0f4ff;
+    --bg-user-search: #f0f4ff;
+    --bg-order-item: #f0f4ff;
+    --bg-filter-search: #f0f4ff;
     --bg-telegram-btn: linear-gradient(135deg, #0088cc, #005f8a);
     --bg-header: linear-gradient(135deg, #2a4a8a 0%, #6a3a9a 100%);
     --bg-footer: linear-gradient(135deg, #1b53c4 0%, #7122c0 100%);
-    --bg-sidebar: rgba(255, 255, 255, 0.96);
+    --bg-sidebar: #ffffff;
     --bg-sidebar-header: linear-gradient(135deg, #2a4a8a 0%, #6a3a9a 100%);
-    --bg-shop-item: rgba(255, 255, 255, 0.84);
-    --bg-playlist: rgba(255, 255, 255, 0.84);
-    --bg-wall-post: rgba(255, 255, 255, 0.84);
+    --bg-shop-item: #f0f4ff;
+    --bg-playlist: #f0f4ff;
+    --bg-wall-post: #f0f4ff;
     
-    /* ===== СВЕТЛАЯ ТЕМА: ДЕЛАЕМ ОСНОВНОЙ ТЕКСТ КОНТРАСТНЫМ ===== */
-    --text-primary: #16233b;
-    --featured-header: #274ebe;
-    --text-secondary: #233454;
-    --text-title-meta: #3153a2;
-    --text-comment: #22314d;
-    --text-muted: #516486;
-    --text-light: #66789b;
+    --text-primary: #ffffff;
+    --text-secondary: #ffffff;
+    --text-muted: #6a7a9a;
+    --text-light: #5a6a8a;
     --text-white: #ffffff;
     
-    --border-primary: rgba(92, 119, 180, 0.32);
-    --border-secondary: rgba(138, 159, 208, 0.26);
+    --border-primary: #b0c8e8;
+    --border-secondary: #d0d8e8;
     
-    --shadow-card: 0 10px 28px rgba(52, 74, 130, 0.12);
-    --shadow-hover: 0 18px 36px rgba(60, 80, 180, 0.20);
-    --shadow-container: 0 14px 40px rgba(52, 74, 130, 0);
+    --shadow-card: 0 8px 20px rgba(40, 60, 140, 0);
+    --shadow-hover: 0 15px 35px rgba(60, 80, 180, 0.2);
+    --shadow-container: 0 10px 40px rgba(60, 80, 180, 0);
     --shadow-header: 0 4px 20px rgba(40, 60, 140, 0.25);
     --shadow-sidebar: 4px 0 30px rgba(0,0,0,0.12);
     
@@ -163,30 +151,13 @@
     --color-accent: #3a6ab8;
     --color-accent2: #8a4aba;
     --color-accent-light: #aa6aca;
-    --color-success: #4CAF50;
-    --color-danger: #ff6b6b;
-    --color-warning: #ffaa00;
-    --color-coin: #fbbf24;
-
-    --light-surface-1: linear-gradient(135deg, rgba(244, 248, 255, 0.82), rgba(241, 235, 255, 0.76));
-    --light-surface-2: linear-gradient(135deg, rgba(236, 244, 255, 0.88), rgba(237, 230, 255, 0.82));
-    --light-surface-3: rgba(246, 249, 255, 0.82);
-    --light-outline: rgba(86, 112, 173, 0.20);
-    --light-panel-shadow: 0 12px 30px rgba(52, 74, 130, 0.12);
-    --light-card-shadow: 0 10px 24px rgba(52, 74, 130, 0.10);
-
-    /* ФОН САЙДБАРА (СВЕТЛАЯ ТЕМА) */
-    --sidebar-bg-image: url('https://s2.radikal.cloud/2026/06/29/Max_a_PEREDELAI_V_DNEVNOE_b7375ac1c55771bc.md.png');
-    --sidebar-bg-overlay: rgba(255, 255, 255, 0.45);
 }
 
-/* ================================================================ */
-/* ===== ЧИТАЕМОСТЬ ТЕКСТА (СВЕТЛАЯ ТЕМА) ===== */
-/* ================================================================ */
-
+/* Черная обводка для белого текста в светлой теме */
 [data-theme="light"] .text,
 [data-theme="light"] p,
 [data-theme="light"] .h2,
+[data-theme="light"] .title-card-meta,
 [data-theme="light"] .sidebar-link,
 [data-theme="light"] .modal-title,
 [data-theme="light"] .modal-message,
@@ -198,80 +169,18 @@
 [data-theme="light"] .toast-text,
 [data-theme="light"] #confirm-modal .modal-title,
 [data-theme="light"] #confirm-modal .modal-message {
-    text-shadow: none;
+    text-shadow: 
+        -1px -1px 0 #000000,  
+         1px -1px 0 #000000,
+        -1px  1px 0 #000000,
+         1px  1px 0 #000000,
+        -1px  0px 0 #000000,
+         1px  0px 0 #000000,
+         0px -1px 0 #000000,
+         0px  1px 0 #000000;
 }
 
-[data-theme="light"] .container,
-[data-theme="light"] .content-box,
-[data-theme="light"] .content-box2,
-[data-theme="light"] .title-card,
-[data-theme="light"] .stat-box,
-[data-theme="light"] .welcome-banner,
-[data-theme="light"] .modal-content,
-[data-theme="light"] .toast-item {
-    backdrop-filter: blur(12px);
-}
-
-[data-theme="light"] .sidebar-link {
-    background: rgba(255, 255, 255, 0.38);
-}
-
-[data-theme="light"] .sidebar-link:hover {
-    background: rgba(255, 255, 255, 0.68);
-}
-
-/* ================================================================ */
-/* ===== ЧИТАЕМОСТЬ ТЕКСТА (ТЁМНАЯ ТЕМА) ===== */
-/* ================================================================ */
-
-[data-theme="dark"] body {
-    color: var(--text-primary);
-}
-
-[data-theme="dark"] .container {
-    background: var(--bg-container) !important;
-    box-shadow: var(--shadow-container) !important;
-}
-
-[data-theme="dark"] .text,
-[data-theme="dark"] p,
-[data-theme="dark"] .h2,
-[data-theme="dark"] .sidebar-link,
-[data-theme="dark"] .modal-title,
-[data-theme="dark"] .modal-message,
-[data-theme="dark"] .modal-content .form-group label,
-[data-theme="dark"] .modal-content .form-group input,
-[data-theme="dark"] .modal-content .form-group textarea,
-[data-theme="dark"] .modal-content .form-group select,
-[data-theme="dark"] .toast-item,
-[data-theme="dark"] .toast-text,
-[data-theme="dark"] #confirm-modal .modal-title,
-[data-theme="dark"] #confirm-modal .modal-message {
-    text-shadow: var(--dark-reading-shadow);
-}
-
-[data-theme="dark"] .title-card-name,
-[data-theme="dark"] .title-card-meta,
-[data-theme="dark"] .featured-item-home .info strong,
-[data-theme="dark"] .featured-item-home .info span,
-[data-theme="dark"] .stat-label,
-[data-theme="dark"] .sidebar-section-label,
-[data-theme="dark"] .sidebar-socials a,
-[data-theme="dark"] .loading,
-[data-theme="dark"] .loading-text,
-[data-theme="dark"] .no-results,
-[data-theme="dark"] .no-comments,
-[data-theme="dark"] .no-materials,
-[data-theme="dark"] .access-denied,
-[data-theme="dark"] .empty-inventory,
-[data-theme="dark"] .socials-empty,
-[data-theme="dark"] .episodes-empty {
-    text-shadow: var(--dark-reading-shadow);
-}
-
-/* ================================================================ */
 /* ========== БАЗОВЫЕ СТИЛИ ========== */
-/* ================================================================ */
 body { 
     background: var(--bg-body);
     background-attachment: fixed;
@@ -431,14 +340,6 @@ body {
     flex-direction: column;
     overflow: hidden;
     border-right: 2px solid var(--color-accent);
-    
-    /* ФОН ИЗ ПЕРЕМЕННЫХ (ТЕМНАЯ/СВЕТЛАЯ ТЕМА) */
-    background-image: var(--sidebar-bg-image) !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    background-color: var(--sidebar-bg-overlay) !important;
-    background-blend-mode: overlay !important;
 }
 #sidebar.open {
     left: 0;
@@ -589,7 +490,7 @@ body {
     padding: 20px;
     background: var(--bg-container);
     border-radius: 16px;
-    box-shadow: none;
+    box-shadow: var(--shadow-container);
     backdrop-filter: none;
     transition: background 0.3s ease, box-shadow 0.3s ease;
 }
@@ -777,8 +678,8 @@ hr {
 }
 
 .title-card-meta {
-    font-size: 16px;
-    color: var(--text-title-meta);
+    font-size: 14px;
+    color: var(--text-secondary);
     display: flex;
     justify-content: space-between;
 }
@@ -1023,110 +924,6 @@ hr {
     color: var(--text-primary);
 }
 
-/* ===== НОВЫЙ ДИЗАЙН ЗАГОЛОВКА НА ГЛАВНОЙ ===== */
-.new-hero {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 30px auto 40px auto;
-    text-align: center;
-    gap: 15px;
-    max-width: 800px;
-}
-
-/* Иконка наушников */
-.hero-icon {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 5px;
-}
-.hero-icon svg {
-    width: 100%;
-    height: 100%;
-}
-
-/* Главная плашка (Dream Sound Dubbing) */
-.hero-main-plaque {
-    display: inline-block;
-    padding: 18px 50px;
-    border-radius: 60px;
-    font-size: 42px;
-    font-weight: 800;
-    letter-spacing: 1px;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    color: #ffffff;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    box-shadow: 0 10px 30px rgba(60, 80, 180, 0.25);
-    
-    /* Градиент в точности как на макете (синий -> фиолетовый) */
-    background: linear-gradient(90deg, #1a3a8a 0%, #6a2aaa 50%, #9a4aba 100%);
-    
-    /* Убедимся, что текст не переносится на мобильных без нужды */
-    white-space: nowrap;
-}
-
-/* Подпись (Студия озвучки...) */
-.hero-sub-plaque {
-    display: inline-block;
-    padding: 10px 32px;
-    border-radius: 40px;
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    color: #ffffff;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.2);
-    box-shadow: 0 4px 15px rgba(60, 80, 180, 0.15);
-    
-    /* Градиент с более мягким переходом */
-    background: linear-gradient(90deg, #1a3a8a 0%, #7a3aaa 100%);
-}
-
-/* ===== АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ ===== */
-@media (max-width: 768px) {
-    .hero-main-plaque {
-        font-size: 28px;
-        padding: 14px 28px;
-        white-space: normal; /* Разрешаем перенос на маленьких экранах */
-        width: 100%;
-        max-width: 90%;
-        box-sizing: border-box;
-    }
-    .hero-sub-plaque {
-        font-size: 15px;
-        padding: 8px 20px;
-        width: 100%;
-        max-width: 80%;
-        box-sizing: border-box;
-    }
-    .hero-icon {
-        width: 38px;
-        height: 38px;
-    }
-    .new-hero {
-        gap: 12px;
-        margin: 20px auto 30px auto;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero-main-plaque {
-        font-size: 22px;
-        padding: 12px 16px;
-        border-radius: 40px;
-    }
-    .hero-sub-plaque {
-        font-size: 13px;
-        padding: 6px 14px;
-        border-radius: 30px;
-    }
-    .hero-icon {
-        width: 32px;
-        height: 32px;
-    }
-}
-
 @keyframes slideIn {
     from { transform: translateX(calc(100% + 30px)); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
@@ -1197,7 +994,6 @@ hr {
     .title-card-image { height: 170px; }
     .content-box { padding: 12px; }
 }
-
 /* ========== МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ ========== */
 #confirm-modal {
     display: none;
@@ -1287,7 +1083,6 @@ hr {
     background: #e05555;
     transform: translateY(-2px);
 }
-
 /* ========== ИСПРАВЛЕНИЯ ДЛЯ МОДЕРАЦИИ ========== */
 /* Скрываем полосу прокрутки, которая выдает браузер */
 ::-webkit-scrollbar { width: 6px; }
@@ -1308,111 +1103,3 @@ body {
 
 /* Запрещаем выделение текста (чтобы не было "синего" выделения) */
 .no-select { user-select: none; }
-
-/* ================================================================ */
-/* ========== ГЛОБАЛЬНАЯ ЧИТАЕМОСТЬ СВЕТЛОЙ ТЕМЫ НА ВСЕХ СТРАНИЦАХ ========== */
-/* ================================================================ */
-[data-theme="light"] body {
-    color: var(--text-primary);
-}
-
-[data-theme="light"] .side-panel,
-[data-theme="light"] .featured-item-home,
-[data-theme="light"] .info-panel,
-[data-theme="light"] .order-item,
-[data-theme="light"] .stat-card,
-[data-theme="light"] .dub-card,
-[data-theme="light"] .material-item,
-[data-theme="light"] .feedback-card,
-[data-theme="light"] .stat-item,
-[data-theme="light"] .item-card,
-[data-theme="light"] .lootbox-card,
-[data-theme="light"] .loot-result,
-[data-theme="light"] .achievement-card,
-[data-theme="light"] .user-search-result,
-[data-theme="light"] .playlist-card,
-[data-theme="light"] .wall-post,
-[data-theme="light"] .result-item,
-[data-theme="light"] .shop-balance,
-[data-theme="light"] .shop-item,
-[data-theme="light"] .team-card,
-[data-theme="light"] .social-edit-item,
-[data-theme="light"] .avg-rating,
-[data-theme="light"] .comment-item,
-[data-theme="light"] .character-card,
-[data-theme="light"] .episode-item,
-[data-theme="light"] .player-wrapper,
-[data-theme="light"] .title-card-wrapper,
-[data-theme="light"] .voice-meta-item {
-    box-shadow: 0 0 0 1px var(--light-outline), var(--light-card-shadow);
-    backdrop-filter: blur(12px) !important;
-}
-
-[data-theme="light"] .featured-section,
-[data-theme="light"] .filters,
-[data-theme="light"] .admin-toolbar,
-[data-theme="light"] .profile-header,
-[data-theme="light"] .admin-panel,
-[data-theme="light"] .wall-section,
-[data-theme="light"] .filters-container,
-[data-theme="light"] .anime-header:not(.has-wallpaper),
-[data-theme="light"] .order-summary,
-[data-theme="light"] .info-box,
-[data-theme="light"] .voice-profile {
-    box-shadow: 0 0 0 1px var(--light-outline), var(--light-panel-shadow);
-    backdrop-filter: blur(14px) !important;
-}
-
-[data-theme="light"] .search-tab,
-[data-theme="light"] .filter-btn,
-[data-theme="light"] .reset-episodes-btn,
-[data-theme="light"] .reset-years-btn,
-[data-theme="light"] .filters .btn-clear {
-    background: rgba(255, 255, 255, 0.42) !important;
-}
-
-[data-theme="light"] .search-tab:hover,
-[data-theme="light"] .filter-btn:hover,
-[data-theme="light"] .reset-episodes-btn:hover,
-[data-theme="light"] .reset-years-btn:hover,
-[data-theme="light"] .filters .btn-clear:hover {
-    background: rgba(255, 255, 255, 0.66) !important;
-}
-
-[data-theme="light"] .search-tab.active,
-[data-theme="light"] .filter-btn.active {
-    background: var(--gradient-primary) !important;
-    border-color: var(--color-accent) !important;
-    color: #fff !important;
-}
-
-[data-theme="light"] .no-results,
-[data-theme="light"] .no-materials,
-[data-theme="light"] .loading-spinner,
-[data-theme="light"] .loading-text,
-[data-theme="light"] .access-denied,
-[data-theme="light"] .auth-prompt,
-[data-theme="light"] .empty-inventory,
-[data-theme="light"] .socials-empty,
-[data-theme="light"] .episodes-empty,
-[data-theme="light"] .no-comments {
-    background: var(--light-surface-2) !important;
-    border: 1px dashed var(--light-outline) !important;
-    border-radius: 16px !important;
-    box-shadow: var(--light-card-shadow);
-    backdrop-filter: blur(10px) !important;
-}
-
-[data-theme="light"] .anime-header.has-wallpaper {
-    box-shadow: 0 0 0 1px var(--light-outline), var(--light-panel-shadow);
-}
-
-[data-theme="light"] .anime-header.has-wallpaper::before {
-    background: linear-gradient(135deg, rgba(244, 248, 255, 0.82), rgba(237, 231, 255, 0.76)) !important;
-}
-
-[data-theme="light"] .sidebar-footer,
-[data-theme="light"] .sidebar-nav,
-[data-theme="light"] .sidebar-section-label {
-    text-shadow: none;
-}
