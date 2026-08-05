@@ -1088,7 +1088,7 @@
                     <div id="episodesEditor" class="episodes-editor">
                         <div class="episodes-empty">Загрузка...</div>
                     </div>
-                    <small style="color:var(--text-muted); display:block; margin-top:5px;">Номер, название, ссылка на Google Drive и статус серии</small>
+                    <small style="color:var(--text-muted); display:block; margin-top:5px;">Номер, название, ссылка на Dropbox и статус серии</small>
                 </div>
 
                 <button type="submit" class="submit-btn" id="submitBtn">💾 Сохранить</button>
@@ -1273,7 +1273,7 @@
                         <div class="episode-edit-item">
                             <input type="number" class="ep-number" value="${ep.number}" placeholder="№" data-index="${index}" data-field="number" min="1">
                             <input type="text" class="ep-title" value="${ep.title || ''}" placeholder="Название серии" data-index="${index}" data-field="title">
-                            <input type="text" class="ep-url" value="${ep.url || ''}" placeholder="Ссылка на Google Drive" data-index="${index}" data-field="url">
+                            <input type="text" class="ep-url" value="${ep.url || ''}" placeholder="Ссылка на Dropbox" data-index="${index}" data-field="url">
                             <select class="ep-status" data-index="${index}" data-field="status">
                                 <option value="Озвучено" ${ep.status === 'Озвучено' ? 'selected' : ''}>✅ Озвучено</option>
                                 <option value="Скоро" ${ep.status === 'Скоро' ? 'selected' : ''}>⏳ Скоро</option>
