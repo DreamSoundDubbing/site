@@ -852,6 +852,15 @@ hr {
     background: #ffffff !important;
 }
 
+/* ===== ТЁМНАЯ ТЕМА: белый текст в селектах (как в полях ввода) ===== */
+[data-theme="dark"] .modal-content select {
+    color: var(--text-primary) !important;
+}
+[data-theme="dark"] .modal-content select option {
+    color: var(--text-primary) !important;
+    background: var(--bg-input) !important;
+}
+
 /* ========== TOAST УВЕДОМЛЕНИЯ ========== */
 .toast-container {
     position: fixed;
@@ -1228,14 +1237,3 @@ body {
 
 /* Запрещаем выделение текста (чтобы не было "синего" выделения) */
 .no-select { user-select: none; }
-
-/* ===== ПЕРЕОПРЕДЕЛЕНИЕ ДЛЯ СВЕТЛОЙ ТЕМЫ: ЧЁРНЫЙ ТЕКСТ В МОДАЛКАХ ===== */
-[data-theme="light"] .modal-content .form-group input,
-[data-theme="light"] .modal-content .form-group textarea,
-[data-theme="light"] .modal-content .form-group select {
-    color: #000000 !important;
-}
-[data-theme="light"] .modal-content .form-group select option {
-    color: #000000 !important;
-    background: #ffffff !important;
-}
