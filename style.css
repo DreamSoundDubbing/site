@@ -692,7 +692,6 @@ hr {
 }
 .title-card-episodes {
     color: var(--text-secondary);
-    font-size: 15px;
 }
 
 .loading {
@@ -840,6 +839,17 @@ hr {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
+}
+
+/* ===== ИСПРАВЛЕНИЕ ДЛЯ СВЕТЛОЙ ТЕМЫ: ЧЁРНЫЙ ТЕКСТ В ПОЛЯХ ВВОДА ===== */
+[data-theme="light"] .modal-content input,
+[data-theme="light"] .modal-content textarea,
+[data-theme="light"] .modal-content select {
+    color: #000000 !important;
+}
+[data-theme="light"] .modal-content select option {
+    color: #000000 !important;
+    background: #ffffff !important;
 }
 
 /* ========== TOAST УВЕДОМЛЕНИЯ ========== */
