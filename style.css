@@ -686,6 +686,14 @@ hr {
     justify-content: space-between;
 }
 
+/* ===== КОЛИЧЕСТВО СЕРИЙ — ГОЛУБОЕ В СВЕТЛОЙ ТЕМЕ ===== */
+[data-theme="light"] .title-card-episodes {
+    color: #0c8aff !important;
+}
+.title-card-episodes {
+    color: var(--text-secondary);
+}
+
 .loading {
     text-align: center;
     padding: 30px;
