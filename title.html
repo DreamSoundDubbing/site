@@ -2117,13 +2117,13 @@ function getEpisodesFromEditor() {
         };
 
         window.skipEnding = function() {
-            const video = document.getElementById('playerVideo');
-            if (!video) return;
-            const ep = window.currentEpisodeData;
-            if (!ep || !ep.endingStart) return;
-            video.currentTime = parseTimecode(ep.endingStart);
-            document.getElementById('skipEndingBtn').classList.remove('visible');
-        };
+    const video = document.getElementById('playerVideo');
+    if (!video) return;
+    const ep = window.currentEpisodeData;
+    if (!ep || !ep.endingEnd) return;
+    video.currentTime = parseTimecode(ep.endingEnd);
+    document.getElementById('skipEndingBtn').classList.remove('visible');
+};
 
         window.changeQuality = function() {
             const select = document.getElementById('qualitySelect');
