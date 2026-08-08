@@ -984,6 +984,13 @@
                         </div>
                         ${rolesHtml}
                     `;
+                                // ===== ДЛЯ ОТЛАДКИ В КОНСОЛИ =====
+            window.__debug = {
+                allRoles: allRoles,
+                rolesByTitle: rolesByTitle,
+                stats: stats
+            };
+            console.log('🟢 Отладочные данные сохранены в window.__debug');
         }
 
         onAuthStateChangedListener(async (user) => {
