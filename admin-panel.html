@@ -325,6 +325,8 @@
             <div class="sidebar-divider"></div>
             <div class="sidebar-section-label">Администрирование</div>
             <a href="admin-panel.html" class="sidebar-link" id="sidebarAdminPanel" style="display:none;"><i class="fas fa-crown"></i><span>Админ-панель</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+            <a href="admin-orders.html" class="sidebar-link" id="sidebarAdminOrders" style="display:none;"><i class="fas fa-clipboard-list"></i><span>Заказы</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+            <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;"><i class="fas fa-gem"></i><span>Управление Dream Gems</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
         </nav>
         <div class="sidebar-footer">
             <div class="sidebar-socials">
@@ -751,6 +753,30 @@
                         <p style="color:var(--text-muted);">Загрузка заказов...</p>
                     </div>
                 </div>
+
+                <!-- ===== ВЫДАЧА DREAM GEMS ===== -->
+<div class="admin-section" style="margin-top:20px;">
+    <h3><i class="fas fa-gem" style="color:#4a8cff;"></i> Выдача Dream Gems</h3>
+    <p style="color:var(--text-muted);font-size:14px;margin-bottom:15px;">Начислите Dream Gems любому пользователю по email.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;">
+        <div style="flex:1;min-width:200px;">
+            <label style="color:var(--text-muted);font-size:12px;display:block;margin-bottom:4px;">Email пользователя *</label>
+            <input type="email" id="adminGemEmail" placeholder="user@example.com" style="width:100%;padding:10px 16px;border-radius:10px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);font-size:14px;">
+        </div>
+        <div style="flex:0 0 120px;">
+            <label style="color:var(--text-muted);font-size:12px;display:block;margin-bottom:4px;">Количество *</label>
+            <input type="number" id="adminGemAmount" placeholder="100" min="1" style="width:100%;padding:10px 16px;border-radius:10px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);font-size:14px;">
+        </div>
+        <div style="flex:1;min-width:150px;">
+            <label style="color:var(--text-muted);font-size:12px;display:block;margin-bottom:4px;">Причина</label>
+            <input type="text" id="adminGemReason" placeholder="Начисление администратором" value="Начисление администратором" style="width:100%;padding:10px 16px;border-radius:10px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);font-size:14px;">
+        </div>
+        <button class="admin-btn" onclick="adminGiveGems()" style="align-self:flex-end;">
+            <i class="fas fa-gem"></i> Выдать гемы
+        </button>
+    </div>
+    <div id="adminGemResult" style="margin-top:10px;font-size:13px;color:var(--text-muted);"></div>
+</div>
             `;
             loadOrders();
         }
@@ -976,6 +1002,44 @@
         window.addEventListener('offline', () => {
             if (!navigator.onLine) { window.location.href = '/site/offline.html'; }
         });
+
+        import { addDSCoins } from './firebase-config.js';
+        // ========== ВЫДАЧА DREAM GEMS ==========
+window.adminGiveGems = async function() {
+    const email = document.getElementById('adminGemEmail').value.trim();
+    const amount = parseInt(document.getElementById('adminGemAmount').value);
+    const reason = document.getElementById('adminGemReason').value.trim() || 'Начисление администратором';
+    const resultDiv = document.getElementById('adminGemResult');
+
+    if (!email) {
+        resultDiv.innerHTML = '<span style="color:var(--color-danger);">❌ Введите email пользователя</span>';
+        return;
+    }
+    if (!amount || amount < 1) {
+        resultDiv.innerHTML = '<span style="color:var(--color-danger);">❌ Введите количество Dream Gems</span>';
+        return;
+    }
+
+    resultDiv.innerHTML = '<span style="color:var(--text-muted);">⏳ Проверка пользователя...</span>';
+
+    const userResult = await getUserByEmail(email);
+    if (!userResult.success) {
+        resultDiv.innerHTML = `<span style="color:var(--color-danger);">❌ Пользователь не найден: ${userResult.error}</span>`;
+        return;
+    }
+
+    resultDiv.innerHTML = '<span style="color:var(--text-muted);">⏳ Начисление гемов...</span>';
+
+    const result = await addDSCoins(userResult.data.id, amount, reason);
+    if (result.success) {
+        resultDiv.innerHTML = `<span style="color:var(--color-success);">✅ ${amount} Dream Gems выданы пользователю ${email}</span>`;
+        // Очистить поля
+        document.getElementById('adminGemEmail').value = '';
+        document.getElementById('adminGemAmount').value = '';
+    } else {
+        resultDiv.innerHTML = `<span style="color:var(--color-danger);">❌ Ошибка: ${result.error}</span>`;
+    }
+};
     </script>
 
 </body>

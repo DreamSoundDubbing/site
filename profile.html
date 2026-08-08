@@ -242,55 +242,69 @@
         </div>
     </header>
 
-    <!-- ========== САЙДБАР ========== -->
-<div id="sidebar-overlay" onclick="closeSidebar()"></div>
-<aside id="sidebar">
-    <div class="sidebar-header">
-        <div class="sidebar-logo">
-            <img src="logo1.jpg" alt="Dream Sound Dubbing" class="sidebar-logo-img">
-            <span>DSD <span style="color:var(--color-accent2);">Menu</span></span>
+    <!-- ========== HEADER ========== -->
+    <header class="fixed-header">
+        <div class="nav-buttons">
+            <button class="burger-btn" onclick="openSidebar()" title="Меню" aria-label="Открыть меню">
+                <span></span><span></span><span></span>
+            </button>
+            <a href="index.html">
+                <img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo">
+            </a>
+            <a href="index.html" class="nav-icon-btn" id="homeLink" style="display:none;">🏠Главная</a>
+            <a href="titles.html" class="nav-icon-btn" id="titlesLink" style="display:none;">🎦Тайтлы</a>
+            <a href="sostav.html" class="nav-icon-btn" id="sostavLink" style="display:none;">🎭Состав</a>
+            <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
+            <a href="search.html" class="nav-icon-btn" id="searchLink" style="display:none;">🔍Поиск</a>
+            <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
+            <a href="voice-order.html" class="nav-icon-btn" id="voiceOrderLink" style="display:none;">📝Заказ</a>
+            <a href="admin-panel.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Админ-панель</a>
+            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">🌙</button>
         </div>
-        <button class="sidebar-close-btn" onclick="closeSidebar()">
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
-    <nav class="sidebar-nav">
-    <div class="sidebar-section-label">Навигация</div>
-    <a href="index.html" class="sidebar-link"><i class="fas fa-home"></i><span>Главная</span></a>
-    <a href="titles.html" class="sidebar-link"><i class="fas fa-film"></i><span>Тайтлы</span></a>
-    <a href="sostav.html" class="sidebar-link"><i class="fas fa-users"></i><span>Состав</span></a>
-    <a href="search.html" class="sidebar-link"><i class="fas fa-search"></i><span>Поиск</span></a>
+    </header>
 
-    <div class="sidebar-divider"></div>
-    
-    <div class="sidebar-section-label">Личное</div>
-    <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
-    <a href="inventory.html" class="sidebar-link"><i class="fas fa-box"></i><span>Инвентарь</span></a>
-    <a href="profile.html#playlists" class="sidebar-link"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
-    <a href="profile.html#shop" class="sidebar-link"><i class="fas fa-gem"></i><span>Баланс Dream Gems</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
-
-    <div class="sidebar-divider"></div>
-    
-    <div class="sidebar-section-label">Студия</div>
-    <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
-    <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заказ озвучки</span></a>
-    <a href="#" class="sidebar-link" onclick="openDSCoinOrder(); return false;"><i class="fas fa-plus"></i><span>Получить Dream Gems</span></a>
-
-    <div class="sidebar-divider"></div>
-    
-    <div class="sidebar-section-label">Администрирование</div>
-    <a href="admin-orders.html" class="sidebar-link" id="sidebarAdminOrders" style="display:none;"><i class="fas fa-clipboard-list"></i><span>Заказы</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
-    <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;"><i class="fas fa-gem"></i><span>Управление Dream Gems</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
-</nav>
-    <div class="sidebar-footer">
-        <div class="sidebar-socials">
+    <!-- ========== SIDEBAR ========== -->
+    <div id="sidebar-overlay" onclick="closeSidebar()"></div>
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="logo1.jpg" alt="Dream Sound Dubbing" class="sidebar-logo-img">
+                <span>DSD <span style="color:var(--color-accent2);">Menu</span></span>
+            </div>
+            <button class="sidebar-close-btn" onclick="closeSidebar()"><i class="fas fa-times"></i></button>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="sidebar-section-label">Навигация</div>
+            <a href="index.html" class="sidebar-link"><i class="fas fa-home"></i><span>Главная</span></a>
+            <a href="titles.html" class="sidebar-link"><i class="fas fa-film"></i><span>Тайтлы</span></a>
+            <a href="sostav.html" class="sidebar-link"><i class="fas fa-users"></i><span>Состав</span></a>
+            <a href="search.html" class="sidebar-link"><i class="fas fa-search"></i><span>Поиск</span></a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-label">Личное</div>
+            <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
+            <a href="inventory.html" class="sidebar-link"><i class="fas fa-box"></i><span>Инвентарь</span></a>
+            <a href="profile.html#playlists" class="sidebar-link"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
+            <a href="profile.html#shop" class="sidebar-link"><i class="fas fa-gem"></i><span>Баланс Dream Gems</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-label">Студия</div>
+            <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
+            <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заказ озвучки</span></a>
+            <a href="#" class="sidebar-link" onclick="openPromoModal(); return false;"><i class="fas fa-gem"></i><span>Активировать промокод</span></a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-label">Администрирование</div>
+            <a href="admin-panel.html" class="sidebar-link" id="sidebarAdminPanel" style="display:none;"><i class="fas fa-crown"></i><span>Админ-панель</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+            <a href="admin-orders.html" class="sidebar-link" id="sidebarAdminOrders" style="display:none;"><i class="fas fa-clipboard-list"></i><span>Заказы</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+            <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;"><i class="fas fa-gem"></i><span>Управление Dream Gems</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-socials">
             <a href="https://vk.ru/dreamsounddubbing" target="_blank"><i class="fab fa-vk"></i></a>
             <a href="https://t.me/DreamSoundDubbing" target="_blank"><i class="fab fa-telegram-plane"></i></a>
             <a href="https://youtube.com/@dreamsounddubbing?si=3iGiDPH9ZK" target="_blank"><i class="fab fa-youtube"></i></a>
         </div>
-        <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px;letter-spacing:1px;">© Dream Sound Dubbing</div>
-    </div>
-</aside>
+            <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px;letter-spacing:1px;">© Dream Sound Dubbing</div>
+        </div>
+    </aside>
 
     <!-- ========== МОДАЛКИ ========== -->
     <div class="modal-overlay" id="m-dscoin-order">
