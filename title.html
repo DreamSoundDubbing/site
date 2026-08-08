@@ -2445,7 +2445,7 @@ await loadAllRoles();
             }
 
             content.innerHTML = `
-                        <div class="anime-header">
+                        <div class="anime-header ${wallpaperUrl ? 'has-wallpaper' : ''}" style="${headerWallpaperStyle}">
                             ${posterHtml}
                             <div class="anime-info">
                                 <h1 class="anime-title">${title.name} ${avgRatingHtml}</h1>
