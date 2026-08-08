@@ -298,26 +298,7 @@
         </div>
     </header>
 
-    <!-- ========== HEADER ========== -->
-    <header class="fixed-header">
-        <div class="nav-buttons">
-            <button class="burger-btn" onclick="openSidebar()" title="Меню" aria-label="Открыть меню">
-                <span></span><span></span><span></span>
-            </button>
-            <a href="index.html">
-                <img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo">
-            </a>
-            <a href="index.html" class="nav-icon-btn" id="homeLink" style="display:none;">🏠Главная</a>
-            <a href="titles.html" class="nav-icon-btn" id="titlesLink" style="display:none;">🎦Тайтлы</a>
-            <a href="sostav.html" class="nav-icon-btn" id="sostavLink" style="display:none;">🎭Состав</a>
-            <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
-            <a href="search.html" class="nav-icon-btn" id="searchLink" style="display:none;">🔍Поиск</a>
-            <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
-            <a href="voice-order.html" class="nav-icon-btn" id="voiceOrderLink" style="display:none;">📝Заказ</a>
-            <a href="admin-panel.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Админ-панель</a>
-            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">🌙</button>
-        </div>
-    </header>
+    
 
     <!-- ========== SIDEBAR ========== -->
     <div id="sidebar-overlay" onclick="closeSidebar()"></div>
@@ -363,6 +344,28 @@
     </aside>
 
     <!-- ========== МОДАЛКИ ========== -->
+     <!-- ========== МОДАЛКА ПРОМОКОДА ========== -->
+    <div class="modal-overlay" id="m-promo-code">
+        <div class="modal-content" style="max-width:440px;">
+            <button class="modal-close" onclick="closeModal('m-promo-code')">✕</button>
+            <h3><i class="fas fa-gem" style="color:#4a8cff;"></i> Активация промокода</h3>
+            <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">
+                Введите промокод, полученный в нашем Telegram-канале, и получите Dream Gems!
+            </p>
+            <div class="form-group">
+                <label>Промокод *</label>
+                <input type="text" id="promoCodeInput" placeholder="Введите промокод..." style="text-transform:uppercase;">
+            </div>
+            <div style="background:var(--bg-welcome);padding:12px;border-radius:10px;margin:12px 0;text-align:center;">
+                <span style="color:var(--text-muted);">Следите за промокодами в </span>
+                <a href="https://t.me/DreamSoundDubbing" target="_blank" style="color:var(--color-accent);font-weight:bold;">Telegram-канале</a>
+            </div>
+            <button class="submit-btn" style="width:100%;" onclick="activatePromoCode()">
+                <i class="fas fa-check"></i> Активировать
+            </button>
+            <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-promo-code')">Отмена</button>
+        </div>
+    </div>
     <div class="modal-overlay" id="m-dscoin-order">
         <div class="modal-content" style="max-width:440px;">
             <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
