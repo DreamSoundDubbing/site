@@ -1402,9 +1402,18 @@
             container.innerHTML = `
                 <div class="profile-container">
                     <div class="profile-header">
-                        <img src="${avatarUrl || 'https://via.placeholder.com/120/d4e8ff/4a90d9?text=?'}" 
-                             class="profile-avatar-large" 
-                             onerror="this.src='https://via.placeholder.com/120/d4e8ff/4a90d9?text=?'">
+                        <div class="profile-avatar-wrapper" style="position:relative; display:inline-block;">
+    <img src="${avatarUrl || 'https://via.placeholder.com/120/d4e8ff/4a90d9?text=?'}" 
+         class="profile-avatar-large" 
+         id="profileAvatar"
+         onerror="this.src='https://via.placeholder.com/120/d4e8ff/4a90d9?text=?'">
+    ${isOwn ? `
+        <label for="avatarUpload" class="avatar-upload-btn" style="position:absolute; bottom:0; right:0; background:var(--color-accent); color:#fff; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; border:2px solid var(--bg-modal);">
+            📷
+            <input type="file" id="avatarUpload" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
+        </label>
+    ` : ''}
+</div>
                         <div class="profile-info">
                             <h1 class="profile-name" id="profileDisplayName" style="${nameStyle}">${nameHtml}</h1>
                             ${equippedStatus ? `
@@ -1461,6 +1470,43 @@
                 document.getElementById('playlistsSection').style.display = 'none';
             }
         }
+
+        // Внутри модульного скрипта profile.html
+import { uploadAvatar } from './firebase-config.js';
+
+window.handleAvatarUpload = async function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const user = getCurrentUser();
+    if (!user) {
+        showToast('❌ Необходимо авторизоваться', 'error');
+        return;
+    }
+
+    // Показываем превью
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('profileAvatar').src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+
+    showToast('⏳ Загрузка фото...', 'info');
+
+    const result = await uploadAvatar(user.uid, file);
+    if (result.success) {
+        // Сохраняем ссылку в профиль
+        const updateResult = await updateUserProfile(user.uid, { photoURL: result.url });
+        if (updateResult.success) {
+            showToast('✅ Фото загружено!', 'success');
+            await loadProfile();
+        } else {
+            showToast('❌ Ошибка сохранения: ' + updateResult.error, 'error');
+        }
+    } else {
+        showToast('❌ Ошибка загрузки: ' + result.error, 'error');
+    }
+};
 
         // Внутри модульного скрипта profile.html
 window.createPromoCode = async function() {

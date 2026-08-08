@@ -1961,6 +1961,41 @@ async function activatePromoCode(uid, code) {
 }
 
 // ============================================================
+// ========== ЗАГРУЗКА АВАТАРОК ==========
+// ============================================================
+
+import { 
+    getStorage, 
+    ref, 
+    uploadBytesResumable, 
+    getDownloadURL 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+const storage = getStorage(app);
+
+async function uploadAvatar(uid, file) {
+    try {
+        const storageRef = ref(storage, `avatars/${uid}/${Date.now()}_${file.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        
+        return new Promise((resolve, reject) => {
+            uploadTask.on(
+                'state_changed',
+                null,
+                (error) => {
+                    reject({ success: false, error: error.message });
+                },
+                async () => {
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    resolve({ success: true, url: downloadURL });
+                }
+            );
+        });
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+// ============================================================
 // ========== ЭКСПОРТ ==========
 // ============================================================
 
@@ -2052,7 +2087,8 @@ export {
     openLootbox,
     transferCoins,
     createPromoCode,
-    activatePromoCode
+    activatePromoCode,
+    uploadAvatar
 };
 
 // === ИЗМЕНЕНИЕ: ЯВНОЕ ПРИСВОЕНИЕ ВСЕХ ФУНКЦИЙ В GLOBAL SCOPE ===
@@ -2143,5 +2179,6 @@ window.openLootbox = openLootbox;
 window.transferCoins = transferCoins;
 window.createPromoCode = createPromoCode;
 window.activatePromoCode = activatePromoCode;
+window.uploadAvatar = uploadAvatar;
 
 console.log('🔥 Модуль firebase-config.js загружен и все функции экспортированы в window');
