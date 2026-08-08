@@ -15,17 +15,63 @@
     <script type="module" src="firebase-config.js"></script>
     <style>
         /* ===== УБИРАЕМ ВСЕ ОБВОДКИ И РАМКИ ===== */
-        * {
+                /* ===== АГРЕССИВНОЕ УДАЛЕНИЕ ВСЕХ ОБВОДОК ===== */
+        *,
+        *::before,
+        *::after,
+        a,
+        button,
+        input,
+        textarea,
+        select,
+        .privacy-content *,
+        .privacy-content a,
+        .privacy-content button {
             outline: none !important;
+            outline-style: none !important;
+            outline-width: 0 !important;
+            outline-color: transparent !important;
             border: none !important;
+            border-style: none !important;
+            border-width: 0 !important;
+            border-color: transparent !important;
             box-shadow: none !important;
+            -webkit-box-shadow: none !important;
+            -moz-box-shadow: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+            text-shadow: none !important;
+            stroke: none !important;
         }
-        *:focus {
+        
+        /* ===== ДОПОЛНИТЕЛЬНО: СБРОС ПРИ ФОКУСЕ ===== */
+        *:focus,
+        *:focus-visible,
+        *:focus-within,
+        *:active,
+        *:hover,
+        a:focus,
+        a:active,
+        button:focus,
+        button:active,
+        input:focus,
+        input:active,
+        textarea:focus,
+        textarea:active,
+        select:focus,
+        select:active {
             outline: none !important;
-        }
-        a:focus, a:active, button:focus, button:active, input:focus, input:active, textarea:focus, textarea:active, select:focus, select:active {
-            outline: none !important;
+            outline-style: none !important;
+            outline-width: 0 !important;
+            outline-color: transparent !important;
+            border: none !important;
+            border-style: none !important;
+            border-width: 0 !important;
+            border-color: transparent !important;
             box-shadow: none !important;
+            -webkit-box-shadow: none !important;
+            -moz-box-shadow: none !important;
         }
 
         .privacy-content {
