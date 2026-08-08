@@ -2099,7 +2099,7 @@ function getEpisodesFromEditor() {
         window.currentEpisode = 0;
         window.currentQuality = 'auto';
 
-        function parseTimecode(tc) {
+                function parseTimecode(tc) {
             if (!tc) return 0;
             const parts = tc.split(':').map(Number);
             if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
@@ -2133,7 +2133,7 @@ function getEpisodesFromEditor() {
             console.log('Качество изменено на:', window.currentQuality);
         };
 
-        window.playEpisode = function(episodeData) {
+                window.playEpisode = function(episodeData) {
             if (!episodeData) {
                 document.getElementById('playerContainer').innerHTML = `<div class="video-placeholder">🎬 Серия ещё не доступна</div>`;
                 return;
@@ -2168,23 +2168,53 @@ function getEpisodesFromEditor() {
                     <button id="skipEndingBtn" class="skip-btn" onclick="skipEnding()">⏩ Пропустить эндинг</button>
                 </div>
             `;
+            
             const video = document.getElementById('playerVideo');
-video.addEventListener('ended', function() {
-    const currentEp = window.currentEpisodeData;
-    if (!currentEp) return;
-    const season = currentEp.season || 1;
-    const currentNumber = currentEp.number;
-    const episodesInSeason = window.episodesBySeason[season] || [];
-    const nextEp = episodesInSeason.find(ep => ep.number === currentNumber + 1 && ep.url);
-    if (nextEp) {
-        showToast('⏩ Автоматический переход на следующую серию...', 'info');
-        setTimeout(() => window.playEpisode(nextEp), 500);
-    }
-});
+            
+            // ===== ВАЖНО: ДОБАВЬТЕ ЭТОТ БЛОК =====
+            video.addEventListener('timeupdate', function() {
+                const ep = window.currentEpisodeData;
+                const skipOpeningBtn = document.getElementById('skipOpeningBtn');
+                const skipEndingBtn = document.getElementById('skipEndingBtn');
+                
+                if (ep && ep.openingStart && ep.openingEnd) {
+                    const start = parseTimecode(ep.openingStart);
+                    const end = parseTimecode(ep.openingEnd);
+                    if (video.currentTime >= start && video.currentTime < end) {
+                        skipOpeningBtn.classList.add('visible');
+                    } else {
+                        skipOpeningBtn.classList.remove('visible');
+                    }
+                }
+                
+                if (ep && ep.endingStart && ep.endingEnd) {
+                    const start = parseTimecode(ep.endingStart);
+                    const end = parseTimecode(ep.endingEnd);
+                    if (video.currentTime >= start && video.currentTime < end) {
+                        skipEndingBtn.classList.add('visible');
+                    } else {
+                        skipEndingBtn.classList.remove('visible');
+                    }
+                }
+            });
+            // ========================================
+
+            video.addEventListener('ended', function() {
+                const currentEp = window.currentEpisodeData;
+                if (!currentEp) return;
+                const season = currentEp.season || 1;
+                const currentNumber = currentEp.number;
+                const episodesInSeason = window.episodesBySeason[season] || [];
+                const nextEp = episodesInSeason.find(ep => ep.number === currentNumber + 1 && ep.url);
+                if (nextEp) {
+                    showToast('⏩ Автоматический переход на следующую серию...', 'info');
+                    setTimeout(() => window.playEpisode(nextEp), 500);
+                }
+            });
             
             document.getElementById('seasonSelect').value = window.currentSeason;
             document.getElementById('episodeSelect').value = episodeData.number;
-            if (episodeNumber) trackViewEpisode(episodeNumber);
+            if (episodeData.number) trackViewEpisode(episodeData.number);
             video.play();
         };
 
