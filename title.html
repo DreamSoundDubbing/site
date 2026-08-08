@@ -2501,28 +2501,37 @@
             setTimeout(setupEpisodesAutoSave, 100);
         }
 
-        // ===== ЕДИНАЯ ФУНКЦИЯ CHECKADMIN =====
+                // ===== ЕДИНАЯ ФУНКЦИЯ CHECKADMIN =====
         async function checkAdmin(user) {
+            console.log('🟡 checkAdmin вызван, user:', user);
             if (user) {
                 const role = await getUserRole(user.uid);
+                console.log('🟢 Роль пользователя:', role);
                 isAdmin = role === 'admin';
+                console.log('🔵 isAdmin:', isAdmin);
                 
                 // Админ-панель
-                document.getElementById('adminPanel').style.display = isAdmin ? 'flex' : 'none';
+                const adminPanel = document.getElementById('adminPanel');
+                if (adminPanel) {
+                    adminPanel.style.display = isAdmin ? 'flex' : 'none';
+                    console.log('🟣 adminPanel display:', adminPanel.style.display);
+                }
                 
                 // Кнопка "Добавить персонажа"
                 const addCharContainer = document.getElementById('addCharacterContainer');
                 if (addCharContainer) {
                     addCharContainer.style.display = isAdmin ? 'block' : 'none';
+                    console.log('🟣 addCharacterContainer display:', addCharContainer.style.display);
                 }
             } else {
                 isAdmin = false;
-                document.getElementById('adminPanel').style.display = 'none';
+                console.log('🔴 Пользователь не авторизован');
+                
+                const adminPanel = document.getElementById('adminPanel');
+                if (adminPanel) adminPanel.style.display = 'none';
                 
                 const addCharContainer = document.getElementById('addCharacterContainer');
-                if (addCharContainer) {
-                    addCharContainer.style.display = 'none';
-                }
+                if (addCharContainer) addCharContainer.style.display = 'none';
             }
         }
 
