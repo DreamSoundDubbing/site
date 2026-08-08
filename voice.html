@@ -802,7 +802,7 @@
             saveBtn.textContent = '💾 Сохранить изменения';
         };
 
-        async function loadVoice() {
+                async function loadVoice() {
             const container = document.getElementById('voice-content');
             container.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
             if (!voiceId) {
@@ -840,12 +840,45 @@
             }
             currentVoice = result.data;
 
-            const titles = window.titlesDatabase?.filter(t => window.rolesDatabase?.some(r => r.titleId === t.id && r
-                .voiceId === voiceId)) || [];
-            const roles = window.rolesDatabase?.filter(r => r.voiceId === voiceId) || [];
-            const stats = { totalTitles: titles.length, totalRoles: roles.length, mainRoles: roles.filter(r => r.type ===
-                    'main').length };
+            // ===== ЗАГРУЗКА РОЛЕЙ И ТАЙТЛОВ =====
+            let allRoles = [];
+            let allTitles = [];
 
+            try {
+                const rolesResult = await getRolesByVoiceId(voiceId);
+                if (rolesResult.success) {
+                    allRoles = rolesResult.roles;
+                }
+            } catch (e) {
+                console.error('Ошибка загрузки ролей:', e);
+            }
+
+            try {
+                const titlesResult = await getTitles();
+                if (titlesResult.success) {
+                    allTitles = titlesResult.titles;
+                }
+            } catch (e) {
+                console.error('Ошибка загрузки тайтлов:', e);
+            }
+
+            // Группируем роли по тайтлам
+            const rolesByTitle = {};
+            allRoles.forEach(role => {
+                const titleId = role.titleId;
+                if (!rolesByTitle[titleId]) {
+                    rolesByTitle[titleId] = [];
+                }
+                rolesByTitle[titleId].push(role);
+            });
+
+            const stats = {
+                totalTitles: Object.keys(rolesByTitle).length,
+                totalRoles: allRoles.length,
+                mainRoles: allRoles.filter(r => r.type === 'main').length
+            };
+
+            // ===== СОЦСЕТИ =====
             let socialHtml = '';
             const voice = currentVoice;
             if (voice.social) {
@@ -857,25 +890,41 @@
                     `<a href="https://github.com/${voice.social.github}" target="_blank" class="social-link">🐙 GitHub</a>`;
             }
 
-            let titlesHtml = '';
-            if (titles.length > 0) {
-                titlesHtml = '<h2 class="title">Участие в проектах</h2>';
-                titles.forEach(title => {
-                    const titleRoles = roles.filter(r => r.titleId === title.id);
-                    titlesHtml += `
-                                <a href="title.html?id=${title.id}" style="display:flex;align-items:center;gap:15px;padding:12px;background:var(--bg-input);border-radius:10px;margin-bottom:10px;text-decoration:none;color:inherit;transition:all 0.3s;border:1px solid transparent;">
-                                    <img src="${title.imageVertical || title.imageHorizontal || title.image}" style="width:60px;height:80px;object-fit:cover;border-radius:8px;" onerror="this.src='https://via.placeholder.com/60x80/d4e8ff/4a90d9?text=?'">
-                                    <div>
-                                        <div style="font-weight:bold;color:var(--color-accent);">${title.name}</div>
-                                        <div style="font-size:13px;color:var(--text-muted);">
-                                            ${titleRoles.map(r => `<span style="display:inline-block;background:var(--border-primary);padding:2px 10px;border-radius:12px;margin:2px;font-size:11px;">${r.character} ${r.type === 'main' ? '⭐' : ''}</span>`).join('')}
-                                        </div>
-                                    </div>
-                                </a>
-                            `;
-                });
+            // ===== СПИСОК РОЛЕЙ ПО ТАЙТЛАМ =====
+            let rolesHtml = '';
+            if (Object.keys(rolesByTitle).length > 0) {
+                rolesHtml = '<h2 class="title" style="margin-top:30px;">🎭 Озвученные роли</h2>';
+                for (const [titleId, roles] of Object.entries(rolesByTitle)) {
+                    const title = allTitles.find(t => t.id === titleId);
+                    if (!title) continue;
+
+                    rolesHtml += `
+                        <div style="background:var(--bg-input);border-radius:12px;padding:16px;margin-bottom:16px;border:1px solid var(--border-primary);">
+                            <div style="display:flex;align-items:center;gap:15px;margin-bottom:12px;">
+                                <img src="${title.imageVertical || title.imageHorizontal || title.image || 'https://via.placeholder.com/60x80/d4e8ff/4a90d9?text=?'}" 
+                                     style="width:60px;height:80px;object-fit:cover;border-radius:8px;" 
+                                     onerror="this.src='https://via.placeholder.com/60x80/d4e8ff/4a90d9?text=?'">
+                                <div>
+                                    <a href="title.html?id=${title.id}" style="font-weight:bold;color:var(--color-accent);text-decoration:none;font-size:18px;">${title.name}</a>
+                                    <div style="font-size:13px;color:var(--text-muted);">${title.type || 'Аниме'} • ${title.year || ''}</div>
+                                </div>
+                            </div>
+                            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                                ${roles.map(role => `
+                                    <span style="display:inline-block;background:var(--bg-card);padding:4px 12px;border-radius:20px;font-size:13px;border:1px solid var(--border-primary);">
+                                        ${role.character}
+                                        ${role.type === 'main' ? '⭐' : ''}
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                rolesHtml = '<p style="color:var(--text-muted);text-align:center;padding:20px;">Пока нет озвученных ролей</p>';
             }
 
+            // ===== АДМИН-ПАНЕЛЬ =====
             let adminHtml = '';
             if (isAdmin) {
                 adminHtml = `
@@ -933,7 +982,7 @@
                             <div class="stat-box"><div class="stat-number">${stats.totalRoles}</div><div class="text">Всего ролей</div></div>
                             <div class="stat-box"><div class="stat-number">${stats.mainRoles}</div><div class="text">Главных ролей</div></div>
                         </div>
-                        ${titlesHtml}
+                        ${rolesHtml}
                     `;
         }
 
