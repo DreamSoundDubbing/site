@@ -14,41 +14,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script type="module" src="firebase-config.js"></script>
     <style>
-        /* ===== УБИРАЕМ ВСЕ ОБВОДКИ И РАМКИ ===== */
-                /* ===== АГРЕССИВНОЕ УДАЛЕНИЕ ВСЕХ ОБВОДОК ===== */
-        *,
-        *::before,
-        *::after,
-        a,
-        button,
-        input,
-        textarea,
-        select,
-        .privacy-content *,
-        .privacy-content a,
-        .privacy-content button {
+                /* ===== УБИРАЕМ ВСЕ ОБВОДКИ И РАМКИ ===== */
+        * {
             outline: none !important;
-            outline-style: none !important;
-            outline-width: 0 !important;
-            outline-color: transparent !important;
             border: none !important;
-            border-style: none !important;
-            border-width: 0 !important;
-            border-color: transparent !important;
             box-shadow: none !important;
-            -webkit-box-shadow: none !important;
-            -moz-box-shadow: none !important;
-            -webkit-appearance: none !important;
-            -moz-appearance: none !important;
-            appearance: none !important;
-            text-shadow: none !important;
-            stroke: none !important;
         }
-        
-        /* ===== ДОПОЛНИТЕЛЬНО: СБРОС ПРИ ФОКУСЕ ===== */
         *:focus,
-        *:focus-visible,
-        *:focus-within,
         *:active,
         *:hover,
         a:focus,
@@ -62,18 +34,10 @@
         select:focus,
         select:active {
             outline: none !important;
-            outline-style: none !important;
-            outline-width: 0 !important;
-            outline-color: transparent !important;
-            border: none !important;
-            border-style: none !important;
-            border-width: 0 !important;
-            border-color: transparent !important;
             box-shadow: none !important;
-            -webkit-box-shadow: none !important;
-            -moz-box-shadow: none !important;
         }
 
+        /* ===== СТИЛИ ТЕКСТА (БЕЗ ИЗМЕНЕНИЙ) ===== */
         .privacy-content {
             max-width: 900px;
             margin: 0 auto;
@@ -147,6 +111,14 @@
             .privacy-content .contact-block {
                 padding: 12px 16px;
             }
+        }
+                /* ===== ФИНАЛЬНЫЙ ПЕРЕБОР ===== */
+        .privacy-content *,
+        .privacy-content a,
+        .privacy-content button {
+            outline: none !important;
+            border: none !important;
+            box-shadow: none !important;
         }
     </style>
 </head>
