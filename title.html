@@ -2467,7 +2467,7 @@
                         `;
             }
 
-            content.innerHTML = `
+                                    content.innerHTML = `
                         <div class="anime-header ${wallpaperUrl ? 'has-wallpaper' : ''}" style="${headerWallpaperStyle}">
                             ${posterHtml}
                             <div class="anime-info">
@@ -2496,9 +2496,16 @@
                         <div id="comments-container"></div>
                     `;
 
+            // ===== ИСПРАВЛЕННЫЙ БЛОК =====
+            // Используем уже существующую переменную user (объявлена выше в loadTitle)
+            if (user) {
+                await checkAdmin(user);
+            }
+            // ==========================
+
             renderCommentForm();
             setTimeout(updateAverageRating, 500);
-            setTimeout(setupEpisodesAutoSave, 100);
+            setTimeout(setupEpisodesAutoSave, 100); 
         }
 
                 // ===== ЕДИНАЯ ФУНКЦИЯ CHECKADMIN =====
