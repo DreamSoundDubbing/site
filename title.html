@@ -2120,7 +2120,7 @@
             console.log('Качество изменено на:', window.currentQuality);
         };
 
-        window.playEpisode = function(episodeData) {
+                window.playEpisode = function(episodeData) {
             if (!episodeData) {
                 document.getElementById('playerContainer').innerHTML = `<div class="video-placeholder">🎬 Серия ещё не доступна</div>`;
                 return;
@@ -2208,9 +2208,12 @@
             document.getElementById('seasonSelect').value = window.currentSeason;
             document.getElementById('episodeSelect').value = episodeData.number;
             if (episodeData.number) trackViewEpisode(episodeData.number);
-            video.play();
+            
+            // ===== УБИРАЕМ video.play() =====
+            // video.play(); // <-- УДАЛЯЕМ ЭТУ СТРОКУ
+            // =================================
         };
-
+        
         window.changeSeason = function() {
             const select = document.getElementById('seasonSelect');
             window.currentSeason = parseInt(select.value);
@@ -2467,7 +2470,7 @@
                         `;
             }
 
-                                    content.innerHTML = `
+                        content.innerHTML = `
                         <div class="anime-header ${wallpaperUrl ? 'has-wallpaper' : ''}" style="${headerWallpaperStyle}">
                             ${posterHtml}
                             <div class="anime-info">
@@ -2496,16 +2499,16 @@
                         <div id="comments-container"></div>
                     `;
 
-            // ===== ИСПРАВЛЕННЫЙ БЛОК =====
+            renderCommentForm();
+            setTimeout(updateAverageRating, 500);
+            setTimeout(setupEpisodesAutoSave, 100);
+
+            // ===== ВЫЗЫВАЕМ checkAdmin ПОСЛЕ ТОГО, КАК DOM ГОТОВ =====
             // Используем уже существующую переменную user (объявлена выше в loadTitle)
             if (user) {
                 await checkAdmin(user);
             }
-            // ==========================
-
-            renderCommentForm();
-            setTimeout(updateAverageRating, 500);
-            setTimeout(setupEpisodesAutoSave, 100); 
+            // ====================================================== 
         }
 
                 // ===== ЕДИНАЯ ФУНКЦИЯ CHECKADMIN =====
