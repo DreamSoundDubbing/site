@@ -81,6 +81,10 @@
     --color-danger: #ff6b6b;
     --color-warning: #ffaa00;
     --color-coin: #fbbf24;
+
+    /* ФОН САЙДБАРА (ТЕМНАЯ ТЕМА) */
+    --sidebar-bg-image: url('https://s1.radikal.cloud/2026/06/29/Max_a_SKIN_TOLKO_FON_SAIcf6a942366443959.md.png');
+    --sidebar-bg-overlay: rgba(0, 0, 0, 0.5);
 }
 
 /* ========== СВЕТЛАЯ ТЕМА ========== */
@@ -105,7 +109,7 @@
     --bg-news1: #e8f0ff;
     --bg-news2: #f0e8ff;
     --bg-auth: #f0f4ff;
-    --bg-auth-error: #fff0f0; 
+    --bg-auth-error: #fff0f0;
     --bg-auth-success: #e8f5e9;
     --bg-order-summary: #f0f4ff;
     --bg-dub-card: #ffffff;
@@ -122,7 +126,7 @@
     --bg-telegram-btn: linear-gradient(135deg, #0088cc, #005f8a);
     --bg-header: linear-gradient(135deg, #2a4a8a 0%, #6a3a9a 100%);
     --bg-footer: linear-gradient(135deg, #1b53c4 0%, #7122c0 100%);
-    --bg-sidebar: #ffffff;
+    --bg-sidebar: rgba(255, 255, 255, 0.96);
     --bg-sidebar-header: linear-gradient(135deg, #2a4a8a 0%, #6a3a9a 100%);
     --bg-shop-item: #f0f4ff;
     --bg-playlist: #f0f4ff;
@@ -153,6 +157,10 @@
     --color-accent: #00315f;
     --color-accent2: #771fbb;
     --color-accent-light: #aa6aca;
+
+    /* ФОН САЙДБАРА (СВЕТЛАЯ ТЕМА) */
+    --sidebar-bg-image: url('https://s2.radikal.cloud/2026/06/29/Max_a_PEREDELAI_V_DNEVNOE_b7375ac1c55771bc.md.png');
+    --sidebar-bg-overlay: rgba(255, 255, 255, 0.45);
 }
 
 /* Черная обводка для белого текста в светлой теме */
@@ -179,6 +187,19 @@
          1px  0px 0 #000000,
          0px -1px 0 #000000,
          0px  1px 0 #000000;
+}
+
+/* ===== УБИРАЕМ ОБВОДКУ ТЕКСТА ТОЛЬКО В САЙДБАРЕ (светлая тема) ===== */
+[data-theme="light"] #sidebar,
+[data-theme="light"] #sidebar *,
+[data-theme="light"] .sidebar-link,
+[data-theme="light"] .sidebar-section-label,
+[data-theme="light"] .sidebar-socials a,
+[data-theme="light"] .sidebar-logo span,
+[data-theme="light"] .sidebar-header,
+[data-theme="light"] .sidebar-nav,
+[data-theme="light"] .sidebar-footer {
+    text-shadow: none !important;
 }
 
 /* ========== БАЗОВЫЕ СТИЛИ ========== */
@@ -341,6 +362,14 @@ body {
     flex-direction: column;
     overflow: hidden;
     border-right: 2px solid var(--color-accent);
+    
+    /* ФОН ИЗ ПЕРЕМЕННЫХ (ТЕМНАЯ/СВЕТЛАЯ ТЕМА) */
+    background-image: var(--sidebar-bg-image) !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-color: var(--sidebar-bg-overlay) !important;
+    background-blend-mode: overlay !important;
 }
 #sidebar.open {
     left: 0;
@@ -412,6 +441,11 @@ body {
     color: var(--text-muted);
     padding: 10px 8px 4px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.sidebar-text {
+    font-size: 15px;
+    background: var(--text-primary);
 }
 .sidebar-divider {
     height: 1px;
@@ -1236,23 +1270,3 @@ body {
 
 /* Запрещаем выделение текста (чтобы не было "синего" выделения) */
 .no-select { user-select: none; }
-
-/* ===== ПЕРЕОПРЕДЕЛЕНИЕ ДЛЯ СВЕТЛОЙ ТЕМЫ: ЧЁРНЫЙ ТЕКСТ В МОДАЛКАХ ===== */
-[data-theme="light"] .modal-content .form-group input,
-[data-theme="light"] .modal-content .form-group textarea,
-[data-theme="light"] .modal-content .form-group select {
-    color: #000000 !important;
-}
-[data-theme="light"] .modal-content .form-group select option {
-    color: #000000 !important;
-    background: #ffffff !important;
-}
-
-/* ===== ТЁМНАЯ ТЕМА: белый текст в селектах (как в полях ввода) ===== */
-[data-theme="dark"] .modal-content select {
-    color: var(--text-primary) !important;
-}
-[data-theme="dark"] .modal-content select option {
-    color: var(--text-primary) !important;
-    background: var(--bg-input) !important;
-}
