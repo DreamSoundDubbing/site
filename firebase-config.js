@@ -1902,7 +1902,7 @@ async function sellCoinFromInventory(uid, itemId) {
 // ========== ПРОМОКОДЫ ==========
 // ============================================================
 
-async function createPromoCode(code, gems, maxUses = 1) {
+async function createPromoCode(code, gems, maxUses = null) {
     try {
         const docRef = doc(db, "promocodes", code);
         const docSnap = await getDoc(docRef);
@@ -1913,7 +1913,7 @@ async function createPromoCode(code, gems, maxUses = 1) {
             code: code,
             gems: gems,
             used: 0,
-            maxUses: maxUses,
+            maxUses: maxUses, // может быть null (безлимит)
             createdAt: serverTimestamp()
         });
         return { success: true };

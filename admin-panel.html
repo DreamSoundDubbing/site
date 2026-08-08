@@ -501,7 +501,8 @@
             }
             const code = document.getElementById('promoCodeNew').value.trim().toUpperCase();
             const gems = parseInt(document.getElementById('promoCodeGems').value);
-            const maxUses = parseInt(document.getElementById('promoCodeMaxUses').value) || 1;
+            const maxUsesInput = document.getElementById('promoCodeMaxUses').value;
+            const maxUses = maxUsesInput ? parseInt(maxUsesInput) : null;
             if (!code) { showToast('❌ Введите код', 'error'); return; }
             if (!gems || gems < 1) { showToast('❌ Введите количество Dream Gems', 'error'); return; }
             const result = await createPromoCode(code, gems, maxUses);
@@ -830,9 +831,9 @@
                 <input type="number" id="promoCodeGems" placeholder="100" min="1">
             </div>
             <div class="form-group">
-                <label>Максимальное количество использований</label>
-                <input type="number" id="promoCodeMaxUses" placeholder="1" min="1">
-            </div>
+    <label>Максимальное количество использований (оставьте пустым для безлимита)</label>
+    <input type="number" id="promoCodeMaxUses" placeholder="Неограниченно" min="1">
+</div>
             <button class="submit-btn" onclick="createPromoCode()"><i class="fas fa-plus"></i> Создать</button>
             <button class="cancel-btn" onclick="closeModal('m-create-promo')">Отмена</button>
         </div>

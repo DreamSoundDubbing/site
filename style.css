@@ -874,6 +874,9 @@ hr {
     transform: none;
 }
 
+.modal-content .cancel-btn { width: 100%; padding: 10px; background: transparent; color: var(--text-muted); border: 2px solid var(--border-primary); border-radius: 25px; font-weight: bold; cursor: pointer; transition: all 0.3s; margin-top: 8px; }
+.modal-content .cancel-btn:hover { border-color: var(--color-accent); color: var(--text-primary); }
+
 /* ===== ИСПРАВЛЕНИЕ ДЛЯ СВЕТЛОЙ ТЕМЫ: ЧЁРНЫЙ ТЕКСТ В ПОЛЯХ ВВОДА ===== */
 [data-theme="light"] .modal-content input,
 [data-theme="light"] .modal-content textarea,
