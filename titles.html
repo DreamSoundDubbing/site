@@ -547,6 +547,61 @@
             font-size: 12px;
         }
 
+        .episode-edit-item .ep-season {
+            width: 44px;
+            padding: 4px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .episode-edit-item .ep-opening-start {
+            width: 70px;
+            padding: 4px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .episode-edit-item .ep-opening-end {
+            width: 70px;
+            padding: 4px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .episode-edit-item .ep-ending-start {
+            width: 70px;
+            padding: 4px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .episode-edit-item .ep-ending-end {
+            width: 70px;
+            padding: 4px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 12px;
+            text-align: center;
+        }
+
         .episode-edit-item .ep-status {
             padding: 4px 8px;
             border-radius: 4px;
@@ -638,7 +693,12 @@
                 flex-direction: column;
                 align-items: stretch;
             }
-            .episode-edit-item .ep-number {
+            .episode-edit-item .ep-number,
+            .episode-edit-item .ep-season,
+            .episode-edit-item .ep-opening-start,
+            .episode-edit-item .ep-opening-end,
+            .episode-edit-item .ep-ending-start,
+            .episode-edit-item .ep-ending-end {
                 width: 100%;
             }
             .episode-edit-item .ep-title,
@@ -706,8 +766,6 @@
             <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">🌙</button>
         </div>
     </header>
-
-    
 
     <!-- ========== SIDEBAR ========== -->
     <div id="sidebar-overlay" onclick="closeSidebar()"></div>
@@ -850,7 +908,6 @@
     </script>
 
     <!-- ========== DSCOIN МОДАЛКИ ========== -->
-     <!-- ========== МОДАЛКА ПРОМОКОДА ========== -->
     <div class="modal-overlay" id="m-promo-code">
         <div class="modal-content" style="max-width:440px;">
             <button class="modal-close" onclick="closeModal('m-promo-code')">✕</button>
@@ -1108,7 +1165,7 @@
                     <div id="episodesEditor" class="episodes-editor">
                         <div class="episodes-empty">Загрузка...</div>
                     </div>
-                    <small style="color:var(--text-muted); display:block; margin-top:5px;">Номер, название, ссылка на Dropbox и статус серии</small>
+                    <small style="color:var(--text-muted); display:block; margin-top:5px;">Номер, сезон, тайм-коды, ссылка на Dropbox и статус серии</small>
                 </div>
 
                 <button type="submit" class="submit-btn" id="submitBtn">💾 Сохранить</button>
@@ -1294,6 +1351,11 @@
                             <input type="number" class="ep-number" value="${ep.number}" placeholder="№" data-index="${index}" data-field="number" min="1">
                             <input type="text" class="ep-title" value="${ep.title || ''}" placeholder="Название серии" data-index="${index}" data-field="title">
                             <input type="text" class="ep-url" value="${ep.url || ''}" placeholder="Ссылка на Dropbox" data-index="${index}" data-field="url">
+                            <input type="number" class="ep-season" value="${ep.season || 1}" placeholder="Сезон" data-index="${index}" data-field="season" min="1">
+                            <input type="text" class="ep-opening-start" value="${ep.openingStart || ''}" placeholder="Тайм-код опенинга (start)" data-index="${index}" data-field="openingStart">
+                            <input type="text" class="ep-opening-end" value="${ep.openingEnd || ''}" placeholder="Тайм-код опенинга (end)" data-index="${index}" data-field="openingEnd">
+                            <input type="text" class="ep-ending-start" value="${ep.endingStart || ''}" placeholder="Тайм-код эндинга (start)" data-index="${index}" data-field="endingStart">
+                            <input type="text" class="ep-ending-end" value="${ep.endingEnd || ''}" placeholder="Тайм-код эндинга (end)" data-index="${index}" data-field="endingEnd">
                             <select class="ep-status" data-index="${index}" data-field="status">
                                 <option value="Озвучено" ${ep.status === 'Озвучено' ? 'selected' : ''}>✅ Озвучено</option>
                                 <option value="Скоро" ${ep.status === 'Скоро' ? 'selected' : ''}>⏳ Скоро</option>
@@ -1320,6 +1382,11 @@
                 number: episodes.length + 1,
                 title: '',
                 url: '',
+                season: 1,
+                openingStart: '',
+                openingEnd: '',
+                endingStart: '',
+                endingEnd: '',
                 status: 'Скоро'
             });
             renderEpisodesEditor(episodes);
@@ -1334,6 +1401,11 @@
                     number: parseInt(el.querySelector('[data-field="number"]').value) || 0,
                     title: el.querySelector('[data-field="title"]').value || '',
                     url: el.querySelector('[data-field="url"]').value || '',
+                    season: parseInt(el.querySelector('[data-field="season"]').value) || 1,
+                    openingStart: el.querySelector('[data-field="openingStart"]').value || '',
+                    openingEnd: el.querySelector('[data-field="openingEnd"]').value || '',
+                    endingStart: el.querySelector('[data-field="endingStart"]').value || '',
+                    endingEnd: el.querySelector('[data-field="endingEnd"]').value || '',
                     status: el.querySelector('[data-field="status"]').value || 'Скоро'
                 });
             });
@@ -1570,6 +1642,7 @@
             document.getElementById('titleImageVert').value = title.imageVertical || '';
             document.getElementById('titleImageHoriz').value = title.imageHorizontal || '';
             document.getElementById('titleWallpaper').value = title.wallpaper || '';
+            document.getElementById('titleTrailer').value = title.trailer || '';
             document.getElementById('titleDescription').value = title.description || '';
             renderEpisodesEditor(title.episodesList || []);
             openModal('modalOverlay');

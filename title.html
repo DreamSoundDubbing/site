@@ -2,11 +2,11 @@
 <html lang="ru" data-theme="dark">
 <head>
     <link rel="manifest" href="/site/manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="DSD">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#4a2a7a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DSD">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4a2a7a">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Просмотр - Dream Sound Dubbing</title>
@@ -418,115 +418,7 @@
             color: var(--text-primary);
         }
 
-        /* ===== РЕДАКТОР СЕРИЙ ===== */
-        .episodes-editor {
-            margin-top: 8px;
-        }
-        .episode-edit-item {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            align-items: center;
-            padding: 6px 10px;
-            background: var(--bg-input);
-            border-radius: 6px;
-            margin-bottom: 5px;
-            border: 1px solid var(--border-primary);
-        }
-        .episode-edit-item:hover {
-            border-color: var(--color-accent);
-        }
-        .episode-edit-item .ep-number {
-            width: 44px;
-            padding: 4px 6px;
-            border-radius: 4px;
-            border: 1px solid var(--border-primary);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            font-size: 12px;
-            text-align: center;
-        }
-        .episode-edit-item .ep-title {
-            flex: 2;
-            min-width: 100px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            border: 1px solid var(--border-primary);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            font-size: 12px;
-        }
-        .episode-edit-item .ep-url {
-            flex: 3;
-            min-width: 120px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            border: 1px solid var(--border-primary);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            font-size: 12px;
-        }
-        .episode-edit-item .ep-status {
-            padding: 4px 8px;
-            border-radius: 4px;
-            border: 1px solid var(--border-primary);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            font-size: 12px;
-            min-width: 70px;
-        }
-        .episode-edit-item .ep-status option {
-            background: var(--bg-card);
-        }
-        .episode-edit-item .remove-ep-btn {
-            background: var(--color-danger);
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            padding: 3px 10px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: background 0.3s;
-            flex-shrink: 0;
-        }
-        .episode-edit-item .remove-ep-btn:hover {
-            background: #e05555;
-        }
-        .add-episode-btn {
-            padding: 6px 16px;
-            background: var(--color-accent);
-            color: #fff;
-            border: none;
-            border-radius: 16px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: bold;
-            transition: all 0.3s;
-            margin-top: 6px;
-        }
-        .add-episode-btn:hover {
-            background: var(--color-accent2);
-            transform: translateY(-2px);
-        }
-        .episodes-empty {
-            color: var(--text-muted);
-            text-align: center;
-            padding: 12px;
-            font-style: italic;
-        }
-
-        .avg-rating {
-            display: inline-block;
-            background: var(--bg-welcome);
-            padding: 4px 14px;
-            border-radius: 20px;
-            border: 1px solid var(--color-accent);
-            margin-left: 10px;
-            font-size: 13px;
-            color: var(--color-warning);
-        }
-
-        /* ===== ПЛЕЕР ===== */
+        /* ===== ПЛЕЕР (НОВЫЙ) ===== */
         .player-wrapper {
             position: relative;
             width: 100%;
@@ -601,73 +493,86 @@
             text-align: center;
             padding: 20px;
         }
-        .player-controls {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            padding: 10px 0;
-        }
-        .fullscreen-btn {
-            padding: 6px 16px;
-            background: var(--gradient-primary);
-            color: #fff;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 13px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .fullscreen-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(60, 80, 180, 0.3);
-        }
-        .fullscreen-btn .icon {
-            font-size: 16px;
-        }
-        body.fullscreen-mode {
-            overflow: hidden !important;
-        }
 
-        /* ===== ПЕРСОНАЖИ ===== */
-        .characters-grid {
+        /* ===== ЭЛЕМЕНТЫ УПРАВЛЕНИЯ ПЛЕЕРОМ ===== */
+        .player-controls-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 16px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
             display: flex;
             flex-wrap: wrap;
-            gap: 16px;
-            justify-content: center;
-            margin: 16px 0;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
-        .character-card {
-            width: 150px;
-            background: var(--bg-character);
-            border-radius: 12px;
-            overflow: hidden;
-            text-align: center;
-            padding-bottom: 10px;
-            box-shadow: 0 3px 12px rgba(60, 80, 180, 0.08);
-            border: 1px solid var(--border-primary);
+        .player-wrapper:hover .player-controls-overlay,
+        .player-wrapper.paused .player-controls-overlay {
+            opacity: 1;
         }
-        .character-image {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-        }
-        .character-name {
-            font-size: 15px;
-            font-weight: bold;
-            margin: 8px 0 4px 0;
-            color: var(--color-accent);
+        .player-controls-overlay > * {
+            pointer-events: auto;
         }
 
-        /* ===== ЭПИЗОДЫ ===== */
-        .episodes-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin: 12px 0;
+        .player-controls-overlay select {
+            padding: 4px 10px;
+            border-radius: 12px;
+            border: 1px solid var(--border-primary);
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+        }
+        .player-controls-overlay select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+        .player-controls-overlay select:focus {
+            outline: none;
+            border-color: var(--color-accent);
+        }
+
+        .skip-btn {
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--color-accent);
+            background: rgba(60, 80, 180, 0.25);
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+            transition: all 0.3s;
+            display: none;
+        }
+        .skip-btn:hover {
+            background: var(--color-accent);
+            transform: scale(1.05);
+        }
+        .skip-btn.visible {
+            display: inline-block;
+        }
+
+        .quality-select {
+            margin-left: auto;
+        }
+        .quality-select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        /* ===== СПИСОК СЕРИЙ (НОВЫЙ) ===== */
+        .episodes-section {
+            margin-top: 30px;
+        }
+        .episodes-section h2 {
+            color: var(--color-accent);
+            margin-bottom: 16px;
         }
         .episode-item {
             display: flex;
@@ -709,6 +614,37 @@
             color: #fff;
         }
 
+        /* ===== ПЕРСОНАЖИ ===== */
+        .characters-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin: 16px 0;
+        }
+        .character-card {
+            width: 150px;
+            background: var(--bg-character);
+            border-radius: 12px;
+            overflow: hidden;
+            text-align: center;
+            padding-bottom: 10px;
+            box-shadow: 0 3px 12px rgba(60, 80, 180, 0.08);
+            border: 1px solid var(--border-primary);
+        }
+        .character-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        .character-name {
+            font-size: 15px;
+            font-weight: bold;
+            margin: 8px 0 4px 0;
+            color: var(--color-accent);
+        }
+
+        /* ===== АДАПТИВНОСТЬ ===== */
         @media (max-width: 768px) {
             .poster-wrapper {
                 width: 160px;
@@ -733,6 +669,19 @@
             }
             .comment-user {
                 flex-wrap: wrap;
+            }
+            .player-controls-overlay {
+                flex-wrap: wrap;
+                gap: 6px;
+                padding: 8px 12px;
+            }
+            .player-controls-overlay select {
+                font-size: 11px;
+                padding: 3px 8px;
+            }
+            .skip-btn {
+                font-size: 11px;
+                padding: 3px 10px;
             }
             .episode-edit-item {
                 flex-direction: column;
@@ -779,40 +728,6 @@
                 gap: 16px;
             }
         }
-
-        .trailer-wrapper {
-    position: relative;
-    width: 100%;
-    background: var(--bg-player);
-    border-radius: 12px;
-    overflow: hidden;
-    margin: 16px 0;
-    aspect-ratio: 16/9;
-    border: 2px solid var(--border-primary);
-}
-.trailer-container {
-    width: 100%;
-    height: 100%;
-    background: var(--bg-player);
-    border-radius: 12px;
-    overflow: hidden;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.trailer-container video {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: contain;
-    background: #000;
-}
-.trailer-container .video-placeholder {
-    color: var(--text-muted);
-    text-align: center;
-    padding: 20px;
-}
     </style>
 </head>
 <body>
@@ -837,7 +752,6 @@
             <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">🌙</button>
         </div>
     </header>
-
 
     <!-- ========== SIDEBAR ========== -->
     <div id="sidebar-overlay" onclick="closeSidebar()"></div>
@@ -881,8 +795,8 @@
             <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px;letter-spacing:1px;">© Dream Sound Dubbing</div>
         </div>
     </aside>
+
     <!-- ========== МОДАЛКИ ========== -->
-     <!-- ========== МОДАЛКА ПРОМОКОДА ========== -->
     <div class="modal-overlay" id="m-promo-code">
         <div class="modal-content" style="max-width:440px;">
             <button class="modal-close" onclick="closeModal('m-promo-code')">✕</button>
@@ -904,6 +818,7 @@
             <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-promo-code')">Отмена</button>
         </div>
     </div>
+
     <div class="modal-overlay" id="m-dscoin-order">
         <div class="modal-content" style="max-width:440px;">
             <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
@@ -1061,15 +976,6 @@
 
     <!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
     <div class="container" id="mainContainer">
-        <!-- ===== ПЛЕЕР ТРЕЙЛЕРА ===== -->
-<div id="trailerSection" style="display:none; margin-bottom: 20px;">
-    <h2 style="color:var(--color-accent);">▶ Трейлер</h2>
-    <div class="trailer-wrapper">
-        <div class="trailer-container" id="trailerContainer">
-            <div class="video-placeholder">🎬 Трейлер не загружен</div>
-        </div>
-    </div>
-</div>
         <div class="header">
             <hr>
             <h1 class="title" style="font-size:28px;">🎬 Просмотр</h1>
@@ -1209,6 +1115,59 @@
             }
         }
 
+        // ========== ЛАЙКИ / ДИЗЛАЙКИ ==========
+window.handleLike = async function(commentId) {
+    const user = getCurrentUser();
+    if (!user) { showToast('Войдите, чтобы ставить лайки', 'warning'); return; }
+    const result = await likeComment(commentId, user.uid);
+    if (result.success) {
+        await loadComments();
+    } else {
+        showToast('❌ ' + result.error, 'error');
+    }
+};
+
+window.handleDislike = async function(commentId) {
+    const user = getCurrentUser();
+    if (!user) { showToast('Войдите, чтобы ставить дизлайки', 'warning'); return; }
+    const result = await dislikeComment(commentId, user.uid);
+    if (result.success) {
+        await loadComments();
+    } else {
+        showToast('❌ ' + result.error, 'error');
+    }
+};
+
+// ========== ОТВЕТЫ НА КОММЕНТАРИИ ==========
+window.openReplyForm = function(commentId, userName) {
+    const form = document.getElementById('replyForm');
+    form.style.display = 'block';
+    document.getElementById('replyParentId').value = commentId;
+    document.getElementById('replyText').focus();
+    document.getElementById('replyText').placeholder = `Ответить ${userName}...`;
+};
+
+window.closeReplyForm = function() {
+    document.getElementById('replyForm').style.display = 'none';
+    document.getElementById('replyText').value = '';
+};
+
+window.submitReply = async function() {
+    const user = getCurrentUser();
+    if (!user) { showToast('Войдите, чтобы ответить', 'warning'); return; }
+    const parentId = document.getElementById('replyParentId').value;
+    const text = document.getElementById('replyText').value.trim();
+    if (!text) { showToast('Введите ответ', 'warning'); return; }
+    const result = await replyToComment(parentId, user.uid, text, titleId);
+    if (result.success) {
+        showToast('✅ Ответ отправлен!', 'success');
+        closeReplyForm();
+        await loadComments();
+    } else {
+        showToast('❌ ' + result.error, 'error');
+    }
+};
+
         async function updateAdminLinks(user) {
             const adminLink = document.getElementById('adminLink');
             const sidebarAdminOrders = document.getElementById('sidebarAdminOrders');
@@ -1342,77 +1301,103 @@
 
         // ===== КОММЕНТАРИИ =====
         function renderComments(comments) {
-            const container = document.getElementById('comments-list');
-            if (!container) return;
-            if (!comments || comments.length === 0) {
-                container.innerHTML = '<div class="no-comments">💬 Пока нет комментариев. Будьте первым!</div>';
-                return;
-            }
-            const user = getCurrentUser();
-            container.innerHTML = comments.map(c => {
-                const isOwner = user && c.uid === user.uid;
-                let textHtml = c.text || '';
+    const container = document.getElementById('comments-list');
+    if (!container) return;
+    if (!comments || comments.length === 0) {
+        container.innerHTML = '<div class="no-comments">💬 Пока нет комментариев. Будьте первым!</div>';
+        return;
+    }
 
-                const commentUser = allUsers.find(u => u.id === c.uid);
-                const prefix = commentUser?.prefix || '';
-                const nickColor = commentUser?.nickColor || null;
-                const displayName = c.name || 'Аноним';
-
-                let nameHtml = displayName;
-                if (prefix) {
-                    nameHtml = `<span style="font-size:12px;opacity:0.7;margin-right:3px;">${prefix}</span> ${displayName}`;
-                }
-                const nameStyle = nickColor ? `color: ${nickColor};` : '';
-
-                if (c.mentions) {
-                    c.mentions.forEach(email => {
-                        const foundUser = allUsers.find(u => u.email === email);
-                        const displayName = foundUser?.displayName || email;
-                        textHtml = textHtml.replace(
-                            new RegExp(`@${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'),
-                            `<a href="profile.html?uid=${foundUser?.id || ''}" class="mention">@${displayName}</a>`
-                        );
-                    });
-                }
-                const mentionRegex = /@([^\s]+)/g;
-                let match;
-                while ((match = mentionRegex.exec(textHtml)) !== null) {
-                    const mention = match[1];
-                    if (!textHtml.includes(`">@${mention}</a>`)) {
-                        const foundUser = allUsers.find(u => (u.displayName || '').toLowerCase() === mention.toLowerCase() || (
-                            u.email || '').toLowerCase() === mention.toLowerCase());
-                        if (foundUser) {
-                            textHtml = textHtml.replace(
-                                new RegExp(`@${mention.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'),
-                                `<a href="profile.html?uid=${foundUser.id}" class="mention">@${foundUser.displayName || foundUser.email}</a>`
-                            );
-                        }
-                    }
-                }
-                textHtml = textHtml.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                textHtml = textHtml.replace(
-                    /&lt;a href="profile\.html\?uid=([^"]+)" class="mention"&gt;@([^&]+)&lt;\/a&gt;/g,
-                    `<a href="profile.html?uid=$1" class="mention">@$2</a>`
-                );
-                const avatarHtml = c.photoURL ?
-                    `<a href="profile.html?uid=${c.uid}"><img src="${c.photoURL}" class="comment-avatar" onerror="this.style.display='none'"></a>` :
-                    `<a href="profile.html?uid=${c.uid}"><div style="width:36px;height:36px;border-radius:50%;background:var(--border-primary);display:flex;align-items:center;justify-content:center;color:var(--color-accent);font-size:16px;cursor:pointer;">👤</div></a>`;
-                return `
-                            <div class="comment-item">
-                                <div class="comment-header">
-                                    <div class="comment-user">
-                                        ${avatarHtml}
-                                        <a href="profile.html?uid=${c.uid}" class="comment-name" style="${nameStyle}">${nameHtml}</a>
-                                        <span class="comment-rating">${'⭐'.repeat(Math.min(c.rating || 5, 5))}</span>
-                                    </div>
-                                    ${isOwner ? `<button class="comment-delete" onclick="handleDeleteComment('${c.id}')">🗑️</button>` : ''}
-                                </div>
-                                <div class="comment-text">${textHtml}</div>
-                                <div class="comment-time">${c.time ? new Date(c.time.seconds * 1000).toLocaleString() : 'Только что'}</div>
-                            </div>
-                        `;
-            }).join('');
+    // Строим дерево комментариев
+    const commentMap = {};
+    const rootComments = [];
+    comments.forEach(c => {
+        commentMap[c.id] = { ...c, replies: [] };
+    });
+    comments.forEach(c => {
+        if (c.parentId && commentMap[c.parentId]) {
+            commentMap[c.parentId].replies.push(commentMap[c.id]);
+        } else {
+            rootComments.push(commentMap[c.id]);
         }
+    });
+
+    const user = getCurrentUser();
+
+    function renderCommentTree(comment, depth = 0) {
+        const isOwner = user && comment.uid === user.uid;
+        let textHtml = comment.text || '';
+
+        // Поиск упоминаний (упрощённо)
+        const mentionRegex = /@([^\s]+)/g;
+        let match;
+        while ((match = mentionRegex.exec(textHtml)) !== null) {
+            const mention = match[1];
+            const foundUser = allUsers.find(u => (u.displayName || '').toLowerCase() === mention.toLowerCase() || (u.email || '').toLowerCase() === mention.toLowerCase());
+            if (foundUser) {
+                textHtml = textHtml.replace(
+                    new RegExp(`@${mention.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'),
+                    `<a href="profile.html?uid=${foundUser.id}" class="mention">@${foundUser.displayName || foundUser.email}</a>`
+                );
+            }
+        }
+        textHtml = textHtml.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        textHtml = textHtml.replace(
+            /&lt;a href="profile\.html\?uid=([^"]+)" class="mention"&gt;@([^&]+)&lt;\/a&gt;/g,
+            `<a href="profile.html?uid=$1" class="mention">@$2</a>`
+        );
+
+        const likes = comment.likes || [];
+        const dislikes = comment.dislikes || [];
+        const liked = user && likes.includes(user.uid);
+        const disliked = user && dislikes.includes(user.uid);
+        const likeCount = likes.length;
+        const dislikeCount = dislikes.length;
+
+        const commentUser = allUsers.find(u => u.id === comment.uid);
+        const prefix = commentUser?.prefix || '';
+        const nickColor = commentUser?.nickColor || null;
+        const displayName = comment.name || 'Аноним';
+        let nameHtml = displayName;
+        if (prefix) {
+            nameHtml = `<span style="font-size:12px;opacity:0.7;margin-right:3px;">${prefix}</span> ${displayName}`;
+        }
+        const nameStyle = nickColor ? `color: ${nickColor};` : '';
+
+        const avatarHtml = comment.photoURL ?
+            `<a href="profile.html?uid=${comment.uid}"><img src="${comment.photoURL}" class="comment-avatar" onerror="this.style.display='none'"></a>` :
+            `<a href="profile.html?uid=${comment.uid}"><div style="width:36px;height:36px;border-radius:50%;background:var(--border-primary);display:flex;align-items:center;justify-content:center;color:var(--color-accent);font-size:16px;cursor:pointer;">👤</div></a>`;
+
+        const repliesHtml = comment.replies.map(reply => renderCommentTree(reply, depth + 1)).join('');
+
+        return `
+            <div class="comment-item" style="margin-left: ${depth * 20}px; ${depth > 0 ? 'border-left-color: var(--color-accent2);' : ''}">
+                <div class="comment-header">
+                    <div class="comment-user">
+                        ${avatarHtml}
+                        <a href="profile.html?uid=${comment.uid}" class="comment-name" style="${nameStyle}">${nameHtml}</a>
+                        <span class="comment-rating">${'⭐'.repeat(Math.min(comment.rating || 5, 5))}</span>
+                    </div>
+                    ${isOwner ? `<button class="comment-delete" onclick="handleDeleteComment('${comment.id}')">🗑️</button>` : ''}
+                </div>
+                <div class="comment-text">${textHtml}</div>
+                <div style="display:flex;gap:12px;margin-top:6px;align-items:center;flex-wrap:wrap;">
+                    <button class="action-btn action-btn-sm outline" onclick="handleLike('${comment.id}')" style="${liked ? 'background:var(--color-accent);color:#fff;' : ''}">
+                        👍 ${likeCount > 0 ? likeCount : ''}
+                    </button>
+                    <button class="action-btn action-btn-sm outline" onclick="handleDislike('${comment.id}')" style="${disliked ? 'background:var(--color-danger);color:#fff;' : ''}">
+                        👎 ${dislikeCount > 0 ? dislikeCount : ''}
+                    </button>
+                    <button class="action-btn action-btn-sm outline" onclick="openReplyForm('${comment.id}', '${displayName}')">💬 Ответить</button>
+                </div>
+                <div class="comment-time">${comment.time ? new Date(comment.time.seconds * 1000).toLocaleString() : 'Только что'}</div>
+                ${repliesHtml}
+            </div>
+        `;
+    }
+
+    container.innerHTML = rootComments.map(c => renderCommentTree(c)).join('');
+}
 
         async function loadComments() {
             const container = document.getElementById('comments-list');
@@ -1472,33 +1457,43 @@
         };
 
         function renderCommentForm() {
-            const container = document.getElementById('comments-container');
-            if (!container) return;
-            const user = getCurrentUser();
-            if (user) {
-                container.innerHTML = `
-                            <h2 style="color:var(--color-accent);margin-top:24px;">💬 Комментарии</h2>
-                            <div class="comment-form">
-                                <div style="position:relative;width:100%;">
-                                    <textarea id="commentText" placeholder="Напишите ваш комментарий... (используйте @имя или @email для отметки)" oninput="findUsers(this)" onblur="setTimeout(hideSuggestions, 300)"></textarea>
-                                </div>
-                                <div class="form-actions">
-                                    <select id="commentRating"><option value="5">⭐⭐⭐⭐⭐</option><option value="4">⭐⭐⭐⭐</option><option value="3">⭐⭐⭐</option><option value="2">⭐⭐</option><option value="1">⭐</option></select>
-                                    <button onclick="handleAddComment()">📤 Отправить</button>
-                                </div>
-                                <div class="hint">💡 Используйте <strong style="color:var(--color-accent);">@имя</strong> или <strong style="color:var(--color-accent);">@email</strong> чтобы отметить пользователя</div>
-                            </div>
-                            <div id="comments-list"></div>
-                        `;
-            } else {
-                container.innerHTML = `
-                            <h2 style="color:var(--color-accent);margin-top:24px;">💬 Комментарии</h2>
-                            <div class="auth-prompt"><a href="login.html">Войдите</a>, чтобы оставить комментарий</div>
-                            <div id="comments-list"></div>
-                        `;
-            }
-            loadComments();
-        }
+    const container = document.getElementById('comments-container');
+    if (!container) return;
+    const user = getCurrentUser();
+    if (user) {
+        container.innerHTML = `
+            <h2 style="color:var(--color-accent);margin-top:24px;">💬 Комментарии</h2>
+            <div class="comment-form">
+                <div style="position:relative;width:100%;">
+                    <textarea id="commentText" placeholder="Напишите ваш комментарий... (используйте @имя или @email для отметки)" oninput="findUsers(this)" onblur="setTimeout(hideSuggestions, 300)"></textarea>
+                </div>
+                <div class="form-actions">
+                    <select id="commentRating"><option value="5">⭐⭐⭐⭐⭐</option><option value="4">⭐⭐⭐⭐</option><option value="3">⭐⭐⭐</option><option value="2">⭐⭐</option><option value="1">⭐</option></select>
+                    <button onclick="handleAddComment()">📤 Отправить</button>
+                </div>
+                <div class="hint">💡 Используйте <strong style="color:var(--color-accent);">@имя</strong> или <strong style="color:var(--color-accent);">@email</strong> чтобы отметить пользователя</div>
+            </div>
+
+            <div id="replyForm" style="display:none;margin:10px 0;padding:12px;background:var(--bg-input);border-radius:8px;border-left:4px solid var(--color-accent2);">
+                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                    <textarea id="replyText" placeholder="Ваш ответ..." style="flex:1;min-width:200px;padding:8px 12px;border-radius:6px;border:1px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);font-size:14px;resize:vertical;min-height:50px;font-family:inherit;"></textarea>
+                    <input type="hidden" id="replyParentId" value="">
+                    <button class="action-btn primary" onclick="submitReply()">📤 Ответить</button>
+                    <button class="action-btn outline" onclick="closeReplyForm()">Отмена</button>
+                </div>
+            </div>
+
+            <div id="comments-list"></div>
+        `;
+    } else {
+        container.innerHTML = `
+            <h2 style="color:var(--color-accent);margin-top:24px;">💬 Комментарии</h2>
+            <div class="auth-prompt"><a href="login.html">Войдите</a>, чтобы оставить комментарий</div>
+            <div id="comments-list"></div>
+        `;
+    }
+    loadComments();
+}
 
         async function updateAverageRating() {
             const container = document.getElementById('avgRatingContainer');
@@ -1556,6 +1551,11 @@
                             <input type="number" class="ep-number" value="${ep.number}" placeholder="№" data-index="${index}" data-field="number" min="1">
                             <input type="text" class="ep-title" value="${ep.title || ''}" placeholder="Название серии" data-index="${index}" data-field="title">
                             <input type="text" class="ep-url" value="${ep.url || ''}" placeholder="Ссылка на Dropbox" data-index="${index}" data-field="url">
+                            <input type="number" class="ep-season" value="${ep.season || 1}" placeholder="Сезон" data-index="${index}" data-field="season" min="1">
+                            <input type="text" class="ep-opening-start" value="${ep.openingStart || ''}" placeholder="Тайм-код опенинга (start)" data-index="${index}" data-field="openingStart">
+                            <input type="text" class="ep-opening-end" value="${ep.openingEnd || ''}" placeholder="Тайм-код опенинга (end)" data-index="${index}" data-field="openingEnd">
+                            <input type="text" class="ep-ending-start" value="${ep.endingStart || ''}" placeholder="Тайм-код эндинга (start)" data-index="${index}" data-field="endingStart">
+                            <input type="text" class="ep-ending-end" value="${ep.endingEnd || ''}" placeholder="Тайм-код эндинга (end)" data-index="${index}" data-field="endingEnd">
                             <select class="ep-status" data-index="${index}" data-field="status">
                                 <option value="Озвучено" ${ep.status === 'Озвучено' ? 'selected' : ''}>✅ Озвучено</option>
                                 <option value="Скоро" ${ep.status === 'Скоро' ? 'selected' : ''}>⏳ Скоро</option>
@@ -1582,6 +1582,11 @@
                 number: episodes.length + 1,
                 title: '',
                 url: '',
+                season: 1,
+                openingStart: '',
+                openingEnd: '',
+                endingStart: '',
+                endingEnd: '',
                 status: 'Скоро'
             });
             renderEpisodeEditor(episodes);
@@ -1596,6 +1601,11 @@
                     number: parseInt(el.querySelector('[data-field="number"]').value) || 0,
                     title: el.querySelector('[data-field="title"]').value || '',
                     url: el.querySelector('[data-field="url"]').value || '',
+                    season: parseInt(el.querySelector('[data-field="season"]').value) || 1,
+                    openingStart: el.querySelector('[data-field="openingStart"]').value || '',
+                    openingEnd: el.querySelector('[data-field="openingEnd"]').value || '',
+                    endingStart: el.querySelector('[data-field="endingStart"]').value || '',
+                    endingEnd: el.querySelector('[data-field="endingEnd"]').value || '',
                     status: el.querySelector('[data-field="status"]').value || 'Скоро'
                 });
             });
@@ -1658,19 +1668,117 @@
             saveBtn.textContent = '💾 Сохранить изменения';
         };
 
-        window.playEpisode = function(url, episodeNumber) {
+        // ===== НОВЫЙ ПЛЕЕР =====
+        window.currentSeason = 1;
+        window.currentEpisode = 0;
+        window.currentQuality = 'auto';
+
+        function parseTimecode(tc) {
+            if (!tc) return 0;
+            const parts = tc.split(':').map(Number);
+            if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+            if (parts.length === 2) return parts[0] * 60 + parts[1];
+            return parseInt(tc) || 0;
+        }
+
+        window.skipOpening = function() {
+            const video = document.getElementById('playerVideo');
+            if (!video) return;
+            const ep = window.currentEpisodeData;
+            if (!ep || !ep.openingEnd) return;
+            video.currentTime = parseTimecode(ep.openingEnd);
+            document.getElementById('skipOpeningBtn').classList.remove('visible');
+        };
+
+        window.skipEnding = function() {
+            const video = document.getElementById('playerVideo');
+            if (!video) return;
+            const ep = window.currentEpisodeData;
+            if (!ep || !ep.endingStart) return;
+            video.currentTime = parseTimecode(ep.endingStart);
+            document.getElementById('skipEndingBtn').classList.remove('visible');
+        };
+
+        window.changeQuality = function() {
+            const select = document.getElementById('qualitySelect');
+            window.currentQuality = select.value;
+            // В реальном проекте здесь нужно переключить source видео
+            // Для примера — просто выводим в консоль
+            console.log('Качество изменено на:', window.currentQuality);
+        };
+
+        window.playEpisode = function(episodeData) {
+            if (!episodeData) {
+                document.getElementById('playerContainer').innerHTML = `<div class="video-placeholder">🎬 Серия ещё не доступна</div>`;
+                return;
+            }
+            window.currentEpisodeData = episodeData;
             const container = document.getElementById('playerContainer');
+            const url = episodeData.url || '';
             if (!url) {
                 container.innerHTML = `<div class="video-placeholder">🎬 Серия ещё не доступна</div>`;
                 return;
             }
             container.innerHTML = `
-                <video id="player" controls width="100%" height="100%" style="background:#000;">
+                <video id="playerVideo" controls width="100%" height="100%" style="background:#000;">
                     <source src="${url}" type="video/mp4">
                     Ваш браузер не поддерживает видео.
                 </video>
+                <div class="player-controls-overlay">
+                    <select id="seasonSelect" onchange="changeSeason()">
+                        ${window.seasons.map(s => `<option value="${s}">Сезон ${s}</option>`).join('')}
+                    </select>
+                    <select id="episodeSelect" onchange="changeEpisode()">
+                        ${window.episodesBySeason[window.currentSeason]?.map(ep => `<option value="${ep.number}">${ep.number}. ${ep.title}</option>`).join('') || '<option>Нет серий</option>'}
+                    </select>
+                    <select id="qualitySelect" class="quality-select" onchange="changeQuality()">
+                        <option value="auto">Авто</option>
+                        <option value="1080">1080p</option>
+                        <option value="720">720p</option>
+                        <option value="480">480p</option>
+                        <option value="360">360p</option>
+                    </select>
+                    <button id="skipOpeningBtn" class="skip-btn" onclick="skipOpening()">⏩ Пропустить опенинг</button>
+                    <button id="skipEndingBtn" class="skip-btn" onclick="skipEnding()">⏩ Пропустить эндинг</button>
+                </div>
             `;
+            const video = document.getElementById('playerVideo');
+video.addEventListener('ended', function() {
+    const currentEp = window.currentEpisodeData;
+    if (!currentEp) return;
+    const season = currentEp.season || 1;
+    const currentNumber = currentEp.number;
+    const episodesInSeason = window.episodesBySeason[season] || [];
+    const nextEp = episodesInSeason.find(ep => ep.number === currentNumber + 1 && ep.url);
+    if (nextEp) {
+        showToast('⏩ Автоматический переход на следующую серию...', 'info');
+        setTimeout(() => window.playEpisode(nextEp), 500);
+    }
+});
+            
+            document.getElementById('seasonSelect').value = window.currentSeason;
+            document.getElementById('episodeSelect').value = episodeData.number;
             if (episodeNumber) trackViewEpisode(episodeNumber);
+            video.play();
+        };
+
+        window.changeSeason = function() {
+            const select = document.getElementById('seasonSelect');
+            window.currentSeason = parseInt(select.value);
+            const epSelect = document.getElementById('episodeSelect');
+            const episodes = window.episodesBySeason[window.currentSeason] || [];
+            epSelect.innerHTML = episodes.map(ep => `<option value="${ep.number}">${ep.number}. ${ep.title}</option>`).join('') || '<option>Нет серий</option>';
+            if (episodes.length > 0) {
+                window.playEpisode(episodes[0]);
+            }
+        };
+
+        window.changeEpisode = function() {
+            const select = document.getElementById('episodeSelect');
+            const number = parseInt(select.value);
+            const episodes = window.episodesBySeason[window.currentSeason] || [];
+            const ep = episodes.find(e => e.number === number);
+            if (ep) window.playEpisode(ep);
         };
 
         function getValidImageUrl(url, fallback) {
@@ -1747,26 +1855,43 @@
             }
 
             const episodes = title.episodesList || [];
+            // Подготавливаем данные для плеера
+            const seasonsSet = new Set(episodes.map(ep => ep.season || 1));
+            window.seasons = Array.from(seasonsSet).sort((a, b) => a - b);
+            window.episodesBySeason = {};
+            seasonsSet.forEach(s => {
+                window.episodesBySeason[s] = episodes.filter(ep => (ep.season || 1) === s).sort((a, b) => a.number - b.number);
+            });
+
+            // Убираем трейлер из списка серий, он будет отдельно
+            const episodesForList = episodes.filter(ep => !ep.isTrailer);
+
             let episodesHtml = '';
-            if (episodes.length > 0) {
+            if (episodesForList.length > 0) {
                 episodesHtml = `
-                            <h2 style="color:var(--color-accent);margin-top:24px;">📺 Список серий</h2>
-                            <div class="episodes-list">
-                                ${episodes.map(ep => `
-                                    <div class="episode-item" onclick="playEpisode('${ep.url}', ${ep.number})" style="cursor:pointer;">
-                                        <span class="episode-number">Серия ${ep.number}</span>
-                                        <span class="episode-title" style="color:var(--text-primary);">${ep.title}</span>
-                                        <span class="episode-status ${ep.status === 'Озвучено' ? 'status-ready' : 'status-soon'}">${ep.status}</span>
-                                    </div>
-                                `).join('')}
+                            <div class="episodes-section">
+                                <h2>📺 Список серий</h2>
+                                <div class="episodes-list">
+                                    ${episodesForList.map(ep => `
+                                        <div class="episode-item" onclick="playEpisode(${JSON.stringify(ep).replace(/"/g, '&quot;')})">
+                                            <span class="episode-number">Сезон ${ep.season || 1} • Серия ${ep.number}</span>
+                                            <span class="episode-title">${ep.title}</span>
+                                            <span class="episode-status ${ep.status === 'Озвучено' ? 'status-ready' : 'status-soon'}">${ep.status}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
                             </div>
                         `;
             }
 
-            const firstEpisode = episodes.find(ep => ep.url) || {
+            const firstEpisode = episodes.find(ep => ep.url && !ep.isTrailer) || {
                 url: '',
-                number: 1
+                number: 1,
+                season: 1,
+                title: '',
+                status: 'Скоро'
             };
+            const trailerEpisode = episodes.find(ep => ep.isTrailer);
 
             // ОБЛОЖКА
             const posterImage = getValidImageUrl(
@@ -1819,9 +1944,9 @@
                                 <div class="form-group"><label>Обои (фоновое изображение)</label><input type="text" id="editWallpaper" placeholder="https://example.com/wallpaper.jpg"></div>
                                 <div class="form-group"><label>Описание</label><textarea id="editDescription"></textarea></div>
                                 <div class="form-group">
-    <label>Трейлер (ссылка на Dropbox)</label>
-    <input type="text" id="editTrailer" placeholder="https://dl.dropboxusercontent.com/s/...">
-</div>
+                                    <label>Трейлер (ссылка на Dropbox)</label>
+                                    <input type="text" id="editTrailer" placeholder="https://dl.dropboxusercontent.com/s/...">
+                                </div>
                                 <div class="form-group">
                                     <label style="display:flex;justify-content:space-between;align-items:center;">
                                         <span>📺 Список серий</span>
@@ -1841,34 +1966,37 @@
                         <h2 style="color:var(--color-accent);">▶ Смотреть онлайн</h2>
                         <div class="player-wrapper" id="playerWrapper">
                             <div class="player-container" id="playerContainer">
-                                ${firstEpisode.url ? `<video id="player" controls width="100%" height="100%" style="background:#000;"><source src="${firstEpisode.url}" type="video/mp4">Ваш браузер не поддерживает видео.</video>` : `<div class="video-placeholder">🎬 Скоро появится</div>`}
-                            </div>
-                            <div class="player-controls">
-                                <button class="fullscreen-btn" onclick="toggleFullscreen()"><span class="icon">⛶</span> На весь экран</button>
+                                ${firstEpisode.url ? `<video id="playerVideo" controls width="100%" height="100%" style="background:#000;"><source src="${firstEpisode.url}" type="video/mp4">Ваш браузер не поддерживает видео.</video>` : `<div class="video-placeholder">🎬 Скоро появится</div>`}
+                                <div class="player-controls-overlay">
+                                    <select id="seasonSelect" onchange="changeSeason()">
+                                        ${window.seasons.map(s => `<option value="${s}">Сезон ${s}</option>`).join('')}
+                                    </select>
+                                    <select id="episodeSelect" onchange="changeEpisode()">
+                                        ${window.episodesBySeason[window.currentSeason]?.map(ep => `<option value="${ep.number}">${ep.number}. ${ep.title}</option>`).join('') || '<option>Нет серий</option>'}
+                                    </select>
+                                    <select id="qualitySelect" class="quality-select" onchange="changeQuality()">
+                                        <option value="auto">Авто</option>
+                                        <option value="1080">1080p</option>
+                                        <option value="720">720p</option>
+                                        <option value="480">480p</option>
+                                        <option value="360">360p</option>
+                                    </select>
+                                    <button id="skipOpeningBtn" class="skip-btn" onclick="skipOpening()">⏩ Пропустить опенинг</button>
+                                    <button id="skipEndingBtn" class="skip-btn" onclick="skipEnding()">⏩ Пропустить эндинг</button>
+                                </div>
                             </div>
                         </div>
                     `;
 
+            // Инициализация плеера при загрузке
+            setTimeout(() => {
+                if (firstEpisode.url) {
+                    window.playEpisode(firstEpisode);
+                }
+            }, 100);
+
             const headerWallpaperStyle = wallpaperUrl ?
                 `background-image: url('${wallpaperUrl}'); background-size: cover; background-position: center;` : '';
-            
-            // ===== ТРЕЙЛЕР =====
-const trailerUrl = title.trailerUrl || null;
-const trailerSection = document.getElementById('trailerSection');
-const trailerContainer = document.getElementById('trailerContainer');
-
-if (trailerUrl) {
-    trailerSection.style.display = 'block';
-    trailerContainer.innerHTML = `
-        <video id="trailerPlayer" controls width="100%" height="100%" style="background:#000;">
-            <source src="${trailerUrl}" type="video/mp4">
-            Ваш браузер не поддерживает видео.
-        </video>
-    `;
-} else {
-    trailerSection.style.display = 'none';
-    trailerContainer.innerHTML = `<div class="video-placeholder">🎬 Трейлер отсутствует</div>`;
-}
 
             let posterHtml = '';
             if (posterImage) {
@@ -1960,102 +2088,102 @@ if (trailerUrl) {
     <!-- ========== КОНТЕЙНЕР ДЛЯ TOAST-УВЕДОМЛЕНИЙ ========== -->
     <div id="toastContainer" class="toast-container"></div>
     <!-- ========== МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ ========== -->
-<div id="confirm-modal">
-    <div class="modal-box">
-        <div class="modal-icon" id="confirmIcon">❓</div>
-        <div class="modal-title" id="confirmTitle">Подтверждение</div>
-        <div class="modal-message" id="confirmMessage">Вы уверены?</div>
-        <div class="modal-buttons">
-            <button class="btn-no" id="confirmNo">Отмена</button>
-            <button class="btn-yes" id="confirmYes">Да</button>
+    <div id="confirm-modal">
+        <div class="modal-box">
+            <div class="modal-icon" id="confirmIcon">❓</div>
+            <div class="modal-title" id="confirmTitle">Подтверждение</div>
+            <div class="modal-message" id="confirmMessage">Вы уверены?</div>
+            <div class="modal-buttons">
+                <button class="btn-no" id="confirmNo">Отмена</button>
+                <button class="btn-yes" id="confirmYes">Да</button>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-// ========== ЕДИНАЯ ФУНКЦИЯ ПОДТВЕРЖДЕНИЯ ЧЕРЕЗ МОДАЛКУ ==========
-// Заменяет стандартный confirm() на красивую модалку
-function showConfirm(message, title = 'Подтверждение', icon = '❓', isDanger = false) {
-    return new Promise((resolve) => {
-        const modal = document.getElementById('confirm-modal');
-        const titleEl = document.getElementById('confirmTitle');
-        const msgEl = document.getElementById('confirmMessage');
-        const iconEl = document.getElementById('confirmIcon');
-        const yesBtn = document.getElementById('confirmYes');
-        const noBtn = document.getElementById('confirmNo');
+    <script>
+        // ========== ЕДИНАЯ ФУНКЦИЯ ПОДТВЕРЖДЕНИЯ ЧЕРЕЗ МОДАЛКУ ==========
+        // Заменяет стандартный confirm() на красивую модалку
+        function showConfirm(message, title = 'Подтверждение', icon = '❓', isDanger = false) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('confirm-modal');
+                const titleEl = document.getElementById('confirmTitle');
+                const msgEl = document.getElementById('confirmMessage');
+                const iconEl = document.getElementById('confirmIcon');
+                const yesBtn = document.getElementById('confirmYes');
+                const noBtn = document.getElementById('confirmNo');
 
-        // Настраиваем содержимое
-        titleEl.textContent = title;
-        msgEl.textContent = message;
-        iconEl.textContent = icon;
+                // Настраиваем содержимое
+                titleEl.textContent = title;
+                msgEl.textContent = message;
+                iconEl.textContent = icon;
 
-        // Если опасное действие — делаем кнопку Да красной
-        if (isDanger) {
-            yesBtn.className = 'btn-danger';
-        } else {
-            yesBtn.className = 'btn-yes';
+                // Если опасное действие — делаем кнопку Да красной
+                if (isDanger) {
+                    yesBtn.className = 'btn-danger';
+                } else {
+                    yesBtn.className = 'btn-yes';
+                }
+
+                // Открываем модалку
+                modal.classList.add('active');
+
+                // Обработчики
+                const closeAndResolve = (value) => {
+                    modal.classList.remove('active');
+                    resolve(value);
+                };
+
+                yesBtn.onclick = () => closeAndResolve(true);
+                noBtn.onclick = () => closeAndResolve(false);
+
+                // Закрытие по клику вне окна
+                modal.onclick = (e) => {
+                    if (e.target === modal) closeAndResolve(false);
+                };
+
+                // Закрытие по Escape
+                const keyHandler = (e) => {
+                    if (e.key === 'Escape') {
+                        closeAndResolve(false);
+                        document.removeEventListener('keydown', keyHandler);
+                    }
+                };
+                document.addEventListener('keydown', keyHandler);
+            });
         }
 
-        // Открываем модалку
-        modal.classList.add('active');
-
-        // Обработчики
-        const closeAndResolve = (value) => {
-            modal.classList.remove('active');
-            resolve(value);
+        // ===== ПЕРЕОПРЕДЕЛЯЕМ СТАНДАРТНЫЙ confirm =====
+        // Теперь везде, где был confirm(), будет вызываться наша модалка
+        window.confirm = function(message) {
+            return showConfirm(message, 'Подтверждение', '❓', false);
         };
 
-        yesBtn.onclick = () => closeAndResolve(true);
-        noBtn.onclick = () => closeAndResolve(false);
-
-        // Закрытие по клику вне окна
-        modal.onclick = (e) => {
-            if (e.target === modal) closeAndResolve(false);
+        // Дополнительные удобные варианты
+        window.confirmDelete = function(message) {
+            return showConfirm(message, 'Удаление', '⚠️', true);
         };
 
-        // Закрытие по Escape
-        const keyHandler = (e) => {
-            if (e.key === 'Escape') {
-                closeAndResolve(false);
-                document.removeEventListener('keydown', keyHandler);
+        window.confirmAction = function(message, title = 'Подтверждение') {
+            return showConfirm(message, title, '🤔', false);
+        };
+    </script>
+    <script>
+        // Регистрация Service Worker для PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/site/sw.js')
+                .then(() => console.log('✅ Service Worker зарегистрирован'))
+                .catch(err => console.log('❌ Ошибка SW:', err));
+        }
+        // Обработка глобальных ошибок сети
+        window.addEventListener('online', () => {
+            document.body.style.display = 'block';
+        });
+        window.addEventListener('offline', () => {
+            if (!navigator.onLine) {
+                window.location.href = '/site/offline.html'; // <-- Тоже исправляем путь
             }
-        };
-        document.addEventListener('keydown', keyHandler);
-    });
-}
-
-// ===== ПЕРЕОПРЕДЕЛЯЕМ СТАНДАРТНЫЙ confirm =====
-// Теперь везде, где был confirm(), будет вызываться наша модалка
-window.confirm = function(message) {
-    return showConfirm(message, 'Подтверждение', '❓', false);
-};
-
-// Дополнительные удобные варианты
-window.confirmDelete = function(message) {
-    return showConfirm(message, 'Удаление', '⚠️', true);
-};
-
-window.confirmAction = function(message, title = 'Подтверждение') {
-    return showConfirm(message, title, '🤔', false);
-};
-</script>
-<script>
-    // Регистрация Service Worker для PWA
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/site/sw.js')
-            .then(() => console.log('✅ Service Worker зарегистрирован'))
-            .catch(err => console.log('❌ Ошибка SW:', err));
-    }
-    // Обработка глобальных ошибок сети
-    window.addEventListener('online', () => {
-        document.body.style.display = 'block';
-    });
-    window.addEventListener('offline', () => {
-        if (!navigator.onLine) {
-            window.location.href = '/site/offline.html'; // <-- Тоже исправляем путь
-        }
-    });
-</script>
+        });
+    </script>
 
 </body>
 </html>

@@ -1995,6 +1995,96 @@ async function uploadAvatar(uid, file) {
         return { success: false, error: error.message };
     }
 }
+
+// ============================================================
+// ========== ЛАЙКИ / ДИЗЛАЙКИ / ОТВЕТЫ НА КОММЕНТАРИИ ==========
+// ============================================================
+
+async function likeComment(commentId, uid) {
+    try {
+        const docRef = doc(db, "comments", commentId);
+        const docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) return { success: false, error: "Комментарий не найден" };
+
+        const data = docSnap.data();
+        const likes = data.likes || [];
+        const dislikes = data.dislikes || [];
+
+        if (likes.includes(uid)) {
+            // Убираем лайк
+            await updateDoc(docRef, { likes: arrayRemove(uid) });
+            return { success: true, action: 'unlike' };
+        } else {
+            // Ставим лайк, убираем дизлайк если был
+            const updates = { likes: arrayUnion(uid) };
+            if (dislikes.includes(uid)) {
+                updates.dislikes = arrayRemove(uid);
+            }
+            await updateDoc(docRef, updates);
+            return { success: true, action: 'like' };
+        }
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function dislikeComment(commentId, uid) {
+    try {
+        const docRef = doc(db, "comments", commentId);
+        const docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) return { success: false, error: "Комментарий не найден" };
+
+        const data = docSnap.data();
+        const likes = data.likes || [];
+        const dislikes = data.dislikes || [];
+
+        if (dislikes.includes(uid)) {
+            // Убираем дизлайк
+            await updateDoc(docRef, { dislikes: arrayRemove(uid) });
+            return { success: true, action: 'undislike' };
+        } else {
+            // Ставим дизлайк, убираем лайк если был
+            const updates = { dislikes: arrayUnion(uid) };
+            if (likes.includes(uid)) {
+                updates.likes = arrayRemove(uid);
+            }
+            await updateDoc(docRef, updates);
+            return { success: true, action: 'dislike' };
+        }
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function replyToComment(commentId, uid, text, titleId) {
+    try {
+        const userData = await getUserData(uid);
+        const displayName = userData.success ? userData.data.displayName : (getCurrentUser()?.displayName || "Аноним");
+        const photoURL = userData.success ? userData.data.photoURL : '';
+
+        const docRef = await addDoc(collection(db, "comments"), {
+            titleId: titleId,
+            uid: uid,
+            name: displayName,
+            photoURL: photoURL,
+            text: text,
+            rating: 5,
+            parentId: commentId,
+            mentions: [],
+            time: serverTimestamp(),
+            likes: [],
+            dislikes: []
+        });
+
+        // Увеличиваем счётчик комментариев у пользователя
+        const userRef = doc(db, "users", uid);
+        await updateDoc(userRef, { commentsCount: increment(1) });
+
+        return { success: true, id: docRef.id };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
 // ============================================================
 // ========== ЭКСПОРТ ==========
 // ============================================================
@@ -2088,7 +2178,10 @@ export {
     transferCoins,
     createPromoCode,
     activatePromoCode,
-    uploadAvatar
+    uploadAvatar,
+    likeComment,
+    dislikeComment,
+    replyToComment
 };
 
 // === ИЗМЕНЕНИЕ: ЯВНОЕ ПРИСВОЕНИЕ ВСЕХ ФУНКЦИЙ В GLOBAL SCOPE ===
@@ -2180,5 +2273,8 @@ window.transferCoins = transferCoins;
 window.createPromoCode = createPromoCode;
 window.activatePromoCode = activatePromoCode;
 window.uploadAvatar = uploadAvatar;
+window.likeComment = likeComment;
+window.dislikeComment = dislikeComment;
+window.replyToComment = replyToComment;
 
 console.log('🔥 Модуль firebase-config.js загружен и все функции экспортированы в window');
