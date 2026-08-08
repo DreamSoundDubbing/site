@@ -1148,11 +1148,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Трейлер (ссылка на Dropbox)</label>
-                    <input type="text" id="titleTrailer" placeholder="https://dl.dropboxusercontent.com/s/...">
-                </div>
-
-                <div class="form-group">
                     <label>Описание</label>
                     <textarea id="titleDescription" placeholder="Описание тайтла..."></textarea>
                 </div>
@@ -1348,19 +1343,43 @@
             }
             container.innerHTML = episodes.map((ep, index) => `
                         <div class="episode-edit-item">
+                            <label style="display:none;">Номер серии</label>
                             <input type="number" class="ep-number" value="${ep.number}" placeholder="№" data-index="${index}" data-field="number" min="1">
+                            
+                            <label style="display:none;">Название серии</label>
                             <input type="text" class="ep-title" value="${ep.title || ''}" placeholder="Название серии" data-index="${index}" data-field="title">
+                            
+                            <label style="display:none;">Ссылка на видео</label>
                             <input type="text" class="ep-url" value="${ep.url || ''}" placeholder="Ссылка на Dropbox" data-index="${index}" data-field="url">
+                            
+                            <label style="display:none;">Сезон</label>
                             <input type="number" class="ep-season" value="${ep.season || 1}" placeholder="Сезон" data-index="${index}" data-field="season" min="1">
-                            <input type="text" class="ep-opening-start" value="${ep.openingStart || ''}" placeholder="Тайм-код опенинга (start)" data-index="${index}" data-field="openingStart">
-                            <input type="text" class="ep-opening-end" value="${ep.openingEnd || ''}" placeholder="Тайм-код опенинга (end)" data-index="${index}" data-field="openingEnd">
-                            <input type="text" class="ep-ending-start" value="${ep.endingStart || ''}" placeholder="Тайм-код эндинга (start)" data-index="${index}" data-field="endingStart">
-                            <input type="text" class="ep-ending-end" value="${ep.endingEnd || ''}" placeholder="Тайм-код эндинга (end)" data-index="${index}" data-field="endingEnd">
+                            
+                            <label style="display:none;">Тайм-код опенинга (начало)</label>
+                            <input type="text" class="ep-opening-start" value="${ep.openingStart || ''}" placeholder="Опенинг (start)" data-index="${index}" data-field="openingStart">
+                            
+                            <label style="display:none;">Тайм-код опенинга (конец)</label>
+                            <input type="text" class="ep-opening-end" value="${ep.openingEnd || ''}" placeholder="Опенинг (end)" data-index="${index}" data-field="openingEnd">
+                            
+                            <label style="display:none;">Тайм-код эндинга (начало)</label>
+                            <input type="text" class="ep-ending-start" value="${ep.endingStart || ''}" placeholder="Эндинг (start)" data-index="${index}" data-field="endingStart">
+                            
+                            <label style="display:none;">Тайм-код эндинга (конец)</label>
+                            <input type="text" class="ep-ending-end" value="${ep.endingEnd || ''}" placeholder="Эндинг (end)" data-index="${index}" data-field="endingEnd">
+                            
+                            <label style="display:none;">Статус серии</label>
                             <select class="ep-status" data-index="${index}" data-field="status">
                                 <option value="Озвучено" ${ep.status === 'Озвучено' ? 'selected' : ''}>✅ Озвучено</option>
                                 <option value="Скоро" ${ep.status === 'Скоро' ? 'selected' : ''}>⏳ Скоро</option>
                                 <option value="В работе" ${ep.status === 'В работе' ? 'selected' : ''}>🔧 В работе</option>
                             </select>
+
+                            <label style="display:none;">Это трейлер</label>
+                            <label style="display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-muted); cursor:pointer;">
+                                <input type="checkbox" class="ep-trailer" data-index="${index}" ${ep.isTrailer ? 'checked' : ''}>
+                                🎬 Трейлер
+                            </label>
+                            
                             <button class="remove-ep-btn" onclick="removeEpisode(${index})" title="Удалить серию">✕</button>
                         </div>
                     `).join('');
@@ -1387,7 +1406,8 @@
                 openingEnd: '',
                 endingStart: '',
                 endingEnd: '',
-                status: 'Скоро'
+                status: 'Скоро',
+                isTrailer: false
             });
             renderEpisodesEditor(episodes);
         };
@@ -1406,7 +1426,8 @@
                     openingEnd: el.querySelector('[data-field="openingEnd"]').value || '',
                     endingStart: el.querySelector('[data-field="endingStart"]').value || '',
                     endingEnd: el.querySelector('[data-field="endingEnd"]').value || '',
-                    status: el.querySelector('[data-field="status"]').value || 'Скоро'
+                    status: el.querySelector('[data-field="status"]').value || 'Скоро',
+                    isTrailer: el.querySelector('[data-field="isTrailer"]')?.checked || false
                 });
             });
             return episodes;
@@ -1642,7 +1663,6 @@
             document.getElementById('titleImageVert').value = title.imageVertical || '';
             document.getElementById('titleImageHoriz').value = title.imageHorizontal || '';
             document.getElementById('titleWallpaper').value = title.wallpaper || '';
-            document.getElementById('titleTrailer').value = title.trailer || '';
             document.getElementById('titleDescription').value = title.description || '';
             renderEpisodesEditor(title.episodesList || []);
             openModal('modalOverlay');
@@ -1673,7 +1693,6 @@
             const description = document.getElementById('titleDescription').value.trim();
             const episodesList = getEpisodesFromEditor();
             const finalEpisodes = episodes > 0 ? episodes : episodesList.length;
-            const trailer = document.getElementById('titleTrailer').value.trim();
 
             if (!id) {
                 showToast('❌ Введите ID тайтла', 'error');
@@ -1716,7 +1735,6 @@
                 wallpaper,
                 description,
                 episodesList,
-                trailer: trailer || null,
             };
             let result = editId ? await updateTitle(editId, data) : await addTitle(data);
 
