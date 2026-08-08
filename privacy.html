@@ -14,8 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script type="module" src="firebase-config.js"></script>
     <style>
-        /* ===== УБИРАЕМ ВСЕ ОБВОДКИ И РАМКИ ===== */
-                /* ===== АГРЕССИВНОЕ УДАЛЕНИЕ ВСЕХ ОБВОДОК ===== */
+        /* ===== АГРЕССИВНОЕ УДАЛЕНИЕ ВСЕХ ОБВОДОК ===== */
         *,
         *::before,
         *::after,
@@ -74,41 +73,31 @@
             -moz-box-shadow: none !important;
         }
 
+        /* ===== СТИЛИ ТЕКСТА (ВЕСЬ СИНИЙ) ===== */
         .privacy-content {
             max-width: 900px;
             margin: 0 auto;
             padding: 10px 0;
         }
-        .privacy-content h2 {
-            color: var(--color-accent);
-            margin-top: 30px;
-            margin-bottom: 10px;
-            font-size: 22px;
-            border-bottom: 1px solid var(--border-primary);
-            padding-bottom: 6px;
-        }
-        .privacy-content h3 {
-            color: var(--color-accent2);
-            margin-top: 20px;
-            margin-bottom: 8px;
-            font-size: 18px;
-        }
-        .privacy-content p {
-            color: var(--text-primary);
-            line-height: 1.7;
-            margin-bottom: 12px;
-        }
-        .privacy-content ul {
-            color: var(--text-secondary);
-            padding-left: 20px;
-            margin-bottom: 12px;
-            line-height: 1.7;
-        }
-        .privacy-content ul li {
-            margin-bottom: 6px;
+        .privacy-content,
+        .privacy-content h1,
+        .privacy-content h2,
+        .privacy-content h3,
+        .privacy-content h4,
+        .privacy-content h5,
+        .privacy-content h6,
+        .privacy-content p,
+        .privacy-content li,
+        .privacy-content div,
+        .privacy-content span,
+        .privacy-content strong,
+        .privacy-content b,
+        .privacy-content em,
+        .privacy-content i {
+            color: var(--color-accent) !important;
         }
         .privacy-content a {
-            color: var(--color-accent);
+            color: var(--color-accent2) !important;
             text-decoration: none;
             transition: color 0.3s;
         }
@@ -116,6 +105,8 @@
             color: var(--color-accent2);
             text-decoration: underline;
         }
+        
+        /* ===== БЛОКИ ===== */
         .privacy-content .important-block {
             background: rgba(255, 107, 107, 0.08);
             border-left: 4px solid var(--color-danger);
@@ -124,7 +115,7 @@
             margin: 20px 0;
         }
         .privacy-content .important-block strong {
-            color: var(--color-danger);
+            color: var(--color-danger) !important;
         }
         .privacy-content .contact-block {
             background: var(--bg-welcome);
@@ -136,6 +127,7 @@
         .privacy-content .contact-block a {
             font-weight: bold;
         }
+        
         @media (max-width: 600px) {
             .privacy-content h2 {
                 font-size: 20px;
