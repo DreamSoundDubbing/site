@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <link rel="manifest" href="/site/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DSD">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4a2a7a">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - Dream Sound Dubbing</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script type="module" src="firebase-config.js"></script>
+    <style>
+        :root {
+            --bg-home: url('https://s3.radikal.cloud/2026/06/28/FON-PROFIL6f2cb57342dd098d.png');
+        }
+        [data-theme="dark"] {
+            --bg-home: url('https://s3.radikal.cloud/2026/06/28/FON-PROFIL6f2cb57342dd098d.png');
+        }
+        [data-theme="light"] {
+            --bg-home: url('https://radika1.link/2026/06/28/FON-PROFIL-DENd8737ff7bc38da6c.png');
+        }
+
+        body {
+            background: var(--bg-home) !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+            background-repeat: no-repeat !important;
+        }
+
+        .admin-panel-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .admin-section {
+            background: var(--bg-admin-panel-dark);
+            border: 1px solid var(--color-accent);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .admin-section h3 {
+            color: var(--color-accent);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-section .form-group {
+            margin-bottom: 12px;
+        }
+        .admin-section .form-group label {
+            color: var(--text-muted);
+            font-size: 13px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .admin-section .form-group input,
+        .admin-section .form-group select,
+        .admin-section .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid var(--border-primary);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 14px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .admin-section .form-group textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+        .admin-section .form-group input:focus,
+        .admin-section .form-group select:focus {
+            border-color: var(--color-accent);
+            outline: none;
+        }
+        .admin-section .form-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .admin-section .form-row .form-group {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .admin-btn {
+            padding: 8px 24px;
+            background: var(--gradient-primary);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(60, 80, 180, 0.3);
+        }
+        .admin-btn.small {
+            padding: 4px 14px;
+            font-size: 12px;
+        }
+
+        .user-search-result {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: var(--bg-user-search);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .user-search-result .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-search-result .user-avatar-small {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .user-search-result .user-name {
+            color: var(--color-accent);
+            font-weight: bold;
+        }
+        .user-search-result .user-email {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .order-item {
+            background: var(--bg-order-item);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-primary);
+            transition: all 0.3s;
+        }
+        .order-item:hover {
+            border-color: var(--color-accent);
+            box-shadow: 0 4px 15px rgba(60, 80, 180, 0.08);
+        }
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .order-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--color-accent);
+        }
+        .order-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--color-accent);
+        }
+        .order-meta {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: var(--text-muted);
+            font-size: 12px;
+            margin: 6px 0;
+        }
+        .order-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .order-actions select {
+            padding: 4px 12px;
+            border-radius: 16px;
+            border: 2px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 13px;
+        }
+        .order-actions select:focus {
+            border-color: var(--color-accent);
+            outline: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status-paid {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-completed {
+            background: #cce5ff;
+            color: #004085;
+        }
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .access-denied {
+            text-align: center;
+            padding: 48px 20px;
+        }
+        .access-denied h2 {
+            color: var(--color-danger);
+        }
+        .access-denied p {
+            color: var(--text-muted);
+            margin: 16px 0;
+        }
+        .access-denied a {
+            color: var(--color-accent);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .access-denied a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--color-accent);
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: color 0.3s;
+        }
+        .back-link:hover {
+            color: var(--color-accent2);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .admin-section .form-row {
+                flex-direction: column;
+            }
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .order-meta {
+                flex-direction: column;
+                gap: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <header class="fixed-header">
+        <div class="nav-buttons">
+            <button class="burger-btn" onclick="openSidebar()" title="Меню" aria-label="Открыть меню">
+                <span></span><span></span><span></span>
+            </button>
+            <a href="index.html">
+                <img src="logo1.jpg" alt="Dream Sound Dubbing" class="header-logo">
+            </a>
+            <a href="index.html" class="nav-icon-btn" id="homeLink" style="display:none;">🏠Главная</a>
+            <a href="titles.html" class="nav-icon-btn" id="titlesLink" style="display:none;">🎦Тайтлы</a>
+            <a href="sostav.html" class="nav-icon-btn" id="sostavLink" style="display:none;">🎭Состав</a>
+            <a href="dub-in.html" class="nav-icon-btn" id="dubInLink" style="display:none;">🎙️DUB-in</a>
+            <a href="search.html" class="nav-icon-btn" id="searchLink" style="display:none;">🔍Поиск</a>
+            <a href="login.html" class="nav-icon-btn" id="authBtn">🔑 Вход</a>
+            <a href="voice-order.html" class="nav-icon-btn" id="voiceOrderLink" style="display:none;">📝Заказ</a>
+            <a href="admin-panel.html" class="nav-icon-btn" id="adminLink" style="display:none;">📋 Админ-панель</a>
+            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">🌙</button>
+        </div>
+    </header>
+
+    <!-- ========== SIDEBAR ========== -->
+    <div id="sidebar-overlay" onclick="closeSidebar()"></div>
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="logo1.jpg" alt="Dream Sound Dubbing" class="sidebar-logo-img">
+                <span>DSD <span style="color:var(--color-accent2);">Menu</span></span>
+            </div>
+            <button class="sidebar-close-btn" onclick="closeSidebar()"><i class="fas fa-times"></i></button>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="sidebar-section-label">Навигация</div>
+            <a href="index.html" class="sidebar-link"><i class="fas fa-home"></i><span>Главная</span></a>
+            <a href="titles.html" class="sidebar-link"><i class="fas fa-film"></i><span>Тайтлы</span></a>
+            <a href="sostav.html" class="sidebar-link"><i class="fas fa-users"></i><span>Состав</span></a>
+            <a href="search.html" class="sidebar-link"><i class="fas fa-search"></i><span>Поиск</span></a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-label">Личное</div>
+            <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
+            <a href="inventory.html" class="sidebar-link"><i class="fas fa-box"></i><span>Инвентарь</span></a>
+            <a href="profile.html#playlists" class="sidebar-link"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
+            <a href="profile.html#shop" class="sidebar-link"><i class="fas fa-gem"></i><span>Баланс Dream Gems</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-label">Студия</div>
+            <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
+            <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заказ озвучки</span></a>
+            <a href="#" class="sidebar-link" onclick="openPromoModal(); return false;"><i class="fas fa-gem"></i><span>Активировать промокод</span></a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-label">Администрирование</div>
+            <a href="admin-panel.html" class="sidebar-link" id="sidebarAdminPanel" style="display:none;"><i class="fas fa-crown"></i><span>Админ-панель</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-socials">
+            <a href="https://vk.ru/dreamsounddubbing" target="_blank"><i class="fab fa-vk"></i></a>
+            <a href="https://t.me/DreamSoundDubbing" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+            <a href="https://youtube.com/@dreamsounddubbing?si=3iGiDPH9ZK" target="_blank"><i class="fab fa-youtube"></i></a>
+        </div>
+            <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px;letter-spacing:1px;">© Dream Sound Dubbing</div>
+        </div>
+    </aside>
+
+    <!-- ========== МОДАЛКА ПРОМОКОДА ========== -->
+    <div class="modal-overlay" id="m-promo-code">
+        <div class="modal-content" style="max-width:440px;">
+            <button class="modal-close" onclick="closeModal('m-promo-code')">✕</button>
+            <h3><i class="fas fa-gem" style="color:#4a8cff;"></i> Активация промокода</h3>
+            <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">
+                Введите промокод, полученный в нашем Telegram-канале, и получите Dream Gems!
+            </p>
+            <div class="form-group">
+                <label>Промокод *</label>
+                <input type="text" id="promoCodeInput" placeholder="Введите промокод..." style="text-transform:uppercase;">
+            </div>
+            <div style="background:var(--bg-welcome);padding:12px;border-radius:10px;margin:12px 0;text-align:center;">
+                <span style="color:var(--text-muted);">Следите за промокодами в </span>
+                <a href="https://t.me/DreamSoundDubbing" target="_blank" style="color:var(--color-accent);font-weight:bold;">Telegram-канале</a>
+            </div>
+            <button class="submit-btn" style="width:100%;" onclick="activatePromoCode()">
+                <i class="fas fa-check"></i> Активировать
+            </button>
+            <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-promo-code')">Отмена</button>
+        </div>
+    </div>
+
+    <!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
+    <div class="container">
+        <div class="header">
+            <h1 class="title">👑 Админ-панель</h1>
+            <hr>
+        </div>
+
+        <div class="content-box admin-panel-container">
+            <a href="profile.html" class="back-link"><i class="fas fa-arrow-left"></i> Вернуться в профиль</a>
+
+            <div id="adminContent">
+                <div class="loading" style="text-align:center;padding:32px;color:var(--text-muted);">⏳ Проверка доступа...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer" style="margin-top: 20px; text-align: center;">
+        <hr>
+        <div class="footer-links" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin: 15px 0;">
+            <a href="index.html">Главная</a>
+            <a href="titles.html">Тайтлы</a>
+            <a href="sostav.html">Состав</a>
+            <a href="dub-in.html" style="display:none;" id="dubInFooter">DUB-in</a>
+            <a href="privacy.html">Политика</a>
+            <a href="feedback.html">Обратная связь</a>
+        </div>
+        <p style="color:var(--text-muted);">© 2026 Dream Sound Dubbing. Все права защищены.</p>
+    </div>
+
+    <script type="module">
+        import {
+            getCurrentUser,
+            onAuthStateChangedListener,
+            getUserRole,
+            getUserDSCoins,
+            getUserByEmail,
+            addDSCoins,
+            createPromoCode,
+            activatePromoCode,
+            getVoiceOrders,
+            updateVoiceOrder,
+            db
+        } from './firebase-config.js';
+        import { deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        window.createPromoCode = createPromoCode;
+        window.activatePromoCode = activatePromoCode;
+
+        let isAdmin = false;
+        let currentUser = null;
+        let allOrders = [];
+        let currentFilter = 'all';
+        let currentSearchQuery = '';
+
+        function updateAuthButton(user) {
+            const btn = document.getElementById('authBtn');
+            if (user) {
+                btn.textContent = `👤 ${user.displayName || user.email || 'Профиль'}`;
+                btn.href = 'profile.html';
+            } else {
+                btn.textContent = '🔑 Вход';
+                btn.href = 'login.html';
+            }
+        }
+
+        async function updateDubInLink(user) {
+            const link = document.getElementById('dubInLink');
+            const sidebarLink = document.getElementById('sidebarDubIn');
+            if (!link) return;
+            if (user) {
+                const role = await getUserRole(user.uid);
+                const show = (role === 'dubber' || role === 'admin');
+                link.style.display = show ? 'inline-flex' : 'none';
+                if (sidebarLink) sidebarLink.style.display = show ? 'flex' : 'none';
+            } else {
+                link.style.display = 'none';
+                if (sidebarLink) sidebarLink.style.display = 'none';
+            }
+        }
+
+        async function updateAdminLinks(user) {
+            const sidebarAdminPanel = document.getElementById('sidebarAdminPanel');
+            if (user) {
+                const role = await getUserRole(user.uid);
+                const isAdminRole = role === 'admin';
+                if (sidebarAdminPanel) sidebarAdminPanel.style.display = isAdminRole ? 'flex' : 'none';
+            } else {
+                if (sidebarAdminPanel) sidebarAdminPanel.style.display = 'none';
+            }
+        }
+
+        async function updateSidebarBalance(user) {
+            const balanceEl = document.getElementById('sidebarBalance');
+            if (!balanceEl) return;
+            if (user) {
+                const result = await getUserDSCoins(user.uid);
+                balanceEl.textContent = result.success ? result.coins : '0';
+            } else {
+                balanceEl.textContent = '0';
+            }
+        }
+
+        // ========== МОДАЛКА ПРОМОКОДА ==========
+        window.activatePromoCode = async function() {
+            const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
+            if (!code) {
+                showToast('❌ Введите промокод', 'error');
+                return;
+            }
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('❌ Необходимо авторизоваться', 'error');
+                return;
+            }
+            const result = await activatePromoCode(user.uid, code);
+            if (result.success) {
+                showToast(`✅ Промокод активирован! Получено ${result.gems} Dream Gems`, 'success');
+                closeModal('m-promo-code');
+                document.getElementById('promoCodeInput').value = '';
+                const balanceResult = await getUserDSCoins(user.uid);
+                if (balanceResult.success) {
+                    document.getElementById('sidebarBalance').textContent = balanceResult.coins;
+                }
+            } else {
+                showToast('❌ ' + result.error, 'error');
+            }
+        };
+
+        window.openPromoModal = function() {
+            closeSidebar();
+            openModal('m-promo-code');
+        };
+
+        // ========== СОЗДАНИЕ ПРОМОКОДА ==========
+        window.createPromoCode = async function() {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('❌ Необходимо авторизоваться', 'error');
+                return;
+            }
+            const code = document.getElementById('promoCodeNew').value.trim().toUpperCase();
+            const gems = parseInt(document.getElementById('promoCodeGems').value);
+            const maxUses = parseInt(document.getElementById('promoCodeMaxUses').value) || 1;
+            if (!code) { showToast('❌ Введите код', 'error'); return; }
+            if (!gems || gems < 1) { showToast('❌ Введите количество Dream Gems', 'error'); return; }
+            const result = await createPromoCode(code, gems, maxUses);
+            if (result.success) {
+                showToast(`✅ Промокод "${code}" создан!`, 'success');
+                closeModal('m-create-promo');
+                document.getElementById('promoCodeNew').value = '';
+                document.getElementById('promoCodeGems').value = '';
+                document.getElementById('promoCodeMaxUses').value = '';
+            } else {
+                showToast('❌ ' + result.error, 'error');
+            }
+        };
+
+        // ========== УПРАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯМИ ==========
+        window.searchUserByEmail = async function() {
+            const email = document.getElementById('adminSearchEmail').value.trim();
+            const container = document.getElementById('adminSearchResults');
+            if (!email) { container.innerHTML = '<p style="color:var(--text-muted);">Введите email для поиска</p>'; return; }
+            container.innerHTML = '<p style="color:var(--text-muted);">⏳ Поиск...</p>';
+            const result = await getUserByEmail(email);
+            if (result.success) {
+                const user = result.data;
+                const roleNames = { 'admin': 'Администратор', 'dubber': 'Даббер', 'user': 'Пользователь' };
+                container.innerHTML = `
+                    <div class="user-search-result">
+                        <div class="user-info">
+                            <img src="${user.photoURL || 'https://via.placeholder.com/32/d4e8ff/4a90d9?text=?'}" class="user-avatar-small" onerror="this.src='https://via.placeholder.com/32/d4e8ff/4a90d9?text=?'">
+                            <div>
+                                <div class="user-name">${user.displayName || 'Без имени'}</div>
+                                <div class="user-email">${user.email}</div>
+                            </div>
+                        </div>
+                        <a href="profile.html?uid=${user.id}" class="admin-btn small">Перейти</a>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `<p style="color:var(--color-danger);">❌ ${result.error}</p>`;
+            }
+        };
+
+        // ========== УПРАВЛЕНИЕ ЗАКАЗАМИ ==========
+        const statusMap = {
+            'pending': { label: '⏳ Ожидает оплаты', class: 'status-pending' },
+            'paid': { label: '✅ Оплачено', class: 'status-paid' },
+            'completed': { label: '🎉 Выполнено', class: 'status-completed' },
+            'cancelled': { label: '❌ Отменено', class: 'status-cancelled' }
+        };
+
+        function filterOrders() {
+            let result = allOrders;
+            if (currentFilter !== 'all') {
+                result = result.filter(o => o.status === currentFilter);
+            }
+            if (currentSearchQuery.trim()) {
+                const query = currentSearchQuery.trim().toLowerCase();
+                result = result.filter(o => {
+                    const searchable = [o.title, o.type, o.userName, o.userEmail, o.description, o.id].join(' ').toLowerCase();
+                    return searchable.includes(query);
+                });
+            }
+            return result;
+        }
+
+        function renderOrders() {
+            const container = document.getElementById('ordersList');
+            const filtered = filterOrders();
+            const stats = {
+                total: allOrders.length,
+                pending: allOrders.filter(o => o.status === 'pending').length,
+                paid: allOrders.filter(o => o.status === 'paid').length,
+                completed: allOrders.filter(o => o.status === 'completed').length,
+                cancelled: allOrders.filter(o => o.status === 'cancelled').length
+            };
+
+            let html = `
+                <div style="display:flex;gap:15px;flex-wrap:wrap;margin-bottom:15px;">
+                    <div class="stat-card" style="flex:1;min-width:80px;padding:12px;background:var(--bg-stat-card);border-radius:10px;text-align:center;border:1px solid var(--border-primary);cursor:pointer;transition:all 0.3s;" onclick="setFilter('all')">
+                        <div class="number" style="font-size:24px;font-weight:bold;color:var(--color-accent);">${stats.total}</div>
+                        <div class="label" style="color:var(--text-muted);font-size:12px;">📊 Всего</div>
+                    </div>
+                    <div class="stat-card" style="flex:1;min-width:80px;padding:12px;background:var(--bg-stat-card);border-radius:10px;text-align:center;border:1px solid var(--border-primary);cursor:pointer;transition:all 0.3s;" onclick="setFilter('pending')">
+                        <div class="number" style="font-size:24px;font-weight:bold;color:var(--color-accent);">${stats.pending}</div>
+                        <div class="label" style="color:var(--text-muted);font-size:12px;">⏳ Ожидают</div>
+                    </div>
+                    <div class="stat-card" style="flex:1;min-width:80px;padding:12px;background:var(--bg-stat-card);border-radius:10px;text-align:center;border:1px solid var(--border-primary);cursor:pointer;transition:all 0.3s;" onclick="setFilter('paid')">
+                        <div class="number" style="font-size:24px;font-weight:bold;color:var(--color-accent);">${stats.paid}</div>
+                        <div class="label" style="color:var(--text-muted);font-size:12px;">✅ Оплачено</div>
+                    </div>
+                    <div class="stat-card" style="flex:1;min-width:80px;padding:12px;background:var(--bg-stat-card);border-radius:10px;text-align:center;border:1px solid var(--border-primary);cursor:pointer;transition:all 0.3s;" onclick="setFilter('completed')">
+                        <div class="number" style="font-size:24px;font-weight:bold;color:var(--color-accent);">${stats.completed}</div>
+                        <div class="label" style="color:var(--text-muted);font-size:12px;">🎉 Выполнено</div>
+                    </div>
+                    <div class="stat-card" style="flex:1;min-width:80px;padding:12px;background:var(--bg-stat-card);border-radius:10px;text-align:center;border:1px solid var(--border-primary);cursor:pointer;transition:all 0.3s;" onclick="setFilter('cancelled')">
+                        <div class="number" style="font-size:24px;font-weight:bold;color:var(--color-accent);">${stats.cancelled}</div>
+                        <div class="label" style="color:var(--text-muted);font-size:12px;">❌ Отменено</div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;padding:12px 16px;background:var(--bg-filter-search);border-radius:10px;border:1px solid var(--border-primary);align-items:center;">
+                    <span style="color:var(--text-muted);font-weight:bold;font-size:13px;">🔍 Поиск:</span>
+                    <div style="display:flex;gap:6px;flex:1;min-width:180px;">
+                        <input type="text" id="searchInput" placeholder="По названию, пользователю..." value="${currentSearchQuery}" onkeydown="if(event.key==='Enter') applySearch()" style="flex:1;padding:6px 14px;border-radius:16px;border:2px solid var(--border-primary);background:var(--bg-card);color:var(--text-primary);font-size:13px;outline:none;min-width:120px;">
+                        <button class="admin-btn small" onclick="applySearch()">🔍 Найти</button>
+                        <button class="admin-btn small" style="background:var(--bg-input);color:var(--text-muted);" onclick="clearSearch()">✕ Очистить</button>
+                    </div>
+                    <span style="color:var(--border-primary);font-size:16px;">|</span>
+                    <span style="color:var(--text-muted);font-weight:bold;font-size:13px;">📂 Статус:</span>
+                    <select id="statusFilter" onchange="applyFilter()" style="padding:6px 14px;border-radius:16px;border:2px solid var(--border-primary);background:var(--bg-card);color:var(--text-primary);font-size:13px;outline:none;">
+                        <option value="all" ${currentFilter === 'all' ? 'selected' : ''}>Все</option>
+                        <option value="pending" ${currentFilter === 'pending' ? 'selected' : ''}>⏳ Ожидают</option>
+                        <option value="paid" ${currentFilter === 'paid' ? 'selected' : ''}>✅ Оплачено</option>
+                        <option value="completed" ${currentFilter === 'completed' ? 'selected' : ''}>🎉 Выполнено</option>
+                        <option value="cancelled" ${currentFilter === 'cancelled' ? 'selected' : ''}>❌ Отменено</option>
+                    </select>
+                    <span style="color:var(--text-muted);font-size:13px;margin-left:auto;">Найдено: <strong style="color:var(--color-accent);">${filtered.length}</strong> из ${allOrders.length}</span>
+                </div>
+            `;
+
+            if (filtered.length === 0) {
+                html += `<div style="text-align:center;padding:32px;color:var(--text-muted);"><span style="font-size:40px;display:block;margin-bottom:8px;">🔍</span><p>${currentSearchQuery ? 'По вашему запросу ничего не найдено' : 'Нет заказов'}</p></div>`;
+            } else {
+                html += filtered.map(order => `
+                    <div class="order-item">
+                        <div class="order-header">
+                            <span class="order-title">${order.title}</span>
+                            <span class="order-price">${order.price} ₽</span>
+                        </div>
+                        <div class="order-meta">
+                            <span>📂 ${order.type}</span>
+                            <span>🎬 ${order.episodes} серий</span>
+                            <span>👤 ${order.userName || order.userEmail || 'Неизвестно'}</span>
+                            <span>📅 ${order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString() : ''}</span>
+                            <span class="status-badge ${statusMap[order.status]?.class || 'status-pending'}">${statusMap[order.status]?.label || order.status}</span>
+                        </div>
+                        ${order.description ? `<p style="color:var(--text-muted);font-size:13px;margin:4px 0;">📝 ${order.description}</p>` : ''}
+                        <div class="order-actions">
+                            <span style="color:var(--text-muted);font-size:12px;">Изменить статус:</span>
+                            <select id="statusSelect_${order.id}">
+                                <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>⏳ Ожидает оплаты</option>
+                                <option value="paid" ${order.status === 'paid' ? 'selected' : ''}>✅ Оплачено</option>
+                                <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>🎉 Выполнено</option>
+                                <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>❌ Отменено</option>
+                            </select>
+                            <button class="admin-btn small" onclick="updateOrder('${order.id}')">💾 Обновить</button>
+                            <button class="admin-btn small" style="background:var(--color-danger);" onclick="deleteOrder('${order.id}')">🗑️ Удалить</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            container.innerHTML = html;
+        }
+
+        window.setFilter = function(filter) {
+            currentFilter = filter;
+            const select = document.getElementById('statusFilter');
+            if (select) select.value = filter;
+            renderOrders();
+        };
+
+        window.applyFilter = function() {
+            const select = document.getElementById('statusFilter');
+            currentFilter = select ? select.value : 'all';
+            renderOrders();
+        };
+
+        window.applySearch = function() {
+            const input = document.getElementById('searchInput');
+            currentSearchQuery = input ? input.value : '';
+            renderOrders();
+        };
+
+        window.clearSearch = function() {
+            const input = document.getElementById('searchInput');
+            if (input) input.value = '';
+            currentSearchQuery = '';
+            renderOrders();
+        };
+
+        window.updateOrder = async function(orderId) {
+            const select = document.getElementById(`statusSelect_${orderId}`);
+            if (!select) return;
+            const newStatus = select.value;
+            if (!confirm(`Изменить статус заказа на "${statusMap[newStatus]?.label || newStatus}"?`)) return;
+            const result = await updateVoiceOrder(orderId, { status: newStatus });
+            if (result.success) {
+                showToast('✅ Статус обновлён!', 'success');
+                await loadOrders();
+            } else {
+                showToast('❌ Ошибка: ' + result.error, 'error');
+            }
+        };
+
+        window.deleteOrder = async function(orderId) {
+            if (!confirm('Удалить этот заказ? Это действие нельзя отменить!')) return;
+            try {
+                await deleteDoc(doc(db, "voiceOrders", orderId));
+                showToast('✅ Заказ удалён!', 'success');
+                await loadOrders();
+            } catch (error) {
+                showToast('❌ Ошибка: ' + error.message, 'error');
+            }
+        };
+
+        async function loadOrders() {
+            const result = await getVoiceOrders();
+            if (!result.success) {
+                showToast('❌ Ошибка загрузки заказов: ' + result.error, 'error');
+                return;
+            }
+            allOrders = result.orders;
+            renderOrders();
+        }
+
+        // ========== АДМИН-ПАНЕЛЬ ==========
+        function renderAdminPanel() {
+            const container = document.getElementById('adminContent');
+            container.innerHTML = `
+                <!-- ===== УПРАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯМИ ===== -->
+                <div class="admin-section">
+                    <h3><i class="fas fa-users"></i> Управление пользователями</h3>
+                    <p style="color:var(--text-muted);font-size:14px;margin-bottom:15px;">Поиск пользователя по email и переход в его профиль</p>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <input type="email" id="adminSearchEmail" placeholder="Введите email пользователя" style="flex:1;padding:10px 16px;border-radius:10px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);font-size:14px;min-width:200px;">
+                        <button class="admin-btn" onclick="searchUserByEmail()">🔍 Найти</button>
+                    </div>
+                    <div id="adminSearchResults" style="margin-top:15px;">
+                        <p style="color:var(--text-muted);">Введите email для поиска пользователя</p>
+                    </div>
+                </div>
+
+                <!-- ===== УПРАВЛЕНИЕ ПРОМОКОДАМИ ===== -->
+                <div class="admin-section">
+                    <h3><i class="fas fa-gem" style="color:#4a8cff;"></i> Управление промокодами</h3>
+                    <p style="color:var(--text-muted);font-size:14px;margin-bottom:15px;">Создавайте промокоды для Dream Gems и публикуйте их в Telegram.</p>
+                    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                        <button class="admin-btn" onclick="openModal('m-create-promo')">➕ Создать промокод</button>
+                        <button class="admin-btn" style="background:var(--bg-input);color:var(--text-muted);border:2px solid var(--border-primary);" onclick="openModal('m-promo-list')">📋 Список промокодов</button>
+                    </div>
+                </div>
+
+                <!-- ===== УПРАВЛЕНИЕ ЗАКАЗАМИ ===== -->
+                <div class="admin-section">
+                    <h3><i class="fas fa-clipboard-list"></i> Управление заказами</h3>
+                    <p style="color:var(--text-muted);font-size:14px;margin-bottom:15px;">Просмотр и изменение статусов заказов на озвучку.</p>
+                    <div id="ordersList">
+                        <p style="color:var(--text-muted);">Загрузка заказов...</p>
+                    </div>
+                </div>
+            `;
+            loadOrders();
+        }
+
+        // ========== ПРОВЕРКА ДОСТУПА ==========
+        async function checkAccess() {
+            const container = document.getElementById('adminContent');
+            const user = getCurrentUser();
+            if (!user) {
+                container.innerHTML = `
+                    <div class="access-denied">
+                        <h2>🔒 Доступ запрещён</h2>
+                        <p>Только <strong style="color:var(--color-accent);">администраторы</strong> имеют доступ к этой странице.</p>
+                        <p><a href="login.html" style="color:var(--color-accent);">Войдите</a> в аккаунт</p>
+                        <br>
+                        <a href="index.html" style="color:var(--color-accent);text-decoration:none;">🏠 На главную</a>
+                    </div>
+                `;
+                return false;
+            }
+            const role = await getUserRole(user.uid);
+            if (role !== 'admin') {
+                container.innerHTML = `
+                    <div class="access-denied">
+                        <h2>🚫 Недостаточно прав</h2>
+                        <p>Ваша роль: <strong style="color:var(--color-warning);">${role}</strong></p>
+                        <p>Для доступа к этой странице нужна роль <strong style="color:var(--color-accent);">Администратор</strong>.</p>
+                        <br>
+                        <a href="index.html" style="color:var(--color-accent);text-decoration:none;">🏠 На главную</a>
+                    </div>
+                `;
+                return false;
+            }
+            return true;
+        }
+
+        // ========== ИНИЦИАЛИЗАЦИЯ ==========
+        onAuthStateChangedListener(async (user) => {
+            currentUser = user;
+            updateAuthButton(user);
+            await updateDubInLink(user);
+            await updateAdminLinks(user);
+            await updateSidebarBalance(user);
+            const hasAccess = await checkAccess();
+            if (hasAccess) {
+                renderAdminPanel();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = getCurrentUser();
+            currentUser = user;
+            updateAuthButton(user);
+            await updateDubInLink(user);
+            await updateAdminLinks(user);
+            await updateSidebarBalance(user);
+            const hasAccess = await checkAccess();
+            if (hasAccess) {
+                renderAdminPanel();
+            }
+        });
+    </script>
+
+    <!-- ========== TOAST КОНТЕЙНЕР ========== -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- ========== МОДАЛКИ ========== -->
+    <div class="modal-overlay" id="m-create-promo">
+        <div class="modal-content" style="max-width:440px;">
+            <button class="modal-close" onclick="closeModal('m-create-promo')">✕</button>
+            <h3><i class="fas fa-gem" style="color:#4a8cff;"></i> Создать промокод</h3>
+            <div class="form-group">
+                <label>Код промокода</label>
+                <input type="text" id="promoCodeNew" placeholder="НАПРИМЕР: DSD2026" style="text-transform:uppercase;">
+            </div>
+            <div class="form-group">
+                <label>Количество Dream Gems</label>
+                <input type="number" id="promoCodeGems" placeholder="100" min="1">
+            </div>
+            <div class="form-group">
+                <label>Максимальное количество использований</label>
+                <input type="number" id="promoCodeMaxUses" placeholder="1" min="1">
+            </div>
+            <button class="submit-btn" onclick="createPromoCode()"><i class="fas fa-plus"></i> Создать</button>
+            <button class="cancel-btn" onclick="closeModal('m-create-promo')">Отмена</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="m-promo-list">
+        <div class="modal-content" style="max-width:500px;">
+            <button class="modal-close" onclick="closeModal('m-promo-list')">✕</button>
+            <h3><i class="fas fa-list"></i> Список промокодов</h3>
+            <div id="promoListContainer">
+                <p style="color:var(--text-muted);text-align:center;">Загрузка...</p>
+            </div>
+            <button class="cancel-btn" onclick="closeModal('m-promo-list')">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- ========== МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ ========== -->
+    <div id="confirm-modal">
+        <div class="modal-box">
+            <div class="modal-icon" id="confirmIcon">❓</div>
+            <div class="modal-title" id="confirmTitle">Подтверждение</div>
+            <div class="modal-message" id="confirmMessage">Вы уверены?</div>
+            <div class="modal-buttons">
+                <button class="btn-no" id="confirmNo">Отмена</button>
+                <button class="btn-yes" id="confirmYes">Да</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== ГЛОБАЛЬНЫЕ ФУНКЦИИ (САЙДБАР, ТЕМА, МОДАЛКИ) ==========
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            const btn = document.getElementById('themeToggle');
+            if (btn) { btn.innerHTML = newTheme === 'dark' ? '🌙' : '☀️'; }
+        }
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const btn = document.getElementById('themeToggle');
+            if (btn) { btn.innerHTML = savedTheme === 'dark' ? '🌙' : '☀️'; }
+        }
+        document.addEventListener('DOMContentLoaded', loadTheme);
+
+        function openSidebar() {
+            document.getElementById('sidebar').classList.add('open');
+            document.getElementById('sidebar-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebar-overlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeSidebar();
+        });
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ========== TOAST-УВЕДОМЛЕНИЯ ==========
+        function showToast(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+            const toast = document.createElement('div');
+            toast.className = `toast-item ${type}`;
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
+                <span class="toast-text">${message}</span>
+                <button class="toast-close-btn" onclick="this.closest('.toast-item').remove()">✕</button>
+                <div class="toast-progress"></div>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.classList.add('removing');
+                    setTimeout(() => {
+                        if (toast.parentNode) toast.remove();
+                    }, 400);
+                }
+            }, duration);
+        }
+        window.alert = function(message) { showToast(message, 'warning'); };
+
+        function showConfirm(message, title = 'Подтверждение', icon = '❓', isDanger = false) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('confirm-modal');
+                const titleEl = document.getElementById('confirmTitle');
+                const msgEl = document.getElementById('confirmMessage');
+                const iconEl = document.getElementById('confirmIcon');
+                const yesBtn = document.getElementById('confirmYes');
+                const noBtn = document.getElementById('confirmNo');
+
+                titleEl.textContent = title;
+                msgEl.textContent = message;
+                iconEl.textContent = icon;
+                yesBtn.className = isDanger ? 'btn-danger' : 'btn-yes';
+                modal.classList.add('active');
+
+                const closeAndResolve = (value) => {
+                    modal.classList.remove('active');
+                    resolve(value);
+                };
+                yesBtn.onclick = () => closeAndResolve(true);
+                noBtn.onclick = () => closeAndResolve(false);
+                modal.onclick = (e) => {
+                    if (e.target === modal) closeAndResolve(false);
+                };
+                const keyHandler = (e) => {
+                    if (e.key === 'Escape') {
+                        closeAndResolve(false);
+                        document.removeEventListener('keydown', keyHandler);
+                    }
+                };
+                document.addEventListener('keydown', keyHandler);
+            });
+        }
+        window.confirm = function(message) { return showConfirm(message, 'Подтверждение', '❓', false); };
+        window.confirmDelete = function(message) { return showConfirm(message, 'Удаление', '⚠️', true); };
+        window.confirmAction = function(message, title = 'Подтверждение') { return showConfirm(message, title, '🤔', false); };
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/site/sw.js')
+                .then(() => console.log('✅ Service Worker зарегистрирован'))
+                .catch(err => console.log('❌ Ошибка SW:', err));
+        }
+        window.addEventListener('online', () => { document.body.style.display = 'block'; });
+        window.addEventListener('offline', () => {
+            if (!navigator.onLine) { window.location.href = '/site/offline.html'; }
+        });
+    </script>
+
+</body>
+</html>

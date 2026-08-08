@@ -1270,3 +1270,9 @@ body {
 
 /* Запрещаем выделение текста (чтобы не было "синего" выделения) */
 .no-select { user-select: none; }
+
+/* ===== УБИРАЕМ ЛЮБУЮ ОБВОДКУ ТЕКСТА В МОДАЛКАХ В СВЕТЛОЙ ТЕМЕ ===== */
+[data-theme="light"] .modal-overlay *,
+[data-theme="light"] .modal-content * {
+    text-shadow: none !important;
+}

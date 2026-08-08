@@ -1899,6 +1899,68 @@ async function sellCoinFromInventory(uid, itemId) {
 }
 
 // ============================================================
+// ========== ПРОМОКОДЫ ==========
+// ============================================================
+
+async function createPromoCode(code, gems, maxUses = 1) {
+    try {
+        const docRef = doc(db, "promocodes", code);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            return { success: false, error: "Промокод уже существует" };
+        }
+        await setDoc(docRef, {
+            code: code,
+            gems: gems,
+            used: 0,
+            maxUses: maxUses,
+            createdAt: serverTimestamp()
+        });
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function activatePromoCode(uid, code) {
+    try {
+        const docRef = doc(db, "promocodes", code);
+        const docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) {
+            return { success: false, error: "Промокод не найден" };
+        }
+        const data = docSnap.data();
+        if (data.used >= data.maxUses) {
+            return { success: false, error: "Промокод уже использован" };
+        }
+
+        // Проверяем, не активировал ли уже этот пользователь
+        const userRef = doc(db, "users", uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+            const userData = userSnap.data();
+            const activatedCodes = userData.activatedPromoCodes || [];
+            if (activatedCodes.includes(code)) {
+                return { success: false, error: "Вы уже активировали этот промокод" };
+            }
+        }
+
+        // Начисляем монеты и обновляем промокод
+        await runTransaction(db, async (transaction) => {
+            transaction.update(docRef, { used: increment(1) });
+            transaction.update(userRef, {
+                dreamGems: increment(data.gems),
+                activatedPromoCodes: arrayUnion(code)
+            });
+        });
+
+        return { success: true, gems: data.gems };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// ============================================================
 // ========== ЭКСПОРТ ==========
 // ============================================================
 
@@ -1988,7 +2050,9 @@ export {
     sellItem,
     buyItem,
     openLootbox,
-    transferCoins
+    transferCoins,
+    createPromoCode,
+    activatePromoCode
 };
 
 // === ИЗМЕНЕНИЕ: ЯВНОЕ ПРИСВОЕНИЕ ВСЕХ ФУНКЦИЙ В GLOBAL SCOPE ===
@@ -2077,5 +2141,7 @@ window.sellItem = sellItem;
 window.buyItem = buyItem;
 window.openLootbox = openLootbox;
 window.transferCoins = transferCoins;
+window.createPromoCode = createPromoCode;
+window.activatePromoCode = activatePromoCode;
 
 console.log('🔥 Модуль firebase-config.js загружен и все функции экспортированы в window');

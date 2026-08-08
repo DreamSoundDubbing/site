@@ -324,20 +324,20 @@
     <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i><span>Профиль</span></a>
     <a href="inventory.html" class="sidebar-link"><i class="fas fa-box"></i><span>Инвентарь</span></a>
     <a href="profile.html#playlists" class="sidebar-link"><i class="fas fa-layer-group"></i><span>Плейлисты</span></a>
-    <a href="profile.html#shop" class="sidebar-link"><i class="fas fa-coins"></i><span>Магазин DSCoins</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
+    <a href="profile.html#shop" class="sidebar-link"><i class="fas fa-gem"></i><span>Баланс Dream Gems</span><span class="sidebar-badge sidebar-badge--coin" id="sidebarBalance">0</span></a>
 
     <div class="sidebar-divider"></div>
     
     <div class="sidebar-section-label">Студия</div>
     <a href="dub-in.html" class="sidebar-link" id="sidebarDubIn" style="display:none;"><i class="fas fa-microphone-alt"></i><span>DUB-in</span><span class="sidebar-badge">Studio</span></a>
     <a href="voice-order.html" class="sidebar-link"><i class="fas fa-wand-magic-sparkles"></i><span>Заказ озвучки</span></a>
-    <a href="#" class="sidebar-link" onclick="openDSCoinOrder(); return false;"><i class="fas fa-coins"></i><span>Купить DSCoins</span></a>
+    <a href="#" class="sidebar-link" onclick="openDSCoinOrder(); return false;"><i class="fas fa-plus"></i><span>Получить Dream Gems</span></a>
 
     <div class="sidebar-divider"></div>
     
     <div class="sidebar-section-label">Администрирование</div>
     <a href="admin-orders.html" class="sidebar-link" id="sidebarAdminOrders" style="display:none;"><i class="fas fa-clipboard-list"></i><span>Заказы</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
-    <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;"><i class="fas fa-coins"></i><span>Управление DSCoins</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
+    <a href="#" class="sidebar-link" id="sidebarAdminDSCoins" style="display:none;" onclick="openAdminDSCoins(); return false;"><i class="fas fa-gem"></i><span>Управление Dream Gems</span><span class="sidebar-badge" style="background:rgba(16,185,129,0.2);color:#34d399;">Admin</span></a>
 </nav>
     <div class="sidebar-footer">
         <div class="sidebar-socials">
@@ -349,40 +349,36 @@
     </div>
 </aside>
 
-<!-- ========== МОДАЛКИ ========== -->
-<div class="modal-overlay" id="m-dscoin-order">
+<!-- ========== МОДАЛКА ПРОМОКОДА ========== -->
+<div class="modal-overlay" id="m-promo-code">
     <div class="modal-content" style="max-width:440px;">
-        <button class="modal-close" onclick="closeModal('m-dscoin-order')">✕</button>
-        <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Покупка DSCoins</h3>
-        <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">После оформления заявки напишите менеджеру в Telegram для оплаты.</p>
-        <div class="form-group"><label>Ваш Email *</label><input type="email" id="dscoin-order-email" placeholder="your@email.com"></div>
-        <div class="form-group"><label>Количество DSCoins *</label>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
-                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(100)">100</button>
-                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(250)">250</button>
-                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(500)">500</button>
-                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(1000)">1000</button>
-                <button type="button" class="action-btn action-btn-sm outline" onclick="setDSCoinAmount(2000)">2000</button>
-            </div>
-            <input type="number" id="dscoin-order-amount" placeholder="Введите количество..." min="1">
+        <button class="modal-close" onclick="closeModal('m-promo-code')">✕</button>
+        <h3><i class="fas fa-gem" style="color:#4a8cff;"></i> Активация промокода</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">
+            Введите промокод, полученный в нашем Telegram-канале, и получите Dream Gems!
+        </p>
+        <div class="form-group">
+            <label>Промокод *</label>
+            <input type="text" id="promoCodeInput" placeholder="Введите промокод..." style="text-transform:uppercase;">
         </div>
         <div style="background:var(--bg-welcome);padding:12px;border-radius:10px;margin:12px 0;text-align:center;">
-            <span style="color:var(--text-muted);">Стоимость: </span>
-            <span id="dscoin-order-price" style="color:var(--color-accent);font-weight:bold;font-size:18px;">0 ₽</span>
-            <div style="font-size:11px;color:var(--text-muted);">1 DSCoin = 1 ₽</div>
+            <span style="color:var(--text-muted);">Следите за промокодами в </span>
+            <a href="https://t.me/DreamSoundDubbing" target="_blank" style="color:var(--color-accent);font-weight:bold;">Telegram-канале</a>
         </div>
-        <button class="submit-btn" style="width:100%;" onclick="submitDSCoinOrder()"><i class="fas fa-paper-plane"></i> Оформить заявку</button>
-        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-dscoin-order')">Отмена</button>
+        <button class="submit-btn" style="width:100%;" onclick="activatePromoCode()">
+            <i class="fas fa-check"></i> Активировать
+        </button>
+        <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-promo-code')">Отмена</button>
     </div>
 </div>
 
 <div class="modal-overlay" id="m-admin-dscoins">
     <div class="modal-content" style="max-width:480px;">
         <button class="modal-close" onclick="closeModal('m-admin-dscoins')">✕</button>
-        <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Управление DSCoins</h3>
+        <h3><i class="fas fa-coins" style="color:#fbbf24;"></i> Управление Dream Gems</h3>
         <p style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">Добавьте монеты пользователю по email.</p>
         <div class="form-group"><label>Email пользователя *</label><input type="email" id="admin-dscoin-email" placeholder="user@example.com"></div>
-        <div class="form-group"><label>Количество DSCoins *</label><input type="number" id="admin-dscoin-amount" placeholder="100" min="1"></div>
+        <div class="form-group"><label>Количество Dream Gems *</label><input type="number" id="admin-dscoin-amount" placeholder="100" min="1"></div>
         <div class="form-group"><label>Причина</label><input type="text" id="admin-dscoin-reason" value="Начисление администратором"></div>
         <button class="submit-btn" style="width:100%;background:var(--gradient-primary);" onclick="adminAddDSCoins()"><i class="fas fa-plus"></i> Добавить монеты</button>
         <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-admin-dscoins')">Отмена</button>
@@ -618,18 +614,33 @@ window.alert = function(message) {
         if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
     });
 
-    async function submitDSCoinOrder() {
-        const email = document.getElementById('dscoin-order-email').value.trim();
-        const amount = parseInt(document.getElementById('dscoin-order-amount').value);
-        if (!email) { showToast('❌ Введите email', 'error'); return; }
-        if (!amount || amount < 1) { showToast('❌ Введите количество DSCoins', 'error'); return; }
-        const result = await createDSCoinOrder({ email: email, amount: amount, price: amount });
-        if (result.success) {
-            showToast('✅ Заявка создана! Напишите менеджеру в Telegram.', 'success');
-            closeModal('m-dscoin-order');
-            window.open('https://t.me/DSD_manager', '_blank');
-        } else showToast('❌ Ошибка: ' + result.error, 'error');
+    window.activatePromoCode = async function() {
+    const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
+    if (!code) {
+        showToast('❌ Введите промокод', 'error');
+        return;
     }
+
+    const user = getCurrentUser();
+    if (!user) {
+        showToast('❌ Необходимо авторизоваться', 'error');
+        return;
+    }
+
+    const result = await activatePromoCode(user.uid, code);
+    if (result.success) {
+        showToast(`✅ Промокод активирован! Получено ${result.gems} Dream Gems`, 'success');
+        closeModal('m-promo-code');
+        document.getElementById('promoCodeInput').value = '';
+        // Обновляем баланс
+        const balanceResult = await getUserDSCoins(user.uid);
+        if (balanceResult.success) {
+            document.getElementById('sidebarBalance').textContent = balanceResult.coins;
+        }
+    } else {
+        showToast('❌ ' + result.error, 'error');
+    }
+};
 
     async function adminAddDSCoins() {
         const email = document.getElementById('admin-dscoin-email').value.trim();
