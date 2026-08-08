@@ -886,6 +886,26 @@
             padding: 12px;
             font-style: italic;
         }
+        /* ===== СТИЛИ ДЛЯ МОДАЛКИ ПЕРСОНАЖЕЙ ===== */
+#addCharacterModal .form-group input[type="file"] {
+    padding: 4px;
+    font-size: 13px;
+    cursor: pointer;
+}
+#addCharacterModal .form-group input[type="file"]::-webkit-file-upload-button {
+    background: var(--gradient-primary);
+    color: #fff;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+#addCharacterModal .form-group input[type="file"]::-webkit-file-upload-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(60,80,180,0.3);
+}
     </style>
 </head>
 <body>
@@ -1016,6 +1036,47 @@
             <button class="action-btn outline" style="width:100%;margin-top:8px;" onclick="closeModal('m-admin-dscoins')">Отмена</button>
         </div>
     </div>
+    <!-- ========== МОДАЛКА ДОБАВЛЕНИЯ ПЕРСОНАЖА ========== -->
+<div class="modal-overlay" id="addCharacterModal">
+    <div class="modal-content" style="max-width:500px;">
+        <button class="modal-close" onclick="closeModal('addCharacterModal')">✕</button>
+        <h2 style="color:var(--color-accent); text-align:center;">
+            <i class="fas fa-user"></i> Добавить персонажа
+        </h2>
+        <form id="characterForm" onsubmit="saveCharacter(event)">
+            <div class="form-group">
+                <label>Фото персонажа (ссылка)</label>
+                <input type="text" id="charImageUrl" placeholder="https://example.com/char.jpg">
+            </div>
+            <div class="form-group" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <label style="flex:1; min-width:100px;">Или загрузите фото</label>
+                <input type="file" id="charImageFile" accept="image/*" style="flex:2; min-width:150px; padding:4px; border-radius:6px; border:2px solid var(--border-primary); background:var(--bg-input); color:var(--text-primary);">
+            </div>
+            <div class="form-group">
+                <label>Имя персонажа *</label>
+                <input type="text" id="charName" placeholder="Например: Ичиго Куросаки" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Тип персонажа</label>
+                    <select id="charType">
+                        <option value="main">⭐ Главный</option>
+                        <option value="secondary">🔄 Второстепенный</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Даббер (озвучка)</label>
+                    <select id="charVoice">
+                        <option value="">— Выберите даббера —</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="submit-btn" id="saveCharBtn">
+                <i class="fas fa-save"></i> Сохранить персонажа
+            </button>
+        </form>
+    </div>
+</div>
 
     <script>
         // ========== УПРАВЛЕНИЕ ТЕМОЙ ==========
@@ -1187,6 +1248,166 @@
         window.createDSCoinOrder = createDSCoinOrder;
         window.setDSCoinAmount = setDSCoinAmount;
         window.updateDSCoinPrice = updateDSCoinPrice;
+        
+                async function checkAdmin(user) {
+            if (user) {
+                const role = await getUserRole(user.uid);
+                isAdmin = role === 'admin';
+                document.getElementById('adminPanel').style.display = isAdmin ? 'flex' : 'none';
+                
+                // ===== ДОБАВЬТЕ ЭТОТ БЛОК =====
+                const addCharContainer = document.getElementById('addCharacterContainer');
+                if (addCharContainer) {
+                    addCharContainer.style.display = isAdmin ? 'block' : 'none';
+                }
+                // =================================
+            } else {
+                isAdmin = false;
+                document.getElementById('adminPanel').style.display = 'none';
+                
+                // ===== ДОБАВЬТЕ ЭТОТ БЛОК =====
+                const addCharContainer = document.getElementById('addCharacterContainer');
+                if (addCharContainer) {
+                    addCharContainer.style.display = 'none';
+                }
+                // =================================
+            }
+        }
+
+        // ===== ПЕРЕМЕННЫЕ ДЛЯ ПЕРСОНАЖЕЙ =====
+let allVoices = [];
+let allRoles = [];
+
+// ===== ЗАГРУЗКА ДАББЕРОВ =====
+async function loadAllVoices() {
+    const result = await getVoices();
+    if (result.success) {
+        allVoices = result.voices;
+    }
+}
+
+// ===== ЗАГРУЗКА РОЛЕЙ =====
+async function loadAllRoles() {
+    const result = await getRolesByTitleId(titleId);
+    if (result.success) {
+        allRoles = result.roles;
+    }
+}
+
+window.openAddCharacterModal = function() {
+    openModal('addCharacterModal');
+    populateVoiceSelect();
+};
+
+window.closeCharacterModal = function() {
+    closeModal('addCharacterModal');
+    document.getElementById('characterForm').reset();
+};
+
+// ===== ЗАПОЛНЕНИЕ ВЫПАДАЮЩЕГО СПИСКА ДАББЕРОВ =====
+function populateVoiceSelect() {
+    const select = document.getElementById('charVoice');
+    select.innerHTML = '<option value="">— Выберите даббера —</option>';
+    allVoices.forEach(voice => {
+        const option = document.createElement('option');
+        option.value = voice.id;
+        option.textContent = voice.name || voice.id;
+        select.appendChild(option);
+    });
+}
+
+// ===== СОХРАНЕНИЕ ПЕРСОНАЖА =====
+window.saveCharacter = async function(event) {
+    event.preventDefault();
+    const btn = document.getElementById('saveCharBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Сохранение...';
+
+    const name = document.getElementById('charName').value.trim();
+    const type = document.getElementById('charType').value;
+    const voiceId = document.getElementById('charVoice').value;
+    const imageUrl = document.getElementById('charImageUrl').value.trim();
+    const fileInput = document.getElementById('charImageFile');
+
+    if (!name) {
+        showToast('❌ Введите имя персонажа', 'error');
+        btn.disabled = false;
+        btn.textContent = '💾 Сохранить';
+        return;
+    }
+    if (!voiceId) {
+        showToast('❌ Выберите даббера', 'error');
+        btn.disabled = false;
+        btn.textContent = '💾 Сохранить';
+        return;
+    }
+
+    let finalImage = imageUrl;
+    if (fileInput.files && fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        try {
+            const uploadResult = await uploadCharacterImage(file);
+            if (uploadResult.success) {
+                finalImage = uploadResult.url;
+            } else {
+                showToast('❌ Ошибка загрузки фото: ' + uploadResult.error, 'error');
+                btn.disabled = false;
+                btn.textContent = '💾 Сохранить';
+                return;
+            }
+        } catch (error) {
+            showToast('❌ Ошибка: ' + error.message, 'error');
+            btn.disabled = false;
+            btn.textContent = '💾 Сохранить';
+            return;
+        }
+    }
+
+    // Сохраняем роль в Firestore
+    const roleData = {
+        titleId: titleId,
+        character: name,
+        characterImage: finalImage || '',
+        voiceId: voiceId,
+        type: type
+    };
+
+    const result = await addRole(roleData);
+    if (result.success) {
+        showToast('✅ Персонаж добавлен!', 'success');
+        closeCharacterModal();
+        await loadTitle(); // перезагружаем страницу, чтобы показать нового персонажа
+    } else {
+        showToast('❌ Ошибка: ' + result.error, 'error');
+    }
+
+    btn.disabled = false;
+    btn.textContent = '💾 Сохранить';
+};
+
+// ===== ЗАГРУЗКА ФОТО В FIREBASE STORAGE =====
+async function uploadCharacterImage(file) {
+    try {
+        const storage = getStorage(app);
+        const storageRef = ref(storage, `characters/${titleId}/${Date.now()}_${file.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        return new Promise((resolve, reject) => {
+            uploadTask.on(
+                'state_changed',
+                null,
+                (error) => {
+                    reject({ success: false, error: error.message });
+                },
+                async () => {
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    resolve({ success: true, url: downloadURL });
+                }
+            );
+        });
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
 
         window.submitDSCoinOrder = async function() {
             const email = document.getElementById('dscoin-order-email').value.trim();
@@ -1994,6 +2215,8 @@ video.addEventListener('ended', function() {
         }
 
         async function loadTitle() {
+            await loadAllVoices();
+await loadAllRoles();
             const content = document.getElementById('title-content');
             content.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
             await loadAllUsers();
@@ -2222,7 +2445,7 @@ video.addEventListener('ended', function() {
             }
 
             content.innerHTML = `
-                        <div class="anime-header ${wallpaperUrl ? 'has-wallpaper' : ''}" style="${headerWallpaperStyle}">
+                        <div class="anime-header">
                             ${posterHtml}
                             <div class="anime-info">
                                 <h1 class="anime-title">${title.name} ${avgRatingHtml}</h1>
@@ -2240,6 +2463,11 @@ video.addEventListener('ended', function() {
                             </div>
                         </div>
                         ${playerHtml}
+                        <div id="addCharacterContainer" style="margin-top:20px; text-align:center; display:none;">
+                            <button class="admin-edit-btn" onclick="openAddCharacterModal()">
+                                <i class="fas fa-user-plus"></i> Добавить персонажа
+                            </button>
+                        </div>
                         ${episodesHtml}
                         ${charactersHtml}
                         <div id="comments-container"></div>
