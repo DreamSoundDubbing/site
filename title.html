@@ -2099,13 +2099,13 @@ function getEpisodesFromEditor() {
         window.currentEpisode = 0;
         window.currentQuality = 'auto';
 
-                function parseTimecode(tc) {
-            if (!tc) return 0;
-            const parts = tc.split(':').map(Number);
-            if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
-            if (parts.length === 2) return parts[0] * 60 + parts[1];
-            return parseInt(tc) || 0;
-        }
+        window.parseTimecode = function(tc) {
+    if (!tc) return 0;
+    const parts = tc.split(':').map(Number);
+    if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+    if (parts.length === 2) return parts[0] * 60 + parts[1];
+    return parseInt(tc) || 0;
+};
 
         window.skipOpening = function() {
             const video = document.getElementById('playerVideo');
@@ -2133,7 +2133,7 @@ function getEpisodesFromEditor() {
             console.log('Качество изменено на:', window.currentQuality);
         };
 
-                window.playEpisode = function(episodeData) {
+        window.playEpisode = function(episodeData) {
             if (!episodeData) {
                 document.getElementById('playerContainer').innerHTML = `<div class="video-placeholder">🎬 Серия ещё не доступна</div>`;
                 return;
@@ -2145,11 +2145,13 @@ function getEpisodesFromEditor() {
                 container.innerHTML = `<div class="video-placeholder">🎬 Серия ещё не доступна</div>`;
                 return;
             }
-            container.innerHTML = `
+                        container.innerHTML = `
                 <video id="playerVideo" controls width="100%" height="100%" style="background:#000;">
                     <source src="${url}" type="video/mp4">
                     Ваш браузер не поддерживает видео.
                 </video>
+                
+                <!-- Основные элементы управления (скрываются при бездействии) -->
                 <div class="player-controls-overlay">
                     <select id="seasonSelect" onchange="changeSeason()">
                         ${window.seasons.map(s => `<option value="${s}">Сезон ${s}</option>`).join('')}
@@ -2164,6 +2166,10 @@ function getEpisodesFromEditor() {
                         <option value="480">480p</option>
                         <option value="360">360p</option>
                     </select>
+                </div>
+                
+                <!-- Кнопки пропуска (всегда видимы, не скрываются) -->
+                <div style="position:absolute; bottom:70px; right:16px; display:flex; gap:8px; z-index:20; pointer-events:auto;">
                     <button id="skipOpeningBtn" class="skip-btn" onclick="skipOpening()">⏩ Пропустить опенинг</button>
                     <button id="skipEndingBtn" class="skip-btn" onclick="skipEnding()">⏩ Пропустить эндинг</button>
                 </div>
@@ -2171,15 +2177,15 @@ function getEpisodesFromEditor() {
             
             const video = document.getElementById('playerVideo');
             
-            // ===== ВАЖНО: ДОБАВЬТЕ ЭТОТ БЛОК =====
+            // ===== ИСПРАВЛЕННЫЙ ОБРАБОТЧИК =====
             video.addEventListener('timeupdate', function() {
                 const ep = window.currentEpisodeData;
                 const skipOpeningBtn = document.getElementById('skipOpeningBtn');
                 const skipEndingBtn = document.getElementById('skipEndingBtn');
                 
                 if (ep && ep.openingStart && ep.openingEnd) {
-                    const start = parseTimecode(ep.openingStart);
-                    const end = parseTimecode(ep.openingEnd);
+                    const start = window.parseTimecode(ep.openingStart);
+                    const end = window.parseTimecode(ep.openingEnd);
                     if (video.currentTime >= start && video.currentTime < end) {
                         skipOpeningBtn.classList.add('visible');
                     } else {
@@ -2188,8 +2194,8 @@ function getEpisodesFromEditor() {
                 }
                 
                 if (ep && ep.endingStart && ep.endingEnd) {
-                    const start = parseTimecode(ep.endingStart);
-                    const end = parseTimecode(ep.endingEnd);
+                    const start = window.parseTimecode(ep.endingStart);
+                    const end = window.parseTimecode(ep.endingEnd);
                     if (video.currentTime >= start && video.currentTime < end) {
                         skipEndingBtn.classList.add('visible');
                     } else {
