@@ -1239,7 +1239,13 @@
             createDSCoinOrder,
             updateTitleRating,
             trackTitleView,
-            getTitleViews
+            getTitleViews,
+            getVoices,
+            getRolesByTitleId,
+            addRole,
+            likeComment,
+            dislikeComment,
+            replyToComment
         } from './firebase-config.js';
 
         window.getUserDSCoins = getUserDSCoins;
@@ -1248,166 +1254,147 @@
         window.createDSCoinOrder = createDSCoinOrder;
         window.setDSCoinAmount = setDSCoinAmount;
         window.updateDSCoinPrice = updateDSCoinPrice;
-        
-                async function checkAdmin(user) {
-            if (user) {
-                const role = await getUserRole(user.uid);
-                isAdmin = role === 'admin';
-                document.getElementById('adminPanel').style.display = isAdmin ? 'flex' : 'none';
-                
-                // ===== ДОБАВЬТЕ ЭТОТ БЛОК =====
-                const addCharContainer = document.getElementById('addCharacterContainer');
-                if (addCharContainer) {
-                    addCharContainer.style.display = isAdmin ? 'block' : 'none';
-                }
-                // =================================
-            } else {
-                isAdmin = false;
-                document.getElementById('adminPanel').style.display = 'none';
-                
-                // ===== ДОБАВЬТЕ ЭТОТ БЛОК =====
-                const addCharContainer = document.getElementById('addCharacterContainer');
-                if (addCharContainer) {
-                    addCharContainer.style.display = 'none';
-                }
-                // =================================
+        window.getVoices = getVoices;
+        window.getRolesByTitleId = getRolesByTitleId;
+        window.addRole = addRole;
+        window.likeComment = likeComment;
+        window.dislikeComment = dislikeComment;
+        window.replyToComment = replyToComment;
+
+        // ========== ПЕРЕМЕННЫЕ ДЛЯ ПЕРСОНАЖЕЙ =====
+        let allVoices = [];
+        let allRoles = [];
+
+        // ===== ЗАГРУЗКА ДАББЕРОВ =====
+        async function loadAllVoices() {
+            const result = await getVoices();
+            if (result.success) {
+                allVoices = result.voices;
             }
         }
 
-        // ===== ПЕРЕМЕННЫЕ ДЛЯ ПЕРСОНАЖЕЙ =====
-let allVoices = [];
-let allRoles = [];
+        // ===== ЗАГРУЗКА РОЛЕЙ =====
+        async function loadAllRoles() {
+            const result = await getRolesByTitleId(titleId);
+            if (result.success) {
+                allRoles = result.roles;
+            }
+        }
 
-// ===== ЗАГРУЗКА ДАББЕРОВ =====
-async function loadAllVoices() {
-    const result = await getVoices();
-    if (result.success) {
-        allVoices = result.voices;
-    }
-}
+        window.openAddCharacterModal = function() {
+            openModal('addCharacterModal');
+            populateVoiceSelect();
+        };
 
-// ===== ЗАГРУЗКА РОЛЕЙ =====
-async function loadAllRoles() {
-    const result = await getRolesByTitleId(titleId);
-    if (result.success) {
-        allRoles = result.roles;
-    }
-}
+        window.closeCharacterModal = function() {
+            closeModal('addCharacterModal');
+            document.getElementById('characterForm').reset();
+        };
 
-window.openAddCharacterModal = function() {
-    openModal('addCharacterModal');
-    populateVoiceSelect();
-};
+        // ===== ЗАПОЛНЕНИЕ ВЫПАДАЮЩЕГО СПИСКА ДАББЕРОВ =====
+        function populateVoiceSelect() {
+            const select = document.getElementById('charVoice');
+            select.innerHTML = '<option value="">— Выберите даббера —</option>';
+            allVoices.forEach(voice => {
+                const option = document.createElement('option');
+                option.value = voice.id;
+                option.textContent = voice.name || voice.id;
+                select.appendChild(option);
+            });
+        }
 
-window.closeCharacterModal = function() {
-    closeModal('addCharacterModal');
-    document.getElementById('characterForm').reset();
-};
+        // ===== СОХРАНЕНИЕ ПЕРСОНАЖА =====
+        window.saveCharacter = async function(event) {
+            event.preventDefault();
+            const btn = document.getElementById('saveCharBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Сохранение...';
 
-// ===== ЗАПОЛНЕНИЕ ВЫПАДАЮЩЕГО СПИСКА ДАББЕРОВ =====
-function populateVoiceSelect() {
-    const select = document.getElementById('charVoice');
-    select.innerHTML = '<option value="">— Выберите даббера —</option>';
-    allVoices.forEach(voice => {
-        const option = document.createElement('option');
-        option.value = voice.id;
-        option.textContent = voice.name || voice.id;
-        select.appendChild(option);
-    });
-}
+            const name = document.getElementById('charName').value.trim();
+            const type = document.getElementById('charType').value;
+            const voiceId = document.getElementById('charVoice').value;
+            const imageUrl = document.getElementById('charImageUrl').value.trim();
+            const fileInput = document.getElementById('charImageFile');
 
-// ===== СОХРАНЕНИЕ ПЕРСОНАЖА =====
-window.saveCharacter = async function(event) {
-    event.preventDefault();
-    const btn = document.getElementById('saveCharBtn');
-    btn.disabled = true;
-    btn.textContent = '⏳ Сохранение...';
-
-    const name = document.getElementById('charName').value.trim();
-    const type = document.getElementById('charType').value;
-    const voiceId = document.getElementById('charVoice').value;
-    const imageUrl = document.getElementById('charImageUrl').value.trim();
-    const fileInput = document.getElementById('charImageFile');
-
-    if (!name) {
-        showToast('❌ Введите имя персонажа', 'error');
-        btn.disabled = false;
-        btn.textContent = '💾 Сохранить';
-        return;
-    }
-    if (!voiceId) {
-        showToast('❌ Выберите даббера', 'error');
-        btn.disabled = false;
-        btn.textContent = '💾 Сохранить';
-        return;
-    }
-
-    let finalImage = imageUrl;
-    if (fileInput.files && fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        try {
-            const uploadResult = await uploadCharacterImage(file);
-            if (uploadResult.success) {
-                finalImage = uploadResult.url;
-            } else {
-                showToast('❌ Ошибка загрузки фото: ' + uploadResult.error, 'error');
+            if (!name) {
+                showToast('❌ Введите имя персонажа', 'error');
                 btn.disabled = false;
                 btn.textContent = '💾 Сохранить';
                 return;
             }
-        } catch (error) {
-            showToast('❌ Ошибка: ' + error.message, 'error');
+            if (!voiceId) {
+                showToast('❌ Выберите даббера', 'error');
+                btn.disabled = false;
+                btn.textContent = '💾 Сохранить';
+                return;
+            }
+
+            let finalImage = imageUrl;
+            if (fileInput.files && fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                try {
+                    const uploadResult = await uploadCharacterImage(file);
+                    if (uploadResult.success) {
+                        finalImage = uploadResult.url;
+                    } else {
+                        showToast('❌ Ошибка загрузки фото: ' + uploadResult.error, 'error');
+                        btn.disabled = false;
+                        btn.textContent = '💾 Сохранить';
+                        return;
+                    }
+                } catch (error) {
+                    showToast('❌ Ошибка: ' + error.message, 'error');
+                    btn.disabled = false;
+                    btn.textContent = '💾 Сохранить';
+                    return;
+                }
+            }
+
+            // Сохраняем роль в Firestore
+            const roleData = {
+                titleId: titleId,
+                character: name,
+                characterImage: finalImage || '',
+                voiceId: voiceId,
+                type: type
+            };
+
+            const result = await addRole(roleData);
+            if (result.success) {
+                showToast('✅ Персонаж добавлен!', 'success');
+                closeCharacterModal();
+                await loadTitle(); // перезагружаем страницу, чтобы показать нового персонажа
+            } else {
+                showToast('❌ Ошибка: ' + result.error, 'error');
+            }
+
             btn.disabled = false;
             btn.textContent = '💾 Сохранить';
-            return;
+        };
+
+        // ===== ЗАГРУЗКА ФОТО В FIREBASE STORAGE =====
+        async function uploadCharacterImage(file) {
+            try {
+                const storage = getStorage(app);
+                const storageRef = ref(storage, `characters/${titleId}/${Date.now()}_${file.name}`);
+                const uploadTask = uploadBytesResumable(storageRef, file);
+                return new Promise((resolve, reject) => {
+                    uploadTask.on(
+                        'state_changed',
+                        null,
+                        (error) => {
+                            reject({ success: false, error: error.message });
+                        },
+                        async () => {
+                            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                            resolve({ success: true, url: downloadURL });
+                        }
+                    );
+                });
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
         }
-    }
-
-    // Сохраняем роль в Firestore
-    const roleData = {
-        titleId: titleId,
-        character: name,
-        characterImage: finalImage || '',
-        voiceId: voiceId,
-        type: type
-    };
-
-    const result = await addRole(roleData);
-    if (result.success) {
-        showToast('✅ Персонаж добавлен!', 'success');
-        closeCharacterModal();
-        await loadTitle(); // перезагружаем страницу, чтобы показать нового персонажа
-    } else {
-        showToast('❌ Ошибка: ' + result.error, 'error');
-    }
-
-    btn.disabled = false;
-    btn.textContent = '💾 Сохранить';
-};
-
-// ===== ЗАГРУЗКА ФОТО В FIREBASE STORAGE =====
-async function uploadCharacterImage(file) {
-    try {
-        const storage = getStorage(app);
-        const storageRef = ref(storage, `characters/${titleId}/${Date.now()}_${file.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-        return new Promise((resolve, reject) => {
-            uploadTask.on(
-                'state_changed',
-                null,
-                (error) => {
-                    reject({ success: false, error: error.message });
-                },
-                async () => {
-                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                    resolve({ success: true, url: downloadURL });
-                }
-            );
-        });
-    } catch (error) {
-        return { success: false, error: error.message };
-    }
-}
 
         window.submitDSCoinOrder = async function() {
             const email = document.getElementById('dscoin-order-email').value.trim();
@@ -1495,57 +1482,57 @@ async function uploadCharacterImage(file) {
         }
 
         // ========== ЛАЙКИ / ДИЗЛАЙКИ ==========
-window.handleLike = async function(commentId) {
-    const user = getCurrentUser();
-    if (!user) { showToast('Войдите, чтобы ставить лайки', 'warning'); return; }
-    const result = await likeComment(commentId, user.uid);
-    if (result.success) {
-        await loadComments();
-    } else {
-        showToast('❌ ' + result.error, 'error');
-    }
-};
+        window.handleLike = async function(commentId) {
+            const user = getCurrentUser();
+            if (!user) { showToast('Войдите, чтобы ставить лайки', 'warning'); return; }
+            const result = await likeComment(commentId, user.uid);
+            if (result.success) {
+                await loadComments();
+            } else {
+                showToast('❌ ' + result.error, 'error');
+            }
+        };
 
-window.handleDislike = async function(commentId) {
-    const user = getCurrentUser();
-    if (!user) { showToast('Войдите, чтобы ставить дизлайки', 'warning'); return; }
-    const result = await dislikeComment(commentId, user.uid);
-    if (result.success) {
-        await loadComments();
-    } else {
-        showToast('❌ ' + result.error, 'error');
-    }
-};
+        window.handleDislike = async function(commentId) {
+            const user = getCurrentUser();
+            if (!user) { showToast('Войдите, чтобы ставить дизлайки', 'warning'); return; }
+            const result = await dislikeComment(commentId, user.uid);
+            if (result.success) {
+                await loadComments();
+            } else {
+                showToast('❌ ' + result.error, 'error');
+            }
+        };
 
-// ========== ОТВЕТЫ НА КОММЕНТАРИИ ==========
-window.openReplyForm = function(commentId, userName) {
-    const form = document.getElementById('replyForm');
-    form.style.display = 'block';
-    document.getElementById('replyParentId').value = commentId;
-    document.getElementById('replyText').focus();
-    document.getElementById('replyText').placeholder = `Ответить ${userName}...`;
-};
+        // ========== ОТВЕТЫ НА КОММЕНТАРИИ ==========
+        window.openReplyForm = function(commentId, userName) {
+            const form = document.getElementById('replyForm');
+            form.style.display = 'block';
+            document.getElementById('replyParentId').value = commentId;
+            document.getElementById('replyText').focus();
+            document.getElementById('replyText').placeholder = `Ответить ${userName}...`;
+        };
 
-window.closeReplyForm = function() {
-    document.getElementById('replyForm').style.display = 'none';
-    document.getElementById('replyText').value = '';
-};
+        window.closeReplyForm = function() {
+            document.getElementById('replyForm').style.display = 'none';
+            document.getElementById('replyText').value = '';
+        };
 
-window.submitReply = async function() {
-    const user = getCurrentUser();
-    if (!user) { showToast('Войдите, чтобы ответить', 'warning'); return; }
-    const parentId = document.getElementById('replyParentId').value;
-    const text = document.getElementById('replyText').value.trim();
-    if (!text) { showToast('Введите ответ', 'warning'); return; }
-    const result = await replyToComment(parentId, user.uid, text, titleId);
-    if (result.success) {
-        showToast('✅ Ответ отправлен!', 'success');
-        closeReplyForm();
-        await loadComments();
-    } else {
-        showToast('❌ ' + result.error, 'error');
-    }
-};
+        window.submitReply = async function() {
+            const user = getCurrentUser();
+            if (!user) { showToast('Войдите, чтобы ответить', 'warning'); return; }
+            const parentId = document.getElementById('replyParentId').value;
+            const text = document.getElementById('replyText').value.trim();
+            if (!text) { showToast('Введите ответ', 'warning'); return; }
+            const result = await replyToComment(parentId, user.uid, text, titleId);
+            if (result.success) {
+                showToast('✅ Ответ отправлен!', 'success');
+                closeReplyForm();
+                await loadComments();
+            } else {
+                showToast('❌ ' + result.error, 'error');
+            }
+        };
 
         async function updateAdminLinks(user) {
             const adminLink = document.getElementById('adminLink');
@@ -1680,103 +1667,103 @@ window.submitReply = async function() {
 
         // ===== КОММЕНТАРИИ =====
         function renderComments(comments) {
-    const container = document.getElementById('comments-list');
-    if (!container) return;
-    if (!comments || comments.length === 0) {
-        container.innerHTML = '<div class="no-comments">💬 Пока нет комментариев. Будьте первым!</div>';
-        return;
-    }
-
-    // Строим дерево комментариев
-    const commentMap = {};
-    const rootComments = [];
-    comments.forEach(c => {
-        commentMap[c.id] = { ...c, replies: [] };
-    });
-    comments.forEach(c => {
-        if (c.parentId && commentMap[c.parentId]) {
-            commentMap[c.parentId].replies.push(commentMap[c.id]);
-        } else {
-            rootComments.push(commentMap[c.id]);
-        }
-    });
-
-    const user = getCurrentUser();
-
-    function renderCommentTree(comment, depth = 0) {
-        const isOwner = user && comment.uid === user.uid;
-        let textHtml = comment.text || '';
-
-        // Поиск упоминаний (упрощённо)
-        const mentionRegex = /@([^\s]+)/g;
-        let match;
-        while ((match = mentionRegex.exec(textHtml)) !== null) {
-            const mention = match[1];
-            const foundUser = allUsers.find(u => (u.displayName || '').toLowerCase() === mention.toLowerCase() || (u.email || '').toLowerCase() === mention.toLowerCase());
-            if (foundUser) {
-                textHtml = textHtml.replace(
-                    new RegExp(`@${mention.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'),
-                    `<a href="profile.html?uid=${foundUser.id}" class="mention">@${foundUser.displayName || foundUser.email}</a>`
-                );
+            const container = document.getElementById('comments-list');
+            if (!container) return;
+            if (!comments || comments.length === 0) {
+                container.innerHTML = '<div class="no-comments">💬 Пока нет комментариев. Будьте первым!</div>';
+                return;
             }
-        }
-        textHtml = textHtml.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        textHtml = textHtml.replace(
-            /&lt;a href="profile\.html\?uid=([^"]+)" class="mention"&gt;@([^&]+)&lt;\/a&gt;/g,
-            `<a href="profile.html?uid=$1" class="mention">@$2</a>`
-        );
 
-        const likes = comment.likes || [];
-        const dislikes = comment.dislikes || [];
-        const liked = user && likes.includes(user.uid);
-        const disliked = user && dislikes.includes(user.uid);
-        const likeCount = likes.length;
-        const dislikeCount = dislikes.length;
+            // Строим дерево комментариев
+            const commentMap = {};
+            const rootComments = [];
+            comments.forEach(c => {
+                commentMap[c.id] = { ...c, replies: [] };
+            });
+            comments.forEach(c => {
+                if (c.parentId && commentMap[c.parentId]) {
+                    commentMap[c.parentId].replies.push(commentMap[c.id]);
+                } else {
+                    rootComments.push(commentMap[c.id]);
+                }
+            });
 
-        const commentUser = allUsers.find(u => u.id === comment.uid);
-        const prefix = commentUser?.prefix || '';
-        const nickColor = commentUser?.nickColor || null;
-        const displayName = comment.name || 'Аноним';
-        let nameHtml = displayName;
-        if (prefix) {
-            nameHtml = `<span style="font-size:12px;opacity:0.7;margin-right:3px;">${prefix}</span> ${displayName}`;
-        }
-        const nameStyle = nickColor ? `color: ${nickColor};` : '';
+            const user = getCurrentUser();
 
-        const avatarHtml = comment.photoURL ?
-            `<a href="profile.html?uid=${comment.uid}"><img src="${comment.photoURL}" class="comment-avatar" onerror="this.style.display='none'"></a>` :
-            `<a href="profile.html?uid=${comment.uid}"><div style="width:36px;height:36px;border-radius:50%;background:var(--border-primary);display:flex;align-items:center;justify-content:center;color:var(--color-accent);font-size:16px;cursor:pointer;">👤</div></a>`;
+            function renderCommentTree(comment, depth = 0) {
+                const isOwner = user && comment.uid === user.uid;
+                let textHtml = comment.text || '';
 
-        const repliesHtml = comment.replies.map(reply => renderCommentTree(reply, depth + 1)).join('');
+                // Поиск упоминаний (упрощённо)
+                const mentionRegex = /@([^\s]+)/g;
+                let match;
+                while ((match = mentionRegex.exec(textHtml)) !== null) {
+                    const mention = match[1];
+                    const foundUser = allUsers.find(u => (u.displayName || '').toLowerCase() === mention.toLowerCase() || (u.email || '').toLowerCase() === mention.toLowerCase());
+                    if (foundUser) {
+                        textHtml = textHtml.replace(
+                            new RegExp(`@${mention.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'),
+                            `<a href="profile.html?uid=${foundUser.id}" class="mention">@${foundUser.displayName || foundUser.email}</a>`
+                        );
+                    }
+                }
+                textHtml = textHtml.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                textHtml = textHtml.replace(
+                    /&lt;a href="profile\.html\?uid=([^"]+)" class="mention"&gt;@([^&]+)&lt;\/a&gt;/g,
+                    `<a href="profile.html?uid=$1" class="mention">@$2</a>`
+                );
 
-        return `
-            <div class="comment-item" style="margin-left: ${depth * 20}px; ${depth > 0 ? 'border-left-color: var(--color-accent2);' : ''}">
-                <div class="comment-header">
-                    <div class="comment-user">
-                        ${avatarHtml}
-                        <a href="profile.html?uid=${comment.uid}" class="comment-name" style="${nameStyle}">${nameHtml}</a>
-                        <span class="comment-rating">${'⭐'.repeat(Math.min(comment.rating || 5, 5))}</span>
+                const likes = comment.likes || [];
+                const dislikes = comment.dislikes || [];
+                const liked = user && likes.includes(user.uid);
+                const disliked = user && dislikes.includes(user.uid);
+                const likeCount = likes.length;
+                const dislikeCount = dislikes.length;
+
+                const commentUser = allUsers.find(u => u.id === comment.uid);
+                const prefix = commentUser?.prefix || '';
+                const nickColor = commentUser?.nickColor || null;
+                const displayName = comment.name || 'Аноним';
+                let nameHtml = displayName;
+                if (prefix) {
+                    nameHtml = `<span style="font-size:12px;opacity:0.7;margin-right:3px;">${prefix}</span> ${displayName}`;
+                }
+                const nameStyle = nickColor ? `color: ${nickColor};` : '';
+
+                const avatarHtml = comment.photoURL ?
+                    `<a href="profile.html?uid=${comment.uid}"><img src="${comment.photoURL}" class="comment-avatar" onerror="this.style.display='none'"></a>` :
+                    `<a href="profile.html?uid=${comment.uid}"><div style="width:36px;height:36px;border-radius:50%;background:var(--border-primary);display:flex;align-items:center;justify-content:center;color:var(--color-accent);font-size:16px;cursor:pointer;">👤</div></a>`;
+
+                const repliesHtml = comment.replies.map(reply => renderCommentTree(reply, depth + 1)).join('');
+
+                return `
+                    <div class="comment-item" style="margin-left: ${depth * 20}px; ${depth > 0 ? 'border-left-color: var(--color-accent2);' : ''}">
+                        <div class="comment-header">
+                            <div class="comment-user">
+                                ${avatarHtml}
+                                <a href="profile.html?uid=${comment.uid}" class="comment-name" style="${nameStyle}">${nameHtml}</a>
+                                <span class="comment-rating">${'⭐'.repeat(Math.min(comment.rating || 5, 5))}</span>
+                            </div>
+                            ${isOwner ? `<button class="comment-delete" onclick="handleDeleteComment('${comment.id}')">🗑️</button>` : ''}
+                        </div>
+                        <div class="comment-text">${textHtml}</div>
+                        <div style="display:flex;gap:12px;margin-top:6px;align-items:center;flex-wrap:wrap;">
+                            <button class="action-btn action-btn-sm outline" onclick="handleLike('${comment.id}')" style="${liked ? 'background:var(--color-accent);color:#fff;' : ''}">
+                                👍 ${likeCount > 0 ? likeCount : ''}
+                            </button>
+                            <button class="action-btn action-btn-sm outline" onclick="handleDislike('${comment.id}')" style="${disliked ? 'background:var(--color-danger);color:#fff;' : ''}">
+                                👎 ${dislikeCount > 0 ? dislikeCount : ''}
+                            </button>
+                            <button class="action-btn action-btn-sm outline" onclick="openReplyForm('${comment.id}', '${displayName}')">💬 Ответить</button>
+                        </div>
+                        <div class="comment-time">${comment.time ? new Date(comment.time.seconds * 1000).toLocaleString() : 'Только что'}</div>
+                        ${repliesHtml}
                     </div>
-                    ${isOwner ? `<button class="comment-delete" onclick="handleDeleteComment('${comment.id}')">🗑️</button>` : ''}
-                </div>
-                <div class="comment-text">${textHtml}</div>
-                <div style="display:flex;gap:12px;margin-top:6px;align-items:center;flex-wrap:wrap;">
-                    <button class="action-btn action-btn-sm outline" onclick="handleLike('${comment.id}')" style="${liked ? 'background:var(--color-accent);color:#fff;' : ''}">
-                        👍 ${likeCount > 0 ? likeCount : ''}
-                    </button>
-                    <button class="action-btn action-btn-sm outline" onclick="handleDislike('${comment.id}')" style="${disliked ? 'background:var(--color-danger);color:#fff;' : ''}">
-                        👎 ${dislikeCount > 0 ? dislikeCount : ''}
-                    </button>
-                    <button class="action-btn action-btn-sm outline" onclick="openReplyForm('${comment.id}', '${displayName}')">💬 Ответить</button>
-                </div>
-                <div class="comment-time">${comment.time ? new Date(comment.time.seconds * 1000).toLocaleString() : 'Только что'}</div>
-                ${repliesHtml}
-            </div>
-        `;
-    }
+                `;
+            }
 
-    container.innerHTML = rootComments.map(c => renderCommentTree(c)).join('');
-}
+            container.innerHTML = rootComments.map(c => renderCommentTree(c)).join('');
+        }
 
         async function loadComments() {
             const container = document.getElementById('comments-list');
@@ -1836,43 +1823,43 @@ window.submitReply = async function() {
         };
 
         function renderCommentForm() {
-    const container = document.getElementById('comments-container');
-    if (!container) return;
-    const user = getCurrentUser();
-    if (user) {
-        container.innerHTML = `
-            <h2 style="color:var(--color-accent);margin-top:24px;">💬 Комментарии</h2>
-            <div class="comment-form">
-                <div style="position:relative;width:100%;">
-                    <textarea id="commentText" placeholder="Напишите ваш комментарий... (используйте @имя или @email для отметки)" oninput="findUsers(this)" onblur="setTimeout(hideSuggestions, 300)"></textarea>
-                </div>
-                <div class="form-actions">
-                    <select id="commentRating"><option value="5">⭐⭐⭐⭐⭐</option><option value="4">⭐⭐⭐⭐</option><option value="3">⭐⭐⭐</option><option value="2">⭐⭐</option><option value="1">⭐</option></select>
-                    <button onclick="handleAddComment()">📤 Отправить</button>
-                </div>
-                <div class="hint">💡 Используйте <strong style="color:var(--color-accent);">@имя</strong> или <strong style="color:var(--color-accent);">@email</strong> чтобы отметить пользователя</div>
-            </div>
+            const container = document.getElementById('comments-container');
+            if (!container) return;
+            const user = getCurrentUser();
+            if (user) {
+                container.innerHTML = `
+                    <h2 style="color:var(--color-accent);margin-top:24px;">💬 Комментарии</h2>
+                    <div class="comment-form">
+                        <div style="position:relative;width:100%;">
+                            <textarea id="commentText" placeholder="Напишите ваш комментарий... (используйте @имя или @email для отметки)" oninput="findUsers(this)" onblur="setTimeout(hideSuggestions, 300)"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <select id="commentRating"><option value="5">⭐⭐⭐⭐⭐</option><option value="4">⭐⭐⭐⭐</option><option value="3">⭐⭐⭐</option><option value="2">⭐⭐</option><option value="1">⭐</option></select>
+                            <button onclick="handleAddComment()">📤 Отправить</button>
+                        </div>
+                        <div class="hint">💡 Используйте <strong style="color:var(--color-accent);">@имя</strong> или <strong style="color:var(--color-accent);">@email</strong> чтобы отметить пользователя</div>
+                    </div>
 
-            <div id="replyForm" style="display:none;margin:10px 0;padding:12px;background:var(--bg-input);border-radius:8px;border-left:4px solid var(--color-accent2);">
-                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-                    <textarea id="replyText" placeholder="Ваш ответ..." style="flex:1;min-width:200px;padding:8px 12px;border-radius:6px;border:1px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);font-size:14px;resize:vertical;min-height:50px;font-family:inherit;"></textarea>
-                    <input type="hidden" id="replyParentId" value="">
-                    <button class="action-btn primary" onclick="submitReply()">📤 Ответить</button>
-                    <button class="action-btn outline" onclick="closeReplyForm()">Отмена</button>
-                </div>
-            </div>
+                    <div id="replyForm" style="display:none;margin:10px 0;padding:12px;background:var(--bg-input);border-radius:8px;border-left:4px solid var(--color-accent2);">
+                        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                            <textarea id="replyText" placeholder="Ваш ответ..." style="flex:1;min-width:200px;padding:8px 12px;border-radius:6px;border:1px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);font-size:14px;resize:vertical;min-height:50px;font-family:inherit;"></textarea>
+                            <input type="hidden" id="replyParentId" value="">
+                            <button class="action-btn primary" onclick="submitReply()">📤 Ответить</button>
+                            <button class="action-btn outline" onclick="closeReplyForm()">Отмена</button>
+                        </div>
+                    </div>
 
-            <div id="comments-list"></div>
-        `;
-    } else {
-        container.innerHTML = `
-            <h2 style="color:var(--color-accent);margin-top:24px;">💬 Комментарии</h2>
-            <div class="auth-prompt"><a href="login.html">Войдите</a>, чтобы оставить комментарий</div>
-            <div id="comments-list"></div>
-        `;
-    }
-    loadComments();
-}
+                    <div id="comments-list"></div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <h2 style="color:var(--color-accent);margin-top:24px;">💬 Комментарии</h2>
+                    <div class="auth-prompt"><a href="login.html">Войдите</a>, чтобы оставить комментарий</div>
+                    <div id="comments-list"></div>
+                `;
+            }
+            loadComments();
+        }
 
         async function updateAverageRating() {
             const container = document.getElementById('avgRatingContainer');
@@ -1919,124 +1906,124 @@ window.submitReply = async function() {
         }
 
         function renderEpisodeEditor(episodes) {
-    const container = document.getElementById('episodesEditor');
-    if (!episodes || episodes.length === 0) {
-        container.innerHTML = `<div class="episodes-empty">📭 Список серий пуст. Нажмите "➕ Добавить серию"</div>`;
-        return;
-    }
-    container.innerHTML = episodes.map((ep, index) => `
-        <div class="episode-edit-item" style="flex-direction:column; align-items:stretch; gap:6px; padding:12px; border:1px solid var(--border-primary); border-radius:8px; margin-bottom:10px;">
-            
-            <!-- Строка 1: Номер, Название, Ссылка, Сезон -->
-            <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end; width:100%;">
-                <div style="display:flex; flex-direction:column; min-width:50px; flex:0 0 auto;">
-                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">№</label>
-                    <input type="number" class="ep-number" value="${ep.number}" placeholder="№" data-index="${index}" data-field="number" min="1" style="width:100%;">
+            const container = document.getElementById('episodesEditor');
+            if (!episodes || episodes.length === 0) {
+                container.innerHTML = `<div class="episodes-empty">📭 Список серий пуст. Нажмите "➕ Добавить серию"</div>`;
+                return;
+            }
+            container.innerHTML = episodes.map((ep, index) => `
+                <div class="episode-edit-item" style="flex-direction:column; align-items:stretch; gap:6px; padding:12px; border:1px solid var(--border-primary); border-radius:8px; margin-bottom:10px;">
+                    
+                    <!-- Строка 1: Номер, Название, Ссылка, Сезон -->
+                    <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end; width:100%;">
+                        <div style="display:flex; flex-direction:column; min-width:50px; flex:0 0 auto;">
+                            <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">№</label>
+                            <input type="number" class="ep-number" value="${ep.number}" placeholder="№" data-index="${index}" data-field="number" min="1" style="width:100%;">
+                        </div>
+                        <div style="display:flex; flex-direction:column; flex:2; min-width:120px;">
+                            <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Название</label>
+                            <input type="text" class="ep-title" value="${ep.title || ''}" placeholder="Название серии" data-index="${index}" data-field="title" style="width:100%;">
+                        </div>
+                        <div style="display:flex; flex-direction:column; flex:3; min-width:150px;">
+                            <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Ссылка</label>
+                            <input type="text" class="ep-url" value="${ep.url || ''}" placeholder="Ссылка на Dropbox" data-index="${index}" data-field="url" style="width:100%;">
+                        </div>
+                        <div style="display:flex; flex-direction:column; min-width:60px; flex:0 0 auto;">
+                            <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Сезон</label>
+                            <input type="number" class="ep-season" value="${ep.season || 1}" placeholder="Сезон" data-index="${index}" data-field="season" min="1" style="width:100%;">
+                        </div>
+                    </div>
+                    
+                    <!-- Строка 2: Тайм-коды -->
+                    <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end; width:100%;">
+                        <div style="display:flex; flex-direction:column; min-width:80px; flex:1;">
+                            <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Опенинг (start)</label>
+                            <input type="text" class="ep-opening-start" value="${ep.openingStart || ''}" placeholder="00:00" data-index="${index}" data-field="openingStart" style="width:100%;">
+                        </div>
+                        <div style="display:flex; flex-direction:column; min-width:80px; flex:1;">
+                            <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Опенинг (end)</label>
+                            <input type="text" class="ep-opening-end" value="${ep.openingEnd || ''}" placeholder="00:00" data-index="${index}" data-field="openingEnd" style="width:100%;">
+                        </div>
+                        <div style="display:flex; flex-direction:column; min-width:80px; flex:1;">
+                            <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Эндинг (start)</label>
+                            <input type="text" class="ep-ending-start" value="${ep.endingStart || ''}" placeholder="00:00" data-index="${index}" data-field="endingStart" style="width:100%;">
+                        </div>
+                        <div style="display:flex; flex-direction:column; min-width:80px; flex:1;">
+                            <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Эндинг (end)</label>
+                            <input type="text" class="ep-ending-end" value="${ep.endingEnd || ''}" placeholder="00:00" data-index="${index}" data-field="endingEnd" style="width:100%;">
+                        </div>
+                    </div>
+                    
+                    <!-- Строка 3: Статус, Трейлер, Удалить -->
+                    <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; width:100%; margin-top:4px;">
+                        <div style="display:flex; flex-direction:column; min-width:120px;">
+                            <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Статус</label>
+                            <select class="ep-status" data-index="${index}" data-field="status" style="width:100%;">
+                                <option value="Озвучено" ${ep.status === 'Озвучено' ? 'selected' : ''}>✅ Озвучено</option>
+                                <option value="Скоро" ${ep.status === 'Скоро' ? 'selected' : ''}>⏳ Скоро</option>
+                                <option value="В работе" ${ep.status === 'В работе' ? 'selected' : ''}>🔧 В работе</option>
+                            </select>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:6px; margin-left:auto;">
+                            <label style="font-size:13px; font-weight:bold; color:var(--text-muted); cursor:pointer; display:flex; align-items:center; gap:4px;">
+                                <input type="checkbox" class="ep-trailer" data-index="${index}" ${ep.isTrailer ? 'checked' : ''}>
+                                🎬 Трейлер
+                            </label>
+                        </div>
+                        <button class="remove-ep-btn" onclick="removeEpisode(${index})" title="Удалить серию" style="margin-left:8px;">✕</button>
+                    </div>
+                    
                 </div>
-                <div style="display:flex; flex-direction:column; flex:2; min-width:120px;">
-                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Название</label>
-                    <input type="text" class="ep-title" value="${ep.title || ''}" placeholder="Название серии" data-index="${index}" data-field="title" style="width:100%;">
-                </div>
-                <div style="display:flex; flex-direction:column; flex:3; min-width:150px;">
-                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Ссылка</label>
-                    <input type="text" class="ep-url" value="${ep.url || ''}" placeholder="Ссылка на Dropbox" data-index="${index}" data-field="url" style="width:100%;">
-                </div>
-                <div style="display:flex; flex-direction:column; min-width:60px; flex:0 0 auto;">
-                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Сезон</label>
-                    <input type="number" class="ep-season" value="${ep.season || 1}" placeholder="Сезон" data-index="${index}" data-field="season" min="1" style="width:100%;">
-                </div>
-            </div>
-            
-            <!-- Строка 2: Тайм-коды -->
-            <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end; width:100%;">
-                <div style="display:flex; flex-direction:column; min-width:80px; flex:1;">
-                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Опенинг (start)</label>
-                    <input type="text" class="ep-opening-start" value="${ep.openingStart || ''}" placeholder="00:00" data-index="${index}" data-field="openingStart" style="width:100%;">
-                </div>
-                <div style="display:flex; flex-direction:column; min-width:80px; flex:1;">
-                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Опенинг (end)</label>
-                    <input type="text" class="ep-opening-end" value="${ep.openingEnd || ''}" placeholder="00:00" data-index="${index}" data-field="openingEnd" style="width:100%;">
-                </div>
-                <div style="display:flex; flex-direction:column; min-width:80px; flex:1;">
-                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Эндинг (start)</label>
-                    <input type="text" class="ep-ending-start" value="${ep.endingStart || ''}" placeholder="00:00" data-index="${index}" data-field="endingStart" style="width:100%;">
-                </div>
-                <div style="display:flex; flex-direction:column; min-width:80px; flex:1;">
-                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Эндинг (end)</label>
-                    <input type="text" class="ep-ending-end" value="${ep.endingEnd || ''}" placeholder="00:00" data-index="${index}" data-field="endingEnd" style="width:100%;">
-                </div>
-            </div>
-            
-            <!-- Строка 3: Статус, Трейлер, Удалить -->
-            <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; width:100%; margin-top:4px;">
-                <div style="display:flex; flex-direction:column; min-width:120px;">
-                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Статус</label>
-                    <select class="ep-status" data-index="${index}" data-field="status" style="width:100%;">
-                        <option value="Озвучено" ${ep.status === 'Озвучено' ? 'selected' : ''}>✅ Озвучено</option>
-                        <option value="Скоро" ${ep.status === 'Скоро' ? 'selected' : ''}>⏳ Скоро</option>
-                        <option value="В работе" ${ep.status === 'В работе' ? 'selected' : ''}>🔧 В работе</option>
-                    </select>
-                </div>
-                <div style="display:flex; align-items:center; gap:6px; margin-left:auto;">
-                    <label style="font-size:13px; font-weight:bold; color:var(--text-muted); cursor:pointer; display:flex; align-items:center; gap:4px;">
-                        <input type="checkbox" class="ep-trailer" data-index="${index}" ${ep.isTrailer ? 'checked' : ''}>
-                        🎬 Трейлер
-                    </label>
-                </div>
-                <button class="remove-ep-btn" onclick="removeEpisode(${index})" title="Удалить серию" style="margin-left:8px;">✕</button>
-            </div>
-            
-        </div>
-    `).join('');
-}
+            `).join('');
+        }
 
         window.removeEpisode = function(index) {
-    const episodes = getEpisodesFromEditor();
-    if (episodes.length <= 1) {
-        if (!confirm('Удалить последнюю серию?')) return;
-    }
-    episodes.splice(index, 1);
-    episodes.forEach((ep, i) => ep.number = i + 1);
-    renderEpisodeEditor(episodes);
-};
+            const episodes = getEpisodesFromEditor();
+            if (episodes.length <= 1) {
+                if (!confirm('Удалить последнюю серию?')) return;
+            }
+            episodes.splice(index, 1);
+            episodes.forEach((ep, i) => ep.number = i + 1);
+            renderEpisodeEditor(episodes);
+        };
 
-window.addEpisode = function() {
-    const episodes = getEpisodesFromEditor();
-    episodes.push({
-        number: episodes.length + 1,
-        title: '',
-        url: '',
-        season: 1,
-        openingStart: '',
-        openingEnd: '',
-        endingStart: '',
-        endingEnd: '',
-        status: 'Скоро',
-        isTrailer: false
-    });
-    renderEpisodeEditor(episodes);
-};
+        window.addEpisode = function() {
+            const episodes = getEpisodesFromEditor();
+            episodes.push({
+                number: episodes.length + 1,
+                title: '',
+                url: '',
+                season: 1,
+                openingStart: '',
+                openingEnd: '',
+                endingStart: '',
+                endingEnd: '',
+                status: 'Скоро',
+                isTrailer: false
+            });
+            renderEpisodeEditor(episodes);
+        };
 
-function getEpisodesFromEditor() {
-    const container = document.getElementById('episodesEditor');
-    const items = container.querySelectorAll('.episode-edit-item');
-    const episodes = [];
-    items.forEach(el => {
-        episodes.push({
-            number: parseInt(el.querySelector('[data-field="number"]').value) || 0,
-            title: el.querySelector('[data-field="title"]').value || '',
-            url: el.querySelector('[data-field="url"]').value || '',
-            season: parseInt(el.querySelector('[data-field="season"]').value) || 1,
-            openingStart: el.querySelector('[data-field="openingStart"]').value || '',
-            openingEnd: el.querySelector('[data-field="openingEnd"]').value || '',
-            endingStart: el.querySelector('[data-field="endingStart"]').value || '',
-            endingEnd: el.querySelector('[data-field="endingEnd"]').value || '',
-            status: el.querySelector('[data-field="status"]').value || 'Скоро',
-            isTrailer: el.querySelector('[data-field="isTrailer"]')?.checked || false
-        });
-    });
-    return episodes;
-}
+        function getEpisodesFromEditor() {
+            const container = document.getElementById('episodesEditor');
+            const items = container.querySelectorAll('.episode-edit-item');
+            const episodes = [];
+            items.forEach(el => {
+                episodes.push({
+                    number: parseInt(el.querySelector('[data-field="number"]').value) || 0,
+                    title: el.querySelector('[data-field="title"]').value || '',
+                    url: el.querySelector('[data-field="url"]').value || '',
+                    season: parseInt(el.querySelector('[data-field="season"]').value) || 1,
+                    openingStart: el.querySelector('[data-field="openingStart"]').value || '',
+                    openingEnd: el.querySelector('[data-field="openingEnd"]').value || '',
+                    endingStart: el.querySelector('[data-field="endingStart"]').value || '',
+                    endingEnd: el.querySelector('[data-field="endingEnd"]').value || '',
+                    status: el.querySelector('[data-field="status"]').value || 'Скоро',
+                    isTrailer: el.querySelector('[data-field="isTrailer"]')?.checked || false
+                });
+            });
+            return episodes;
+        }
 
         function setupEpisodesAutoSave() {
             const container = document.getElementById('episodesEditor');
@@ -2100,12 +2087,12 @@ function getEpisodesFromEditor() {
         window.currentQuality = 'auto';
 
         window.parseTimecode = function(tc) {
-    if (!tc) return 0;
-    const parts = tc.split(':').map(Number);
-    if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
-    if (parts.length === 2) return parts[0] * 60 + parts[1];
-    return parseInt(tc) || 0;
-};
+            if (!tc) return 0;
+            const parts = tc.split(':').map(Number);
+            if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+            if (parts.length === 2) return parts[0] * 60 + parts[1];
+            return parseInt(tc) || 0;
+        };
 
         window.skipOpening = function() {
             const video = document.getElementById('playerVideo');
@@ -2117,13 +2104,13 @@ function getEpisodesFromEditor() {
         };
 
         window.skipEnding = function() {
-    const video = document.getElementById('playerVideo');
-    if (!video) return;
-    const ep = window.currentEpisodeData;
-    if (!ep || !ep.endingEnd) return;
-    video.currentTime = parseTimecode(ep.endingEnd);
-    document.getElementById('skipEndingBtn').classList.remove('visible');
-};
+            const video = document.getElementById('playerVideo');
+            if (!video) return;
+            const ep = window.currentEpisodeData;
+            if (!ep || !ep.endingEnd) return;
+            video.currentTime = parseTimecode(ep.endingEnd);
+            document.getElementById('skipEndingBtn').classList.remove('visible');
+        };
 
         window.changeQuality = function() {
             const select = document.getElementById('qualitySelect');
@@ -2145,7 +2132,7 @@ function getEpisodesFromEditor() {
                 container.innerHTML = `<div class="video-placeholder">🎬 Серия ещё не доступна</div>`;
                 return;
             }
-                        container.innerHTML = `
+            container.innerHTML = `
                 <video id="playerVideo" controls width="100%" height="100%" style="background:#000;">
                     <source src="${url}" type="video/mp4">
                     Ваш браузер не поддерживает видео.
@@ -2252,7 +2239,7 @@ function getEpisodesFromEditor() {
 
         async function loadTitle() {
             await loadAllVoices();
-await loadAllRoles();
+            await loadAllRoles();
             const content = document.getElementById('title-content');
             content.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
             await loadAllUsers();
@@ -2514,6 +2501,31 @@ await loadAllRoles();
             setTimeout(setupEpisodesAutoSave, 100);
         }
 
+        // ===== ЕДИНАЯ ФУНКЦИЯ CHECKADMIN =====
+        async function checkAdmin(user) {
+            if (user) {
+                const role = await getUserRole(user.uid);
+                isAdmin = role === 'admin';
+                
+                // Админ-панель
+                document.getElementById('adminPanel').style.display = isAdmin ? 'flex' : 'none';
+                
+                // Кнопка "Добавить персонажа"
+                const addCharContainer = document.getElementById('addCharacterContainer');
+                if (addCharContainer) {
+                    addCharContainer.style.display = isAdmin ? 'block' : 'none';
+                }
+            } else {
+                isAdmin = false;
+                document.getElementById('adminPanel').style.display = 'none';
+                
+                const addCharContainer = document.getElementById('addCharacterContainer');
+                if (addCharContainer) {
+                    addCharContainer.style.display = 'none';
+                }
+            }
+        }
+
         // ===== ПОДПИСКА НА АВТОРИЗАЦИЮ =====
         onAuthStateChangedListener(async (user) => {
             currentUser = user;
@@ -2521,12 +2533,7 @@ await loadAllRoles();
             await updateDubInLink(user);
             await updateAdminLinks(user);
             await updateSidebarBalance(user);
-            if (user) {
-                const role = await getUserRole(user.uid);
-                isAdmin = role === 'admin';
-            } else {
-                isAdmin = false;
-            }
+            await checkAdmin(user);
             await loadTitle();
         });
 
@@ -2538,10 +2545,7 @@ await loadAllRoles();
             await updateDubInLink(user);
             await updateAdminLinks(user);
             await updateSidebarBalance(user);
-            if (user) {
-                const role = await getUserRole(user.uid);
-                isAdmin = role === 'admin';
-            }
+            await checkAdmin(user);
             await loadTitle();
         });
 
