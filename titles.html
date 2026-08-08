@@ -1334,7 +1334,7 @@
             if (amountInput) amountInput.addEventListener('input', updateDSCoinPrice);
         });
 
-                function renderEpisodesEditor(episodes) {
+                        function renderEpisodesEditor(episodes) {
             const container = document.getElementById('episodesEditor');
             if (!episodes || episodes.length === 0) {
                 container.innerHTML =
@@ -1342,62 +1342,67 @@
                 return;
             }
             container.innerHTML = episodes.map((ep, index) => `
-                        <div class="episode-edit-item" style="flex-direction:column; align-items:stretch; gap:4px;">
-                            <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center; width:100%;">
-                                <div style="display:flex; flex-direction:column; min-width:50px;">
-                                    <label style="font-size:10px; color:var(--text-muted); margin-bottom:2px;">№ серии</label>
-                                    <input type="number" class="ep-number" value="${ep.number}" placeholder="№" data-index="${index}" data-field="number" min="1">
+                        <div class="episode-edit-item" style="flex-direction:column; align-items:stretch; gap:6px; padding:12px; border:1px solid var(--border-primary); border-radius:8px; margin-bottom:10px;">
+                            
+                            <!-- Строка 1: Номер, Название, Ссылка, Сезон -->
+                            <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end; width:100%;">
+                                <div style="display:flex; flex-direction:column; min-width:50px; flex:0 0 auto;">
+                                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">№</label>
+                                    <input type="number" class="ep-number" value="${ep.number}" placeholder="№" data-index="${index}" data-field="number" min="1" style="width:100%;">
                                 </div>
-                                <div style="display:flex; flex-direction:column; flex:2; min-width:100px;">
-                                    <label style="font-size:10px; color:var(--text-muted); margin-bottom:2px;">Название</label>
-                                    <input type="text" class="ep-title" value="${ep.title || ''}" placeholder="Название серии" data-index="${index}" data-field="title">
+                                <div style="display:flex; flex-direction:column; flex:2; min-width:120px;">
+                                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Название</label>
+                                    <input type="text" class="ep-title" value="${ep.title || ''}" placeholder="Название серии" data-index="${index}" data-field="title" style="width:100%;">
                                 </div>
-                                <div style="display:flex; flex-direction:column; flex:3; min-width:120px;">
-                                    <label style="font-size:10px; color:var(--text-muted); margin-bottom:2px;">Ссылка на видео</label>
-                                    <input type="text" class="ep-url" value="${ep.url || ''}" placeholder="Ссылка на Dropbox" data-index="${index}" data-field="url">
+                                <div style="display:flex; flex-direction:column; flex:3; min-width:150px;">
+                                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Ссылка</label>
+                                    <input type="text" class="ep-url" value="${ep.url || ''}" placeholder="Ссылка на Dropbox" data-index="${index}" data-field="url" style="width:100%;">
                                 </div>
-                                <div style="display:flex; flex-direction:column; min-width:50px;">
-                                    <label style="font-size:10px; color:var(--text-muted); margin-bottom:2px;">Сезон</label>
-                                    <input type="number" class="ep-season" value="${ep.season || 1}" placeholder="Сезон" data-index="${index}" data-field="season" min="1">
+                                <div style="display:flex; flex-direction:column; min-width:60px; flex:0 0 auto;">
+                                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Сезон</label>
+                                    <input type="number" class="ep-season" value="${ep.season || 1}" placeholder="Сезон" data-index="${index}" data-field="season" min="1" style="width:100%;">
                                 </div>
                             </div>
                             
-                            <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center; width:100%;">
-                                <div style="display:flex; flex-direction:column; min-width:70px;">
-                                    <label style="font-size:10px; color:var(--text-muted); margin-bottom:2px;">Опенинг (start)</label>
-                                    <input type="text" class="ep-opening-start" value="${ep.openingStart || ''}" placeholder="00:00" data-index="${index}" data-field="openingStart">
+                            <!-- Строка 2: Тайм-коды -->
+                            <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end; width:100%;">
+                                <div style="display:flex; flex-direction:column; min-width:80px; flex:1;">
+                                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Опенинг (start)</label>
+                                    <input type="text" class="ep-opening-start" value="${ep.openingStart || ''}" placeholder="00:00" data-index="${index}" data-field="openingStart" style="width:100%;">
                                 </div>
-                                <div style="display:flex; flex-direction:column; min-width:70px;">
-                                    <label style="font-size:10px; color:var(--text-muted); margin-bottom:2px;">Опенинг (end)</label>
-                                    <input type="text" class="ep-opening-end" value="${ep.openingEnd || ''}" placeholder="00:00" data-index="${index}" data-field="openingEnd">
+                                <div style="display:flex; flex-direction:column; min-width:80px; flex:1;">
+                                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Опенинг (end)</label>
+                                    <input type="text" class="ep-opening-end" value="${ep.openingEnd || ''}" placeholder="00:00" data-index="${index}" data-field="openingEnd" style="width:100%;">
                                 </div>
-                                <div style="display:flex; flex-direction:column; min-width:70px;">
-                                    <label style="font-size:10px; color:var(--text-muted); margin-bottom:2px;">Эндинг (start)</label>
-                                    <input type="text" class="ep-ending-start" value="${ep.endingStart || ''}" placeholder="00:00" data-index="${index}" data-field="endingStart">
+                                <div style="display:flex; flex-direction:column; min-width:80px; flex:1;">
+                                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Эндинг (start)</label>
+                                    <input type="text" class="ep-ending-start" value="${ep.endingStart || ''}" placeholder="00:00" data-index="${index}" data-field="endingStart" style="width:100%;">
                                 </div>
-                                <div style="display:flex; flex-direction:column; min-width:70px;">
-                                    <label style="font-size:10px; color:var(--text-muted); margin-bottom:2px;">Эндинг (end)</label>
-                                    <input type="text" class="ep-ending-end" value="${ep.endingEnd || ''}" placeholder="00:00" data-index="${index}" data-field="endingEnd">
+                                <div style="display:flex; flex-direction:column; min-width:80px; flex:1;">
+                                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Эндинг (end)</label>
+                                    <input type="text" class="ep-ending-end" value="${ep.endingEnd || ''}" placeholder="00:00" data-index="${index}" data-field="endingEnd" style="width:100%;">
                                 </div>
                             </div>
                             
-                            <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center; width:100%;">
-                                <div style="display:flex; flex-direction:column; min-width:100px;">
-                                    <label style="font-size:10px; color:var(--text-muted); margin-bottom:2px;">Статус</label>
-                                    <select class="ep-status" data-index="${index}" data-field="status">
+                            <!-- Строка 3: Статус, Трейлер, Удалить -->
+                            <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; width:100%; margin-top:4px;">
+                                <div style="display:flex; flex-direction:column; min-width:120px;">
+                                    <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Статус</label>
+                                    <select class="ep-status" data-index="${index}" data-field="status" style="width:100%;">
                                         <option value="Озвучено" ${ep.status === 'Озвучено' ? 'selected' : ''}>✅ Озвучено</option>
                                         <option value="Скоро" ${ep.status === 'Скоро' ? 'selected' : ''}>⏳ Скоро</option>
                                         <option value="В работе" ${ep.status === 'В работе' ? 'selected' : ''}>🔧 В работе</option>
                                     </select>
                                 </div>
-                                <div style="display:flex; align-items:center; gap:6px;">
-                                    <label style="font-size:12px; color:var(--text-muted); cursor:pointer; display:flex; align-items:center; gap:4px;">
+                                <div style="display:flex; align-items:center; gap:6px; margin-left:auto;">
+                                    <label style="font-size:13px; font-weight:bold; color:var(--text-muted); cursor:pointer; display:flex; align-items:center; gap:4px;">
                                         <input type="checkbox" class="ep-trailer" data-index="${index}" ${ep.isTrailer ? 'checked' : ''}>
                                         🎬 Трейлер
                                     </label>
                                 </div>
-                                <button class="remove-ep-btn" onclick="removeEpisode(${index})" title="Удалить серию" style="margin-left:auto;">✕</button>
+                                <button class="remove-ep-btn" onclick="removeEpisode(${index})" title="Удалить серию" style="margin-left:8px;">✕</button>
                             </div>
+                            
                         </div>
                     `).join('');
         }
@@ -1412,7 +1417,7 @@
             renderEpisodesEditor(episodes);
         };
 
-        window.addEpisode = function() {
+                window.addEpisode = function() {
             const episodes = getEpisodesFromEditor();
             episodes.push({
                 number: episodes.length + 1,
@@ -1424,7 +1429,7 @@
                 endingStart: '',
                 endingEnd: '',
                 status: 'Скоро',
-                isTrailer: false
+                isTrailer: false  // <--- ВАЖНО: добавьте это
             });
             renderEpisodesEditor(episodes);
         };
