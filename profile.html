@@ -662,6 +662,37 @@
         window.transferCoins = transferCoins;
         window.equipStatus = equipStatus;
 
+        // ========== МОДАЛКА ПРОМОКОДА ==========
+        window.activatePromoCode = async function() {
+            const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
+            if (!code) {
+                showToast('❌ Введите промокод', 'error');
+                return;
+            }
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('❌ Необходимо авторизоваться', 'error');
+                return;
+            }
+            const result = await activatePromoCode(user.uid, code);
+            if (result.success) {
+                showToast(`✅ Промокод активирован! Получено ${result.gems} Dream Gems`, 'success');
+                closeModal('m-promo-code');
+                document.getElementById('promoCodeInput').value = '';
+                const balanceResult = await getUserDSCoins(user.uid);
+                if (balanceResult.success) {
+                    document.getElementById('sidebarBalance').textContent = balanceResult.coins;
+                }
+            } else {
+                showToast('❌ ' + result.error, 'error');
+            }
+        };
+
+        window.openPromoModal = function() {
+            closeSidebar();
+            openModal('m-promo-code');
+        };
+
         let currentUser = null;
         let currentUserData = null;
         let viewedUserData = null;
@@ -671,6 +702,7 @@
         let allPlaylists = [];
         let colorPrice = 500;
         let prefixPrice = 300;
+        let statusPrice = 1000;
 
         const urlParams = new URLSearchParams(window.location.search);
         const viewedId = urlParams.get('uid');

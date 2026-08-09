@@ -73,7 +73,7 @@
             -moz-box-shadow: none !important;
         }
 
-        /* ===== СТИЛИ ТЕКСТА (ВЕСЬ СИНИЙ) ===== */
+        /* ===== ВЕСЬ ТЕКСТ ГОЛУБОЙ ===== */
         .privacy-content {
             max-width: 900px;
             margin: 0 auto;
@@ -94,15 +94,15 @@
         .privacy-content b,
         .privacy-content em,
         .privacy-content i {
-            color: var(--color-accent) !important;
+            color: #87CEEB !important; /* Голубой (Sky Blue) */
         }
         .privacy-content a {
-            color: var(--color-accent2) !important;
+            color: #5bc0eb !important; /* Чуть ярче для ссылок */
             text-decoration: none;
             transition: color 0.3s;
         }
         .privacy-content a:hover {
-            color: var(--color-accent2);
+            color: #5bc0eb;
             text-decoration: underline;
         }
         
@@ -479,6 +479,36 @@
         window.getUserByEmail = getUserByEmail;
         window.addDSCoins = addDSCoins;
         window.createDSCoinOrder = createDSCoinOrder;
+        // ========== МОДАЛКА ПРОМОКОДА ==========
+        window.activatePromoCode = async function() {
+            const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
+            if (!code) {
+                showToast('❌ Введите промокод', 'error');
+                return;
+            }
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('❌ Необходимо авторизоваться', 'error');
+                return;
+            }
+            const result = await activatePromoCode(user.uid, code);
+            if (result.success) {
+                showToast(`✅ Промокод активирован! Получено ${result.gems} Dream Gems`, 'success');
+                closeModal('m-promo-code');
+                document.getElementById('promoCodeInput').value = '';
+                const balanceResult = await getUserDSCoins(user.uid);
+                if (balanceResult.success) {
+                    document.getElementById('sidebarBalance').textContent = balanceResult.coins;
+                }
+            } else {
+                showToast('❌ ' + result.error, 'error');
+            }
+        };
+
+        window.openPromoModal = function() {
+            closeSidebar();
+            openModal('m-promo-code');
+        };
 
         window.submitDSCoinOrder = async function() {
             const email = document.getElementById('dscoin-order-email').value.trim();

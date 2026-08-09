@@ -746,6 +746,37 @@
         window.setDSCoinAmount = setDSCoinAmount;
         window.updateDSCoinPrice = updateDSCoinPrice;
 
+        // ========== МОДАЛКА ПРОМОКОДА ==========
+        window.activatePromoCode = async function() {
+            const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
+            if (!code) {
+                showToast('❌ Введите промокод', 'error');
+                return;
+            }
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('❌ Необходимо авторизоваться', 'error');
+                return;
+            }
+            const result = await activatePromoCode(user.uid, code);
+            if (result.success) {
+                showToast(`✅ Промокод активирован! Получено ${result.gems} Dream Gems`, 'success');
+                closeModal('m-promo-code');
+                document.getElementById('promoCodeInput').value = '';
+                const balanceResult = await getUserDSCoins(user.uid);
+                if (balanceResult.success) {
+                    document.getElementById('sidebarBalance').textContent = balanceResult.coins;
+                }
+            } else {
+                showToast('❌ ' + result.error, 'error');
+            }
+        };
+
+        window.openPromoModal = function() {
+            closeSidebar();
+            openModal('m-promo-code');
+        };
+
         window.submitDSCoinOrder = async function() {
             const email = document.getElementById('dscoin-order-email').value.trim();
             const amount = parseInt(document.getElementById('dscoin-order-amount').value);
