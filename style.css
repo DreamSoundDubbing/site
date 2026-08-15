@@ -82,6 +82,8 @@
     --color-warning: #ffaa00;
     --color-coin: #fbbf24;
 
+    --text-titlle-meta: #ffffff;
+
     /* ФОН САЙДБАРА (ТЕМНАЯ ТЕМА) */
     --sidebar-bg-image: url('https://s1.radikal.cloud/2026/06/29/Max_a_SKIN_TOLKO_FON_SAIcf6a942366443959.md.png');
     --sidebar-bg-overlay: rgba(0, 0, 0, 0.5);
@@ -157,6 +159,8 @@
     --color-accent: #43a4ff;
     --color-accent2: #46007c;
     --color-accent-light: #aa6aca;
+
+    --text-titlle-meta: #000000;
 
     /* ФОН САЙДБАРА (СВЕТЛАЯ ТЕМА) */
     --sidebar-bg-image: url('https://s2.radikal.cloud/2026/06/29/Max_a_PEREDELAI_V_DNEVNOE_b7375ac1c55771bc.md.png');
