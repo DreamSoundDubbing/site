@@ -1178,13 +1178,28 @@
             }
         }
 
-                async function loadPlaylists() {
+        async function loadPlaylists() {
+            console.log('🟡 loadPlaylists() вызвана');
             const user = getCurrentUser();
-            if (!user) return;
+            if (!user) {
+                console.warn('🔴 Пользователь не авторизован');
+                return;
+            }
+            console.log('🟢 Пользователь:', user.uid);
+
             const result = await getPlaylists(user.uid);
+            console.log('🔵 Результат getPlaylists:', result);
+
             const container = document.getElementById('playlistsContainer');
+            if (!container) {
+                console.error('🔴 Элемент #playlistsContainer не найден');
+                return;
+            }
+
             if (result.success) {
                 allPlaylists = result.playlists;
+                console.log('🟢 Загружено плейлистов:', allPlaylists.length);
+
                 if (allPlaylists.length === 0) {
                     container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">У вас пока нет плейлистов</p>';
                 } else {
@@ -1208,7 +1223,8 @@
                     `;
                 }
             } else {
-                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки плейлистов</p>';
+                console.error('🔴 Ошибка загрузки плейлистов:', result.error);
+                container.innerHTML = `<p style="color:var(--text-muted);font-style:italic;">❌ Ошибка загрузки плейлистов: ${result.error || 'Неизвестная ошибка'}</p>`;
             }
         }
 
