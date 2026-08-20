@@ -1203,24 +1203,24 @@
                 if (allPlaylists.length === 0) {
                     container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">У вас пока нет плейлистов</p>';
                 } else {
-                    container.innerHTML = `
-                        <div class="playlist-grid">
-                            ${allPlaylists.map(p => `
-                                <div class="playlist-card">
-                                    ${p.image ? `<img src="${p.image}" class="cover" onerror="this.style.display='none'">` : `<div class="cover" style="background:var(--bg-welcome);display:flex;align-items:center;justify-content:center;font-size:30px;">📁</div>`}
-                                    <div class="name">${p.name}</div>
-                                    <div class="count">${p.items?.length || 0} релизов</div>
-                                    ${p.pinned ? '<div class="pinned">📌 Закреплён</div>' : ''}
-                                    ${isOwnProfile ? `
-                                        <div style="display:flex;gap:5px;margin-top:8px;justify-content:center;">
-                                            <button class="action-btn action-btn-sm outline" onclick="editPlaylist('${p.id}')">✏️</button>
-                                            <button class="action-btn action-btn-sm danger" onclick="deletePlaylistItem('${p.id}')">🗑️</button>
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
+                                    container.innerHTML = `
+                    <div class="playlist-grid">
+                        ${allPlaylists.map(p => `
+                            <div class="playlist-card" onclick="openPlaylistView('${p.id}')" style="cursor:pointer;">
+                                ${p.image ? `<img src="${p.image}" class="cover" onerror="this.style.display='none'">` : `<div class="cover" style="background:var(--bg-welcome);display:flex;align-items:center;justify-content:center;font-size:30px;">📁</div>`}
+                                <div class="name">${p.name}</div>
+                                <div class="count">${p.items?.length || 0} релизов</div>
+                                ${p.pinned ? '<div class="pinned">📌 Закреплён</div>' : ''}
+                                ${isOwnProfile ? `
+                                    <div style="display:flex;gap:5px;margin-top:8px;justify-content:center;">
+                                        <button class="action-btn action-btn-sm outline" onclick="event.stopPropagation(); editPlaylist('${p.id}')">✏️</button>
+                                        <button class="action-btn action-btn-sm danger" onclick="event.stopPropagation(); deletePlaylistItem('${p.id}')">🗑️</button>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
                 }
             } else {
                 console.error('🔴 Ошибка загрузки плейлистов:', result.error);
@@ -1683,6 +1683,63 @@ window.createPromoCode = async function() {
             }
             await loadProfile();
         });
+                // ===== ОТКРЫТИЕ ПЛЕЙЛИСТА СО СПИСКОМ ТАЙТЛОВ =====
+        window.openPlaylistView = async function(playlistId) {
+            // Находим плейлист по ID
+            const playlist = allPlaylists.find(p => p.id === playlistId);
+            if (!playlist) {
+                showToast('❌ Плейлист не найден', 'error');
+                return;
+            }
+
+            document.getElementById('playlistViewTitle').textContent = `📁 ${playlist.name}`;
+            document.getElementById('playlistViewDesc').textContent = playlist.description || 'Без описания';
+
+            const container = document.getElementById('playlistViewItems');
+            container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">⏳ Загрузка тайтлов...</p>';
+
+            openModal('m-playlist-view');
+
+            // Загружаем тайтлы из плейлиста
+            const items = playlist.items || [];
+            if (items.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">В этом плейлисте пока нет тайтлов</p>';
+                return;
+            }
+
+            // Загружаем все тайтлы из Firebase, чтобы получить их названия и обложки
+            const titlesResult = await getTitles();
+            const allTitles = titlesResult.success ? titlesResult.titles : [];
+
+            let html = '';
+            for (const item of items) {
+                const title = allTitles.find(t => t.id === item.id);
+                if (title) {
+                    const image = title.imageVertical || title.imageHorizontal || title.image || 'https://via.placeholder.com/60x80/d4e8ff/4a90d9?text=?';
+                    html += `
+                        <a href="title.html?id=${title.id}" style="display:flex;align-items:center;gap:15px;padding:12px;background:var(--bg-input);border-radius:10px;margin-bottom:10px;text-decoration:none;color:inherit;transition:all 0.3s;border:1px solid transparent;">
+                            <img src="${image}" style="width:60px;height:80px;object-fit:cover;border-radius:8px;" onerror="this.src='https://via.placeholder.com/60x80/d4e8ff/4a90d9?text=?'">
+                            <div>
+                                <div style="font-weight:bold;color:var(--color-accent);">${title.name}</div>
+                                <div style="font-size:13px;color:var(--text-muted);">${title.type || 'Аниме'} • ${title.year || ''}</div>
+                            </div>
+                        </a>
+                    `;
+                } else {
+                    html += `
+                        <div style="display:flex;align-items:center;gap:15px;padding:12px;background:var(--bg-input);border-radius:10px;margin-bottom:10px;border:1px solid var(--border-primary);">
+                            <div style="width:60px;height:80px;background:var(--bg-welcome);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;">❓</div>
+                            <div>
+                                <div style="font-weight:bold;color:var(--text-muted);">Тайтл не найден</div>
+                                <div style="font-size:13px;color:var(--text-muted);">ID: ${item.id}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            container.innerHTML = html;
+        };
     </script>
 
     <!-- ========== КОНТЕЙНЕР ДЛЯ TOAST-УВЕДОМЛЕНИЙ ========== -->
@@ -1698,6 +1755,19 @@ window.createPromoCode = async function() {
                 <button class="btn-no" id="confirmNo">Отмена</button>
                 <button class="btn-yes" id="confirmYes">Да</button>
             </div>
+        </div>
+    </div>
+
+    <!-- ========== МОДАЛКА ПРОСМОТРА ПЛЕЙЛИСТА ========== -->
+    <div class="modal-overlay" id="m-playlist-view">
+        <div class="modal-content" style="max-width:600px;">
+            <button class="modal-close" onclick="closeModal('m-playlist-view')">✕</button>
+            <h3 id="playlistViewTitle" style="color:var(--color-accent);">📁 Название плейлиста</h3>
+            <div style="color:var(--text-muted);font-size:13px;margin-bottom:10px;" id="playlistViewDesc"></div>
+            <div id="playlistViewItems" style="max-height:400px;overflow-y:auto;">
+                <p style="color:var(--text-muted);font-style:italic;">Загрузка...</p>
+            </div>
+            <button class="action-btn outline" style="width:100%;margin-top:16px;" onclick="closeModal('m-playlist-view')">Закрыть</button>
         </div>
     </div>
 
