@@ -1178,7 +1178,7 @@
             }
         }
 
-        async function loadPlaylists() {
+                async function loadPlaylists() {
             const user = getCurrentUser();
             if (!user) return;
             const result = await getPlaylists(user.uid);
@@ -1207,6 +1207,8 @@
                         </div>
                     `;
                 }
+            } else {
+                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Ошибка загрузки плейлистов</p>';
             }
         }
 
@@ -1588,7 +1590,7 @@ window.createPromoCode = async function() {
     }
 };
 
-        async function loadProfile() {
+                async function loadProfile() {
             const container = document.getElementById('profileContent');
             container.innerHTML = '<div class="loading" style="text-align:center;padding:40px;color:var(--text-muted);">⏳ Загрузка...</div>';
 
@@ -1633,6 +1635,15 @@ window.createPromoCode = async function() {
 
             await renderProfile(user, viewedUserData, isOwnProfile);
             await loadOrders();
+
+            // ===== ЗАГРУЗКА ПЛЕЙЛИСТОВ (ИСПРАВЛЕНО) =====
+            if (isOwnProfile) {
+                document.getElementById('playlistsSection').style.display = 'block';
+                await loadPlaylists();
+            } else {
+                // Для чужого профиля — скрываем секцию или показываем только публичные
+                document.getElementById('playlistsSection').style.display = 'none';
+            }
         }
 
         // ===== ИНИЦИАЛИЗАЦИЯ =====
