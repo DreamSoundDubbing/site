@@ -91,7 +91,7 @@
         .action-btn-sm { padding: 4px 14px; font-size: 12px; }
 
         .dscoin-balance {
-            background: var(--bg-welcome); border-radius: 15px; padding: 20px;
+            background: var(--bg-profile-header); border-radius: 15px; padding: 20px;
             border: 1px solid var(--color-accent); margin: 20px 0;
             display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
         }
@@ -144,7 +144,7 @@
         .user-search-result .user-email { color: var(--text-muted); font-size: 12px; }
         .user-search-result .user-current-role { font-size: 12px; color: var(--text-muted); margin: 0 10px; }
 
-        .playlist-section { margin-top: 30px; }
+        .playlist-section { margin-top: 30px; color: var(--bg-profile-header);}
         .playlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 15px; }
         .playlist-card { background: var(--bg-playlist); border-radius: 12px; padding: 14px; text-align: center; border: 2px solid var(--border-secondary); transition: all 0.3s ease; cursor: pointer; }
         .playlist-card:hover { border-color: var(--color-accent); transform: translateY(-4px); box-shadow: var(--shadow-hover); }
@@ -153,7 +153,7 @@
         .playlist-card .count { color: var(--text-muted); font-size: 12px; }
         .playlist-card .pinned { color: var(--color-accent); font-size: 11px; font-weight: bold; }
 
-        .wall-section { margin-top: 30px; background: var(--bg-content); padding: 20px; border-radius: 15px; border: 1px solid var(--border-primary); }
+        .wall-section { margin-top: 30px; background: var(--bg-profile-header); padding: 20px; border-radius: 15px; border: 1px solid var(--border-primary); }
         .wall-section .wall-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
         .wall-section .wall-header h3 { color: var(--color-accent); margin: 0; }
         .wall-form { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -165,7 +165,7 @@
         .wall-post .user { display: flex; align-items: center; gap: 10px; }
         .wall-post .user .avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
         .wall-post .user .name { font-weight: bold; color: var(--color-accent); }
-        .wall-post .text { color: var(--text-primary); font-size: 15px; line-height: 1.6; }
+        .wall-post .text { color: var(--text-primary); font-size: 15px; line-height: 1.6;  text-shadow: none;}
         .wall-post .time { color: var(--text-muted); font-size: 11px; }
         .wall-post .actions { display: flex; gap: 8px; margin-top: 8px; }
         .wall-post .actions button { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 13px; transition: color 0.3s; }
@@ -538,7 +538,7 @@
         </div>
 
         <!-- ========== МАГАЗИН ========== -->
-        <div id="shopSection" style="display:none;background:var(--bg-content);padding:20px;border-radius:15px;border:1px solid var(--border-primary);margin:20px 0;">
+        <div id="shopSection" style="display:none;background:var(--bg-profile-header);padding:20px;border-radius:15px;border:1px solid var(--border-primary);margin:20px 0;">
             <h3 style="color:var(--color-accent);margin-bottom:15px;"><i class="fas fa-store"></i> Магазин</h3>
             <div class="shop-grid" id="shopGrid">
                 <div class="shop-item">
@@ -572,7 +572,7 @@
                 <button class="action-btn primary" onclick="openPlaylistModal()"><i class="fas fa-plus"></i> Создать</button>
             </div>
             <div id="playlistsContainer">
-                <p style="color:var(--text-muted);font-style:italic;">Загрузка...</p>
+                <p style="color:var(--text-muted);font-style:italic; text-shadow: none;">Загрузка...</p>
             </div>
         </div>
 
@@ -599,7 +599,7 @@
         </div>
 
         <!-- ========== ЗАЯВКИ ========== -->
-        <div id="ordersSection" style="margin-top:30px;background:var(--bg-content);padding:20px;border-radius:15px;border:1px solid var(--border-primary);">
+        <div id="ordersSection" style="margin-top:30px;background:var(--bg-profile-header);padding:20px;border-radius:15px;border:1px solid var(--border-primary);">
             <h3 style="color:var(--color-accent);"><i class="fas fa-clipboard-list"></i> Мои заявки на озвучку</h3>
             <div id="ordersList" style="margin-top:10px;">
                 <p style="color:var(--text-muted);">Загрузка...</p>
@@ -621,7 +621,7 @@
             <a href="privacy.html">Политика</a>
             <a href="feedback.html">Обратная связь</a>
         </div>
-        <p style="color:var(--text-muted);">© 2026 Dream Sound Dubbing. Все права защищены.</p>
+        <p style="color:var(--text-muted); text-shadow: none;">© 2026 Dream Sound Dubbing. Все права защищены.</p>
     </div>
 
     <script type="module">
@@ -1274,7 +1274,7 @@
             if (!user) { container.innerHTML = '<p style="color:var(--text-muted);">Войдите, чтобы увидеть заявки</p>'; return; }
             const result = await getVoiceOrders(user.uid);
             if (!result.success || result.orders.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-muted);">У вас пока нет заявок</p>';
+                container.innerHTML = '<p style="color:var(--text-muted); text-shadow: none;">У вас пока нет заявок</p>';
                 return;
             }
             const statusMap = { 'pending': '⏳ Ожидает оплаты', 'paid': '✅ Оплачено', 'completed': '🎉 Выполнено', 'cancelled': '❌ Отменено' };
