@@ -631,7 +631,7 @@
             isAdmin, getVoiceOrders, getUserDSCoins, addDSCoins, createDSCoinOrder, getDSCoinTransactions,
             getPlaylists, createPlaylist, updatePlaylist, deletePlaylist, getWallPosts, addWallPost,
             deleteWallPost, updateWallVisibility, getShopPrices, purchaseColorNick, purchasePrefix,
-            getUserRole, spendDSCoins, addItemToInventory, transferCoins, equipStatus
+            getUserRole, spendDSCoins, addItemToInventory, transferCoins, equipStatus, getTitles,
         } from './firebase-config.js';
 
         window.getUserDSCoins = getUserDSCoins;
@@ -661,6 +661,7 @@
         window.addItemToInventory = addItemToInventory;
         window.transferCoins = transferCoins;
         window.equipStatus = equipStatus;
+        window.getTitles = getTitles;
 
         // ========== МОДАЛКА ПРОМОКОДА ==========
         window.activatePromoCode = async function() {
@@ -1740,6 +1741,155 @@ window.createPromoCode = async function() {
 
             container.innerHTML = html;
         };
+                // ===== ВРЕМЕННЫЙ СПИСОК ТАЙТЛОВ В ПЛЕЙЛИСТЕ =====
+        let tempPlaylistTitles = [];
+
+        // ===== ЗАГРУЗКА ТАЙТЛОВ ДЛЯ ПОИСКА =====
+        async function loadAllTitlesForSearch() {
+            const result = await getTitles();
+            if (result.success) {
+                window.allTitlesForSearch = result.titles;
+            }
+        }
+
+        // ===== ДОБАВЛЕНИЕ ТАЙТЛА В ПЛЕЙЛИСТ =====
+        window.addTitleToPlaylist = function() {
+            const input = document.getElementById('playlistAddTitleInput');
+            const query = input.value.trim();
+            if (!query) {
+                showToast('Введите название тайтла', 'warning');
+                return;
+            }
+
+            const found = window.allTitlesForSearch?.find(t => 
+                t.name.toLowerCase().includes(query.toLowerCase()) ||
+                (t.nameEn || '').toLowerCase().includes(query.toLowerCase())
+            );
+
+            if (!found) {
+                showToast('❌ Тайтл не найден. Проверьте название.', 'error');
+                return;
+            }
+
+            if (tempPlaylistTitles.some(t => t.id === found.id)) {
+                showToast('⚠️ Тайтл уже в плейлисте', 'warning');
+                return;
+            }
+
+            tempPlaylistTitles.push({
+                id: found.id,
+                name: found.name,
+                image: found.imageVertical || found.imageHorizontal || found.image || ''
+            });
+
+            renderPlaylistTitles();
+            input.value = '';
+        };
+
+        // ===== УДАЛЕНИЕ ТАЙТЛА ИЗ ПЛЕЙЛИСТА =====
+        window.removeTitleFromPlaylist = function(index) {
+            tempPlaylistTitles.splice(index, 1);
+            renderPlaylistTitles();
+        };
+
+        // ===== ОТРИСОВКА СПИСКА ТАЙТЛОВ В МОДАЛКЕ =====
+        function renderPlaylistTitles() {
+            const container = document.getElementById('playlistTitlesContainer');
+            if (tempPlaylistTitles.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;font-size:13px;margin:0;">Пока нет тайтлов</p>';
+                return;
+            }
+
+            container.innerHTML = tempPlaylistTitles.map((t, index) => `
+                <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;background:var(--bg-card);border-radius:6px;margin-bottom:4px;border:1px solid var(--border-primary);">
+                    <img src="${t.image || 'https://via.placeholder.com/40x40/d4e8ff/4a90d9?text=?'}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;" onerror="this.src='https://via.placeholder.com/40x40/d4e8ff/4a90d9?text=?'">
+                    <span style="flex:1;color:var(--text-primary);font-size:14px;">${t.name}</span>
+                    <button class="action-btn danger action-btn-sm" onclick="removeTitleFromPlaylist(${index})" style="padding:2px 10px;">✕</button>
+                </div>
+            `).join('');
+        }
+
+        // ===== ОБНОВЛЕНИЕ МОДАЛКИ СОЗДАНИЯ/РЕДАКТИРОВАНИЯ =====
+        window.openPlaylistModal = function(editData = null) {
+            tempPlaylistTitles = [];
+
+            if (editData) {
+                document.getElementById('playlistModalTitle').textContent = '✏️ Редактировать плейлист';
+                document.getElementById('editPlaylistId').value = editData.id || '';
+                document.getElementById('playlistName').value = editData.name || '';
+                document.getElementById('playlistDesc').value = editData.description || '';
+                document.getElementById('playlistImg').value = editData.image || '';
+                document.getElementById('playlistPinned').checked = editData.pinned || false;
+
+                // Устанавливаем видимость
+                const visibility = editData.visibility || 'public';
+                const radio = document.querySelector(`input[name="playlistVisibility"][value="${visibility}"]`);
+                if (radio) radio.checked = true;
+
+                // Загружаем тайтлы
+                if (editData.items) {
+                    tempPlaylistTitles = editData.items.map(item => ({
+                        id: item.id,
+                        name: item.name || item.title || 'Без названия',
+                        image: item.image || ''
+                    }));
+                }
+            } else {
+                document.getElementById('playlistModalTitle').textContent = '📁 Создать плейлист';
+                document.getElementById('editPlaylistId').value = '';
+                document.getElementById('playlistName').value = '';
+                document.getElementById('playlistDesc').value = '';
+                document.getElementById('playlistImg').value = '';
+                document.getElementById('playlistPinned').checked = false;
+                document.querySelector('input[name="playlistVisibility"][value="public"]').checked = true;
+            }
+
+            renderPlaylistTitles();
+            openModal('m-playlist');
+
+            // Загружаем тайтлы для поиска (если ещё не загружены)
+            if (!window.allTitlesForSearch) {
+                loadAllTitlesForSearch();
+            }
+        };
+
+        // ===== СОХРАНЕНИЕ ПЛЕЙЛИСТА (ОБНОВЛЕННАЯ) =====
+        window.savePlaylist = async function() {
+            const user = getCurrentUser();
+            if (!user) { showToast('Войдите, чтобы создать плейлист', 'warning'); return; }
+
+            const id = document.getElementById('editPlaylistId').value;
+            const name = document.getElementById('playlistName').value.trim();
+            const description = document.getElementById('playlistDesc').value.trim();
+            const image = document.getElementById('playlistImg').value.trim();
+            const pinned = document.getElementById('playlistPinned').checked;
+            const visibility = document.querySelector('input[name="playlistVisibility"]:checked')?.value || 'public';
+
+            if (!name) { showToast('Введите название плейлиста', 'warning'); return; }
+
+            const items = tempPlaylistTitles.map(t => ({
+                id: t.id,
+                name: t.name,
+                image: t.image || ''
+            }));
+
+            const data = { name, description, image, pinned, visibility, items };
+
+            let result;
+            if (id) {
+                result = await updatePlaylist(id, data);
+            } else {
+                result = await createPlaylist(user.uid, data);
+            }
+
+            if (result.success) {
+                showToast('✅ Плейлист сохранён!', 'success');
+                closeModal('m-playlist');
+                await loadPlaylists();
+            } else {
+                showToast('❌ Ошибка: ' + result.error, 'error');
+            }
+        };
     </script>
 
     <!-- ========== КОНТЕЙНЕР ДЛЯ TOAST-УВЕДОМЛЕНИЙ ========== -->
@@ -1758,16 +1908,54 @@ window.createPromoCode = async function() {
         </div>
     </div>
 
-    <!-- ========== МОДАЛКА ПРОСМОТРА ПЛЕЙЛИСТА ========== -->
-    <div class="modal-overlay" id="m-playlist-view">
-        <div class="modal-content" style="max-width:600px;">
-            <button class="modal-close" onclick="closeModal('m-playlist-view')">✕</button>
-            <h3 id="playlistViewTitle" style="color:var(--color-accent);">📁 Название плейлиста</h3>
-            <div style="color:var(--text-muted);font-size:13px;margin-bottom:10px;" id="playlistViewDesc"></div>
-            <div id="playlistViewItems" style="max-height:400px;overflow-y:auto;">
-                <p style="color:var(--text-muted);font-style:italic;">Загрузка...</p>
+        <!-- ========== МОДАЛКА СОЗДАНИЯ/РЕДАКТИРОВАНИЯ ПЛЕЙЛИСТА ========== -->
+    <div class="modal-overlay" id="m-playlist">
+        <div class="modal-content" style="max-width:550px;">
+            <button class="modal-close" onclick="closeModal('m-playlist')">✕</button>
+            <h3 id="playlistModalTitle">📁 Создать плейлист</h3>
+            <input type="hidden" id="editPlaylistId">
+            
+            <div class="form-group">
+                <label>Название *</label>
+                <input type="text" id="playlistName" placeholder="Название плейлиста">
             </div>
-            <button class="action-btn outline" style="width:100%;margin-top:16px;" onclick="closeModal('m-playlist-view')">Закрыть</button>
+            <div class="form-group">
+                <label>Описание</label>
+                <textarea id="playlistDesc" rows="2" placeholder="Краткое описание..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Обложка (URL)</label>
+                <input type="text" id="playlistImg" placeholder="https://...">
+            </div>
+            
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+                <label style="color:var(--text-muted);font-size:13px;">
+                    <input type="checkbox" id="playlistPinned"> 📌 Закрепить в профиле
+                </label>
+                <label style="color:var(--text-muted);font-size:13px;">
+                    <input type="radio" name="playlistVisibility" value="public" checked> 🌍 Публичный
+                </label>
+                <label style="color:var(--text-muted);font-size:13px;">
+                    <input type="radio" name="playlistVisibility" value="friends"> 👥 Только подписчики
+                </label>
+                <label style="color:var(--text-muted);font-size:13px;">
+                    <input type="radio" name="playlistVisibility" value="private"> 🔒 Приватный
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>🎬 Тайтлы в плейлисте</label>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+                    <input type="text" id="playlistAddTitleInput" placeholder="Введите название тайтла..." style="flex:1;min-width:150px;padding:8px 12px;border-radius:8px;border:2px solid var(--border-primary);background:var(--bg-input);color:var(--text-primary);font-size:13px;">
+                    <button class="action-btn primary" onclick="addTitleToPlaylist()" style="padding:8px 16px;">➕ Добавить</button>
+                </div>
+                <div id="playlistTitlesContainer" style="max-height:200px;overflow-y:auto;border:1px solid var(--border-primary);border-radius:8px;padding:8px;background:var(--bg-input);">
+                    <p style="color:var(--text-muted);font-style:italic;font-size:13px;margin:0;">Пока нет тайтлов</p>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="savePlaylist()"><i class="fas fa-save"></i> Сохранить</button>
+            <button class="cancel-btn" onclick="closeModal('m-playlist')">Отмена</button>
         </div>
     </div>
 
