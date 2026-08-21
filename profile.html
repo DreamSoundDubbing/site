@@ -1685,30 +1685,40 @@ window.createPromoCode = async function() {
             await loadProfile();
         });
                 // ===== ОТКРЫТИЕ ПЛЕЙЛИСТА СО СПИСКОМ ТАЙТЛОВ =====
+                // ===== ОТКРЫТИЕ ПЛЕЙЛИСТА (УПРОЩЁННО) =====
         window.openPlaylistView = async function(playlistId) {
-            // Находим плейлист по ID
+            console.log('🟡 openPlaylistView вызван, playlistId:', playlistId);
+            
+            const titleEl = document.getElementById('playlistViewTitle');
+            const descEl = document.getElementById('playlistViewDesc');
+            const itemsEl = document.getElementById('playlistViewItems');
+
+            if (!titleEl || !descEl || !itemsEl) {
+                console.error('❌ Не найден один из элементов модалки');
+                console.log('titleEl:', titleEl);
+                console.log('descEl:', descEl);
+                console.log('itemsEl:', itemsEl);
+                return;
+            }
+
             const playlist = allPlaylists.find(p => p.id === playlistId);
             if (!playlist) {
                 showToast('❌ Плейлист не найден', 'error');
                 return;
             }
 
-            document.getElementById('playlistViewTitle').textContent = `📁 ${playlist.name}`;
-            document.getElementById('playlistViewDesc').textContent = playlist.description || 'Без описания';
-
-            const container = document.getElementById('playlistViewItems');
-            container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">⏳ Загрузка тайтлов...</p>';
+            titleEl.textContent = `📁 ${playlist.name}`;
+            descEl.textContent = playlist.description || 'Без описания';
+            itemsEl.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">⏳ Загрузка тайтлов...</p>';
 
             openModal('m-playlist-view');
 
-            // Загружаем тайтлы из плейлиста
             const items = playlist.items || [];
             if (items.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">В этом плейлисте пока нет тайтлов</p>';
+                itemsEl.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">В этом плейлисте пока нет тайтлов</p>';
                 return;
             }
 
-            // Загружаем все тайтлы из Firebase, чтобы получить их названия и обложки
             const titlesResult = await getTitles();
             const allTitles = titlesResult.success ? titlesResult.titles : [];
 
@@ -1739,7 +1749,7 @@ window.createPromoCode = async function() {
                 }
             }
 
-            container.innerHTML = html;
+            itemsEl.innerHTML = html;
         };
                 // ===== ВРЕМЕННЫЙ СПИСОК ТАЙТЛОВ В ПЛЕЙЛИСТЕ =====
         let tempPlaylistTitles = [];
@@ -1956,6 +1966,19 @@ window.createPromoCode = async function() {
 
             <button class="submit-btn" onclick="savePlaylist()"><i class="fas fa-save"></i> Сохранить</button>
             <button class="cancel-btn" onclick="closeModal('m-playlist')">Отмена</button>
+        </div>
+    </div>
+
+        <!-- ========== МОДАЛКА ПРОСМОТРА ПЛЕЙЛИСТА ========== -->
+    <div class="modal-overlay" id="m-playlist-view">
+        <div class="modal-content" style="max-width:600px;">
+            <button class="modal-close" onclick="closeModal('m-playlist-view')">✕</button>
+            <h3 id="playlistViewTitle" style="color:var(--color-accent);">📁 Название плейлиста</h3>
+            <div style="color:var(--text-muted);font-size:13px;margin-bottom:10px;" id="playlistViewDesc"></div>
+            <div id="playlistViewItems" style="max-height:400px;overflow-y:auto;">
+                <p style="color:var(--text-muted);font-style:italic;">Загрузка...</p>
+            </div>
+            <button class="action-btn outline" style="width:100%;margin-top:16px;" onclick="closeModal('m-playlist-view')">Закрыть</button>
         </div>
     </div>
 
