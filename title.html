@@ -2366,6 +2366,7 @@ async function trackTitleProgress(titleId, progress) {
             return url;
         }
         // ===== ОТКРЫТИЕ МОДАЛКИ ДОБАВЛЕНИЯ В ПЛЕЙЛИСТ =====
+// ===== ОТКРЫТИЕ МОДАЛКИ ДОБАВЛЕНИЯ В ПЛЕЙЛИСТ =====
 window.openAddToPlaylistModal = async function(titleId, titleName) {
     document.getElementById('playlistTitleName').textContent = titleName;
     window.currentTitleForPlaylist = titleId;
@@ -2376,6 +2377,21 @@ window.openAddToPlaylistModal = async function(titleId, titleName) {
     const playlists = await loadUserPlaylistsForModal();
     renderPlaylistSearchResults(playlists, titleId);
 };
+
+// ===== ЗАГРУЗКА ПЛЕЙЛИСТОВ ДЛЯ МОДАЛКИ =====
+async function loadUserPlaylistsForModal() {
+    const user = getCurrentUser();
+    if (!user) return [];
+    
+    const result = await getPlaylists(user.uid);
+    if (!result.success) return [];
+    
+    // Исключаем системные плейлисты "Продолжить просмотр" и "Просмотрено"
+    return result.playlists.filter(p => 
+        p.name !== 'Продолжить просмотр' && 
+        p.name !== 'Просмотрено'
+    );
+}
 
 // ===== ОТРИСОВКА РЕЗУЛЬТАТОВ ПОИСКА ПЛЕЙЛИСТОВ =====
 function renderPlaylistSearchResults(playlists, titleId) {
@@ -2408,7 +2424,6 @@ window.searchPlaylists = function() {
     const query = document.getElementById('playlistSearchInput').value.trim().toLowerCase();
     const container = document.getElementById('playlistSearchResults');
     
-    // Если запрос пустой — показываем все плейлисты
     if (!query) {
         loadUserPlaylistsForModal().then(playlists => {
             renderPlaylistSearchResults(playlists, window.currentTitleForPlaylist);
@@ -2434,7 +2449,6 @@ window.toggleTitleInPlaylist = async function(playlistId, titleId) {
         return;
     }
 
-    // Находим плейлист в списке
     const playlists = await getPlaylists(user.uid);
     const playlist = playlists.success ? playlists.playlists.find(p => p.id === playlistId) : null;
     if (!playlist) {
@@ -2445,7 +2459,6 @@ window.toggleTitleInPlaylist = async function(playlistId, titleId) {
     const items = playlist.items || [];
     const isInPlaylist = items.some(item => item.id === titleId);
 
-    // Добавляем или убираем тайтл
     let newItems;
     if (isInPlaylist) {
         newItems = items.filter(item => item.id !== titleId);
@@ -2457,7 +2470,6 @@ window.toggleTitleInPlaylist = async function(playlistId, titleId) {
 
     const result = await updatePlaylist(playlistId, { items: newItems });
     if (result.success) {
-        // Обновляем отображение
         const playlists = await getPlaylists(user.uid);
         renderPlaylistSearchResults(
             playlists.success ? playlists.playlists.filter(p => p.name !== 'Продолжить просмотр' && p.name !== 'Просмотрено') : [],
@@ -2474,7 +2486,6 @@ document.addEventListener('input', function(e) {
         searchPlaylists();
     }
 });
-
         async function loadTitle() {
             await loadAllVoices();
             await loadAllRoles();
