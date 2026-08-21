@@ -2293,20 +2293,27 @@
         };
 
         // ===== ОТСЛЕЖИВАНИЕ ПРОГРЕССА ПРОСМОТРА =====
+import { getPlaylists, updatePlaylist } from './firebase-config.js';
+window.getPlaylists = getPlaylists;
+window.updatePlaylist = updatePlaylist;
+
+async function loadUserPlaylistsForModal() {
+    const user = getCurrentUser();
+    if (!user) return [];
+    const result = await getPlaylists(user.uid);
+    if (!result.success) return [];
+    return result.playlists.filter(p => p.name !== 'Продолжить просмотр' && p.name !== 'Просмотрено');
+}
+
 async function trackTitleProgress(titleId, progress) {
     const user = getCurrentUser();
     if (!user) return;
-
-    // Получаем плейлисты пользователя
     const playlistsResult = await getPlaylists(user.uid);
     if (!playlistsResult.success) return;
-
     const playlists = playlistsResult.playlists;
     const continueWatching = playlists.find(p => p.name === 'Продолжить просмотр');
     const watched = playlists.find(p => p.name === 'Просмотрено');
-
     if (progress === 'completed') {
-        // Добавляем в "Просмотрено"
         if (watched) {
             const items = watched.items || [];
             if (!items.some(item => item.id === titleId)) {
@@ -2314,13 +2321,11 @@ async function trackTitleProgress(titleId, progress) {
                 await updatePlaylist(watched.id, { items: items });
             }
         }
-        // Убираем из "Продолжить просмотр"
         if (continueWatching) {
             const items = (continueWatching.items || []).filter(item => item.id !== titleId);
             await updatePlaylist(continueWatching.id, { items: items });
         }
     } else if (progress === 'started') {
-        // Добавляем в "Продолжить просмотр"
         if (continueWatching) {
             const items = continueWatching.items || [];
             if (!items.some(item => item.id === titleId)) {
@@ -2328,7 +2333,6 @@ async function trackTitleProgress(titleId, progress) {
                 await updatePlaylist(continueWatching.id, { items: items });
             }
         }
-        // Убираем из "Просмотрено"
         if (watched) {
             const items = (watched.items || []).filter(item => item.id !== titleId);
             await updatePlaylist(watched.id, { items: items });
