@@ -1077,6 +1077,39 @@
         </form>
     </div>
 </div>
+<!-- ========== МОДАЛКА ДОБАВЛЕНИЯ ТАЙТЛА В ПЛЕЙЛИСТ ========== -->
+<div class="modal-overlay" id="m-add-to-playlist">
+    <div class="modal-content" style="max-width:450px;">
+        <button class="modal-close" onclick="closeModal('m-add-to-playlist')">✕</button>
+        <h3 style="color:var(--color-accent); text-align:center;">
+            <i class="fas fa-layer-group"></i> Добавить в плейлист
+        </h3>
+        <p style="color:var(--text-muted); font-size:13px; text-align:center; margin-bottom:15px;">
+            Выберите плейлист для тайтла «<span id="playlistTitleName" style="color:var(--color-accent); font-weight:bold;"></span>»
+        </p>
+        
+        <!-- Поиск плейлистов -->
+        <div class="form-group">
+            <input type="text" id="playlistSearchInput" placeholder="🔍 Поиск плейлистов..." 
+                   style="width:100%; padding:8px 14px; border-radius:8px; border:2px solid var(--border-primary); background:var(--bg-input); color:var(--text-primary); font-size:14px;">
+        </div>
+
+        <!-- Список плейлистов -->
+        <div id="playlistSearchResults" style="max-height:300px; overflow-y:auto;">
+            <p style="color:var(--text-muted); font-style:italic; text-align:center; padding:10px;">Загрузка...</p>
+        </div>
+
+        <!-- Кнопка создать новый плейлист -->
+        <div style="display:flex; gap:10px; margin-top:15px; flex-wrap:wrap;">
+            <button class="action-btn primary" onclick="openPlaylistModal()" style="flex:1;">
+                <i class="fas fa-plus"></i> Создать плейлист
+            </button>
+            <button class="action-btn outline" onclick="closeModal('m-add-to-playlist')" style="flex:1;">
+                Отмена
+            </button>
+        </div>
+    </div>
+</div>
 
     <script>
         // ========== УПРАВЛЕНИЕ ТЕМОЙ ==========
@@ -2151,7 +2184,7 @@
             console.log('Качество изменено на:', window.currentQuality);
         };
 
-                window.playEpisode = function(episodeData) {
+        window.playEpisode = function(episodeData) {
             if (!episodeData) {
                 document.getElementById('playerContainer').innerHTML = `<div class="video-placeholder">🎬 Серия ещё не доступна</div>`;
                 return;
@@ -2220,6 +2253,17 @@
                         skipEndingBtn.classList.remove('visible');
                     }
                 }
+                
+                // ===== ОТСЛЕЖИВАНИЕ ПРОГРЕССА ПРОСМОТРА =====
+                if (video.duration > 0 && video.currentTime > 10) {
+                    // Пользователь начал смотреть — добавляем в "Продолжить просмотр"
+                    trackTitleProgress(titleId, 'started');
+                }
+                
+                if (video.duration > 0 && video.currentTime >= video.duration - 5) {
+                    // Пользователь досмотрел — добавляем в "Просмотрено"
+                    trackTitleProgress(titleId, 'completed');
+                }
             });
             // ========================================
 
@@ -2234,6 +2278,9 @@
                     showToast('⏩ Автоматический переход на следующую серию...', 'info');
                     setTimeout(() => window.playEpisode(nextEp), 500);
                 }
+                
+                // ===== ПОЛЬЗОВАТЕЛЬ ДОСМОТРЕЛ СЕРИЮ ДО КОНЦА =====
+                trackTitleProgress(titleId, 'completed');
             });
             
             document.getElementById('seasonSelect').value = window.currentSeason;
@@ -2244,6 +2291,50 @@
             // video.play(); // <-- УДАЛЯЕМ ЭТУ СТРОКУ
             // =================================
         };
+
+        // ===== ОТСЛЕЖИВАНИЕ ПРОГРЕССА ПРОСМОТРА =====
+async function trackTitleProgress(titleId, progress) {
+    const user = getCurrentUser();
+    if (!user) return;
+
+    // Получаем плейлисты пользователя
+    const playlistsResult = await getPlaylists(user.uid);
+    if (!playlistsResult.success) return;
+
+    const playlists = playlistsResult.playlists;
+    const continueWatching = playlists.find(p => p.name === 'Продолжить просмотр');
+    const watched = playlists.find(p => p.name === 'Просмотрено');
+
+    if (progress === 'completed') {
+        // Добавляем в "Просмотрено"
+        if (watched) {
+            const items = watched.items || [];
+            if (!items.some(item => item.id === titleId)) {
+                items.push({ id: titleId, addedAt: new Date() });
+                await updatePlaylist(watched.id, { items: items });
+            }
+        }
+        // Убираем из "Продолжить просмотр"
+        if (continueWatching) {
+            const items = (continueWatching.items || []).filter(item => item.id !== titleId);
+            await updatePlaylist(continueWatching.id, { items: items });
+        }
+    } else if (progress === 'started') {
+        // Добавляем в "Продолжить просмотр"
+        if (continueWatching) {
+            const items = continueWatching.items || [];
+            if (!items.some(item => item.id === titleId)) {
+                items.push({ id: titleId, addedAt: new Date() });
+                await updatePlaylist(continueWatching.id, { items: items });
+            }
+        }
+        // Убираем из "Просмотрено"
+        if (watched) {
+            const items = (watched.items || []).filter(item => item.id !== titleId);
+            await updatePlaylist(watched.id, { items: items });
+        }
+    }
+}
         
         window.changeSeason = function() {
             const select = document.getElementById('seasonSelect');
@@ -2270,6 +2361,115 @@
             }
             return url;
         }
+        // ===== ОТКРЫТИЕ МОДАЛКИ ДОБАВЛЕНИЯ В ПЛЕЙЛИСТ =====
+window.openAddToPlaylistModal = async function(titleId, titleName) {
+    document.getElementById('playlistTitleName').textContent = titleName;
+    window.currentTitleForPlaylist = titleId;
+    
+    openModal('m-add-to-playlist');
+    
+    // Загружаем плейлисты пользователя (без системных "Продолжить просмотр" и "Просмотрено")
+    const playlists = await loadUserPlaylistsForModal();
+    renderPlaylistSearchResults(playlists, titleId);
+};
+
+// ===== ОТРИСОВКА РЕЗУЛЬТАТОВ ПОИСКА ПЛЕЙЛИСТОВ =====
+function renderPlaylistSearchResults(playlists, titleId) {
+    const container = document.getElementById('playlistSearchResults');
+    if (playlists.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted); font-style:italic; text-align:center; padding:10px;">У вас нет плейлистов. Создайте новый!</p>';
+        return;
+    }
+
+    container.innerHTML = playlists.map(playlist => {
+        const isInPlaylist = (playlist.items || []).some(item => item.id === titleId);
+        return `
+            <div class="playlist-search-item" style="display:flex; align-items:center; gap:10px; padding:10px; background:var(--bg-input); border-radius:8px; margin-bottom:8px; border:1px solid var(--border-primary);">
+                <div style="width:40px; height:40px; border-radius:8px; background:var(--bg-welcome); display:flex; align-items:center; justify-content:center; font-size:20px;">📁</div>
+                <div style="flex:1;">
+                    <div style="font-weight:bold; color:var(--text-primary);">${playlist.name}</div>
+                    <div style="font-size:12px; color:var(--text-muted);">${(playlist.items || []).length} тайтлов</div>
+                </div>
+                <button class="action-btn ${isInPlaylist ? 'danger' : 'primary'} action-btn-sm" 
+                        onclick="toggleTitleInPlaylist('${playlist.id}', '${titleId}')">
+                    ${isInPlaylist ? '✕ Убрать' : '+ Добавить'}
+                </button>
+            </div>
+        `;
+    }).join('');
+}
+
+// ===== ПОИСК ПЛЕЙЛИСТОВ =====
+window.searchPlaylists = function() {
+    const query = document.getElementById('playlistSearchInput').value.trim().toLowerCase();
+    const container = document.getElementById('playlistSearchResults');
+    
+    // Если запрос пустой — показываем все плейлисты
+    if (!query) {
+        loadUserPlaylistsForModal().then(playlists => {
+            renderPlaylistSearchResults(playlists, window.currentTitleForPlaylist);
+        });
+        return;
+    }
+
+    loadUserPlaylistsForModal().then(playlists => {
+        const filtered = playlists.filter(p => p.name.toLowerCase().includes(query));
+        if (filtered.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-muted); font-style:italic; text-align:center; padding:10px;">Плейлисты не найдены</p>';
+        } else {
+            renderPlaylistSearchResults(filtered, window.currentTitleForPlaylist);
+        }
+    });
+};
+
+// ===== ДОБАВЛЕНИЕ/УДАЛЕНИЕ ТАЙТЛА ИЗ ПЛЕЙЛИСТА =====
+window.toggleTitleInPlaylist = async function(playlistId, titleId) {
+    const user = getCurrentUser();
+    if (!user) {
+        showToast('❌ Войдите в аккаунт', 'error');
+        return;
+    }
+
+    // Находим плейлист в списке
+    const playlists = await getPlaylists(user.uid);
+    const playlist = playlists.success ? playlists.playlists.find(p => p.id === playlistId) : null;
+    if (!playlist) {
+        showToast('❌ Плейлист не найден', 'error');
+        return;
+    }
+
+    const items = playlist.items || [];
+    const isInPlaylist = items.some(item => item.id === titleId);
+
+    // Добавляем или убираем тайтл
+    let newItems;
+    if (isInPlaylist) {
+        newItems = items.filter(item => item.id !== titleId);
+        showToast('❌ Тайтл убран из плейлиста', 'warning');
+    } else {
+        newItems = [...items, { id: titleId, addedAt: new Date() }];
+        showToast('✅ Тайтл добавлен в плейлист!', 'success');
+    }
+
+    const result = await updatePlaylist(playlistId, { items: newItems });
+    if (result.success) {
+        // Обновляем отображение
+        const playlists = await getPlaylists(user.uid);
+        renderPlaylistSearchResults(
+            playlists.success ? playlists.playlists.filter(p => p.name !== 'Продолжить просмотр' && p.name !== 'Просмотрено') : [],
+            titleId
+        );
+    } else {
+        showToast('❌ Ошибка: ' + result.error, 'error');
+    }
+};
+
+// ===== ПРИВЯЗКА ПОИСКА =====
+document.addEventListener('input', function(e) {
+    if (e.target.id === 'playlistSearchInput') {
+        searchPlaylists();
+    }
+});
 
         async function loadTitle() {
             await loadAllVoices();
@@ -2480,6 +2680,13 @@
                 }
             }, 100);
 
+            // Кнопка добавления в плейлист
+const addToPlaylistBtn = `
+    <button class="admin-edit-btn" onclick="openAddToPlaylistModal('${title.id}', '${title.name}')" style="margin-top:10px;">
+        <i class="fas fa-layer-group"></i> В плейлист
+    </button>
+`;
+
             const headerWallpaperStyle = wallpaperUrl ?
                 `background-image: url('${wallpaperUrl}'); background-size: cover; background-position: center;` : '';
 
@@ -2502,33 +2709,34 @@
             }
 
                         content.innerHTML = `
-                        <div class="anime-header ${wallpaperUrl ? 'has-wallpaper' : ''}" style="${headerWallpaperStyle}">
-                            ${posterHtml}
-                            <div class="anime-info">
-                                <h1 class="anime-title">${title.name} ${avgRatingHtml}</h1>
-                                <div class="anime-meta">
-                                    <span class="anime-tag">${title.type || 'Аниме'}</span>
-                                    <span class="anime-tag">${title.year || '2025'}</span>
-                                    <span class="anime-tag">${title.episodes || '?'} серий</span>
-                                    <span class="anime-tag">⭐ ${title.rating || '4.5'}</span>
-                                    ${title.status ? statusMap[title.status] || '' : ''}
-                                    ${title.newStatus ? newStatusMap[title.newStatus] || '' : ''}
-                                </div>
-                                <p style="color:var(--text-primary);"><strong style="color:var(--color-accent);">Жанры:</strong> ${title.genres?.join(', ') || 'Не указаны'}</p>
-                                <div class="anime-description">${title.description || 'Описание отсутствует'}</div>
-                                ${adminHtml}
-                            </div>
-                        </div>
-                        ${playerHtml}
-                        <div id="addCharacterContainer" style="margin-top:20px; text-align:center; display:none;">
-                            <button class="admin-edit-btn" onclick="openAddCharacterModal()">
-                                <i class="fas fa-user-plus"></i> Добавить персонажа
-                            </button>
-                        </div>
-                        ${episodesHtml}
-                        ${charactersHtml}
-                        <div id="comments-container"></div>
-                    `;
+    <div class="anime-header ${wallpaperUrl ? 'has-wallpaper' : ''}" style="${headerWallpaperStyle}">
+        ${posterHtml}
+        <div class="anime-info">
+            <h1 class="anime-title">${title.name} ${avgRatingHtml}</h1>
+            <div class="anime-meta">
+                <span class="anime-tag">${title.type || 'Аниме'}</span>
+                <span class="anime-tag">${title.year || '2025'}</span>
+                <span class="anime-tag">${title.episodes || '?'} серий</span>
+                <span class="anime-tag">⭐ ${title.rating || '4.5'}</span>
+                ${title.status ? statusMap[title.status] || '' : ''}
+                ${title.newStatus ? newStatusMap[title.newStatus] || '' : ''}
+            </div>
+            ${addToPlaylistBtn}
+            <p style="color:var(--text-primary);"><strong style="color:var(--color-accent);">Жанры:</strong> ${title.genres?.join(', ') || 'Не указаны'}</p>
+            <div class="anime-description">${title.description || 'Описание отсутствует'}</div>
+            ${adminHtml}
+        </div>
+    </div>
+    ${playerHtml}
+    <div id="addCharacterContainer" style="margin-top:20px; text-align:center; display:none;">
+        <button class="admin-edit-btn" onclick="openAddCharacterModal()">
+            <i class="fas fa-user-plus"></i> Добавить персонажа
+        </button>
+    </div>
+    ${episodesHtml}
+    ${charactersHtml}
+    <div id="comments-container"></div>
+`;
 
             renderCommentForm();
             setTimeout(updateAverageRating, 500);

@@ -1227,7 +1227,259 @@
                 console.error('🔴 Ошибка загрузки плейлистов:', result.error);
                 container.innerHTML = `<p style="color:var(--text-muted);font-style:italic;">❌ Ошибка загрузки плейлистов: ${result.error || 'Неизвестная ошибка'}</p>`;
             }
+                    // ===== ВРЕМЕННЫЙ СПИСОК ТАЙТЛОВ В ПЛЕЙЛИСТЕ =====
+        let tempPlaylistTitles = [];
+
+        // ===== ЗАГРУЗКА ТАЙТЛОВ ДЛЯ ПОИСКА =====
+        async function loadAllTitlesForSearch() {
+            const result = await getTitles();
+            if (result.success) {
+                window.allTitlesForSearch = result.titles;
+            }
         }
+
+        // ===== ДОБАВЛЕНИЕ ТАЙТЛА В ПЛЕЙЛИСТ =====
+        window.addTitleToPlaylist = function() {
+            const input = document.getElementById('playlistAddTitleInput');
+            const query = input.value.trim();
+            if (!query) {
+                showToast('Введите название тайтла', 'warning');
+                return;
+            }
+
+            const found = window.allTitlesForSearch?.find(t => 
+                t.name.toLowerCase().includes(query.toLowerCase()) ||
+                (t.nameEn || '').toLowerCase().includes(query.toLowerCase())
+            );
+
+            if (!found) {
+                showToast('❌ Тайтл не найден. Проверьте название.', 'error');
+                return;
+            }
+
+            if (tempPlaylistTitles.some(t => t.id === found.id)) {
+                showToast('⚠️ Тайтл уже в плейлисте', 'warning');
+                return;
+            }
+
+            tempPlaylistTitles.push({
+                id: found.id,
+                name: found.name,
+                image: found.imageVertical || found.imageHorizontal || found.image || ''
+            });
+
+            renderPlaylistTitles();
+            input.value = '';
+        };
+
+        // ===== УДАЛЕНИЕ ТАЙТЛА ИЗ ПЛЕЙЛИСТА =====
+        window.removeTitleFromPlaylist = function(index) {
+            tempPlaylistTitles.splice(index, 1);
+            renderPlaylistTitles();
+        };
+
+        // ===== ОТРИСОВКА СПИСКА ТАЙТЛОВ В МОДАЛКЕ =====
+        function renderPlaylistTitles() {
+            const container = document.getElementById('playlistTitlesContainer');
+            if (tempPlaylistTitles.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;font-size:13px;margin:0;">Пока нет тайтлов</p>';
+                return;
+            }
+
+            container.innerHTML = tempPlaylistTitles.map((t, index) => `
+                <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;background:var(--bg-card);border-radius:6px;margin-bottom:4px;border:1px solid var(--border-primary);">
+                    <img src="${t.image || 'https://via.placeholder.com/40x40/d4e8ff/4a90d9?text=?'}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;" onerror="this.src='https://via.placeholder.com/40x40/d4e8ff/4a90d9?text=?'">
+                    <span style="flex:1;color:var(--text-primary);font-size:14px;">${t.name}</span>
+                    <button class="action-btn danger action-btn-sm" onclick="removeTitleFromPlaylist(${index})" style="padding:2px 10px;">✕</button>
+                </div>
+            `).join('');
+        }
+
+        // ===== ОБНОВЛЕНИЕ МОДАЛКИ СОЗДАНИЯ/РЕДАКТИРОВАНИЯ =====
+        window.openPlaylistModal = function(editData = null) {
+            tempPlaylistTitles = [];
+
+            if (editData) {
+                document.getElementById('playlistModalTitle').textContent = '✏️ Редактировать плейлист';
+                document.getElementById('editPlaylistId').value = editData.id || '';
+                document.getElementById('playlistName').value = editData.name || '';
+                document.getElementById('playlistDesc').value = editData.description || '';
+                document.getElementById('playlistImg').value = editData.image || '';
+                document.getElementById('playlistPinned').checked = editData.pinned || false;
+
+                // Устанавливаем видимость
+                const visibility = editData.visibility || 'public';
+                const radio = document.querySelector(`input[name="playlistVisibility"][value="${visibility}"]`);
+                if (radio) radio.checked = true;
+
+                // Загружаем тайтлы
+                if (editData.items) {
+                    tempPlaylistTitles = editData.items.map(item => ({
+                        id: item.id,
+                        name: item.name || item.title || 'Без названия',
+                        image: item.image || ''
+                    }));
+                }
+            } else {
+                document.getElementById('playlistModalTitle').textContent = '📁 Создать плейлист';
+                document.getElementById('editPlaylistId').value = '';
+                document.getElementById('playlistName').value = '';
+                document.getElementById('playlistDesc').value = '';
+                document.getElementById('playlistImg').value = '';
+                document.getElementById('playlistPinned').checked = false;
+                document.querySelector('input[name="playlistVisibility"][value="public"]').checked = true;
+            }
+
+            renderPlaylistTitles();
+            openModal('m-playlist');
+
+            // Загружаем тайтлы для поиска (если ещё не загружены)
+            if (!window.allTitlesForSearch) {
+                loadAllTitlesForSearch();
+            }
+        };
+
+        // ===== СОХРАНЕНИЕ ПЛЕЙЛИСТА (ОБНОВЛЕННАЯ) =====
+        window.savePlaylist = async function() {
+            const user = getCurrentUser();
+            if (!user) { showToast('Войдите, чтобы создать плейлист', 'warning'); return; }
+
+            const id = document.getElementById('editPlaylistId').value;
+            const name = document.getElementById('playlistName').value.trim();
+            const description = document.getElementById('playlistDesc').value.trim();
+            const image = document.getElementById('playlistImg').value.trim();
+            const pinned = document.getElementById('playlistPinned').checked;
+            const visibility = document.querySelector('input[name="playlistVisibility"]:checked')?.value || 'public';
+
+            if (!name) { showToast('Введите название плейлиста', 'warning'); return; }
+
+            const items = tempPlaylistTitles.map(t => ({
+                id: t.id,
+                name: t.name,
+                image: t.image || ''
+            }));
+
+            const data = { name, description, image, pinned, visibility, items };
+
+            let result;
+            if (id) {
+                result = await updatePlaylist(id, data);
+            } else {
+                result = await createPlaylist(user.uid, data);
+            }
+
+            if (result.success) {
+                showToast('✅ Плейлист сохранён!', 'success');
+                closeModal('m-playlist');
+                await loadPlaylists();
+            } else {
+                showToast('❌ Ошибка: ' + result.error, 'error');
+            }
+        };
+        }
+        // ===== СИСТЕМНЫЕ ПЛЕЙЛИСТЫ =====
+const SYSTEM_PLAYLISTS = {
+    WATCH_LATER: 'Буду смотреть',
+    CONTINUE_WATCHING: 'Продолжить просмотр',
+    WATCHED: 'Просмотрено'
+};
+
+// ===== СОЗДАНИЕ СИСТЕМНЫХ ПЛЕЙЛИСТОВ =====
+async function ensureSystemPlaylists(userId) {
+    const playlists = await getPlaylists(userId);
+    if (!playlists.success) return;
+
+    const existingNames = playlists.playlists.map(p => p.name);
+    const toCreate = Object.values(SYSTEM_PLAYLISTS).filter(name => !existingNames.includes(name));
+
+    for (const name of toCreate) {
+        await createPlaylist(userId, {
+            name: name,
+            description: name === SYSTEM_PLAYLISTS.WATCH_LATER ? 'Тайтлы, которые вы планируете посмотреть' :
+                         name === SYSTEM_PLAYLISTS.CONTINUE_WATCHING ? 'Тайтлы, которые вы не досмотрели' :
+                         'Тайтлы, которые вы просмотрели до конца',
+            image: '',
+            pinned: name === SYSTEM_PLAYLISTS.WATCH_LATER,
+            visibility: 'private',
+            items: [],
+            isSystem: true
+        });
+    }
+}
+
+// ===== ДОБАВЛЕНИЕ ТАЙТЛА В СИСТЕМНЫЙ ПЛЕЙЛИСТ =====
+async function addTitleToSystemPlaylist(userId, titleId, systemPlaylistName) {
+    const playlists = await getPlaylists(userId);
+    if (!playlists.success) return;
+
+    const playlist = playlists.playlists.find(p => p.name === systemPlaylistName);
+    if (!playlist) return;
+
+    const items = playlist.items || [];
+    if (!items.some(item => item.id === titleId)) {
+        items.push({ id: titleId, addedAt: new Date() });
+        await updatePlaylist(playlist.id, { items: items });
+    }
+}
+
+// ===== УДАЛЕНИЕ ТАЙТЛА ИЗ СИСТЕМНОГО ПЛЕЙЛИСТА =====
+async function removeTitleFromSystemPlaylist(userId, titleId, systemPlaylistName) {
+    const playlists = await getPlaylists(userId);
+    if (!playlists.success) return;
+
+    const playlist = playlists.playlists.find(p => p.name === systemPlaylistName);
+    if (!playlist) return;
+
+    const items = (playlist.items || []).filter(item => item.id !== titleId);
+    await updatePlaylist(playlist.id, { items: items });
+}
+
+// ===== ПРОВЕРКА ПРОСМОТРА ТАЙТЛА =====
+async function trackTitleProgress(titleId, progress) {
+    const user = getCurrentUser();
+    if (!user) return;
+
+    // Если пользователь досмотрел — добавляем в "Просмотрено", убираем из "Продолжить просмотр"
+    if (progress === 'completed') {
+        await addTitleToSystemPlaylist(user.uid, titleId, SYSTEM_PLAYLISTS.WATCHED);
+        await removeTitleFromSystemPlaylist(user.uid, titleId, SYSTEM_PLAYLISTS.CONTINUE_WATCHING);
+    }
+    // Если начал смотреть, но не досмотрел — добавляем в "Продолжить просмотр"
+    else if (progress === 'started') {
+        await addTitleToSystemPlaylist(user.uid, titleId, SYSTEM_PLAYLISTS.CONTINUE_WATCHING);
+        await removeTitleFromSystemPlaylist(user.uid, titleId, SYSTEM_PLAYLISTS.WATCHED);
+    }
+}
+
+// ===== ЗАГРУЗКА ПЛЕЙЛИСТОВ ДЛЯ МОДАЛКИ (title.html) =====
+async function loadUserPlaylistsForModal() {
+    const user = getCurrentUser();
+    if (!user) return [];
+
+    const result = await getPlaylists(user.uid);
+    if (!result.success) return [];
+
+    // Исключаем системные плейлисты "Продолжить просмотр" и "Просмотрено"
+    return result.playlists.filter(p => 
+        p.name !== SYSTEM_PLAYLISTS.CONTINUE_WATCHING && 
+        p.name !== SYSTEM_PLAYLISTS.WATCHED
+    );
+}
+
+// ===== ПРИНУДИТЕЛЬНОЕ СОЗДАНИЕ СИСТЕМНЫХ ПЛЕЙЛИСТОВ =====
+// Вызываем при загрузке профиля и при авторизации
+async function initSystemPlaylists() {
+    const user = getCurrentUser();
+    if (!user) return;
+    
+    // Проверяем, есть ли системные плейлисты, и создаём их если нет
+    await ensureSystemPlaylists(user.uid);
+    
+    // Обновляем список плейлистов на странице
+    if (typeof loadPlaylists === 'function') {
+        await loadPlaylists();
+    }
+}
 
         async function loadWall() {
             const container = document.getElementById('wallContainer');
@@ -1918,6 +2170,7 @@ window.createPromoCode = async function() {
         </div>
     </div>
 
+        <!-- ========== МОДАЛКА СОЗДАНИЯ/РЕДАКТИРОВАНИЯ ПЛЕЙЛИСТА ========== -->
         <!-- ========== МОДАЛКА СОЗДАНИЯ/РЕДАКТИРОВАНИЯ ПЛЕЙЛИСТА ========== -->
     <div class="modal-overlay" id="m-playlist">
         <div class="modal-content" style="max-width:550px;">
