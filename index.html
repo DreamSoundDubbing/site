@@ -807,7 +807,11 @@ window.confirmAction = function(message, title = 'Подтверждение') {
             btn.href = 'login.html';
         }
     }
-    
+    function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
 
     async function updateDubInLink(user) {
         const headerLink = document.getElementById('dubInLink');
