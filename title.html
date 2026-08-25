@@ -2297,14 +2297,6 @@ import { getPlaylists, updatePlaylist } from './firebase-config.js';
 window.getPlaylists = getPlaylists;
 window.updatePlaylist = updatePlaylist;
 
-async function loadUserPlaylistsForModal() {
-    const user = getCurrentUser();
-    if (!user) return [];
-    const result = await getPlaylists(user.uid);
-    if (!result.success) return [];
-    return result.playlists.filter(p => p.name !== 'Продолжить просмотр' && p.name !== 'Просмотрено');
-}
-
 async function trackTitleProgress(titleId, progress) {
     const user = getCurrentUser();
     if (!user) return;
