@@ -1,31 +1,29 @@
-const CACHE_NAME = 'dream-sound-dubbing-v2'; // Версия обновлена
+const CACHE_NAME = 'dream-sound-dubbing-v2';
 
-// === ИЗМЕНЕНИЕ: Убраны несуществующие файлы. Оставлены только гарантированно существующие. ===
 const ASSETS_TO_CACHE = [
-  '/site/',
-  '/site/index.html',
-  '/site/titles.html',
-  '/site/title.html',
-  '/site/profile.html',
-  '/site/login.html',
-  '/site/search.html',
-  '/site/sostav.html',
-  '/site/dub-in.html',
-  '/site/voice-order.html',
-  '/site/admin-orders.html',
-  '/site/privacy.html',
-  '/site/feedback.html',
-  '/site/inventory.html',
-  '/site/lootboxes.html',
-  '/site/voice.html',
-  '/site/offline.html', // Добавлена страница офлайн
-  '/site/style.css',
-  '/site/firebase-config.js',
-  '/site/data.js',
-  '/site/manifest.json',
-  '/site/sw.js',
-  // Файлы изображений, если они точно есть в корне /site/
-  '/site/logo1.jpg'
+  '/',
+  '/index.html',
+  '/titles.html',
+  '/title.html',
+  '/profile.html',
+  '/login.html',
+  '/search.html',
+  '/sostav.html',
+  '/dub-in.html',
+  '/voice-order.html',
+  '/admin-orders.html',
+  '/privacy.html',
+  '/feedback.html',
+  '/inventory.html',
+  '/lootboxes.html',
+  '/voice.html',
+  '/offline.html',
+  '/style.css',
+  '/firebase-config.js',
+  '/data.js',
+  '/manifest.json',
+  '/sw.js',
+  '/logo1.jpg'
 ];
 
 self.addEventListener('install', (event) => {
