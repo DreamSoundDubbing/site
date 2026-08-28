@@ -1,18 +1,49 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <link rel="manifest" href="/manifest.json">
+    <!-- ====== SEO & META ====== -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Заказ озвучки — Dream Sound Dubbing</title>
+<meta name="description" content="Закажите профессиональную озвучку аниме, сериалов, фильмов и игр в студии Dream Sound Dubbing.">
+<meta name="keywords" content="заказ озвучки, озвучка на заказ, профессиональная озвучка, DSD">
+<meta name="author" content="Dream Sound Dubbing">
+<meta name="robots" content="index, follow">
+
+<!-- ====== OPEN GRAPH ====== -->
+<meta property="og:title" content="Заказ озвучки — Dream Sound Dubbing">
+<meta property="og:description" content="Закажите профессиональную озвучку в студии Dream Sound Dubbing. Качество, сроки, индивидуальный подход.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dream-sound-dubbing.ru/voice-order.html">
+<meta property="og:image" content="https://dream-sound-dubbing.ru/images/logo1.jpg">
+<meta property="og:site_name" content="Dream Sound Dubbing">
+
+<!-- ====== TWITTER CARDS ====== -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Заказ озвучки — Dream Sound Dubbing">
+<meta name="twitter:description" content="Закажите профессиональную озвучку в студии Dream Sound Dubbing.">
+<meta name="twitter:image" content="https://dream-sound-dubbing.ru/images/logo1.jpg">
+
+<!-- ====== CANONICAL ====== -->
+<link rel="canonical" href="https://dream-sound-dubbing.ru/voice-order.html">
+
+<!-- ====== PWA / WEB APP ====== -->
+<link rel="manifest" href="/manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="DSD">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#4a2a7a">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Заказ озвучки - Dream Sound Dubbing</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script type="module" src="firebase-config.js"></script>
+
+<!-- ====== FAVICON ====== -->
+<link rel="icon" href="/images/logo1.jpg" type="image/jpeg" sizes="any">
+<link rel="shortcut icon" href="/images/logo1.jpg" type="image/jpeg">
+<link rel="apple-touch-icon" href="/images/logo1.jpg">
+
+<!-- ====== СТИЛИ И СКРИПТЫ ====== -->
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script type="module" src="firebase-config.js"></script>
     <style>
         :root {
             /* Тёмная тема */
@@ -1001,7 +1032,7 @@ window.confirmAction = function(message, title = 'Подтверждение') {
 <script>
     // Регистрация Service Worker для PWA
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/site/sw.js')
+        navigator.serviceWorker.register('/sw.js')
             .then(() => console.log('✅ Service Worker зарегистрирован'))
             .catch(err => console.log('❌ Ошибка SW:', err));
     }

@@ -1,19 +1,50 @@
 <!DOCTYPE html>
 <html lang="ru" data-theme="dark">
 <head>
-    <link rel="manifest" href="/manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="DSD">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#4a2a7a">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Просмотр - Dream Sound Dubbing</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="data.js"></script>
-    <script type="module" src="firebase-config.js"></script>
+    <!-- ====== SEO & META ====== -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Смотреть аниме онлайн — Dream Sound Dubbing</title>
+<meta name="description" content="Смотрите аниме, сериалы и фильмы с профессиональной русской озвучкой от Dream Sound Dubbing. Качественный звук, атмосферная озвучка.">
+<meta name="keywords" content="смотреть аниме, онлайн аниме, озвучка, DSD, Dream Sound Dubbing">
+<meta name="author" content="Dream Sound Dubbing">
+<meta name="robots" content="index, follow">
+
+<!-- ====== OPEN GRAPH ====== -->
+<meta property="og:title" content="Смотреть аниме онлайн — Dream Sound Dubbing">
+<meta property="og:description" content="Смотрите аниме с качественной русской озвучкой от Dream Sound Dubbing. Удобный плеер, список серий.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dream-sound-dubbing.ru/title.html">
+<meta property="og:image" content="https://dream-sound-dubbing.ru/images/logo1.jpg">
+<meta property="og:site_name" content="Dream Sound Dubbing">
+
+<!-- ====== TWITTER CARDS ====== -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Смотреть аниме онлайн — Dream Sound Dubbing">
+<meta name="twitter:description" content="Смотрите аниме с качественной русской озвучкой от Dream Sound Dubbing.">
+<meta name="twitter:image" content="https://dream-sound-dubbing.ru/images/logo1.jpg">
+
+<!-- ====== CANONICAL ====== -->
+<link rel="canonical" href="https://dream-sound-dubbing.ru/title.html">
+
+<!-- ====== PWA / WEB APP ====== -->
+<link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DSD">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#4a2a7a">
+
+<!-- ====== FAVICON ====== -->
+<link rel="icon" href="/images/logo1.jpg" type="image/jpeg" sizes="any">
+<link rel="shortcut icon" href="/images/logo1.jpg" type="image/jpeg">
+<link rel="apple-touch-icon" href="/images/logo1.jpg">
+
+<!-- ====== СТИЛИ И СКРИПТЫ ====== -->
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="data.js"></script>
+<script type="module" src="firebase-config.js"></script>
     <style>
         /* ===== СТИЛИ СТРАНИЦЫ ТАЙТЛА ===== */
         .player-container iframe {
@@ -2916,7 +2947,7 @@ const addToPlaylistBtn = `
     <script>
         // Регистрация Service Worker для PWA
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/site/sw.js')
+            navigator.serviceWorker.register('/sw.js')
                 .then(() => console.log('✅ Service Worker зарегистрирован'))
                 .catch(err => console.log('❌ Ошибка SW:', err));
         }
