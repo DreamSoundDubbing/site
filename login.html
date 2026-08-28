@@ -439,6 +439,28 @@
             }
         };
 
+                // ===== ПОНЯТНЫЕ ОШИБКИ ДЛЯ ПОЛЬЗОВАТЕЛЯ =====
+        function getUserFriendlyError(error) {
+            if (!error) return 'Попробуйте ещё раз.';
+            
+            const errorMap = {
+                'auth/invalid-email': 'Проверьте правильность email.',
+                'auth/user-disabled': 'Аккаунт отключён. Обратитесь в поддержку.',
+                'auth/user-not-found': 'Пользователь с таким email не найден.',
+                'auth/wrong-password': 'Неверный пароль.',
+                'auth/email-already-in-use': 'Этот email уже зарегистрирован.',
+                'auth/weak-password': 'Пароль должен быть не короче 6 символов.',
+                'auth/too-many-requests': 'Слишком много попыток. Подождите немного.',
+                'auth/network-request-failed': 'Проблема с интернетом. Проверьте соединение.',
+                'auth/invalid-credential': 'Неверный email или пароль.'
+            };
+            
+            if (errorMap[error]) return errorMap[error];
+            
+            // Если ошибка не найдена в карте, просто показываем понятное сообщение
+            return 'Что-то пошло не так. Попробуйте ещё раз.';
+        }
+
         window.adminAddDSCoins = async function() {
             const email = document.getElementById('admin-dscoin-email').value.trim();
             const amount = parseInt(document.getElementById('admin-dscoin-amount').value);
@@ -482,23 +504,23 @@
             msg.style.display = 'none';
         };
 
-        window.handleLogin = async function() {
+                window.handleLogin = async function() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             const msg = document.getElementById('authMessage');
             if (!email || !password) {
                 msg.className = 'auth-message error';
-                msg.textContent = '❌ Заполните все поля';
+                msg.textContent = '❌ Пожалуйста, заполните все поля.';
                 return;
             }
             const result = await loginUser(email, password);
             if (result.success) {
                 msg.className = 'auth-message success';
                 msg.textContent = '✅ Вход выполнен! Перенаправление...';
-                setTimeout(() => window.location.href = 'index.html', 1500);
+                setTimeout(() => window.location.href = 'profile.html', 1500);
             } else {
                 msg.className = 'auth-message error';
-                msg.textContent = '❌ ' + result.error;
+                msg.textContent = '❌ Не удалось войти. ' + getUserFriendlyError(result.error);
             }
         };
 
@@ -509,12 +531,12 @@
             const msg = document.getElementById('authMessage');
             if (!name || !email || !password) {
                 msg.className = 'auth-message error';
-                msg.textContent = '❌ Заполните все поля';
+                msg.textContent = '❌ Пожалуйста, заполните все поля.';
                 return;
             }
             if (password.length < 6) {
                 msg.className = 'auth-message error';
-                msg.textContent = '❌ Пароль должен быть минимум 6 символов';
+                msg.textContent = '❌ Пароль должен быть не короче 6 символов.';
                 return;
             }
             const result = await registerUser(email, password, name);
@@ -524,7 +546,7 @@
                 setTimeout(() => window.location.href = 'index.html', 1500);
             } else {
                 msg.className = 'auth-message error';
-                msg.textContent = '❌ ' + result.error;
+                msg.textContent = '❌ Не удалось зарегистрироваться. ' + getUserFriendlyError(result.error);
             }
         };
 
