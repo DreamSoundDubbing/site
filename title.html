@@ -16,6 +16,14 @@
     <script type="module" src="firebase-config.js"></script>
     <style>
         /* ===== СТИЛИ СТРАНИЦЫ ТАЙТЛА ===== */
+        .player-container iframe {
+    border: none;
+}
+
+/* Попытка скрыть панель Dropbox (не гарантировано) */
+.player-container iframe + div {
+    display: none;
+}
         .anime-header {
             display: flex;
             gap: 30px;
