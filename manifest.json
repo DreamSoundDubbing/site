@@ -12,34 +12,34 @@
   "dir": "ltr",
   "icons": [
     {
-      "src": "/site/icons/icon-192x192.png",
+      "src": "//icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/site/icons/icon-512x512.png",
+      "src": "//icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
   ],
   "screenshots": [
     {
-      "src": "/site/screenshots/home.jpg",
+      "src": "//screenshots/home.jpg",
       "sizes": "1280x720",
       "type": "image/jpeg"
     },
     {
-      "src": "/site/screenshots/order.jpg",
+      "src": "//screenshots/order.jpg",
       "sizes": "1280x720",
       "type": "image/jpeg"
     },
     {
-      "src": "/site/screenshots/sostav.jpg",
+      "src": "//screenshots/sostav.jpg",
       "sizes": "1280x720",
       "type": "image/jpeg"
     },
     {
-      "src": "/site/screenshots/titles.jpg",
+      "src": "//screenshots/titles.jpg",
       "sizes": "1280x720",
       "type": "image/jpeg"
     }
@@ -47,11 +47,11 @@
   "shortcuts": [
     {
       "name": "Главная",
-      "url": "/site/index.html"
+      "url": "//index.html"
     },
     {
       "name": "Состав",
-      "url": "/site/sostav.html"
+      "url": "//sostav.html"
     }
   ],
   "related_applications": [],

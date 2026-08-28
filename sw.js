@@ -90,7 +90,7 @@ self.addEventListener('fetch', (event) => {
         }).catch(() => {
           // Если запрос на навигацию (страницу) и сеть недоступна, показываем offline.html
           if (event.request.mode === 'navigate') {
-            return caches.match('/site/offline.html');
+            return caches.match('//offline.html');
           }
           return new Response('Офлайн', { status: 503 });
         });
