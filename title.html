@@ -253,7 +253,7 @@
             color: var(--color-warning);
         }
         .comment-text {
-            color: var(--text-comment);
+            color: var(--color-accent);
             margin-top: 8px;
             word-wrap: break-word;
             line-height: 1.5;
@@ -469,145 +469,151 @@
             color: var(--text-primary);
         }
 
-        /* ===== ПЛЕЕР (НОВЫЙ) ===== */
-        .player-wrapper {
-            position: relative;
-            width: 100%;
-            background: var(--bg-player);
-            border-radius: 12px;
-            overflow: hidden;
-            margin: 16px 0;
-            aspect-ratio: 16/9;
-            border: 2px solid var(--border-primary);
-        }
-        .player-wrapper.fullscreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            aspect-ratio: auto;
-            z-index: 99999;
-            border: none;
-            border-radius: 0;
-            margin: 0;
-            background: #000;
-        }
-        .player-wrapper.fullscreen .player-container {
-            border-radius: 0;
-            border: none;
-        }
-        .player-wrapper.fullscreen .player-controls {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.6);
-            padding: 8px 20px;
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
-            z-index: 10;
-        }
-        .player-wrapper.fullscreen .player-controls button {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background 0.3s;
-        }
-        .player-wrapper.fullscreen .player-controls button:hover {
-            background: rgba(255, 255, 255, 0.4);
-        }
-        .player-container {
-            width: 100%;
-            height: 100%;
-            background: var(--bg-player);
-            border-radius: 12px;
-            overflow: hidden;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .player-container video {
-            width: 100%;
-            height: 100%;
-            display: block;
-            object-fit: contain;
-            background: #000;
-        }
-        .player-container .video-placeholder {
-            color: var(--text-muted);
-            text-align: center;
-            padding: 20px;
-        }
+        /* ===== ПЛЕЕР (ОБНОВЛЕННЫЙ) ===== */
+.player-wrapper {
+    position: relative;
+    width: 100%;
+    background: var(--bg-player);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 16px 0;
+    aspect-ratio: 16/9;
+    border: 2px solid var(--border-primary);
+}
 
-        /* ===== ЭЛЕМЕНТЫ УПРАВЛЕНИЯ ПЛЕЕРОМ ===== */
-        .player-controls-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 10px 16px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.85));
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 8px;
-            pointer-events: none;
-            z-index: 5;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .player-wrapper:hover .player-controls-overlay,
-        .player-wrapper.paused .player-controls-overlay {
-            opacity: 1;
-        }
-        .player-controls-overlay > * {
-            pointer-events: auto;
-        }
+.player-wrapper.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    aspect-ratio: auto;
+    z-index: 99999;
+    border: none;
+    border-radius: 0;
+    margin: 0;
+    background: #000;
+}
 
-        .player-controls-overlay select {
-            padding: 4px 10px;
-            border-radius: 12px;
-            border: 1px solid var(--border-primary);
-            background: rgba(0,0,0,0.6);
-            color: #fff;
-            font-size: 12px;
-            cursor: pointer;
-            backdrop-filter: blur(4px);
-        }
-        .player-controls-overlay select option {
-            background: #1a1a2e;
-            color: #fff;
-        }
-        .player-controls-overlay select:focus {
-            outline: none;
-            border-color: var(--color-accent);
-        }
+.player-wrapper.fullscreen .player-container {
+    border-radius: 0;
+    border: none;
+}
 
-        .skip-btn {
-            padding: 4px 14px;
-            border-radius: 20px;
-            border: 1px solid var(--color-accent);
-            background: rgba(60, 80, 180, 0.25);
-            color: #fff;
-            font-size: 12px;
-            cursor: pointer;
-            backdrop-filter: blur(4px);
-            transition: all 0.3s;
-            display: none;
-        }
-        .skip-btn:hover {
-            background: var(--color-accent);
-            transform: scale(1.05);
-        }
-        .skip-btn.visible {
-            display: inline-block;
-        }
+.player-container {
+    width: 100%;
+    height: 100%;
+    background: var(--bg-player);
+    border-radius: 12px;
+    overflow: hidden;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-container video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    background: #000;
+}
+
+.player-container .video-placeholder {
+    color: var(--text-muted);
+    text-align: center;
+    padding: 20px;
+}
+
+/* ===== ВЕРХНИЕ ЭЛЕМЕНТЫ УПРАВЛЕНИЯ (внутри плеера, сверху) ===== */
+.player-top-controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 16px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.player-wrapper:hover .player-top-controls,
+.player-wrapper.paused .player-top-controls {
+    opacity: 1;
+}
+
+.player-top-controls > * {
+    pointer-events: auto;
+}
+
+.player-top-controls select {
+    padding: 4px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    font-size: 12px;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    outline: none;
+}
+
+.player-top-controls select option {
+    background: #1a1a2e;
+    color: #fff;
+}
+
+.player-top-controls select:focus {
+    border-color: var(--color-accent);
+}
+
+/* ===== КНОПКИ ПРОПУСКА (остаются снизу) ===== */
+.skip-btn-container {
+    position: absolute;
+    bottom: 70px;
+    right: 16px;
+    display: flex;
+    gap: 8px;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.skip-btn-container > * {
+    pointer-events: auto;
+}
+
+.skip-btn {
+    padding: 4px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--color-accent);
+    background: rgba(60, 80, 180, 0.25);
+    color: #fff;
+    font-size: 12px;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: all 0.3s;
+    display: none;
+}
+
+.skip-btn:hover {
+    background: var(--color-accent);
+    transform: scale(1.05);
+}
+
+.skip-btn.visible {
+    display: inline-block;
+}
+
+/* ===== УБИРАЕМ СТАРЫЙ СПИСОК СЕРИЙ ===== */
+.episodes-section {
+    display: none !important;
+}
 
         .quality-select {
             margin-left: auto;
@@ -616,11 +622,7 @@
             background: #1a1a2e;
             color: #fff;
         }
-
-        /* ===== СПИСОК СЕРИЙ (НОВЫЙ) ===== */
-        .episodes-section {
-            margin-top: 30px;
-        }
+        
         .episodes-section h2 {
             color: var(--color-accent);
             margin-bottom: 16px;
@@ -666,34 +668,165 @@
         }
 
         /* ===== ПЕРСОНАЖИ ===== */
-        .characters-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            justify-content: center;
-            margin: 16px 0;
-        }
-        .character-card {
-            width: 150px;
-            background: var(--bg-character);
-            border-radius: 12px;
-            overflow: hidden;
-            text-align: center;
-            padding-bottom: 10px;
-            box-shadow: 0 3px 12px rgba(60, 80, 180, 0.08);
-            border: 1px solid var(--border-primary);
-        }
-        .character-image {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-        }
-        .character-name {
-            font-size: 15px;
-            font-weight: bold;
-            margin: 8px 0 4px 0;
-            color: var(--color-accent);
-        }
+        /* ===== ПЕРСОНАЖИ (обновленные) ===== */
+.characters-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    margin: 16px 0;
+}
+
+.character-card-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.character-card-wrapper .admin-actions {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 10;
+}
+
+.character-card-wrapper:hover .admin-actions {
+    opacity: 1;
+}
+
+.character-card-wrapper .admin-actions button {
+    padding: 3px 8px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.character-card-wrapper .admin-actions .edit-char-btn {
+    background: var(--color-accent);
+    color: #fff;
+}
+
+.character-card-wrapper .admin-actions .edit-char-btn:hover {
+    background: var(--color-accent2);
+}
+
+.character-card-wrapper .admin-actions .delete-char-btn {
+    background: var(--color-danger);
+    color: #fff;
+}
+
+.character-card-wrapper .admin-actions .delete-char-btn:hover {
+    background: #e05555;
+}
+
+.character-card {
+    width: 150px;
+    background: var(--bg-character);
+    border-radius: 12px;
+    overflow: hidden;
+    text-align: center;
+    padding-bottom: 10px;
+    box-shadow: 0 3px 12px rgba(60, 80, 180, 0.08);
+    border: 1px solid var(--border-primary);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.character-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-accent);
+    box-shadow: 0 8px 25px rgba(60, 80, 180, 0.15);
+}
+
+.character-image {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+
+.character-name {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 8px 0 4px 0;
+    color: var(--color-accent);
+}
+
+.character-voice {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.character-voice a {
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+.character-voice a:hover {
+    text-decoration: underline;
+}
+
+.character-type-badge {
+    display: inline-block;
+    padding: 1px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+.character-type-main {
+    background: var(--color-accent);
+    color: #fff;
+}
+
+.character-type-secondary {
+    background: var(--border-primary);
+    color: var(--text-muted);
+}
+
+/* ===== МОДАЛКА РЕДАКТИРОВАНИЯ ПЕРСОНАЖА ===== */
+#editCharacterModal .modal-content {
+    max-width: 500px;
+}
+
+#editCharacterModal .form-group input[type="file"] {
+    padding: 4px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+#editCharacterModal .form-group input[type="file"]::-webkit-file-upload-button {
+    background: var(--gradient-primary);
+    color: #fff;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+#editCharacterModal .form-group input[type="file"]::-webkit-file-upload-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(60,80,180,0.3);
+}
+
+#editCharacterModal .current-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--color-accent);
+    margin: 8px auto;
+    display: block;
+}
 
         /* ===== АДАПТИВНОСТЬ ===== */
         @media (max-width: 768px) {
@@ -937,26 +1070,6 @@
             padding: 12px;
             font-style: italic;
         }
-        /* ===== СТИЛИ ДЛЯ МОДАЛКИ ПЕРСОНАЖЕЙ ===== */
-#addCharacterModal .form-group input[type="file"] {
-    padding: 4px;
-    font-size: 13px;
-    cursor: pointer;
-}
-#addCharacterModal .form-group input[type="file"]::-webkit-file-upload-button {
-    background: var(--gradient-primary);
-    color: #fff;
-    border: none;
-    padding: 4px 12px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s;
-}
-#addCharacterModal .form-group input[type="file"]::-webkit-file-upload-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(60,80,180,0.3);
-}
     </style>
 </head>
 <body>
@@ -1125,6 +1238,60 @@
             <button type="submit" class="submit-btn" id="saveCharBtn">
                 <i class="fas fa-save"></i> Сохранить персонажа
             </button>
+        </form>
+    </div>
+</div>
+
+<!-- ========== МОДАЛКА РЕДАКТИРОВАНИЯ ПЕРСОНАЖА ========== -->
+<div class="modal-overlay" id="editCharacterModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('editCharacterModal')">✕</button>
+        <h2 style="color:var(--color-accent); text-align:center;">
+            <i class="fas fa-user-edit"></i> Редактировать персонажа
+        </h2>
+        <form id="editCharacterForm" onsubmit="saveEditedCharacter(event)">
+            <input type="hidden" id="editCharRoleId" value="">
+            
+            <div class="form-group" style="text-align:center;">
+                <label>Текущее фото</label>
+                <img id="editCharCurrentImage" src="" alt="Текущее фото" class="current-avatar">
+            </div>
+            
+            <div class="form-group">
+                <label>Фото персонажа (ссылка)</label>
+                <input type="text" id="editCharImageUrl" placeholder="https://example.com/char.jpg">
+            </div>
+            <div class="form-group" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <label style="flex:1; min-width:100px;">Или загрузите новое фото</label>
+                <input type="file" id="editCharImageFile" accept="image/*" style="flex:2; min-width:150px; padding:4px; border-radius:6px; border:2px solid var(--border-primary); background:var(--bg-input); color:var(--text-primary);">
+            </div>
+            <div class="form-group">
+                <label>Имя персонажа *</label>
+                <input type="text" id="editCharName" placeholder="Например: Ичиго Куросаки" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Тип персонажа</label>
+                    <select id="editCharType">
+                        <option value="main">⭐ Главный</option>
+                        <option value="secondary">🔄 Второстепенный</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Даббер (озвучка)</label>
+                    <select id="editCharVoice">
+                        <option value="">— Выберите даббера —</option>
+                    </select>
+                </div>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:16px;">
+                <button type="submit" class="submit-btn" id="editCharSaveBtn" style="flex:1;">
+                    <i class="fas fa-save"></i> Сохранить изменения
+                </button>
+                <button type="button" class="cancel-btn" style="flex:1;" onclick="closeModal('editCharacterModal')">
+                    Отмена
+                </button>
+            </div>
         </form>
     </div>
 </div>
@@ -1487,6 +1654,125 @@
             btn.textContent = '💾 Сохранить';
         };
 
+        // ===== ОТКРЫТИЕ МОДАЛКИ РЕДАКТИРОВАНИЯ ПЕРСОНАЖА =====
+window.openEditCharacterModal = function(roleId) {
+    const role = allRoles.find(r => r.id === roleId);
+    if (!role) {
+        showToast('❌ Персонаж не найден', 'error');
+        return;
+    }
+    
+    document.getElementById('editCharRoleId').value = role.id;
+    document.getElementById('editCharName').value = role.character || '';
+    document.getElementById('editCharType').value = role.type || 'main';
+    document.getElementById('editCharVoice').value = role.voiceId || '';
+    document.getElementById('editCharImageUrl').value = role.characterImage || '';
+    document.getElementById('editCharCurrentImage').src = role.characterImage || 'https://via.placeholder.com/80/d4e8ff/4a90d9?text=?';
+    
+    // Заполняем список дабберов
+    populateEditVoiceSelect();
+    
+    openModal('editCharacterModal');
+};
+
+// ===== ЗАПОЛНЕНИЕ ВЫПАДАЮЩЕГО СПИСКА ДАББЕРОВ ДЛЯ РЕДАКТИРОВАНИЯ =====
+function populateEditVoiceSelect() {
+    const select = document.getElementById('editCharVoice');
+    select.innerHTML = '<option value="">— Выберите даббера —</option>';
+    allVoices.forEach(voice => {
+        const option = document.createElement('option');
+        option.value = voice.id;
+        option.textContent = voice.name || voice.id;
+        select.appendChild(option);
+    });
+}
+
+// ===== СОХРАНЕНИЕ ОТРЕДАКТИРОВАННОГО ПЕРСОНАЖА =====
+window.saveEditedCharacter = async function(event) {
+    event.preventDefault();
+    const btn = document.getElementById('editCharSaveBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Сохранение...';
+
+    const roleId = document.getElementById('editCharRoleId').value;
+    const name = document.getElementById('editCharName').value.trim();
+    const type = document.getElementById('editCharType').value;
+    const voiceId = document.getElementById('editCharVoice').value;
+    const imageUrl = document.getElementById('editCharImageUrl').value.trim();
+    const fileInput = document.getElementById('editCharImageFile');
+
+    if (!name) {
+        showToast('❌ Введите имя персонажа', 'error');
+        btn.disabled = false;
+        btn.textContent = '💾 Сохранить изменения';
+        return;
+    }
+    if (!voiceId) {
+        showToast('❌ Выберите даббера', 'error');
+        btn.disabled = false;
+        btn.textContent = '💾 Сохранить изменения';
+        return;
+    }
+
+    let finalImage = imageUrl;
+    if (fileInput.files && fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        try {
+            const uploadResult = await uploadCharacterImage(file);
+            if (uploadResult.success) {
+                finalImage = uploadResult.url;
+            } else {
+                showToast('❌ Ошибка загрузки фото: ' + uploadResult.error, 'error');
+                btn.disabled = false;
+                btn.textContent = '💾 Сохранить изменения';
+                return;
+            }
+        } catch (error) {
+            showToast('❌ Ошибка: ' + error.message, 'error');
+            btn.disabled = false;
+            btn.textContent = '💾 Сохранить изменения';
+            return;
+        }
+    }
+
+    // Обновляем роль в Firestore
+    const roleData = {
+        character: name,
+        characterImage: finalImage || '',
+        voiceId: voiceId,
+        type: type
+    };
+
+    // Импортируем функцию updateRole из firebase-config.js
+    const { updateRole } = await import('./firebase-config.js');
+    const result = await updateRole(roleId, roleData);
+    
+    if (result.success) {
+        showToast('✅ Персонаж обновлён!', 'success');
+        closeModal('editCharacterModal');
+        await loadTitle(); // перезагружаем страницу
+    } else {
+        showToast('❌ Ошибка: ' + result.error, 'error');
+    }
+
+    btn.disabled = false;
+    btn.textContent = '💾 Сохранить изменения';
+};
+// ===== УДАЛЕНИЕ ПЕРСОНАЖА =====
+window.deleteCharacter = async function(roleId) {
+    const role = allRoles.find(r => r.id === roleId);
+    if (!confirm(`Удалить персонажа "${role?.character || roleId}"?`)) return;
+    
+    const { deleteRole } = await import('./firebase-config.js');
+    const result = await deleteRole(roleId);
+    
+    if (result.success) {
+        showToast('✅ Персонаж удалён', 'success');
+        await loadTitle();
+    } else {
+        showToast('❌ Ошибка: ' + result.error, 'error');
+    }
+};
         // ===== ЗАГРУЗКА ФОТО В FIREBASE STORAGE =====
         async function uploadCharacterImage(file) {
             try {
@@ -2236,112 +2522,148 @@
         };
 
         window.playEpisode = function(episodeData) {
-            if (!episodeData) {
-                document.getElementById('playerContainer').innerHTML = `<div class="video-placeholder">🎬 Серия ещё не доступна</div>`;
-                return;
-            }
-            window.currentEpisodeData = episodeData;
-            const container = document.getElementById('playerContainer');
-            const url = episodeData.url || '';
-            if (!url) {
-                container.innerHTML = `<div class="video-placeholder">🎬 Серия ещё не доступна</div>`;
-                return;
-            }
-            container.innerHTML = `
+    if (!episodeData) {
+        document.getElementById('playerContainer').innerHTML = `<div class="video-placeholder">🎬 Серия ещё не доступна</div>`;
+        return;
+    }
+    window.currentEpisodeData = episodeData;
+    const container = document.getElementById('playerContainer');
+    const url = episodeData.url || '';
+    if (!url) {
+        container.innerHTML = `<div class="video-placeholder">🎬 Серия ещё не доступна</div>`;
+        return;
+    }
+
+    // Определяем тип ссылки для корректного отображения
+    let videoHtml = '';
+    if (url.includes('drive.google.com') || url.includes('drive.usercontent.google.com')) {
+        // Google Drive — извлекаем ID и используем embed
+        let fileId = '';
+        const match = url.match(/\/d\/([^\/]+)/);
+        if (match) {
+            fileId = match[1];
+        } else {
+            // Если ссылка вида drive.google.com/file/d/ID/view
+            const idMatch = url.match(/[-\w]{25,}/);
+            if (idMatch) fileId = idMatch[0];
+        }
+        if (fileId) {
+            const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+            videoHtml = `
+                <iframe src="${embedUrl}" width="100%" height="100%" frameborder="0" allowfullscreen style="border:none;"></iframe>
+            `;
+        } else {
+            // Если не удалось извлечь ID — пробуем через <video>
+            videoHtml = `
                 <video id="playerVideo" controls width="100%" height="100%" style="background:#000;">
                     <source src="${url}" type="video/mp4">
                     Ваш браузер не поддерживает видео.
                 </video>
-                
-                <!-- Основные элементы управления (скрываются при бездействии) -->
-                <div class="player-controls-overlay">
-                    <select id="seasonSelect" onchange="changeSeason()">
-                        ${window.seasons.map(s => `<option value="${s}">Сезон ${s}</option>`).join('')}
-                    </select>
-                    <select id="episodeSelect" onchange="changeEpisode()">
-                        ${window.episodesBySeason[window.currentSeason]?.map(ep => `<option value="${ep.number}">${ep.number}. ${ep.title}</option>`).join('') || '<option>Нет серий</option>'}
-                    </select>
-                    <select id="qualitySelect" class="quality-select" onchange="changeQuality()">
-                        <option value="auto">Авто</option>
-                        <option value="1080">1080p</option>
-                        <option value="720">720p</option>
-                        <option value="480">480p</option>
-                        <option value="360">360p</option>
-                    </select>
-                </div>
-                
-                <!-- Кнопки пропуска (всегда видимы, не скрываются) -->
-                <div style="position:absolute; bottom:70px; right:16px; display:flex; gap:8px; z-index:20; pointer-events:auto;">
-                    <button id="skipOpeningBtn" class="skip-btn" onclick="skipOpening()">⏩ Пропустить опенинг</button>
-                    <button id="skipEndingBtn" class="skip-btn" onclick="skipEnding()">⏩ Пропустить эндинг</button>
-                </div>
             `;
-            
-            const video = document.getElementById('playerVideo');
-            
-            // ===== ИСПРАВЛЕННЫЙ ОБРАБОТЧИК =====
-            video.addEventListener('timeupdate', function() {
-                const ep = window.currentEpisodeData;
-                const skipOpeningBtn = document.getElementById('skipOpeningBtn');
-                const skipEndingBtn = document.getElementById('skipEndingBtn');
-                
-                if (ep && ep.openingStart && ep.openingEnd) {
-                    const start = window.parseTimecode(ep.openingStart);
-                    const end = window.parseTimecode(ep.openingEnd);
-                    if (video.currentTime >= start && video.currentTime < end) {
-                        skipOpeningBtn.classList.add('visible');
-                    } else {
-                        skipOpeningBtn.classList.remove('visible');
-                    }
-                }
-                
-                if (ep && ep.endingStart && ep.endingEnd) {
-                    const start = window.parseTimecode(ep.endingStart);
-                    const end = window.parseTimecode(ep.endingEnd);
-                    if (video.currentTime >= start && video.currentTime < end) {
-                        skipEndingBtn.classList.add('visible');
-                    } else {
-                        skipEndingBtn.classList.remove('visible');
-                    }
-                }
-                
-                // ===== ОТСЛЕЖИВАНИЕ ПРОГРЕССА ПРОСМОТРА =====
-                if (video.duration > 0 && video.currentTime > 10) {
-                    // Пользователь начал смотреть — добавляем в "Продолжить просмотр"
-                    trackTitleProgress(titleId, 'started');
-                }
-                
-                if (video.duration > 0 && video.currentTime >= video.duration - 5) {
-                    // Пользователь досмотрел — добавляем в "Просмотрено"
-                    trackTitleProgress(titleId, 'completed');
-                }
-            });
-            // ========================================
+        }
+    } else if (url.includes('dropbox.com') || url.includes('dl.dropboxusercontent.com')) {
+        // Dropbox — преобразуем в прямую ссылку для плеера
+        let directUrl = url;
+        if (url.includes('dropbox.com') && !url.includes('dl.dropboxusercontent.com')) {
+            directUrl = url.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '');
+        }
+        videoHtml = `
+            <video id="playerVideo" controls width="100%" height="100%" style="background:#000;">
+                <source src="${directUrl}" type="video/mp4">
+                Ваш браузер не поддерживает видео.
+            </video>
+        `;
+    } else {
+        // Обычная ссылка
+        videoHtml = `
+            <video id="playerVideo" controls width="100%" height="100%" style="background:#000;">
+                <source src="${url}" type="video/mp4">
+                Ваш браузер не поддерживает видео.
+            </video>
+        `;
+    }
 
-            video.addEventListener('ended', function() {
-                const currentEp = window.currentEpisodeData;
-                if (!currentEp) return;
-                const season = currentEp.season || 1;
-                const currentNumber = currentEp.number;
-                const episodesInSeason = window.episodesBySeason[season] || [];
-                const nextEp = episodesInSeason.find(ep => ep.number === currentNumber + 1 && ep.url);
-                if (nextEp) {
-                    showToast('⏩ Автоматический переход на следующую серию...', 'info');
-                    setTimeout(() => window.playEpisode(nextEp), 500);
+    container.innerHTML = `
+        ${videoHtml}
+        
+        <!-- ВЕРХНИЕ ЭЛЕМЕНТЫ УПРАВЛЕНИЯ (сезоны и серии) -->
+        <div class="player-top-controls">
+            <select id="seasonSelect" onchange="changeSeason()">
+                ${window.seasons.map(s => `<option value="${s}" ${s === window.currentSeason ? 'selected' : ''}>Сезон ${s}</option>`).join('')}
+            </select>
+            <select id="episodeSelect" onchange="changeEpisode()">
+                ${window.episodesBySeason[window.currentSeason]?.map(ep => `<option value="${ep.number}" ${ep.number === episodeData.number ? 'selected' : ''}>${ep.number}. ${ep.title}</option>`).join('') || '<option>Нет серий</option>'}
+            </select>
+        </div>
+        
+        <!-- Кнопки пропуска (снизу) -->
+        <div class="skip-btn-container">
+            <button id="skipOpeningBtn" class="skip-btn" onclick="skipOpening()">⏩ Пропустить опенинг</button>
+            <button id="skipEndingBtn" class="skip-btn" onclick="skipEnding()">⏩ Пропустить эндинг</button>
+        </div>
+    `;
+
+    const video = document.getElementById('playerVideo');
+    if (video) {
+        // Обработчики для видео
+        video.addEventListener('timeupdate', function() {
+            const ep = window.currentEpisodeData;
+            const skipOpeningBtn = document.getElementById('skipOpeningBtn');
+            const skipEndingBtn = document.getElementById('skipEndingBtn');
+            
+            if (ep && ep.openingStart && ep.openingEnd) {
+                const start = window.parseTimecode(ep.openingStart);
+                const end = window.parseTimecode(ep.openingEnd);
+                if (video.currentTime >= start && video.currentTime < end) {
+                    skipOpeningBtn.classList.add('visible');
+                } else {
+                    skipOpeningBtn.classList.remove('visible');
                 }
-                
-                // ===== ПОЛЬЗОВАТЕЛЬ ДОСМОТРЕЛ СЕРИЮ ДО КОНЦА =====
+            }
+            
+            if (ep && ep.endingStart && ep.endingEnd) {
+                const start = window.parseTimecode(ep.endingStart);
+                const end = window.parseTimecode(ep.endingEnd);
+                if (video.currentTime >= start && video.currentTime < end) {
+                    skipEndingBtn.classList.add('visible');
+                } else {
+                    skipEndingBtn.classList.remove('visible');
+                }
+            }
+            
+            // Отслеживание прогресса просмотра
+            if (video.duration > 0 && video.currentTime > 10) {
+                trackTitleProgress(titleId, 'started');
+            }
+            if (video.duration > 0 && video.currentTime >= video.duration - 5) {
                 trackTitleProgress(titleId, 'completed');
-            });
-            
-            document.getElementById('seasonSelect').value = window.currentSeason;
-            document.getElementById('episodeSelect').value = episodeData.number;
-            if (episodeData.number) trackViewEpisode(episodeData.number);
-            
-            // ===== УБИРАЕМ video.play() =====
-            // video.play(); // <-- УДАЛЯЕМ ЭТУ СТРОКУ
-            // =================================
-        };
+            }
+        });
+
+        video.addEventListener('ended', function() {
+            const currentEp = window.currentEpisodeData;
+            if (!currentEp) return;
+            const season = currentEp.season || 1;
+            const currentNumber = currentEp.number;
+            const episodesInSeason = window.episodesBySeason[season] || [];
+            const nextEp = episodesInSeason.find(ep => ep.number === currentNumber + 1 && ep.url);
+            if (nextEp) {
+                showToast('⏩ Автоматический переход на следующую серию...', 'info');
+                setTimeout(() => window.playEpisode(nextEp), 500);
+            }
+            trackTitleProgress(titleId, 'completed');
+        });
+        
+        // Обновляем селекторы
+        const seasonSelect = document.getElementById('seasonSelect');
+        if (seasonSelect) seasonSelect.value = window.currentSeason;
+        
+        const episodeSelect = document.getElementById('episodeSelect');
+        if (episodeSelect) episodeSelect.value = episodeData.number;
+    }
+    
+    if (episodeData.number) trackViewEpisode(episodeData.number);
+};
 
         // ===== ОТСЛЕЖИВАНИЕ ПРОГРЕССА ПРОСМОТРА =====
 import { getPlaylists, updatePlaylist } from './firebase-config.js';
@@ -2384,23 +2706,30 @@ async function trackTitleProgress(titleId, progress) {
 }
         
         window.changeSeason = function() {
-            const select = document.getElementById('seasonSelect');
-            window.currentSeason = parseInt(select.value);
-            const epSelect = document.getElementById('episodeSelect');
-            const episodes = window.episodesBySeason[window.currentSeason] || [];
-            epSelect.innerHTML = episodes.map(ep => `<option value="${ep.number}">${ep.number}. ${ep.title}</option>`).join('') || '<option>Нет серий</option>';
-            if (episodes.length > 0) {
-                window.playEpisode(episodes[0]);
-            }
-        };
+    const select = document.getElementById('seasonSelect');
+    if (!select) return;
+    window.currentSeason = parseInt(select.value);
+    const epSelect = document.getElementById('episodeSelect');
+    if (!epSelect) return;
+    const episodes = window.episodesBySeason[window.currentSeason] || [];
+    epSelect.innerHTML = episodes.map(ep => 
+        `<option value="${ep.number}">${ep.number}. ${ep.title}</option>`
+    ).join('') || '<option>Нет серий</option>';
+    if (episodes.length > 0) {
+        // Находим первую доступную серию с ссылкой
+        const firstWithUrl = episodes.find(ep => ep.url);
+        window.playEpisode(firstWithUrl || episodes[0]);
+    }
+};
 
-        window.changeEpisode = function() {
-            const select = document.getElementById('episodeSelect');
-            const number = parseInt(select.value);
-            const episodes = window.episodesBySeason[window.currentSeason] || [];
-            const ep = episodes.find(e => e.number === number);
-            if (ep) window.playEpisode(ep);
-        };
+window.changeEpisode = function() {
+    const select = document.getElementById('episodeSelect');
+    if (!select) return;
+    const number = parseInt(select.value);
+    const episodes = window.episodesBySeason[window.currentSeason] || [];
+    const ep = episodes.find(e => e.number === number);
+    if (ep) window.playEpisode(ep);
+};
 
         function getValidImageUrl(url, fallback) {
             if (!url || url === '' || url === 'undefined' || url === 'null') {
@@ -2580,22 +2909,51 @@ document.addEventListener('input', function(e) {
                 roles = window.rolesDatabase?.filter(r => r.titleId === titleId) || [];
             }
 
-            let charactersHtml = '';
-            if (roles.length > 0) {
-                charactersHtml =
-                '<h2 style="color:var(--color-accent);margin-top:24px;">🎭 Персонажи и озвучка</h2><div class="characters-grid">';
-                roles.forEach(role => {
-                    const voice = window.voicesDatabase?.find(v => v.id === role.voiceId);
-                    charactersHtml += `
-                                <div class="character-card">
-                                    <img src="${role.characterImage || 'https://via.placeholder.com/150x120/d4e8ff/4a90d9?text=Персонаж'}" class="character-image" onerror="this.src='https://via.placeholder.com/150x120/d4e8ff/4a90d9?text=?'">
-                                    <div class="character-name">${role.character}</div>
-                                    <p style="color:var(--text-muted);font-size:12px;">Озвучивает: <a href="voice.html?id=${role.voiceId}" style="color:var(--color-accent);">${voice?.name || role.voiceId}</a></p>
-                                </div>
-                            `;
-                });
-                charactersHtml += '</div>';
-            }
+            // ===== ОТРИСОВКА ПЕРСОНАЖЕЙ С АДМИН-КНОПКАМИ =====
+// ===== ОТРИСОВКА ПЕРСОНАЖЕЙ =====
+let charactersHtml = '';
+if (roles.length > 0) {
+    charactersHtml = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; flex-wrap:wrap; gap:10px;">
+            <h2 style="color:var(--color-accent); margin:0;">🎭 Персонажи и озвучка</h2>
+            ${isAdmin ? `<button class="admin-edit-btn" onclick="openAddCharacterModal()"><i class="fas fa-user-plus"></i> Добавить персонажа</button>` : ''}
+        </div>
+        <div class="characters-grid">
+    `;
+    
+    roles.forEach(role => {
+        const voice = allVoices.find(v => v.id === role.voiceId);
+        const typeLabel = role.type === 'main' ? '⭐ Главный' : '🔄 Второстепенный';
+        const typeClass = role.type === 'main' ? 'character-type-main' : 'character-type-secondary';
+        
+        let adminButtons = '';
+        if (isAdmin) {
+            adminButtons = `
+                <div class="admin-actions">
+                    <button class="edit-char-btn" onclick="event.preventDefault(); openEditCharacterModal('${role.id}')" title="Редактировать">✏️</button>
+                    <button class="delete-char-btn" onclick="event.preventDefault(); deleteCharacter('${role.id}')" title="Удалить">🗑️</button>
+                </div>
+            `;
+        }
+        
+        charactersHtml += `
+            <div class="character-card-wrapper">
+                <div class="character-card">
+                    <img src="${role.characterImage || 'https://via.placeholder.com/150x120/d4e8ff/4a90d9?text=Персонаж'}" 
+                         class="character-image" 
+                         onerror="this.src='https://via.placeholder.com/150x120/d4e8ff/4a90d9?text=?'">
+                    <div class="character-name">${role.character}</div>
+                    <div class="character-voice">
+                        Озвучивает: <a href="voice.html?id=${role.voiceId}">${voice?.name || role.voiceId}</a>
+                    </div>
+                    <span class="character-type-badge ${typeClass}">${typeLabel}</span>
+                </div>
+                ${adminButtons}
+            </div>
+        `;
+    });
+    charactersHtml += '</div>';
+}
 
             const episodes = title.episodesList || [];
             // Подготавливаем данные для плеера
@@ -2609,23 +2967,7 @@ document.addEventListener('input', function(e) {
             // Убираем трейлер из списка серий, он будет отдельно
             const episodesForList = episodes.filter(ep => !ep.isTrailer);
 
-            let episodesHtml = '';
-            if (episodesForList.length > 0) {
-                episodesHtml = `
-                            <div class="episodes-section">
-                                <h2>📺 Список серий</h2>
-                                <div class="episodes-list">
-                                    ${episodesForList.map(ep => `
-                                        <div class="episode-item" onclick="playEpisode(${JSON.stringify(ep).replace(/"/g, '&quot;')})">
-                                            <span class="episode-number">Сезон ${ep.season || 1} • Серия ${ep.number}</span>
-                                            <span class="episode-title">${ep.title}</span>
-                                            <span class="episode-status ${ep.status === 'Озвучено' ? 'status-ready' : 'status-soon'}">${ep.status}</span>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        `;
-            }
+            
 
             const firstEpisode = episodes.find(ep => ep.url && !ep.isTrailer) || {
                 url: '',
@@ -2706,30 +3048,13 @@ document.addEventListener('input', function(e) {
             }
 
             const playerHtml = `
-                        <h2 style="color:var(--color-accent);">▶ Смотреть онлайн</h2>
-                        <div class="player-wrapper" id="playerWrapper">
-                            <div class="player-container" id="playerContainer">
-                                ${firstEpisode.url ? `<video id="playerVideo" controls width="100%" height="100%" style="background:#000;"><source src="${firstEpisode.url}" type="video/mp4">Ваш браузер не поддерживает видео.</video>` : `<div class="video-placeholder">🎬 Скоро появится</div>`}
-                                <div class="player-controls-overlay">
-                                    <select id="seasonSelect" onchange="changeSeason()">
-                                        ${window.seasons.map(s => `<option value="${s}">Сезон ${s}</option>`).join('')}
-                                    </select>
-                                    <select id="episodeSelect" onchange="changeEpisode()">
-                                        ${window.episodesBySeason[window.currentSeason]?.map(ep => `<option value="${ep.number}">${ep.number}. ${ep.title}</option>`).join('') || '<option>Нет серий</option>'}
-                                    </select>
-                                    <select id="qualitySelect" class="quality-select" onchange="changeQuality()">
-                                        <option value="auto">Авто</option>
-                                        <option value="1080">1080p</option>
-                                        <option value="720">720p</option>
-                                        <option value="480">480p</option>
-                                        <option value="360">360p</option>
-                                    </select>
-                                    <button id="skipOpeningBtn" class="skip-btn" onclick="skipOpening()">⏩ Пропустить опенинг</button>
-                                    <button id="skipEndingBtn" class="skip-btn" onclick="skipEnding()">⏩ Пропустить эндинг</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+    <h2 style="color:var(--color-accent);">▶ Смотреть онлайн</h2>
+    <div class="player-wrapper" id="playerWrapper">
+        <div class="player-container" id="playerContainer">
+            ${firstEpisode.url ? `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000;color:#fff;">Загрузка плеера...</div>` : `<div class="video-placeholder">🎬 Скоро появится</div>`}
+        </div>
+    </div>
+`;
 
             // Инициализация плеера при загрузке
             setTimeout(() => {
@@ -2791,7 +3116,6 @@ const addToPlaylistBtn = `
             <i class="fas fa-user-plus"></i> Добавить персонажа
         </button>
     </div>
-    ${episodesHtml}
     ${charactersHtml}
     <div id="comments-container"></div>
 `;

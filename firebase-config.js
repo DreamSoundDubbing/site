@@ -2085,6 +2085,29 @@ async function replyToComment(commentId, uid, text, titleId) {
         return { success: false, error: error.message };
     }
 }
+
+// ===== УПРАВЛЕНИЕ РОЛЯМИ (ПЕРСОНАЖАМИ) =====
+
+// Обновление роли
+export async function updateRole(roleId, data) {
+    try {
+        const roleRef = doc(db, "roles", roleId);
+        await updateDoc(roleRef, data);
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Удаление роли
+export async function deleteRole(roleId) {
+    try {
+        await deleteDoc(doc(db, "roles", roleId));
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
 // ============================================================
 // ========== ЭКСПОРТ ==========
 // ============================================================
