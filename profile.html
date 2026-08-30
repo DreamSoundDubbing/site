@@ -293,6 +293,58 @@
         </div>
     </div>
 
+    <!-- ========== МОДАЛКА СМЕНЫ ПОЧТЫ И ПАРОЛЯ ========== -->
+<div class="modal-overlay" id="m-account-settings">
+    <div class="modal-content" style="max-width:450px;">
+        <button class="modal-close" onclick="closeModal('m-account-settings')">✕</button>
+        <h3 style="color:var(--color-accent); text-align:center;">
+            <i class="fas fa-user-cog"></i> Настройки аккаунта
+        </h3>
+        
+        <!-- Смена Email -->
+        <div style="margin-bottom:20px;">
+            <h4 style="color:var(--text-muted); font-size:14px; margin-bottom:10px;">📧 Смена Email</h4>
+            <div class="form-group">
+                <label>Новый Email *</label>
+                <input type="email" id="newEmailInput" placeholder="new@email.com">
+            </div>
+            <div class="form-group">
+                <label>Текущий пароль *</label>
+                <input type="password" id="emailPasswordInput" placeholder="Введите пароль">
+            </div>
+            <button class="action-btn primary" onclick="handleChangeEmail()" style="width:100%;">
+                <i class="fas fa-envelope"></i> Сменить Email
+            </button>
+        </div>
+        
+        <hr style="border-color:var(--border-primary); margin:15px 0;">
+        
+        <!-- Смена пароля -->
+        <div>
+            <h4 style="color:var(--text-muted); font-size:14px; margin-bottom:10px;">🔑 Смена пароля</h4>
+            <div class="form-group">
+                <label>Текущий пароль *</label>
+                <input type="password" id="oldPasswordInput" placeholder="Введите текущий пароль">
+            </div>
+            <div class="form-group">
+                <label>Новый пароль *</label>
+                <input type="password" id="newPasswordInput" placeholder="Минимум 6 символов">
+            </div>
+            <div class="form-group">
+                <label>Подтвердите новый пароль *</label>
+                <input type="password" id="confirmPasswordInput" placeholder="Повторите пароль">
+            </div>
+            <button class="action-btn primary" onclick="handleChangePassword()" style="width:100%;">
+                <i class="fas fa-key"></i> Сменить пароль
+            </button>
+        </div>
+        
+        <button class="cancel-btn" style="width:100%; margin-top:16px;" onclick="closeModal('m-account-settings')">
+            Закрыть
+        </button>
+    </div>
+</div>
+
     <script>
         function toggleTheme() { const html = document.documentElement; const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; html.setAttribute('data-theme', newTheme); localStorage.setItem('theme', newTheme); }
         function loadTheme() { const savedTheme = localStorage.getItem('theme') || 'dark'; document.documentElement.setAttribute('data-theme', savedTheme); }
@@ -406,6 +458,8 @@
             getPlaylists, createPlaylist, updatePlaylist, deletePlaylist, getWallPosts, addWallPost,
             deleteWallPost, updateWallVisibility, getUserRole, spendDSCoins, addItemToInventory,
             transferCoins, equipStatus, getTitles,
+            changeUserEmail,
+    changeUserPassword
         } from './firebase-config.js';
 
         window.getUserDSCoins = getUserDSCoins;
@@ -432,6 +486,8 @@
         window.transferCoins = transferCoins;
         window.equipStatus = equipStatus;
         window.getTitles = getTitles;
+        window.changeUserEmail = changeUserEmail;
+window.changeUserPassword = changeUserPassword;
 
         let currentUser = null;
         let currentUserData = null;
@@ -448,6 +504,67 @@
         const urlParams = new URLSearchParams(window.location.search);
         const viewedId = urlParams.get('uid');
         const viewedEmail = urlParams.get('email');
+
+        // ===== СМЕНА EMAIL =====
+window.handleChangeEmail = async function() {
+    const newEmail = document.getElementById('newEmailInput').value.trim();
+    const password = document.getElementById('emailPasswordInput').value;
+    
+    if (!newEmail) {
+        showToast('❌ Введите новый Email', 'error');
+        return;
+    }
+    if (!password) {
+        showToast('❌ Введите текущий пароль', 'error');
+        return;
+    }
+    
+    if (!confirm(`Сменить Email на "${newEmail}"?`)) return;
+    
+    const result = await changeUserEmail(newEmail, password);
+    if (result.success) {
+        showToast('✅ Email успешно изменён!', 'success');
+        document.getElementById('newEmailInput').value = '';
+        document.getElementById('emailPasswordInput').value = '';
+        closeModal('m-account-settings');
+        await loadProfile();
+    } else {
+        showToast('❌ Ошибка: ' + result.error, 'error');
+    }
+};
+
+// ===== СМЕНА ПАРОЛЯ =====
+window.handleChangePassword = async function() {
+    const oldPassword = document.getElementById('oldPasswordInput').value;
+    const newPassword = document.getElementById('newPasswordInput').value;
+    const confirmPassword = document.getElementById('confirmPasswordInput').value;
+    
+    if (!oldPassword) {
+        showToast('❌ Введите текущий пароль', 'error');
+        return;
+    }
+    if (!newPassword || newPassword.length < 6) {
+        showToast('❌ Новый пароль должен быть не короче 6 символов', 'error');
+        return;
+    }
+    if (newPassword !== confirmPassword) {
+        showToast('❌ Пароли не совпадают', 'error');
+        return;
+    }
+    
+    if (!confirm('Сменить пароль?')) return;
+    
+    const result = await changeUserPassword(oldPassword, newPassword);
+    if (result.success) {
+        showToast('✅ Пароль успешно изменён!', 'success');
+        document.getElementById('oldPasswordInput').value = '';
+        document.getElementById('newPasswordInput').value = '';
+        document.getElementById('confirmPasswordInput').value = '';
+        closeModal('m-account-settings');
+    } else {
+        showToast('❌ Ошибка: ' + result.error, 'error');
+    }
+};
 
         // ===== СИСТЕМНЫЕ ПЛЕЙЛИСТЫ =====
         const SYSTEM_PLAYLISTS = { WATCH_LATER: 'Буду смотреть', CONTINUE_WATCHING: 'Продолжить просмотр', WATCHED: 'Просмотрено' };
@@ -734,7 +851,13 @@
                         ${equippedStatus ? `<div style="display:inline-block;background:var(--bg-welcome);border:1px solid var(--color-accent);border-radius:12px;padding:2px 12px;font-size:12px;color:var(--text-primary);margin-top:4px;">💬 ${equippedStatus.text}</div>` : ''}
                         <div class="profile-email">${isOwn ? email : ''}</div>
                         <span class="profile-role ${roleClass[role] || 'role-user'}">${roleNames[role] || 'Пользователь'}</span>
-                        <div class="profile-actions">${isOwn ? `<button class="action-btn primary" onclick="openEditProfileModal()">✏️ Редактировать</button><button class="action-btn danger" onclick="handleLogout()">🚪 Выйти</button>` : subscribeButton}</div>
+                        <div class="profile-actions">
+    ${isOwn ? `
+        <button class="action-btn primary" onclick="openEditProfileModal()">✏️ Редактировать</button>
+        <button class="action-btn outline" onclick="openModal('m-account-settings')">⚙️ Настройки аккаунта</button>
+        <button class="action-btn danger" onclick="handleLogout()">🚪 Выйти</button>
+    ` : subscribeButton}
+</div>
                     </div>
                 </div>
                 <div class="profile-stats">

