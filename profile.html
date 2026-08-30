@@ -293,6 +293,38 @@
         </div>
     </div>
 
+    <!-- ========== МОДАЛКА РЕДАКТИРОВАНИЯ ПРОФИЛЯ ========== -->
+<div class="modal-overlay" id="m-edit-profile">
+    <div class="modal-content" style="max-width:450px;">
+        <button class="modal-close" onclick="closeModal('m-edit-profile')">✕</button>
+        <h3 style="color:var(--color-accent); text-align:center;">
+            <i class="fas fa-user-edit"></i> Редактировать профиль
+        </h3>
+        
+        <div class="form-group">
+            <label>Имя *</label>
+            <input type="text" id="editProfileName" placeholder="Ваше имя">
+        </div>
+        <div class="form-group">
+            <label>Ссылка на аватарку</label>
+            <input type="text" id="editProfileAvatar" placeholder="https://example.com/avatar.jpg">
+        </div>
+        <div class="form-group">
+            <label>Префикс (будет отображаться перед именем)</label>
+            <input type="text" id="editProfilePrefix" placeholder="[DSD]" maxlength="10">
+        </div>
+        <div class="form-group">
+            <label>Цвет ника</label>
+            <input type="color" id="editProfileColor" value="#6a5aaa">
+        </div>
+        
+        <button class="submit-btn" onclick="saveProfileEdit()">
+            <i class="fas fa-save"></i> Сохранить
+        </button>
+        <button class="cancel-btn" onclick="closeModal('m-edit-profile')">Отмена</button>
+    </div>
+</div>
+
     <!-- ========== МОДАЛКА СМЕНЫ ПОЧТЫ И ПАРОЛЯ ========== -->
 <div class="modal-overlay" id="m-account-settings">
     <div class="modal-content" style="max-width:450px;">
@@ -926,7 +958,29 @@ window.handleChangePassword = async function() {
         window.addWallPost = async function() { const user = getCurrentUser(); if (!user) { showToast('Войдите, чтобы оставить запись', 'warning'); return; } const text = document.getElementById('wallInput').value.trim(); if (!text) { showToast('Введите текст', 'warning'); return; } const userData = await getUserData(user.uid); const visibility = userData.success ? (userData.data.wallVisibility || 'all') : 'all'; const result = await addWallPost(user.uid, text, visibility); if (result.success) { document.getElementById('wallInput').value = ''; await loadWall(); } else { showToast('❌ Ошибка: ' + result.error, 'error'); } };
         window.deleteWallPost = async function(id) { if (!confirm('Удалить запись?')) return; const result = await deleteWallPost(id); if (result.success) { await loadWall(); } else { showToast('❌ Ошибка: ' + result.error, 'error'); } };
         window.saveWallSettings = async function() { const user = getCurrentUser(); if (!user) return; const selected = document.querySelector('input[name="wallMode"]:checked'); if (!selected) return; const result = await updateWallVisibility(user.uid, selected.value); if (result.success) { showToast('✅ Настройки сохранены!', 'success'); closeModal('m-wall-settings'); await loadWall(); } else { showToast('❌ Ошибка: ' + result.error, 'error'); } };
-        window.openEditProfileModal = function() { const user = getCurrentUser(); if (!user) { showToast('❌ Войдите, чтобы редактировать профиль', 'error'); return; } if (!currentUserData) { showToast('❌ Данные ещё загружаются, попробуйте позже', 'warning'); return; } document.getElementById('editProfileName').value = currentUserData.displayName || ''; document.getElementById('editProfileAvatar').value = currentUserData.photoURL || ''; document.getElementById('editProfilePrefix').value = currentUserData.prefix || ''; document.getElementById('editProfileColor').value = currentUserData.nickColor || '#6a5aaa'; openModal('m-edit-profile'); };
+        window.openEditProfileModal = function() {
+    const user = getCurrentUser();
+    if (!user) {
+        showToast('❌ Войдите, чтобы редактировать профиль', 'error');
+        return;
+    }
+    if (!currentUserData) {
+        showToast('❌ Данные ещё загружаются, попробуйте позже', 'warning');
+        return;
+    }
+    
+    const nameInput = document.getElementById('editProfileName');
+    const avatarInput = document.getElementById('editProfileAvatar');
+    const prefixInput = document.getElementById('editProfilePrefix');
+    const colorInput = document.getElementById('editProfileColor');
+    
+    if (nameInput) nameInput.value = currentUserData.displayName || '';
+    if (avatarInput) avatarInput.value = currentUserData.photoURL || '';
+    if (prefixInput) prefixInput.value = currentUserData.prefix || '';
+    if (colorInput) colorInput.value = currentUserData.nickColor || '#6a5aaa';
+    
+    openModal('m-edit-profile');
+};
         window.saveProfileEdit = async function() { const user = getCurrentUser(); if (!user) { showToast('❌ Войдите, чтобы редактировать профиль', 'error'); return; } const name = document.getElementById('editProfileName').value.trim(); const avatar = document.getElementById('editProfileAvatar').value.trim(); const newPrefix = document.getElementById('editProfilePrefix').value.trim(); const newColor = document.getElementById('editProfileColor').value; if (!name) { showToast('❌ Введите имя', 'error'); return; } const data = {}; if (name) data.displayName = name; if (avatar) data.photoURL = avatar; if (newPrefix !== (currentUserData.prefix || '')) data.prefix = newPrefix || null; if (newColor !== (currentUserData.nickColor || '#6a5aaa')) data.nickColor = newColor; const result = await updateUserProfile(user.uid, data); if (result.success) { showToast('✅ Профиль обновлён!', 'success'); closeModal('m-edit-profile'); await loadProfile(); } else { showToast('❌ Ошибка: ' + result.error, 'error'); } };
         window.openTransferCoinsModal = function() { openModal('m-transfer-coins'); };
         window.handleTransferCoins = async function() { const user = getCurrentUser(); if (!user) { showToast('❌ Войдите в аккаунт', 'error'); return; } const email = document.getElementById('transfer-target-email').value.trim(); const amount = parseInt(document.getElementById('transfer-amount').value); if (!email) { showToast('❌ Введите Email получателя', 'error'); return; } if (!amount || amount < 1) { showToast('❌ Введите корректную сумму', 'error'); return; } const targetResult = await getUserByEmail(email); if (!targetResult.success) { showToast('❌ Пользователь не найден', 'error'); return; } if (user.uid === targetResult.data.id) { showToast('❌ Нельзя перевести монеты самому себе', 'error'); return; } if (!confirm(`Перевести ${amount} монет пользователю ${email}?`)) return; const result = await transferCoins(user.uid, targetResult.data.id, amount); if (result.success) { showToast(`✅ ${amount} монет переведено!`, 'success'); closeModal('m-transfer-coins'); document.getElementById('transfer-target-email').value = ''; document.getElementById('transfer-amount').value = ''; } else { showToast('❌ ' + result.error, 'error'); } };
