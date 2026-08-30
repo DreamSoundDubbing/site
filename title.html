@@ -2537,14 +2537,69 @@ window.deleteCharacter = async function(roleId) {
 
     // Определяем тип ссылки для корректного отображения
     let videoHtml = '';
-    if (url.includes('drive.google.com') || url.includes('drive.usercontent.google.com')) {
-        // Google Drive — извлекаем ID и используем embed
+    
+    // ===== ЯНДЕКС ДИСК =====
+    if (url.includes('disk.yandex.ru') || url.includes('yadi.sk')) {
+        // Извлекаем публичную ссылку
+        let publicUrl = url;
+        
+        // Если ссылка на Яндекс Диск, преобразуем в прямую ссылку
+        if (url.includes('disk.yandex.ru')) {
+            // Пытаемся извлечь ID файла
+            const match = url.match(/\/d\/([^\/]+)/);
+            if (match) {
+                // Используем iframe для встраивания
+                const fileId = match[1];
+                videoHtml = `
+                    <iframe src="https://disk.yandex.ru/i/${fileId}" 
+                            width="100%" height="100%" frameborder="0" 
+                            allowfullscreen style="border:none; background:#000;">
+                    </iframe>
+                `;
+            } else {
+                // Пробуем через embed
+                const embedMatch = url.match(/\/public\/?\?hash=([^&]+)/);
+                if (embedMatch) {
+                    const hash = embedMatch[1];
+                    videoHtml = `
+                        <iframe src="https://disk.yandex.ru/embed?hash=${hash}" 
+                                width="100%" height="100%" frameborder="0" 
+                                allowfullscreen style="border:none; background:#000;">
+                        </iframe>
+                    `;
+                } else {
+                    // Пробуем через прямую ссылку (если доступна)
+                    const directMatch = url.match(/\/download\/([^?]+)/);
+                    if (directMatch) {
+                        videoHtml = `
+                            <video id="playerVideo" controls width="100%" height="100%" style="background:#000;">
+                                <source src="${url}" type="video/mp4">
+                                Ваш браузер не поддерживает видео.
+                            </video>
+                        `;
+                    } else {
+                        // Показываем сообщение
+                        videoHtml = `<div class="video-placeholder">📁 Ссылка на Яндекс Диск. Нажмите "Смотреть" для перехода</div>`;
+                    }
+                }
+            }
+        } else if (url.includes('yadi.sk')) {
+            // Короткая ссылка yadi.sk
+            videoHtml = `
+                <iframe src="${url}" 
+                        width="100%" height="100%" frameborder="0" 
+                        allowfullscreen style="border:none; background:#000;">
+                </iframe>
+            `;
+        }
+    }
+    // ===== GOOGLE DRIVE =====
+    else if (url.includes('drive.google.com') || url.includes('drive.usercontent.google.com')) {
         let fileId = '';
         const match = url.match(/\/d\/([^\/]+)/);
         if (match) {
             fileId = match[1];
         } else {
-            // Если ссылка вида drive.google.com/file/d/ID/view
             const idMatch = url.match(/[-\w]{25,}/);
             if (idMatch) fileId = idMatch[0];
         }
@@ -2554,7 +2609,6 @@ window.deleteCharacter = async function(roleId) {
                 <iframe src="${embedUrl}" width="100%" height="100%" frameborder="0" allowfullscreen style="border:none;"></iframe>
             `;
         } else {
-            // Если не удалось извлечь ID — пробуем через <video>
             videoHtml = `
                 <video id="playerVideo" controls width="100%" height="100%" style="background:#000;">
                     <source src="${url}" type="video/mp4">
@@ -2562,8 +2616,9 @@ window.deleteCharacter = async function(roleId) {
                 </video>
             `;
         }
-    } else if (url.includes('dropbox.com') || url.includes('dl.dropboxusercontent.com')) {
-        // Dropbox — преобразуем в прямую ссылку для плеера
+    }
+    // ===== DROPBOX =====
+    else if (url.includes('dropbox.com') || url.includes('dl.dropboxusercontent.com')) {
         let directUrl = url;
         if (url.includes('dropbox.com') && !url.includes('dl.dropboxusercontent.com')) {
             directUrl = url.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '');
@@ -2574,8 +2629,9 @@ window.deleteCharacter = async function(roleId) {
                 Ваш браузер не поддерживает видео.
             </video>
         `;
-    } else {
-        // Обычная ссылка
+    }
+    // ===== ОБЫЧНАЯ ССЫЛКА =====
+    else {
         videoHtml = `
             <video id="playerVideo" controls width="100%" height="100%" style="background:#000;">
                 <source src="${url}" type="video/mp4">
@@ -2606,7 +2662,6 @@ window.deleteCharacter = async function(roleId) {
 
     const video = document.getElementById('playerVideo');
     if (video) {
-        // Обработчики для видео
         video.addEventListener('timeupdate', function() {
             const ep = window.currentEpisodeData;
             const skipOpeningBtn = document.getElementById('skipOpeningBtn');
@@ -2632,7 +2687,6 @@ window.deleteCharacter = async function(roleId) {
                 }
             }
             
-            // Отслеживание прогресса просмотра
             if (video.duration > 0 && video.currentTime > 10) {
                 trackTitleProgress(titleId, 'started');
             }
@@ -2655,7 +2709,6 @@ window.deleteCharacter = async function(roleId) {
             trackTitleProgress(titleId, 'completed');
         });
         
-        // Обновляем селекторы
         const seasonSelect = document.getElementById('seasonSelect');
         if (seasonSelect) seasonSelect.value = window.currentSeason;
         
