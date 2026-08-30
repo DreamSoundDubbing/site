@@ -15,9 +15,9 @@
     }
   },
   "host": "https://dream-sound-dubbing.ru",
-  "iconUrl": "https://dream-sound-dubbing.ru/logo1.jpg",
-  "maskableIconUrl": "https://dream-sound-dubbing.ru/logo1.jpg",
-  "monochromeIconUrl": "https://dream-sound-dubbing.ru/logo1.jpg",
+  "iconUrl": "https://dream-sound-dubbing.ru/DSD.png",
+  "maskableIconUrl": "https://dream-sound-dubbing.ru/DSD.png",
+  "monochromeIconUrl": "https://dream-sound-dubbing.ru/DSD.png",
   "includeSourceCode": false,
   "isChromeOSOnly": false,
   "launcherName": "Dream Sound Dubbing",

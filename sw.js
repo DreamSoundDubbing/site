@@ -1,29 +1,18 @@
-const CACHE_NAME = 'dream-sound-dubbing-v2';
-
-const ASSETS_TO_CACHE = [
+// sw.js
+const CACHE_NAME = 'dsd-cache-v1';
+const urlsToCache = [
   '/',
   '/index.html',
   '/titles.html',
-  '/title.html',
-  '/profile.html',
-  '/login.html',
-  '/search.html',
   '/sostav.html',
-  '/dub-in.html',
-  '/voice-order.html',
-  '/admin-orders.html',
-  '/privacy.html',
-  '/feedback.html',
-  '/inventory.html',
-  '/lootboxes.html',
+  '/profile.html',
+  '/search.html',
+  '/title.html',
   '/voice.html',
-  '/offline.html',
   '/style.css',
-  '/firebase-config.js',
   '/data.js',
-  '/manifest.json',
-  '/sw.js',
-  '/logo1.jpg'
+  '/firebase-config.js',
+  '/images/DSD.png'
 ];
 
 self.addEventListener('install', (event) => {
