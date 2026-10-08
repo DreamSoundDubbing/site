@@ -12,7 +12,7 @@
     --bg-container: rgba(18, 10, 30, 0);
     --bg-content: #1a103000;
     --bg-content2: linear-gradient(135deg, #1a10403e, #2a10403e);
-    --bg-card: #1a103086;
+    --bg-card: #1a103000;
     --bg-stat: #1a1040;
     --bg-voice-profile: linear-gradient(135deg, #1a1040, #2a1040);
     --bg-comment: #1a1040;
@@ -96,7 +96,7 @@
     --bg-container: rgba(255, 255, 255, 0);
     --bg-content: #ffffff00;
     --bg-content2: linear-gradient(135deg, #d4e8ff, #dcc8f0);
-    --bg-card: #ffffff86;
+    --bg-card: #ffffff00;
     --bg-stat: #e8f0ff;
     --bg-voice-profile: linear-gradient(135deg, #e8f0ff, #e8d8f0);
     --bg-comment: #eef4ff;
