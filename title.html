@@ -46,6 +46,7 @@
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="data.js"></script>
+<script src="player-orientation.js" defer></script>
 <script type="module" src="firebase-config.js"></script>
     <style>
         /* ===== СТИЛИ СТРАНИЦЫ ТАЙТЛА ===== */
@@ -537,6 +538,39 @@
 .kinescope-player .video-placeholder {
     display: grid;
     place-items: center;
+}
+
+/* iPhone: сохраняем кнопки Kinescope и поворачиваем плеер в портретном окне. */
+html.kinescope-expanded,
+body.kinescope-expanded {
+    overflow: hidden;
+    overscroll-behavior: none;
+}
+.kinescope-player iframe.kinescope-expanded {
+    position: fixed;
+    z-index: 2147483647;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    aspect-ratio: auto;
+    transform: translate(-50%, -50%);
+    border: 0;
+    border-radius: 0;
+    background: #000;
+}
+@media (orientation: portrait) {
+    .kinescope-player iframe.kinescope-expanded {
+        width: 100vh;
+        height: 100vw;
+        width: 100dvh;
+        height: 100dvw;
+        transform: translate(-50%, -50%) rotate(90deg);
+    }
 }
 
 .player-container .video-placeholder {
@@ -2605,7 +2639,7 @@ window.deleteCharacter = async function(roleId) {
     }
     // ===== KINESCOPE =====
     else if (kinescopeUrl) {
-        videoHtml = `<iframe src="${escapePlayerHtml(kinescopeUrl)}"
+        videoHtml = `<iframe data-kinescope-player src="${escapePlayerHtml(kinescopeUrl)}"
             title="${escapePlayerHtml(episodeData.title || `Серия ${episodeData.number}`)}"
             width="100%" height="100%"
             allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
