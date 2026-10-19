@@ -53,10 +53,6 @@
     border: none;
 }
 
-/* Попытка скрыть панель Dropbox (не гарантировано) */
-.player-container iframe + div {
-    display: none;
-}
         .anime-header {
             display: flex;
             gap: 30px;
@@ -509,6 +505,38 @@
     display: block;
     object-fit: contain;
     background: #000;
+}
+
+/* Выбор серии располагается над встроенным плеером и не закрывает его кнопки. */
+.player-wrapper.kinescope-player {
+    aspect-ratio: auto;
+}
+.kinescope-player .player-container {
+    flex-direction: column;
+    height: auto;
+}
+.kinescope-player .player-top-controls {
+    position: static;
+    order: -1;
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--bg-card);
+}
+.kinescope-player .player-top-controls select {
+    max-width: 100%;
+    min-width: 0;
+}
+.kinescope-player iframe,
+.kinescope-player .video-placeholder {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    box-sizing: border-box;
+}
+.kinescope-player .video-placeholder {
+    display: grid;
+    place-items: center;
 }
 
 .player-container .video-placeholder {
@@ -2318,7 +2346,8 @@ window.deleteCharacter = async function(roleId) {
                         </div>
                         <div style="display:flex; flex-direction:column; flex:3; min-width:150px;">
                             <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Ссылка</label>
-                            <input type="text" class="ep-url" value="${ep.url || ''}" placeholder="Ссылка на Dropbox" data-index="${index}" data-field="url" style="width:100%;">
+                            <input type="text" class="ep-url" value="${escapePlayerHtml(ep.url || '')}" placeholder="https://kinescope.io/ID_видео" data-index="${index}" data-field="url" style="width:100%;">
+                            <small style="color:var(--text-muted);">Kinescope: «Копировать ссылку» на видео (не адрес кабинета). Прямые ссылки на файлы тоже поддерживаются.</small>
                         </div>
                         <div style="display:flex; flex-direction:column; min-width:60px; flex:0 0 auto;">
                             <label style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-bottom:2px;">Сезон</label>
@@ -2358,7 +2387,7 @@ window.deleteCharacter = async function(roleId) {
                         </div>
                         <div style="display:flex; align-items:center; gap:6px; margin-left:auto;">
                             <label style="font-size:13px; font-weight:bold; color:var(--text-muted); cursor:pointer; display:flex; align-items:center; gap:4px;">
-                                <input type="checkbox" class="ep-trailer" data-index="${index}" ${ep.isTrailer ? 'checked' : ''}>
+                                <input type="checkbox" class="ep-trailer" data-index="${index}" data-field="isTrailer" ${ep.isTrailer ? 'checked' : ''}>
                                 🎬 Трейлер
                             </label>
                         </div>
@@ -2404,7 +2433,7 @@ window.deleteCharacter = async function(roleId) {
                 episodes.push({
                     number: parseInt(el.querySelector('[data-field="number"]').value) || 0,
                     title: el.querySelector('[data-field="title"]').value || '',
-                    url: el.querySelector('[data-field="url"]').value || '',
+                    url: el.querySelector('[data-field="url"]').value.trim(),
                     season: parseInt(el.querySelector('[data-field="season"]').value) || 1,
                     openingStart: el.querySelector('[data-field="openingStart"]').value || '',
                     openingEnd: el.querySelector('[data-field="openingEnd"]').value || '',
@@ -2440,6 +2469,13 @@ window.deleteCharacter = async function(roleId) {
             saveBtn.disabled = true;
             saveBtn.textContent = '⏳ Сохранение...';
             const episodes = getEpisodesFromEditor();
+            const invalidEpisode = episodes.find(ep => isKinescopeUrl(ep.url) && !getKinescopeEmbedUrl(ep.url));
+            if (invalidEpisode) {
+                showToast(`Серия ${invalidEpisode.number}: скопируйте ссылку на видео в Kinescope, а не адрес личного кабинета.`, 'error');
+                saveBtn.disabled = false;
+                saveBtn.textContent = '💾 Сохранить изменения';
+                return;
+            }
             episodes.forEach((ep, i) => {
                 if (!ep.number || ep.number < 1) ep.number = i + 1;
             });
@@ -2512,24 +2548,71 @@ window.deleteCharacter = async function(roleId) {
             console.log('Качество изменено на:', window.currentQuality);
         };
 
+        function escapePlayerHtml(value) {
+            return String(value).replace(/[&<>"']/g, char => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[char]));
+        }
+
+        function getKinescopeEmbedUrl(value) {
+            try {
+                const url = new URL(value.trim());
+                if (!['https:', 'http:'].includes(url.protocol) ||
+                    url.hostname !== 'kinescope.io' || url.username || url.password || url.port) return null;
+                const match = url.pathname.match(/^\/(?:embed\/)?([a-zA-Z0-9_-]+)\/?$/);
+                if (!match || match[1] === 'embed') return null;
+                const embed = new URL(`https://kinescope.io/embed/${match[1]}`);
+                embed.search = url.search;
+                // Не загружаем видео до нажатия Play и не запускаем его автоматически.
+                embed.searchParams.set('preload', 'false');
+                embed.searchParams.set('autoplay', 'false');
+                return embed.href;
+            } catch {
+                return null;
+            }
+        }
+
+        function isKinescopeUrl(value) {
+            try {
+                const { hostname } = new URL(value);
+                return hostname === 'kinescope.io' || hostname.endsWith('.kinescope.io');
+            } catch {
+                return false;
+            }
+        }
+
         window.playEpisode = function(episodeData) {
     if (!episodeData) {
         document.getElementById('playerContainer').innerHTML = `<div class="video-placeholder">🎬 Серия ещё не доступна</div>`;
         return;
     }
     window.currentEpisodeData = episodeData;
+    window.currentSeason = episodeData.season || 1;
     const container = document.getElementById('playerContainer');
-    const url = episodeData.url || '';
-    if (!url) {
-        container.innerHTML = `<div class="video-placeholder">🎬 Серия ещё не доступна</div>`;
-        return;
-    }
+    const url = (episodeData.url || '').trim();
+    const kinescopeUrl = getKinescopeEmbedUrl(url);
+    const invalidKinescopeUrl = isKinescopeUrl(url) && !kinescopeUrl;
+    document.getElementById('playerWrapper').classList.toggle('kinescope-player', !!kinescopeUrl || invalidKinescopeUrl || !url);
 
     // Определяем тип ссылки для корректного отображения
     let videoHtml = '';
     
+    if (!url) {
+        videoHtml = `<div class="video-placeholder">🎬 Серия ещё не доступна</div>`;
+    }
+    else if (invalidKinescopeUrl) {
+        videoHtml = `<div class="video-placeholder">Не удалось открыть видео. Администратору нужно обновить ссылку на эту серию.</div>`;
+    }
+    // ===== KINESCOPE =====
+    else if (kinescopeUrl) {
+        videoHtml = `<iframe src="${escapePlayerHtml(kinescopeUrl)}"
+            title="${escapePlayerHtml(episodeData.title || `Серия ${episodeData.number}`)}"
+            width="100%" height="100%"
+            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+            allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+    }
     // ===== ЯНДЕКС ДИСК =====
-    if (url.includes('disk.yandex.ru') || url.includes('yadi.sk')) {
+    else if (url.includes('disk.yandex.ru') || url.includes('yadi.sk')) {
         // Извлекаем публичную ссылку
         let publicUrl = url;
         
@@ -2635,19 +2718,19 @@ window.deleteCharacter = async function(roleId) {
         
         <!-- ВЕРХНИЕ ЭЛЕМЕНТЫ УПРАВЛЕНИЯ (сезоны и серии) -->
         <div class="player-top-controls">
-            <select id="seasonSelect" onchange="changeSeason()">
+            <select id="seasonSelect" aria-label="Сезон" onchange="changeSeason()">
                 ${window.seasons.map(s => `<option value="${s}" ${s === window.currentSeason ? 'selected' : ''}>Сезон ${s}</option>`).join('')}
             </select>
-            <select id="episodeSelect" onchange="changeEpisode()">
-                ${window.episodesBySeason[window.currentSeason]?.map(ep => `<option value="${ep.number}" ${ep.number === episodeData.number ? 'selected' : ''}>${ep.number}. ${ep.title}</option>`).join('') || '<option>Нет серий</option>'}
+            <select id="episodeSelect" aria-label="Серия" onchange="changeEpisode()">
+                ${window.episodesBySeason[window.currentSeason]?.map(ep => `<option value="${ep.number}" ${ep.number === episodeData.number ? 'selected' : ''}>${ep.number}. ${escapePlayerHtml(ep.title || '')}</option>`).join('') || '<option>Нет серий</option>'}
             </select>
         </div>
         
         <!-- Кнопки пропуска (снизу) -->
-        <div class="skip-btn-container">
+        ${kinescopeUrl || invalidKinescopeUrl || !url ? '' : `<div class="skip-btn-container">
             <button id="skipOpeningBtn" class="skip-btn" onclick="skipOpening()">⏩ Пропустить опенинг</button>
             <button id="skipEndingBtn" class="skip-btn" onclick="skipEnding()">⏩ Пропустить эндинг</button>
-        </div>
+        </div>`}
     `;
 
     const video = document.getElementById('playerVideo');
@@ -2706,7 +2789,7 @@ window.deleteCharacter = async function(roleId) {
         if (episodeSelect) episodeSelect.value = episodeData.number;
     }
     
-    if (episodeData.number) trackViewEpisode(episodeData.number);
+    if (url && !invalidKinescopeUrl && episodeData.number) trackViewEpisode(episodeData.number);
 };
 
         // ===== ОТСЛЕЖИВАНИЕ ПРОГРЕССА ПРОСМОТРА =====
